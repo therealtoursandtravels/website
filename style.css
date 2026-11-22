@@ -1,0 +1,88 @@
+
+/* VOICE: refined, warm, trustworthy family luxury
+   IDEA: an engraved travel certificate / luggage-tag seal
+   PICTURE: the red seal logo large on a white field with a soft red halo
+   COLOUR+TYPE: logo red #D7191F + charcoal on white/light grey only; Playfair Display + Jost
+   LAYOUT: full-bleed light bands, centred editorial headings, red hairlines */
+:root{--red:#D7191F;--crimson:#B3121A;--wine:#1e1e1e;--gold:#D7191F;--gold2:#D7191F;--ink:#222;--muted:#666;--bg:#f7f7f7;--line:#e6e6e6}
+*{box-sizing:border-box;min-width:0}html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{margin:0;font-family:'Jost',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:17px;color:var(--ink);background:#fff;line-height:1.7;overflow-x:clip}
+a{color:var(--crimson)}img{max-width:100%;display:block}
+h1,h2,h3{font-family:'Playfair Display',Georgia,serif;font-weight:600;line-height:1.15;text-wrap:balance}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+.topbar{background:var(--red);color:#fff;font-size:13.5px;letter-spacing:.2px}
+.topbar .wrap{display:flex;gap:18px;justify-content:space-between;flex-wrap:wrap;padding:7px 22px}
+.topbar a{color:#fff;text-decoration:none}
+header.site{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header.site .wrap{display:flex;align-items:center;justify-content:space-between;padding:10px 22px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--wine)}
+.brand img{width:64px;height:64px}
+.brand b{font-family:'Playfair Display',serif;font-size:22px;letter-spacing:.2px;line-height:1.1;color:var(--crimson)}
+.brand small{display:block;color:var(--muted);font-weight:500;font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-top:3px}
+nav.main a{color:var(--wine);text-decoration:none;font-weight:500;margin-left:24px;font-size:15.5px}
+nav.main a:hover{color:var(--red)}
+nav.main a.cta{background:linear-gradient(135deg,var(--red),var(--crimson));color:#fff;padding:10px 20px;border-radius:999px;box-shadow:0 6px 16px rgba(142,14,22,.25)}
+.menu-btn{display:none;background:none;border:0;font-size:28px;color:var(--crimson);width:44px;height:44px}
+.hero{position:relative;color:var(--ink);overflow:hidden;background:radial-gradient(900px 500px at 85% 30%,rgba(215,25,31,.07),transparent 65%),#fff;border-bottom:1px solid var(--line)}
+.hero:before{content:"";position:absolute;inset:0;background:var(--hero,none) center/cover no-repeat;opacity:.12}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1.25fr .75fr;gap:40px;align-items:center;padding:88px 22px 96px}
+.hero h1{font-size:clamp(34px,5vw,58px);margin:0 0 18px;color:var(--wine)}
+.hero p{font-size:19px;color:var(--muted);margin:0 0 30px;max-width:640px}
+.kicker{display:inline-flex;align-items:center;gap:10px;color:var(--red);font-size:14px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:18px}
+.kicker:before{content:"";width:34px;height:1px;background:var(--gold)}
+.seal{justify-self:center;position:relative;width:min(340px,80vw);aspect-ratio:1;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 0 0 12px #fdf0f0,0 24px 50px rgba(0,0,0,.10)}
+.seal img{width:86%}
+.ridge{display:none}
+.btns{display:flex;gap:14px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:9px;min-height:48px;padding:12px 26px;border-radius:999px;font-weight:600;text-decoration:none;font-size:16px;letter-spacing:.3px;transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.gold{background:var(--red);color:#fff;box-shadow:0 8px 20px rgba(215,25,31,.22)}
+.btn.red{background:var(--red);color:#fff}
+.btn.ghost{border:1.5px solid var(--ink);color:var(--ink)}
+.btn.outline{border:1.5px solid var(--crimson);color:var(--crimson)}
+.trust{display:flex;gap:40px;flex-wrap:wrap;margin-top:40px;padding-top:26px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+.trust b{display:block;font-family:'Playfair Display',serif;font-size:30px;color:var(--red);font-weight:600}
+section{padding:84px 0}section.alt{background:var(--bg)}
+.head{text-align:center;max-width:760px;margin:0 auto 44px}
+.head .kicker{color:var(--gold);justify-content:center}.head .kicker:after{content:"";width:34px;height:1px;background:var(--gold)}
+h2{font-size:clamp(28px,3.6vw,42px);color:var(--wine);margin:0 0 14px}
+.lead{color:var(--muted);margin:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:24px}
+.card{position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;padding:30px 26px;text-decoration:none;color:var(--ink);transition:transform .2s,box-shadow .2s,border-color .2s}
+.card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,0,0,.08);border-color:var(--red)}
+.card .ic{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:#fdf0f0;font-size:24px}
+.card h3{margin:16px 0 8px;color:var(--crimson);font-size:21px}.card p{margin:0;color:var(--muted);font-size:15px}
+.card .more{display:inline-block;margin-top:14px;color:var(--red);font-weight:600;font-size:14px;letter-spacing:1px;text-transform:uppercase}
+.two{display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:center}
+.photo{border-radius:22px;overflow:hidden;box-shadow:0 24px 50px rgba(0,0,0,.12)}
+.emblem{border-radius:22px;padding:56px;text-align:center;color:var(--muted);background:#fff;border:1px solid var(--line);box-shadow:0 24px 50px rgba(0,0,0,.07)}
+.emblem img{width:190px;margin:0 auto 20px}
+.emblem b{display:block;font-family:'Playfair Display',serif;font-size:26px;color:var(--red)}
+ul.ticks{list-style:none;padding:0;margin:0}ul.ticks li{padding:9px 0 9px 36px;position:relative;border-bottom:1px solid var(--line)}
+ul.ticks li:before{content:"✓";position:absolute;left:4px;top:9px;color:var(--red);font-weight:700}
+.review{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px}
+.review .stars{color:var(--red);letter-spacing:3px;font-size:18px}.review p{margin:10px 0 14px;font-family:'Playfair Display',serif;font-style:italic;font-size:17.5px;color:#3b2f2f}.review b{color:var(--crimson);font-weight:600}
+.band{background:#fdf0f0;color:var(--ink);text-align:center}
+.band h2{color:var(--wine)}.band p{color:var(--muted);margin:0 0 28px}
+.faq details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin-bottom:14px}
+.faq summary{font-weight:600;color:var(--wine);cursor:pointer;font-size:17px}
+.faq details[open]{border-color:var(--red)}
+.crumbs{font-size:14px;color:var(--muted);margin-bottom:16px}.crumbs a{color:var(--red)}
+footer{background:var(--bg);color:var(--muted);font-size:15px;border-top:1px solid var(--line)}
+footer .wrap{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;padding:64px 22px 36px}
+footer a{color:var(--ink);text-decoration:none}footer a:hover{color:var(--red)}footer h4{font-family:'Playfair Display',serif;color:var(--wine);font-size:20px;margin:0 0 14px}
+footer ul{list-style:none;padding:0;margin:0}footer li{margin:7px 0}
+
+.copy{border-top:1px solid var(--line);text-align:center;padding:18px;font-size:13.5px;color:var(--muted)}
+.gst{display:inline-block;margin-top:6px;padding:4px 12px;border:1px solid var(--line);border-radius:999px;color:var(--ink);background:#fff;font-size:13px;letter-spacing:.5px}
+.float-wa{position:fixed;right:18px;bottom:18px;z-index:60;background:#25D366;color:#fff;width:60px;height:60px;border-radius:50%;display:grid;place-items:center;box-shadow:0 8px 22px rgba(0,0,0,.3);text-decoration:none;font-size:28px}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.info{background:var(--bg);border:1px solid var(--line);border-radius:18px;padding:32px}
+.info p{margin:0 0 14px}
+.map{border:0;width:100%;min-height:380px;height:100%;border-radius:18px;outline:1px solid var(--line)}
+:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+@media(max-width:900px){.hero .wrap{grid-template-columns:1fr;padding:56px 22px 110px}.seal{width:220px;order:-1}
+nav.main{display:none;position:absolute;top:84px;left:0;right:0;background:#fff;padding:14px 22px;box-shadow:0 10px 24px rgba(0,0,0,.1)}
+nav.main.open{display:block}nav.main a{display:block;margin:12px 0}.menu-btn{display:block}
+.two,.contact-grid,footer .wrap{grid-template-columns:1fr}section{padding:60px 0}.brand b{font-size:16px}.brand img{width:52px;height:52px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
