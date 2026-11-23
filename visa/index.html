@@ -37,7 +37,7 @@
 <link rel="icon" type="image/png" href="../favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css?v=d17eeb29">
+<link rel="stylesheet" href="../style.css?v=921741d8">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TravelAgency", "@id": "https://www.therealtoursandtravels.com/#agency", "name": "The Real Tours and Travels", "url": "https://www.therealtoursandtravels.com/", "logo": "https://www.therealtoursandtravels.com/img/logo-512.png", "image": "https://www.therealtoursandtravels.com/img/logo-512.png", "telephone": "+919843121212", "email": "enquiry@therealtoursandtravels.com", "foundingDate": "1981", "taxID": "27AMUPK4723E1ZU", "vatID": "27AMUPK4723E1ZU", "address": {"@type": "PostalAddress", "streetAddress": "204, B10, Rachana Building, Govardhan Nagar, Lal Bahadur Shastri Marg", "addressLocality": "Mulund West, Mumbai", "addressRegion": "Maharashtra", "postalCode": "400080", "addressCountry": "IN"}, "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], "opens": "09:00", "closes": "22:00"}], "areaServed": {"@type": "Country", "name": "India"}, "hasMap": "https://maps.google.com/maps?cid=6174258107225017089", "sameAs": ["https://www.instagram.com/therealtoursandtravels/", "https://www.facebook.com/657186054138837", "https://maps.google.com/maps?cid=6174258107225017089"], "makesOffer": [{"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Domestic Holiday Packages from Mumbai", "url": "https://www.therealtoursandtravels.com/domestic-holiday-packages/"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "International Holiday Packages from Mumbai", "url": "https://www.therealtoursandtravels.com/international-holiday-packages/"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Passport & Visa Services in Mulund, Mumbai", "url": "https://www.therealtoursandtravels.com/passport-visa-services/"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Travel Insurance for Every Trip", "url": "https://www.therealtoursandtravels.com/travel-insurance/"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Yatra & Pilgrimage Tour Packages from Mumbai", "url": "https://www.therealtoursandtravels.com/yatra-tours/"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Group Tours for Families, Friends & Societies", "url": "https://www.therealtoursandtravels.com/group-tours/"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Honeymoon Packages from Mumbai", "url": "https://www.therealtoursandtravels.com/honeymoon-packages/"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Customised Tours – Planned Around You", "url": "https://www.therealtoursandtravels.com/customised-tours/"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "FIT & MICE Tours – Corporate Travel and Events", "url": "https://www.therealtoursandtravels.com/fit-mice-tours/"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Jain Yatra Tours with Maharaj (Pure Jain Food)", "url": "https://www.therealtoursandtravels.com/jain-yatra-tours-with-maharaj/"}}]}</script>
 </head><body>
 
@@ -116,7 +116,7 @@
 <p class="meta">Requirements can change and may differ for business, student or family visits. We confirm the final checklist for your case before you apply.</p>
 <p><a class="btn outline" href="#upload" data-pick="japan">Upload documents for Japan</a></p></div><div class="vpanel" data-c="other" hidden>
 <div class="vhead"><div><h3>🌐 Other country</h3><p class="meta">Travelling somewhere not listed above? Type the country – our visa team will send you the exact documents, fee and processing time for it.</p></div></div>
-<div class="vother"><label>Which country are you visiting?<input id="vo_country" maxlength="60" list="vo_list" autocomplete="off" placeholder="e.g. Japan, Kenya, Bhutan, Brazil"></label>
+<div class="vother"><label>Which country are you visiting?<input id="vo_country" maxlength="60" list="vo_list" autocomplete="off" placeholder="e.g. Kenya, Bhutan, Brazil, South Korea"></label>
 <a class="btn gold" id="vo_wa" href="https://wa.me/919843121212" target="_blank" rel="noopener">Request checklist &amp; price</a></div>
 <p id="vo_msg" class="vmsg" role="status" aria-live="polite"></p>
 <p class="meta" style="margin:8px 0 0">Price = government / embassy fee (no GST) + our service fee + 18% GST on the service fee. Requirements differ by country and visa type – we confirm the final checklist for your case before you apply.</p>
@@ -126,20 +126,28 @@
 <section class="alt" id="upload"><div class="wrap" style="max-width:820px">
 <div class="head"><span class="kicker">Secure upload</span><h2>Upload your visa documents</h2><p class="lead">Upload clear scans or photos (PDF, JPG or PNG, up to 10 MB each). Your documents are stored privately and seen only by our visa team.</p></div>
 <form id="vform" class="vform" novalidate>
-<div class="row"><label>Full name*<input name="full_name" required maxlength="120" autocomplete="name"></label>
+<div class="row"><label>Full name* <small>(main contact)</small><input name="full_name" required maxlength="120" autocomplete="name"></label>
 <label>Mobile number*<input name="phone" required inputmode="tel" maxlength="20" autocomplete="tel" placeholder="10-digit mobile, or +country code"></label></div>
 <div class="row"><label>Email<input name="email" type="email" maxlength="160" autocomplete="email"></label>
-<label>Country*<select name="country" required><option value="Dubai / UAE">Dubai / UAE</option><option value="Thailand">Thailand</option><option value="Singapore">Singapore</option><option value="Malaysia">Malaysia</option><option value="Vietnam">Vietnam</option><option value="Europe (Schengen)">Europe (Schengen)</option><option value="United Kingdom">United Kingdom</option><option value="United States">United States</option><option value="Canada">Canada</option><option value="Australia">Australia</option><option value="Japan">Japan</option><option value="Other">Other country – type below</option></select></label></div>
-<label id="ocwrap" hidden>Which country?*<input name="other_country" maxlength="60" list="vo_list" autocomplete="off" placeholder="e.g. Japan, Kenya, Bhutan"></label>
-<datalist id="vo_list"><option value="Japan"></option><option value="South Korea"></option><option value="China"></option><option value="Hong Kong"></option><option value="Taiwan"></option><option value="Philippines"></option><option value="Indonesia"></option><option value="Cambodia"></option><option value="Laos"></option><option value="Myanmar"></option><option value="Nepal"></option><option value="Bhutan"></option><option value="Sri Lanka"></option><option value="Bangladesh"></option><option value="Mauritius"></option><option value="Seychelles"></option><option value="Kenya"></option><option value="Tanzania"></option><option value="South Africa"></option><option value="Egypt"></option><option value="Morocco"></option><option value="Turkey"></option><option value="Azerbaijan"></option><option value="Georgia"></option><option value="Armenia"></option><option value="Uzbekistan"></option><option value="Kazakhstan"></option><option value="Kyrgyzstan"></option><option value="Jordan"></option><option value="Israel"></option><option value="Saudi Arabia"></option><option value="Qatar"></option><option value="Oman"></option><option value="Bahrain"></option><option value="Kuwait"></option><option value="Russia"></option><option value="Ireland"></option><option value="Canada"></option><option value="Mexico"></option><option value="Brazil"></option><option value="Argentina"></option><option value="Peru"></option><option value="Chile"></option><option value="New Zealand"></option><option value="Fiji"></option><option value="Iceland"></option><option value="Norway"></option><option value="Sweden"></option><option value="Finland"></option><option value="Denmark"></option><option value="Croatia"></option><option value="Greece"></option><option value="Portugal"></option><option value="Czech Republic"></option><option value="Hungary"></option><option value="Poland"></option><option value="Austria"></option><option value="Netherlands"></option><option value="Belgium"></option></datalist>
-<div class="row"><label>Visa type<select name="visa_type"><option>Tourist</option><option>Business</option><option>Visiting family / friends</option><option>Student</option><option>Transit</option></select></label>
-<label>Travel date<input name="travel_date" type="date"></label></div>
-<div class="row"><label>Number of travellers<input name="travellers" type="number" min="1" max="50" value="1"></label><span></span></div>
-<label>Documents* <small>(select multiple files – passport, photo, bank statements, ITR, bookings…)</small>
-<input name="files" type="file" multiple required accept=".pdf,.jpg,.jpeg,.png,.heic,.heif,.webp,application/pdf,image/*"></label>
-<div id="flist" class="flist"></div>
-<label>Notes for our team<textarea name="notes" maxlength="2000" rows="3" placeholder="Anything we should know – e.g. previous visa refusals, travelling with children"></textarea></label>
-<label class="chk"><input type="checkbox" name="consent" required><span>I agree that The Real Tours and Travels may use these documents only to process my visa application, as per the <a href="../privacy-policy/">Privacy Policy</a>.</span></label>
+<label>Passport nationality*<select name="nationality"><option>Indian</option><option value="Other">Other – type below</option></select></label></div>
+<label id="natwrap" hidden>Which nationality?*<input name="nationality_other" maxlength="40" autocomplete="off" placeholder="e.g. British, American, Canadian (OCI card holders too)"></label>
+<div class="row"><label>Country*<select name="country" required><option value="Dubai / UAE">Dubai / UAE</option><option value="Thailand">Thailand</option><option value="Singapore">Singapore</option><option value="Malaysia">Malaysia</option><option value="Vietnam">Vietnam</option><option value="Europe (Schengen)">Europe (Schengen)</option><option value="United Kingdom">United Kingdom</option><option value="United States">United States</option><option value="Canada">Canada</option><option value="Australia">Australia</option><option value="Japan">Japan</option><option value="Other">Other country – type below</option></select></label>
+<label>Visa type<select name="visa_type"><option>Tourist</option><option>Business</option><option>Visiting family / friends</option><option>Student</option><option>Transit</option><option>Medical</option><option>Conference / Event</option><option>Work / Employment</option><option>Pilgrimage (e.g. Umrah)</option><option>Not sure – please advise</option></select></label></div>
+<label id="ocwrap" hidden>Which country?*<input name="other_country" maxlength="60" list="vo_list" autocomplete="off" placeholder="e.g. Kenya, Bhutan, South Korea"></label>
+<datalist id="vo_list"><option value="South Korea"></option><option value="China"></option><option value="Hong Kong"></option><option value="Taiwan"></option><option value="Philippines"></option><option value="Indonesia"></option><option value="Cambodia"></option><option value="Laos"></option><option value="Myanmar"></option><option value="Nepal"></option><option value="Bhutan"></option><option value="Sri Lanka"></option><option value="Bangladesh"></option><option value="Mauritius"></option><option value="Seychelles"></option><option value="Kenya"></option><option value="Tanzania"></option><option value="South Africa"></option><option value="Egypt"></option><option value="Morocco"></option><option value="Turkey"></option><option value="Azerbaijan"></option><option value="Georgia"></option><option value="Armenia"></option><option value="Uzbekistan"></option><option value="Kazakhstan"></option><option value="Kyrgyzstan"></option><option value="Jordan"></option><option value="Israel"></option><option value="Saudi Arabia"></option><option value="Qatar"></option><option value="Oman"></option><option value="Bahrain"></option><option value="Kuwait"></option><option value="Russia"></option><option value="Ireland"></option><option value="Canada"></option><option value="Mexico"></option><option value="Brazil"></option><option value="Argentina"></option><option value="Peru"></option><option value="Chile"></option><option value="New Zealand"></option><option value="Fiji"></option><option value="Iceland"></option><option value="Norway"></option><option value="Sweden"></option><option value="Finland"></option><option value="Denmark"></option><option value="Croatia"></option><option value="Greece"></option><option value="Portugal"></option><option value="Czech Republic"></option><option value="Hungary"></option><option value="Poland"></option><option value="Austria"></option><option value="Netherlands"></option><option value="Belgium"></option></datalist>
+<div class="row"><label>Travel date<input name="travel_date" type="date"></label>
+<label>Return date<input name="return_date" type="date"></label></div>
+<div class="row"><label>Employment status<select name="employment"><option value="">Select…</option><option>Salaried</option><option>Self-employed / Business owner</option><option>Student</option><option>Retired</option><option>Homemaker</option><option>Other</option></select></label>
+<label>Preferred appointment city <small>(for fingerprints &amp; photo at the visa centre)</small><select name="appt_city"><option>Not needed / not sure</option><option>Mumbai</option><option>Pune</option><option>Ahmedabad</option><option>Goa</option><option>Nagpur</option><option>Delhi</option><option>Bengaluru</option><option>Hyderabad</option><option>Chennai</option><option>Kolkata</option></select></label></div>
+<div class="row"><fieldset class="yn"><legend>Ever been refused a visa for any country?</legend><div class="chips"><label><input type="radio" name="refused" value="No" checked>No</label><label><input type="radio" name="refused" value="Yes">Yes</label></div></fieldset>
+<fieldset class="yn"><legend>Visited the US, UK, Schengen, Canada or Australia in the last 5 years?</legend><div class="chips"><label><input type="radio" name="history" value="No" checked>No</label><label><input type="radio" name="history" value="Yes">Yes</label></div></fieldset></div>
+<p id="refnote" class="vnote" hidden>Please mention the country and year of the refusal in the notes below – it helps us prepare a stronger application.</p>
+<div class="row"><label>Number of travellers<input name="travellers" type="number" min="1" max="10" value="1"></label><span class="vnote">For groups of more than 10, please WhatsApp us on 98431 21212.</span></div>
+<div id="vcheck" class="vcheck" hidden></div>
+<label class="chk"><input type="checkbox" name="later"><span>I'll send my documents later – just save my details for now</span></label>
+<div id="tlist" class="tlist"></div>
+<label>Notes for our team<textarea name="notes" maxlength="1000" rows="3" placeholder="Anything we should know – e.g. details of a previous refusal, travelling with children, urgent travel"></textarea></label>
+<label class="chk"><input type="checkbox" name="consent" required><span>I agree that The Real Tours and Travels may use my details and documents only to process my visa application, as per the <a href="../privacy-policy/">Privacy Policy</a>.</span></label>
 <div class="hp" aria-hidden="true"><label>Leave this empty<input name="company_website" tabindex="-1" autocomplete="off"></label></div>
 <button class="btn gold" type="submit" id="vsubmit">Upload documents securely</button>
 <p id="vmsg" class="vmsg" role="status" aria-live="polite"></p>
@@ -194,39 +202,124 @@ if(vo){
   e.currentTarget.href='https://wa.me/919843121212?text='+encodeURIComponent('Hi The Real Tours and Travels, please share the documents required and the price for a '+c+' visa. Travellers:  Travel date: ');});
  document.getElementById('vo_up').addEventListener('click',()=>{csel.value='Other';syncOther();const c=vo.value.trim();if(c)f.other_country.value=c;});
 }
-const f=document.getElementById('vform'),msg=document.getElementById('vmsg'),btn=document.getElementById('vsubmit'),fl=document.getElementById('flist');
-f.files.addEventListener('change',()=>{fl.innerHTML=[...f.files.files].map(x=>'<span>📄 '+x.name.replace(/[<>&]/g,'')+' · '+(x.size/1048576).toFixed(1)+' MB</span>').join('');});
+const f=document.getElementById('vform'),msg=document.getElementById('vmsg'),btn=document.getElementById('vsubmit');
+const DOCS={"Dubai / UAE": ["Clear colour scan of passport front and back pages", "Recent passport-size photo with white background", "PAN card copy", "Return flight booking", "Hotel booking or address in the UAE"], "Thailand": ["Original passport valid for at least 6 months from the return date, with at least 2 blank pages", "Recent passport-size photo with white background", "Return flight booking", "Hotel bookings", "Recent bank statement showing sufficient funds"], "Singapore": ["Original passport valid for at least 6 months from the return date, with at least 2 blank pages", "Recent photo, 35 × 45 mm, white background, matte finish", "Visa application form (we fill it for you)", "Covering letter", "Return flight booking and hotel bookings", "Recent bank statements", "For business visits: invitation letter from the Singapore company"], "Malaysia": ["Original passport valid for at least 6 months from the return date, with at least 2 blank pages", "Recent photo with white background", "Return flight booking", "Hotel bookings", "Recent bank statement"], "Vietnam": ["Clear colour scan of passport bio page", "Recent passport-size photo with white background", "Travel dates and entry/exit airport", "Hotel address in Vietnam"], "Europe (Schengen)": ["Original passport valid for at least 6 months from the return date, with at least 2 blank pages", "Copies of old passports, if any", "2 recent photos, 35 × 45 mm, white background (80% face)", "Covering letter explaining the purpose of travel", "Bank statements for the last 6 months (signed and stamped by the bank)", "Income tax returns (ITR) for the last 2–3 years", "Salaried: salary slips (last 3 months) and leave/NOC letter from employer", "Self-employed: business proof (GST certificate / Shop Act / company registration)", "Students: school or college ID and bonafide letter; retired: pension proof", "Confirmed return flight booking", "Hotel bookings for the whole stay", "Day-wise travel itinerary", "Travel insurance covering the whole Schengen stay, minimum €30,000 medical cover"], "United Kingdom": ["Original passport valid for at least 6 months from the return date, with at least 2 blank pages", "Copies of old passports, if any", "Bank statements for the last 6 months (signed and stamped by the bank)", "Income tax returns (ITR) for the last 2–3 years", "Salaried: salary slips (last 3 months) and leave/NOC letter from employer", "Self-employed: business proof (GST certificate / Shop Act / company registration)", "Students: school or college ID and bonafide letter; retired: pension proof", "Confirmed return flight booking", "Hotel bookings for the whole stay", "Day-wise travel itinerary", "For visiting family: invitation letter and host's ID / visa status"], "United States": ["Original passport valid for at least 6 months from the return date, with at least 2 blank pages", "Copies of old passports, if any", "Digital photo, 2 × 2 inch (51 × 51 mm), white background", "DS-160 confirmation page (we prepare it)", "Appointment and visa fee receipt", "Bank statements for the last 6 months (signed and stamped by the bank)", "Income tax returns (ITR) for the last 2–3 years", "Salaried: salary slips (last 3 months) and leave/NOC letter from employer", "Self-employed: business proof (GST certificate / Shop Act / company registration)", "Students: school or college ID and bonafide letter; retired: pension proof", "Proof of ties to India (property, family, job)", "Travel plan / itinerary"], "Canada": ["Original passport valid for at least 6 months from the return date, with at least 2 blank pages", "Copies of old passports, if any", "Digital photo as per Canada specifications", "Bank statements for the last 6 months (signed and stamped by the bank)", "Income tax returns (ITR) for the last 2–3 years", "Salaried: salary slips (last 3 months) and leave/NOC letter from employer", "Self-employed: business proof (GST certificate / Shop Act / company registration)", "Students: school or college ID and bonafide letter; retired: pension proof", "Confirmed return flight booking", "Hotel bookings for the whole stay", "Day-wise travel itinerary", "For visiting family: invitation letter and host's status proof"], "Australia": ["Original passport valid for at least 6 months from the return date, with at least 2 blank pages", "Copies of old passports, if any", "Recent passport-size photo", "Bank statements for the last 6 months (signed and stamped by the bank)", "Income tax returns (ITR) for the last 2–3 years", "Salaried: salary slips (last 3 months) and leave/NOC letter from employer", "Self-employed: business proof (GST certificate / Shop Act / company registration)", "Students: school or college ID and bonafide letter; retired: pension proof", "Confirmed return flight booking", "Hotel bookings for the whole stay", "Day-wise travel itinerary"], "Japan": ["Original passport valid for at least 6 months from the return date, with at least 2 blank pages", "Copies of old passports, if any", "Recent photo, 45 × 35 mm, white background", "Visa application form (we fill it for you)", "Bank statements for the last 6 months (signed and stamped by the bank)", "Income tax returns (ITR) for the last 2–3 years", "Salaried: salary slips (last 3 months) and leave/NOC letter from employer", "Self-employed: business proof (GST certificate / Shop Act / company registration)", "Students: school or college ID and bonafide letter; retired: pension proof", "Confirmed return flight booking", "Hotel bookings for the whole stay", "Day-wise travel itinerary"]};
+const EMP={"Salaried":["Last 3 months' salary slips","Leave / NOC letter from your employer","Income tax returns (ITR) for the last 2–3 years","Bank statements for the last 6 months"],
+"Self-employed / Business owner":["Business proof – GST certificate, Shop Act licence or company registration","Income tax returns (ITR) for the last 3 years","Personal and business bank statements for the last 6 months","Cover letter on your business letterhead"],
+"Student":["College ID card and bonafide / enrolment letter","NOC / leave letter from your college","Parents' bank statements and ITR, with a sponsorship letter"],
+"Retired":["Retirement letter or pension proof","Bank statements for the last 6 months","Income tax returns (ITR), if filed"],
+"Homemaker":["Spouse's bank statements and ITR","Sponsorship letter from your spouse","Marriage certificate (if asked for)"]};
+const ACCEPT='.pdf,.jpg,.jpeg,.png,.heic,.heif,.webp,application/pdf,image/*';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
+const today=new Date(Date.now()+330*60000).toISOString().slice(0,10);
+f.travel_date.min=today;f.return_date.min=today;
+const addMonths=(ds,m)=>{const d=new Date(ds+'T00:00');d.setMonth(d.getMonth()+m);return d.toISOString().slice(0,10);};
+const nice=ds=>new Date(ds+'T00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+// ---- nationality / refusal note ----
+const natw=document.getElementById('natwrap');f.nationality.addEventListener('change',()=>{natw.hidden=f.nationality.value!=='Other';});
+f.querySelectorAll('input[name=refused]').forEach(r=>r.addEventListener('change',()=>{document.getElementById('refnote').hidden=f.querySelector('input[name=refused]:checked').value!=='Yes';}));
+// ---- checklist for the chosen country (+ employment) ----
+const vcheck=document.getElementById('vcheck');
+function countryName(){return csel.value==='Other'?(f.other_country.value.trim()||'your destination'):csel.value;}
+function drawCheck(){const c=csel.value,emp=f.employment.value;if(!c){vcheck.hidden=true;return;}
+ let h='<h4>📋 Documents checklist – '+esc(countryName())+'</h4>';
+ if(DOCS[c])h+='<ul>'+DOCS[c].map(x=>'<li>'+x+'</li>').join('')+'</ul>';
+ else h+='<p>Our visa team will share the exact checklist for '+esc(countryName())+'. Usually needed: passport (front &amp; back), a recent photo with white background, bank statements, ITR and your flight / hotel bookings.</p>';
+ if(EMP[emp])h+='<h4>Also needed – '+esc(emp)+'</h4><ul>'+EMP[emp].map(x=>'<li>'+x+'</li>').join('')+'</ul>';
+ h+='<p class="vnote">Upload what you have – our team will tell you if anything else is needed for your case.</p>';
+ vcheck.innerHTML=h;vcheck.hidden=false;}
+csel.addEventListener('change',drawCheck);f.employment.addEventListener('change',drawCheck);f.other_country.addEventListener('input',drawCheck);
+// ---- one block per traveller: name, passport expiry, documents ----
+const tlist=document.getElementById('tlist');
+function block(i){const b=document.createElement('div');b.className='tblock';
+ b.innerHTML='<h4>Traveller '+(i+1)+'</h4><div class="row"><label>Name as on passport'+(i?'*':' <small>(if different from main contact)</small>')+'<input data-tn maxlength="80" autocomplete="off"></label>'+
+ '<label>Passport expiry date<input data-tx type="date"></label></div><p class="pwarn" hidden></p>'+
+ '<label class="tfiles">Documents for this traveller* <small>(select several files – passport, photo, bank statements, ITR…)</small><input data-tf type="file" multiple accept="'+ACCEPT+'"></label><div class="flist"></div>';
+ const fi=b.querySelector('[data-tf]'),fl=b.querySelector('.flist');
+ fi.addEventListener('change',()=>{fl.innerHTML=[...fi.files].map(x=>{const big=x.size>10485760,shr=/^image\/(jpeg|png|webp)$/.test(x.type)&&x.size>3145728;
+  return '<span>📄 '+esc(x.name)+' · '+(x.size/1048576).toFixed(1)+' MB'+(shr?' – will be resized':big?' – too large (max 10 MB)':'')+'</span>';}).join('');});
+ b.querySelector('[data-tx]').addEventListener('change',checkPassports);return b;}
+function drawTravellers(){const n=Math.min(10,Math.max(1,parseInt(f.travellers.value)||1));
+ while(tlist.children.length<n)tlist.appendChild(block(tlist.children.length));
+ while(tlist.children.length>n)tlist.lastElementChild.remove();
+ syncLater();checkPassports();}
+f.travellers.addEventListener('input',drawTravellers);
+// ---- send documents later ----
+function syncLater(){const later=f.later.checked;tlist.querySelectorAll('.tfiles,.flist').forEach(x=>x.hidden=later);btn.textContent=later?'Save my details':'Upload documents securely';}
+f.later.addEventListener('change',syncLater);
+// ---- passport validity: most countries need 6 months beyond the return date ----
+function checkPassports(){const trav=f.travel_date.value,ret=f.return_date.value||trav;
+ tlist.querySelectorAll('.tblock').forEach(b=>{const x=b.querySelector('[data-tx]').value,w=b.querySelector('.pwarn');b.dataset.warn='';
+  if(!x){w.hidden=true;return;}
+  let t='';
+  if(x<=today)t='⚠️ This passport has already expired – it must be renewed before you apply.';
+  else if(trav&&x<=trav)t='⚠️ This passport expires before your trip – it must be renewed before you apply.';
+  else if(ret&&x<addMonths(ret,6))t='⚠️ This passport expires on '+nice(x)+', less than 6 months after your return date. Most countries need 6 months\' validity – please renew it first.';
+  else if(!ret&&x<addMonths(today,6))t='⚠️ This passport expires within 6 months. Most countries need 6 months\' validity after your return – please check before you apply.';
+  if(t){w.innerHTML=t+' <a href="../passport/">We can help you renew it →</a>';w.hidden=false;b.dataset.warn='1';}else w.hidden=true;});}
+f.travel_date.addEventListener('change',()=>{f.return_date.min=f.travel_date.value||today;if(f.return_date.value&&f.return_date.value<f.travel_date.value)f.return_date.value='';checkPassports();});
+f.return_date.addEventListener('change',checkPassports);
+drawTravellers();drawCheck();
+// ---- shrink large phone photos before upload (keeps PDFs and HEIC as they are) ----
+async function shrink(file){if(!/^image\/(jpeg|png|webp)$/.test(file.type)||file.size<=3145728)return file;
+ try{const img=await createImageBitmap(file),k=Math.min(1,2400/Math.max(img.width,img.height)),c=document.createElement('canvas');
+  c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+  const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.85));if(!blob||blob.size>=file.size)return file;
+  return new File([blob],file.name.replace(/\.[^.]+$/,'')+'.jpg',{type:'image/jpeg'});}catch(_){return file;}}
 function uuid(){return (crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return (c=='x'?r:(r&3|8)).toString(16);}));}
 function safe(n){return n.normalize('NFKD').replace(/[^A-Za-z0-9._-]+/g,'_').slice(-80)||'file';}
 f.addEventListener('submit',async e=>{
  e.preventDefault();msg.className='vmsg';
- if(f.company_website.value){msg.textContent='✅ Thank you – documents received.';msg.classList.add('ok');return;} // spam trap
- const d=new FormData(f),files=[...f.files.files];
+ const fail=(t,el)=>{msg.textContent=t;msg.classList.add('err');if(el)el.focus();};
+ if(f.company_website.value){msg.textContent='✅ Thank you – details received.';msg.classList.add('ok');return;} // spam trap
+ const d=new FormData(f),later=f.later.checked;
  const phone=(d.get('phone')||'').replace(/[^0-9+]/g,'');
- if(!d.get('full_name').trim()||phone.length<10){msg.textContent='Please enter your name and a valid mobile number.';msg.classList.add('err');return;}
- if(!files.length){msg.textContent='Please choose at least one document to upload.';msg.classList.add('err');return;}
- if(files.length>25){msg.textContent='Please upload up to 25 files at a time.';msg.classList.add('err');return;}
- const big=files.find(x=>x.size>10485760);if(big){msg.textContent=big.name+' is larger than 10 MB. Please upload a smaller scan.';msg.classList.add('err');return;}
+ if(!d.get('full_name').trim()||phone.length<10)return fail('Please enter your name and a valid mobile number.',f.full_name);
  let country=d.get('country');
- if(country==='Other'){country=(d.get('other_country')||'').trim();if(country.length<2){msg.textContent='Please type the country you are visiting.';msg.classList.add('err');f.other_country.focus();return;}}
- if(!d.get('consent')){msg.textContent='Please tick the consent box.';msg.classList.add('err');return;}
- btn.disabled=true;const id=uuid(),paths=[];
+ if(country==='Other'){country=(d.get('other_country')||'').trim();if(country.length<2)return fail('Please type the country you are visiting.',f.other_country);}
+ let nat=d.get('nationality');if(nat==='Other'){nat=(d.get('nationality_other')||'').trim();if(nat.length<2)return fail('Please type your passport nationality.',f.nationality_other);}
+ const trav=d.get('travel_date')||'',ret=d.get('return_date')||'';
+ if(trav&&trav<today)return fail('The travel date cannot be in the past.',f.travel_date);
+ if(ret&&trav&&ret<trav)return fail('The return date must be after the travel date.',f.return_date);
+ const blocks=[...tlist.querySelectorAll('.tblock')],T=[];
+ for(let i=0;i<blocks.length;i++){const b=blocks[i],nm=b.querySelector('[data-tn]').value.trim();
+  if(i&&nm.length<2)return fail('Please enter the name of traveller '+(i+1)+' as on their passport.',b.querySelector('[data-tn]'));
+  const files=[...b.querySelector('[data-tf]').files];
+  if(!later&&!files.length)return fail('Please choose the documents for traveller '+(i+1)+' – or tick "I\'ll send my documents later".',b.querySelector('[data-tf]'));
+  T.push({name:nm||d.get('full_name').trim(),expiry:b.querySelector('[data-tx]').value,warn:!!b.dataset.warn,files:later?[]:files});}
+ const total=T.reduce((a,t)=>a+t.files.length,0);
+ if(total>30)return fail('Please upload up to 30 files in total – WhatsApp us any extra documents.');
+ const tooBig=T.flatMap(t=>t.files).find(x=>x.size>10485760&&!/^image\/(jpeg|png|webp)$/.test(x.type));
+ if(tooBig)return fail(tooBig.name+' is larger than 10 MB. Please upload a smaller scan (or WhatsApp it to us).');
+ if(!d.get('consent'))return fail('Please tick the consent box.');
+ btn.disabled=true;const id=uuid(),ref=id.slice(0,8).toUpperCase(),paths=[];
  try{
-  for(let i=0;i<files.length;i++){
-   msg.textContent='Uploading '+(i+1)+' of '+files.length+'…';
-   const p='applications/'+id+'/'+String(i+1).padStart(2,'0')+'-'+safe(files[i].name);
-   const r=await fetch(SB+'/storage/v1/object/visa-documents/'+p,{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+(window.RTT_TOKEN||KEY),'Content-Type':files[i].type||'application/octet-stream','x-upsert':'false'},body:files[i]});
+  let k=0;
+  for(let i=0;i<T.length;i++)for(let j=0;j<T[i].files.length;j++){
+   k++;msg.textContent=(T[i].files[j].size>3145728?'Preparing':'Uploading')+' file '+k+' of '+total+'…';
+   const file=await shrink(T[i].files[j]);
+   if(file.size>10485760)throw {user:file.name+' is larger than 10 MB. Please upload a smaller scan (or WhatsApp it to us).'};
+   const p='applications/'+id+'/T'+(i+1)+'-'+String(j+1).padStart(2,'0')+'-'+safe(file.name);
+   msg.textContent='Uploading file '+k+' of '+total+'…';
+   const r=await fetch(SB+'/storage/v1/object/visa-documents/'+p,{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+(window.RTT_TOKEN||KEY),'Content-Type':file.type||'application/octet-stream','x-upsert':'false'},body:file});
    if(!r.ok)throw new Error('upload '+r.status);
    paths.push(p);
   }
-  const row={id,full_name:d.get('full_name').trim(),phone,email:(d.get('email')||'').trim()||null,country:country.slice(0,80),visa_type:d.get('visa_type'),travel_date:d.get('travel_date')||null,travellers:parseInt(d.get('travellers'))||null,notes:(d.get('notes')||'').trim()||null,files:paths};
+  const det=['Passport nationality: '+nat,'Return date: '+(ret||'not given'),'Employment: '+(d.get('employment')||'not given'),
+   'Ever refused a visa: '+d.get('refused'),'Visited US/UK/Schengen/Canada/Australia in last 5 years: '+d.get('history'),'Preferred appointment city: '+d.get('appt_city')]
+   .concat(T.map((t,i)=>'Traveller '+(i+1)+': '+t.name+(t.expiry?' – passport expires '+t.expiry+(t.warn?' (⚠ under 6 months validity)':''):'')+(later?'':' – '+t.files.length+' file'+(t.files.length==1?'':'s'))));
+  if(later)det.push('Documents: client will send them later');
+  const un=(d.get('notes')||'').trim();
+  const notes=(det.join('\n')+(un?'\n---\n'+un:'')).slice(0,2000);
+  const row={id,full_name:d.get('full_name').trim(),phone,email:(d.get('email')||'').trim()||null,country:country.slice(0,60),visa_type:d.get('visa_type'),travel_date:trav||null,travellers:T.length,notes,files:paths};
   const r2=await fetch(SB+'/rest/v1/visa_applications',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+(window.RTT_TOKEN||KEY),'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(row)});
   if(!r2.ok)throw new Error('save '+r2.status);
-  notify('New visa documents '+id.slice(0,8).toUpperCase()+' – '+row.full_name,'Name: '+row.full_name+'\nPhone: '+row.phone+(row.email?'\nEmail: '+row.email:'')+'\nCountry: '+row.country+'\nType: '+row.visa_type+(row.travel_date?'\nTravel date: '+row.travel_date:'')+'\nApplicants: '+(row.travellers||1)+'\nFiles uploaded: '+paths.length+' (see Supabase → Storage → visa-documents → applications/'+id+')'+(row.notes?'\nNotes: '+row.notes:''),row.email||'');
-  f.reset();fl.innerHTML='';syncOther();
-  msg.innerHTML='✅ Thank you! Your documents were uploaded securely (reference: <b>'+id.slice(0,8).toUpperCase()+'</b>). Our team will call you shortly. For faster service, <a href="https://wa.me/919843121212?text='+encodeURIComponent('Hi, I uploaded my documents on your website. Reference: '+id.slice(0,8).toUpperCase())+'" target="_blank" rel="noopener">WhatsApp us your reference</a>.';
+  notify('New visa '+(later?'enquiry (documents to follow) ':'documents ')+ref+' – '+row.full_name,'Name: '+row.full_name+'\nPhone: '+row.phone+(row.email?'\nEmail: '+row.email:'')+'\nCountry: '+row.country+'\nVisa type: '+row.visa_type+(trav?'\nTravel date: '+trav:'')+'\nTravellers: '+T.length+'\n'+det.join('\n')+(un?'\nNotes: '+un:'')+'\nFiles uploaded: '+paths.length+(paths.length?' (stored privately in Supabase › Storage › visa-documents/applications/'+id+')':''),row.email||'');
+  f.reset();tlist.innerHTML='';drawTravellers();syncOther();drawCheck();natw.hidden=true;document.getElementById('refnote').hidden=true;
+  const wa='https://wa.me/919843121212?text='+encodeURIComponent((later?'Hi, I saved my visa details on your website and will send my documents. Reference: ':'Hi, I uploaded my visa documents on your website. Reference: ')+ref);
+  msg.innerHTML=later?'✅ Thank you! Your details are saved (reference: <b>'+ref+'</b>). Send your documents any time – <a href="'+wa+'" target="_blank" rel="noopener">WhatsApp them to us with this reference</a>, or upload them here.':'✅ Thank you! Your documents were uploaded securely (reference: <b>'+ref+'</b>). Our team will call you shortly. For faster service, <a href="'+wa+'" target="_blank" rel="noopener">WhatsApp us your reference</a>.';
   msg.classList.add('ok');
- }catch(err){msg.textContent='Sorry, the upload did not complete. Please try again, or WhatsApp your documents to 98431 21212.';msg.classList.add('err');}
+ }catch(err){msg.textContent=err&&err.user?err.user:'Sorry, the upload did not complete. Please try again, or WhatsApp your documents to 98431 21212.';msg.classList.add('err');}
  btn.disabled=false;
 });
 })();

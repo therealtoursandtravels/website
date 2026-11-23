@@ -102,6 +102,14 @@ footer ul{list-style:none;padding:0;margin:0}footer li{margin:7px 0}
 @media(max-width:380px){.seal{width:170px;height:170px}.brand small{display:none}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
 
+.yn{border:0;padding:0;margin:0;display:grid;gap:8px}.yn legend{font-weight:500;font-size:15px;margin-bottom:8px}
+.vnote{margin:0;font-size:13.5px;color:var(--muted);align-self:center}
+.vcheck{background:var(--bg);border:1px solid var(--line);border-left:4px solid var(--red);border-radius:14px;padding:14px 18px}
+.vcheck h4{margin:4px 0 6px;font-family:'Playfair Display',serif;font-size:18px;color:var(--wine)}.vcheck ul{margin:0 0 8px;padding-left:20px}.vcheck li{margin:3px 0}.vcheck p{margin:4px 0}
+.tlist{display:grid;gap:14px}.tblock{border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:#fff;display:grid;gap:10px}
+.tblock h4{margin:0;font-family:'Playfair Display',serif;font-size:18px;color:var(--wine)}
+.pwarn{margin:0;background:#fff4e5;border:1px solid #f2c48b;color:#7a4300;border-radius:12px;padding:10px 14px;font-size:14px}.pwarn a{color:var(--crimson);font-weight:500}
+
 .gcalc{text-align:left;margin:16px 0 6px;display:grid;gap:12px}.grow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .gcalc label{display:grid;gap:6px;font-weight:500;font-size:14.5px;color:var(--wine)}.gcalc small{font-weight:400;color:var(--muted);font-size:12.5px}
 .gin{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:12px;padding:0 12px;background:#fff}.gin input{border:0;outline:0;font:500 17px 'Jost',sans-serif;padding:11px 0;width:100%;background:none}
