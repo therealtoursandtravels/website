@@ -9,6 +9,7 @@ from tools import gst_tool_page, TOOL_CSS
 import pwa
 from insurance import insurance_page
 import account
+import admin
 from svcform import svc_form, SVC_CSS
 import fx
 
@@ -676,6 +677,8 @@ def build():
 <h2>Cancellation or changes by us or suppliers</h2><p>If a service is cancelled by us or a supplier, we will offer an alternative or refund the amount received for that service, as per the supplier's policy.</p>""")
     # Private GST quote tool (noindex, not in sitemap)
     write("/tools/gst-quote/", page("/tools/gst-quote/", "GST Quote & Invoice Maker | The Real Tours and Travels", "Internal tool.", gst_tool_page(NAME, ADDR, GST, PHONE, EMAIL)).replace('<meta name="robots" content="index,follow,max-image-preview:large">','<meta name="robots" content="noindex,nofollow">'))
+    # Private office admin panel (noindex, not in sitemap, access enforced by Supabase RLS)
+    write("/admin/", admin.admin_page())
     # sitemap / robots / CNAME
     urls = ["/"] + [f"/{s['slug']}/" for s in SERVICES] + ["/blog/", "/visa/", "/passport/", "/insurance/", "/about/", "/flights-hotels/", "/customize-your-package/"] + [f"/blog/{a['slug']}/" for a in ARTICLES] + ["/contact/", "/terms/", "/privacy-policy/", "/cancellation-refund-policy/"]
     def _img(u):
@@ -687,7 +690,7 @@ def build():
     open(os.path.join(root, "manifest.webmanifest"), "w").write(pwa.manifest(NAME))
     open(os.path.join(root, "sw.js"), "w").write(pwa.service_worker(urls, CSSV))
     write("/offline/", page("/offline/", "Offline | The Real Tours and Travels", "You are offline.", pwa.offline_body(PHONE, PHONE_RAW, WA)).replace('<meta name="robots" content="index,follow,max-image-preview:large">','<meta name="robots" content="noindex">'))
-    open(os.path.join(root, "robots.txt"), "w").write(f"User-agent: *\nAllow: /\nDisallow: /tools/\n\nSitemap: {SITE}/sitemap.xml\n")
+    open(os.path.join(root, "robots.txt"), "w").write(f"User-agent: *\nAllow: /\nDisallow: /tools/\nDisallow: /admin/\n\nSitemap: {SITE}/sitemap.xml\n")
     open(os.path.join(root, "CNAME"), "w").write("www.therealtoursandtravels.com\n")
     print("built", len(urls), "pages")
 
