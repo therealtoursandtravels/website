@@ -47,48 +47,102 @@ COUNTRIES = [
 ]
 
 
-def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band):
-    tabs = "".join(f'<button type="button" class="vtab{" on" if i==0 else ""}" data-c="{c}">{f} {n}</button>' for i,(c,f,n,_,_) in enumerate(COUNTRIES))
+PASSPORT = [
+ ("fresh", "🆕", "Fresh Passport (Adult)", "Online application, then appointment at the Passport Seva Kendra and police verification",
+  ["Proof of present address – Aadhaar card, electricity / water / telephone bill, bank passbook with photo, or registered rent agreement",
+   "Proof of date of birth – birth certificate, PAN card, Aadhaar card or school leaving certificate",
+   "Educational certificate (10th marksheet or higher), if available – for non-ECR status",
+   "Marriage certificate, if you want your spouse's name on the passport"]),
+ ("renewal", "🔁", "Passport Renewal / Re-issue", "When your passport has expired, is about to expire or the pages are full",
+  ["Original old passport",
+   "Self-attested copies of the first two and last two pages of the old passport (including ECR / non-ECR page)",
+   "Proof of present address, if it has changed since your last passport",
+   "Name change documents (marriage certificate / gazette notification), if applicable"]),
+ ("minor", "👶", "Passport for Minors (below 18)", "Both parents' consent is required",
+  ["Birth certificate of the child",
+   "Copies of both parents' passports (or address proof of parents if they do not have passports)",
+   "Declaration / consent of both parents in the prescribed format (we prepare it)",
+   "Proof of present address in the parents' name"]),
+ ("tatkaal", "⚡", "Tatkaal (Urgent) Passport", "Faster processing on payment of the Tatkaal fee",
+  ["All documents required for a fresh passport or re-issue",
+   "Additional identity proofs as required under the Tatkaal scheme – we confirm the exact list for your case",
+   "Proof of present address"]),
+ ("lost", "🧾", "Lost / Damaged Passport", "Re-issue of a lost, stolen or damaged passport",
+  ["Police report / FIR for a lost or stolen passport (original)",
+   "Damaged passport (original), if applicable",
+   "Copy of the old passport, if available",
+   "Proof of present address and date of birth",
+   "Affidavit / declaration explaining how the passport was lost or damaged (we prepare it)"]),
+]
+
+def passport_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band):
+    return visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="passport")
+
+def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
+    P = mode == "passport"
+    ITEMS = PASSPORT if P else COUNTRIES
+    tabs = "".join(f'<button type="button" class="vtab{" on" if i==0 else ""}" data-c="{c}">{f} {n}</button>' for i,(c,f,n,_,_) in enumerate(ITEMS))
     panels = ""
-    for i,(c,f,n,how,docs) in enumerate(COUNTRIES):
+    for i,(c,f,n,how,docs) in enumerate(ITEMS):
         lis = "".join(f"<li>{d}</li>" for d in docs)
-        wa = "https://wa.me/919843121212?text=" + ("Hi%20The%20Real%20Tours%20and%20Travels%2C%20please%20share%20the%20price%20for%20" + n.replace(" ","%20").replace("/","%2F").replace("(","").replace(")","") + "%20visa.%20Travellers%3A%20%20Travel%20date%3A%20")
+        wa = "https://wa.me/919843121212?text=" + ("Hi%20The%20Real%20Tours%20and%20Travels%2C%20please%20share%20the%20price%20for%20" + n.replace(" ","%20").replace("/","%2F").replace("(","").replace(")","") + ("." if P else "%20visa.%20Travellers%3A%20%20Travel%20date%3A%20"))
         panels += f"""<div class="vpanel" data-c="{c}"{'' if i==0 else ' hidden'}>
 <div class="vhead"><div><h3>{f} {n}</h3><p class="meta">{how}</p></div>
 <div class="vprice"><span>Price</span><a class="btn gold" href="{wa}" target="_blank" rel="noopener">Request Price</a></div></div>
 <h4>Documents required</h4><ul class="ticks">{lis}</ul>
-<p class="meta">Requirements can change and may differ for business, student or family visits. We confirm the final checklist for your case before you apply.</p>
+<p class="meta">{"Requirements are set by Passport Seva (Ministry of External Affairs) and can change. We confirm the final checklist for your case before you apply." if P else "Requirements can change and may differ for business, student or family visits. We confirm the final checklist for your case before you apply."}</p>
 <p><a class="btn outline" href="#upload" data-pick="{c}">Upload documents for {n}</a></p></div>"""
-    opts = "".join(f'<option value="{n}">{n}</option>' for (_,_,n,_,_) in COUNTRIES) + '<option value="Other">Other country</option>'
+    opts = "".join(f'<option value="{n}">{n}</option>' for (_,_,n,_,_) in ITEMS) + ('' if P else '<option value="Other">Other country</option>')
+    T = dict(
+      crumb="Passport Services" if P else "Visa Services",
+      kicker="🛂 Passport services" if P else "🛂 Visa services",
+      h1="Passport Services in Mulund, Mumbai" if P else "Visa Services in Mulund, Mumbai",
+      intro=("New passport, renewal, minor, Tatkaal or lost passport – check the documents required, request the price, and upload your documents securely. We fill the forms and book your Passport Seva Kendra appointment." if P else
+             "Check the documents required for your visa, request the price, and upload your documents securely – our visa team will review them and call you back."),
+      k2="Choose your service" if P else "Choose your destination",
+      h2="Documents required by service" if P else "Documents required by country",
+      lead2=("Select a service to see the checklist. Tap <b>Request Price</b> to get the government fee and our service charge on WhatsApp." if P else
+             "Select a country to see the checklist. Tap <b>Request Price</b> to get the current visa fee and our service charge on WhatsApp."),
+      h3="Upload your passport documents" if P else "Upload your visa documents",
+      team="passport team" if P else "visa team",
+      sel_label="Service*" if P else "Country*",
+      type_row=('<input type="hidden" name="visa_type" value="Passport">' if P else
+                '<label>Visa type<select name="visa_type"><option>Tourist</option><option>Business</option><option>Visiting family / friends</option><option>Student</option><option>Transit</option></select></label>'),
+      date_label="Needed by (travel date, if any)" if P else "Travel date",
+      trav_label="Number of applicants" if P else "Number of travellers",
+      files_hint="(select multiple files – address proof, birth proof, old passport…)" if P else "(select multiple files – passport, photo, bank statements, ITR, bookings…)",
+      notes_ph="e.g. change of name or address, urgent travel" if P else "Anything we should know – e.g. previous visa refusals, travelling with children",
+      consent="to process my passport application" if P else "to process my visa application",
+    )
     return f"""
-<section class="hero"><div class="wrap"><div><div class="crumbs"><a href="../">Home</a> › Visa Services</div>
-<span class="kicker">🛂 Visa &amp; passport services</span>
-<h1>Visa Services in Mulund, Mumbai</h1>
-<p>Check the documents required for your visa, request the price, and upload your documents securely – our visa team will review them and call you back.</p>
+<section class="hero"><div class="wrap"><div><div class="crumbs"><a href="../">Home</a> › {T["crumb"]}</div>
+<span class="kicker">{T["kicker"]}</span>
+<h1>{T["h1"]}</h1>
+<p>{T["intro"]}</p>
 <div class="btns"><a class="btn gold" href="#countries">See documents required</a><a class="btn ghost" href="#upload">Upload documents</a></div>
 </div>{seal("../")}</div></section>
 
 <section id="countries"><div class="wrap">
-<div class="head"><span class="kicker">Choose your destination</span><h2>Documents required by country</h2><p class="lead">Select a country to see the checklist. Tap <b>Request Price</b> to get the current visa fee and our service charge on WhatsApp.</p></div>
+<div class="head"><span class="kicker">{T["k2"]}</span><h2>{T["h2"]}</h2><p class="lead">{T["lead2"]}</p></div>
 <div class="vtabs" role="tablist">{tabs}</div>
 <div class="vbox">{panels}</div>
 </div></section>
 
 <section class="alt" id="upload"><div class="wrap" style="max-width:820px">
-<div class="head"><span class="kicker">Secure upload</span><h2>Upload your visa documents</h2><p class="lead">Upload clear scans or photos (PDF, JPG or PNG, up to 10 MB each). Your documents are stored privately and seen only by our visa team.</p></div>
+<div class="head"><span class="kicker">Secure upload</span><h2>{T["h3"]}</h2><p class="lead">Upload clear scans or photos (PDF, JPG or PNG, up to 10 MB each). Your documents are stored privately and seen only by our {T["team"]}.</p></div>
 <form id="vform" class="vform" novalidate>
 <div class="row"><label>Full name*<input name="full_name" required maxlength="120" autocomplete="name"></label>
 <label>Mobile number*<input name="phone" required inputmode="tel" maxlength="20" autocomplete="tel" placeholder="10-digit mobile"></label></div>
 <div class="row"><label>Email<input name="email" type="email" maxlength="160" autocomplete="email"></label>
-<label>Country*<select name="country" required>{opts}</select></label></div>
-<div class="row"><label>Visa type<select name="visa_type"><option>Tourist</option><option>Business</option><option>Visiting family / friends</option><option>Student</option><option>Transit</option></select></label>
-<label>Travel date<input name="travel_date" type="date"></label></div>
-<div class="row"><label>Number of travellers<input name="travellers" type="number" min="1" max="50" value="1"></label><span></span></div>
-<label>Documents* <small>(select multiple files – passport, photo, bank statements, ITR, bookings…)</small>
+<label>{T["sel_label"]}<select name="country" required>{opts}</select></label></div>
+<div class="row">{T["type_row"]}
+<label>{T["date_label"]}<input name="travel_date" type="date"></label></div>
+<div class="row"><label>{T["trav_label"]}<input name="travellers" type="number" min="1" max="50" value="1"></label><span></span></div>
+<label>Documents* <small>{T["files_hint"]}</small>
 <input name="files" type="file" multiple required accept=".pdf,.jpg,.jpeg,.png,.heic,.heif,.webp,application/pdf,image/*"></label>
 <div id="flist" class="flist"></div>
-<label>Notes for our team<textarea name="notes" maxlength="2000" rows="3" placeholder="Anything we should know – e.g. previous visa refusals, travelling with children"></textarea></label>
-<label class="chk"><input type="checkbox" name="consent" required><span>I agree that The Real Tours and Travels may use these documents only to process my visa application, as per the <a href="../privacy-policy/">Privacy Policy</a>.</span></label>
+<label>Notes for our team<textarea name="notes" maxlength="2000" rows="3" placeholder="{T["notes_ph"]}"></textarea></label>
+<label class="chk"><input type="checkbox" name="consent" required><span>I agree that The Real Tours and Travels may use these documents only {T["consent"]}, as per the <a href="../privacy-policy/">Privacy Policy</a>.</span></label>
 <button class="btn gold" type="submit" id="vsubmit">Upload documents securely</button>
 <p id="vmsg" class="vmsg" role="status" aria-live="polite"></p>
 </form>
@@ -101,7 +155,7 @@ const SB="{SB_URL}",KEY="{SB_KEY}";
 const tabs=document.querySelectorAll('.vtab'),panels=document.querySelectorAll('.vpanel');
 function show(c){{tabs.forEach(t=>t.classList.toggle('on',t.dataset.c===c));panels.forEach(p=>p.hidden=p.dataset.c!==c);}}
 tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.c)));
-const names={json.dumps({c:n for (c,_,n,_,_) in COUNTRIES})};
+const names={json.dumps({c:n for (c,_,n,_,_) in ITEMS})};
 document.querySelectorAll('[data-pick]').forEach(a=>a.addEventListener('click',()=>{{const s=document.querySelector('select[name=country]');s.value=names[a.dataset.pick];}}));
 const f=document.getElementById('vform'),msg=document.getElementById('vmsg'),btn=document.getElementById('vsubmit'),fl=document.getElementById('flist');
 f.files.addEventListener('change',()=>{{fl.innerHTML=[...f.files.files].map(x=>'<span>📄 '+x.name.replace(/[<>&]/g,'')+' · '+(x.size/1048576).toFixed(1)+' MB</span>').join('');}});
@@ -129,7 +183,7 @@ f.addEventListener('submit',async e=>{{
   const r2=await fetch(SB+'/rest/v1/visa_applications',{{method:'POST',headers:{{apikey:KEY,Authorization:'Bearer '+KEY,'Content-Type':'application/json',Prefer:'return=minimal'}},body:JSON.stringify(row)}});
   if(!r2.ok)throw new Error('save '+r2.status);
   f.reset();fl.innerHTML='';
-  msg.innerHTML='✅ Thank you! Your documents were uploaded securely (reference: <b>'+id.slice(0,8).toUpperCase()+'</b>). Our visa team will call you shortly. For faster service, <a href="https://wa.me/919843121212?text='+encodeURIComponent('Hi, I uploaded my visa documents on your website. Reference: '+id.slice(0,8).toUpperCase())+'" target="_blank" rel="noopener">WhatsApp us your reference</a>.';
+  msg.innerHTML='✅ Thank you! Your documents were uploaded securely (reference: <b>'+id.slice(0,8).toUpperCase()+'</b>). Our team will call you shortly. For faster service, <a href="https://wa.me/919843121212?text='+encodeURIComponent('Hi, I uploaded my documents on your website. Reference: '+id.slice(0,8).toUpperCase())+'" target="_blank" rel="noopener">WhatsApp us your reference</a>.';
   msg.classList.add('ok');
  }}catch(err){{msg.textContent='Sorry, the upload did not complete. Please try again, or WhatsApp your documents to 98431 21212.';msg.classList.add('err');}}
  btn.disabled=false;
