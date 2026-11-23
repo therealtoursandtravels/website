@@ -107,6 +107,7 @@ def planner_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band, ADDR, GST):
 <script>
 (function(){{
 const SB="{SB_URL}",KEY="{SB_KEY}";
+const notify=(s,t,r)=>{{try{{fetch('https://formsubmit.co/ajax/enquiry@therealtoursandtravels.com',{{method:'POST',headers:{{'Content-Type':'application/json',Accept:'application/json'}},body:JSON.stringify({{_subject:s,message:t,_replyto:r||'',_template:'table',_captcha:'false',source:location.href}})}}).catch(()=>{{}});}}catch(_){{}}}};
 const DEST={json.dumps(DEST, ensure_ascii=False)};
 const f=document.getElementById('pform'),msg=document.getElementById('pmsg');
 f.destination.addEventListener('change',()=>{{document.getElementById('otherwrap').hidden=f.destination.value!=='Other';}});
@@ -170,6 +171,7 @@ f.addEventListener('submit',async e=>{{
  document.getElementById('itin').innerHTML=render(o,days,ref);
  const wa='Hi The Real Tours and Travels, I created an itinerary on your website (Ref '+ref+'): '+o.destName+', '+o.days+' days, '+o.adults+' adults'+(o.children?' + '+o.children+' children':'')+', '+o.hotel+', '+o.car+', '+o.mode+(o.start?', from '+o.start:'')+'. Please share the best price.';
  document.getElementById('wabtn').href='https://wa.me/919843121212?text='+encodeURIComponent(wa);
+ notify('New itinerary request '+ref+' – '+(row.full_name||contact),wa.replace('Hi The Real Tours and Travels, I created an itinerary on your website ','')+(row.full_name?'\\nName: '+row.full_name:'')+'\\nContact: '+contact+(row.notes?'\\nNotes: '+row.notes:''),isEmail?contact:'');
  const res=document.getElementById('result');res.hidden=false;res.scrollIntoView({{behavior:'smooth'}});
  btn.disabled=false;msg.innerHTML='✅ Your itinerary is ready below (Ref <b>'+ref+'</b>).';msg.classList.add('ok');
 }});

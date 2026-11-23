@@ -40,7 +40,7 @@ def _contact(btn):
 <label class="fcell">Your name<input name="name" maxlength="120" autocomplete="name"></label>
 <label class="fcell">Mobile or email*<input name="contact" required maxlength="160" placeholder="98xxxxxxxx or you@example.com" autocomplete="tel"></label>
 <label class="fcell">Notes<input name="notes" maxlength="200" placeholder=""></label>
-<button class="btn gold fgo" type="submit">{btn}</button></div>
+<button class="btn gold fgo" type="submit">{btn} on WhatsApp</button></div>
 <p class="fmsg vmsg" role="status" aria-live="polite"></p>"""
 
 AD = lambda i: "Adult" + ("s" if i > 1 else "")
@@ -90,6 +90,7 @@ def flight_widget(root):
 <script>
 (function(){{
 const SB="{SB_URL}",KEY="{SB_KEY}";
+const notify=(s,t,r)=>{{try{{fetch('https://formsubmit.co/ajax/enquiry@therealtoursandtravels.com',{{method:'POST',headers:{{'Content-Type':'application/json',Accept:'application/json'}},body:JSON.stringify({{_subject:s,message:t,_replyto:r||'',_template:'table',_captcha:'false',source:location.href}})}}).catch(()=>{{}});}}catch(_){{}}}};
 const box=document.getElementById('flight-search');
 const forms={{}};box.querySelectorAll('form').forEach(x=>forms[x.dataset.kind]=x);
 const NOTE={{flight:'Preferred airline, timings, baggage…',hotel:'e.g. sea view, near beach, Jain food, early check-in',cruise:'e.g. dates flexible, senior citizens, Jain food'}};
@@ -145,11 +146,14 @@ Object.entries(forms).forEach(([kind,f])=>f.addEventListener('submit',async e=>{
  if(err){{msg.textContent=err;msg.classList.add('err');return;}}
  row.phone=isPhone?digits:null;row.email=isEmail?c:null;
  const btn=f.querySelector('.fgo');btn.disabled=true;msg.textContent='Sending your enquiry…';
+ let w=null;try{{w=window.open('','_blank');if(w)w.document.write('<p style="font:16px sans-serif;padding:20px">Opening WhatsApp…</p>');}}catch(_){{w=null;}}
  try{{const r=await fetch(SB+'/rest/v1/'+table,{{method:'POST',headers:{{apikey:KEY,Authorization:'Bearer '+KEY,'Content-Type':'application/json',Prefer:'return=minimal'}},body:JSON.stringify(row)}});if(!r.ok)throw 0;}}
- catch(_){{btn.disabled=false;msg.textContent='Sorry, something went wrong. Please WhatsApp us on 98431 21212.';msg.classList.add('err');return;}}
+ catch(_){{if(w)w.close();btn.disabled=false;msg.textContent='Sorry, something went wrong. Please WhatsApp us on 98431 21212.';msg.classList.add('err');return;}}
  if(notes)lines.push('Notes: '+notes);if(name)lines.push('Name: '+name);lines.push('Contact: '+c);
  const wa='https://wa.me/919843121212?text='+encodeURIComponent(lines.filter(Boolean).join('\\n'));
- msg.innerHTML='✅ Enquiry received (Ref <b>'+ref+'</b>). Our team will reply with the best options shortly. <a class="btn gold" style="margin-top:10px" href="'+wa+'" target="_blank" rel="noopener">💬 Get faster reply on WhatsApp</a>';
+ notify('New '+kind+' enquiry '+ref+' – '+(name||c),lines.filter(Boolean).join('\\n'),isEmail?c:'');
+ if(w){{try{{w.location.href=wa;}}catch(_){{}}}}
+ msg.innerHTML='✅ Enquiry received (Ref <b>'+ref+'</b>). Please press <b>Send</b> in WhatsApp so our team gets it instantly. If WhatsApp did not open: <a class="btn gold" style="margin-top:10px" href="'+wa+'" target="_blank" rel="noopener">💬 Send on WhatsApp</a>';
  msg.classList.add('ok');btn.disabled=false;
 }}));
 }})();
