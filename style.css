@@ -35,6 +35,10 @@ nav.main a.cta{background:linear-gradient(135deg,var(--red),var(--crimson));colo
 img{max-width:100%;height:auto}
 html,body{overflow-x:hidden}
 .ridge{display:none}
+.article{max-width:780px;margin:0 auto}.article h2{margin-top:38px}.article h3{font-size:22px;color:var(--crimson);margin:26px 0 8px}.article p{font-size:17px}
+.cover{border-radius:20px;overflow:hidden;margin:0 0 34px;box-shadow:0 20px 44px rgba(0,0,0,.10)}.cover img{width:100%;display:block}
+.meta{color:var(--muted);font-size:14px;margin-bottom:6px}
+.card.post-card{padding:0;overflow:hidden}.post-card img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}.post-card .in{padding:22px 24px 26px}
 .btns{display:flex;gap:14px;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;gap:9px;min-height:48px;padding:12px 26px;border-radius:999px;font-weight:600;text-decoration:none;font-size:16px;letter-spacing:.3px;transition:transform .15s}
 .btn:hover{transform:translateY(-2px)}

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Static site generator for The Real Tours and Travels (SEO site)."""
 import json, os, datetime
+from articles import ARTICLES
 
 SITE = "https://www.therealtoursandtravels.com"
 NAME = "The Real Tours and Travels"
@@ -17,7 +18,7 @@ GST = "27AMUPK4723E1ZU"
 TODAY = datetime.date.today().isoformat()
 
 SERVICES = [
- dict(slug="domestic-holiday-packages", short="Domestic Holidays", icon="🏔️", img="kashmir.jpg",
+ dict(slug="domestic-holiday-packages", short="Domestic Holidays", icon="🏔️", img="gulmarg.jpg",
   title="Domestic Holiday Packages from Mumbai | Kashmir, Kerala, Manali",
   h1="Domestic Holiday Packages from Mumbai",
   desc="Family-friendly domestic holiday packages from Mumbai to Kashmir, Kerala, Manali, Shimla, Goa, Rajasthan, Andaman and the North East. Planned by The Real Tours and Travels, Mulund West, since 1981.",
@@ -37,7 +38,7 @@ SERVICES = [
   faqs=[("Do you help with visas for international packages?","Yes. Our visa team guides you on documents and files tourist visas for Dubai, Singapore, Schengen/Europe, UK, USA, Australia and more."),
         ("Can you customise an international package?","Absolutely. Every package can be changed – hotels, number of nights, activities and pace – to suit your family."),
         ("Do you provide vegetarian and Jain food abroad?","We can recommend and pre-arrange vegetarian and Jain meals in most popular destinations.")]),
- dict(slug="passport-visa-services", short="Passport & Visa", icon="🛂", img=None,
+ dict(slug="passport-visa-services", short="Passport & Visa", icon="🛂", img="passport.jpg",
   title="Passport & Visa Services in Mulund, Mumbai | Tourist Visa Assistance",
   h1="Passport & Visa Services in Mulund, Mumbai",
   desc="Fresh passport and renewal appointments, and tourist and business visa assistance for Dubai, Singapore, Thailand, Schengen, UK, USA, Canada and Australia. Visit The Real Tours and Travels, Mulund West.",
@@ -47,7 +48,7 @@ SERVICES = [
   faqs=[("How early should I apply for a Schengen or UK visa?","Ideally 6–8 weeks before travel, especially in peak season. Contact us early and we will plan the timeline."),
         ("Can you help with a passport renewal?","Yes. We help with the online form, documents and Passport Seva appointment booking for fresh and renewal passports."),
         ("Do you guarantee visa approval?","No agent can guarantee a visa – the decision is the embassy's. We make sure your application is complete and correctly presented to give it the best chance.")]),
- dict(slug="travel-insurance", short="Travel Insurance", icon="🛡️", img=None,
+ dict(slug="travel-insurance", short="Travel Insurance", icon="🛡️", img="flight.jpg",
   title="Travel Insurance for International & Domestic Trips | Mumbai",
   h1="Travel Insurance for Every Trip",
   desc="Overseas and domestic travel insurance for families, seniors and students – medical cover, trip cancellation, lost baggage and Schengen-compliant policies. Arranged by The Real Tours and Travels, Mumbai.",
@@ -107,7 +108,7 @@ SERVICES = [
   faqs=[("What does MICE stand for?","Meetings, Incentives, Conferences and Exhibitions/Events – business travel for groups."),
         ("Do you arrange corporate offsites near Mumbai?","Yes, as well as domestic and international incentive trips."),
         ("Can you handle visas for a corporate group?","Yes, we coordinate group visas, flights and insurance.")]),
- dict(slug="jain-yatra-tours-with-maharaj", short="Jain Yatra with Maharaj", icon="🙏", img=None,
+ dict(slug="jain-yatra-tours-with-maharaj", short="Jain Yatra with Maharaj", icon="🙏", img="jain.jpg",
   title="Jain Yatra Tours with Maharaj | Pure Jain Food on Tour from Mumbai",
   h1="Jain Yatra Tours with Maharaj (Pure Jain Food)",
   desc="Jain tirth yatras and holidays with our own travelling Maharaj cooking pure Jain food – Palitana, Shikharji, Girnar, Ranakpur and more. Ideal for families, senior citizens and Jain groups from Mumbai.",
@@ -163,6 +164,10 @@ nav.main a.cta{background:linear-gradient(135deg,var(--red),var(--crimson));colo
 img{max-width:100%;height:auto}
 html,body{overflow-x:hidden}
 .ridge{display:none}
+.article{max-width:780px;margin:0 auto}.article h2{margin-top:38px}.article h3{font-size:22px;color:var(--crimson);margin:26px 0 8px}.article p{font-size:17px}
+.cover{border-radius:20px;overflow:hidden;margin:0 0 34px;box-shadow:0 20px 44px rgba(0,0,0,.10)}.cover img{width:100%;display:block}
+.meta{color:var(--muted);font-size:14px;margin-bottom:6px}
+.card.post-card{padding:0;overflow:hidden}.post-card img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}.post-card .in{padding:22px 24px 26px}
 .btns{display:flex;gap:14px;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;gap:9px;min-height:48px;padding:12px 26px;border-radius:999px;font-weight:600;text-decoration:none;font-size:16px;letter-spacing:.3px;transition:transform .15s}
 .btn:hover{transform:translateY(-2px)}
@@ -243,7 +248,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
     ld = "\n".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in lds)
     depth = path.strip("/").count("/") + (1 if path.strip("/") else 0)
     root = "../" * depth if depth else ""
-    og = SITE + "/img/" + (hero_img or "og.jpg")
+    og = SITE + "/img/" + (hero_img or "logo-512.png")
     nav = "".join(f'<li><a href="{root}{s["slug"]}/">{s["short"]}</a></li>' for s in SERVICES)
     return f"""<!doctype html>
 <html lang="en-IN"><head>
@@ -267,7 +272,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <header class="site"><div class="wrap">
 <a class="brand" href="{root or './'}"><img src="{root}img/logo.png" alt="The Real Tours and Travels logo – Estd. 1981" width="64" height="64"><span><b>The Real Tours and Travels</b><small>Crafting Journeys Since 1981</small></span></a>
 <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('nav.main').classList.toggle('open')">☰</button>
-<nav class="main"><a href="{root or './'}#services">Services</a><a href="{root}international-holiday-packages/">International</a><a href="{root}jain-yatra-tours-with-maharaj/">Jain Yatra</a><a href="{root}contact/">Contact</a><a class="cta" href="{WA}" target="_blank" rel="noopener">WhatsApp Us</a></nav>
+<nav class="main"><a href="{root or './'}#services">Services</a><a href="{root}international-holiday-packages/">International</a><a href="{root}jain-yatra-tours-with-maharaj/">Jain Yatra</a><a href="{root}blog/">Travel Guides</a><a href="{root}contact/">Contact</a><a class="cta" href="{WA}" target="_blank" rel="noopener">WhatsApp Us</a></nav>
 </div></header>
 <main>
 {body}
@@ -279,7 +284,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <p><a href="tel:{PHONE_RAW}">📞 {PHONE}</a><br><a href="mailto:{EMAIL}">✉️ {EMAIL}</a><br>
 <a href="{IG}" target="_blank" rel="noopener">📸 @therealtoursandtravels</a> · <a href="{FB}" target="_blank" rel="noopener">Facebook</a></p></div>
 <div><h4>Our Services</h4><ul>{nav}</ul></div>
-<div><h4>Visit Us</h4><ul><li>Open every day, 9 am – 10 pm</li><li><a href="{MAPS}" target="_blank" rel="noopener">Get directions on Google Maps</a></li><li><a href="{REVIEW}" target="_blank" rel="noopener">⭐ Review us on Google</a></li><li><a href="{root}contact/">Contact us</a></li></ul>
+<div><h4>Visit Us</h4><ul><li>Open every day, 9 am – 10 pm</li><li><a href="{MAPS}" target="_blank" rel="noopener">Get directions on Google Maps</a></li><li><a href="{REVIEW}" target="_blank" rel="noopener">⭐ Review us on Google</a></li><li><a href="{root}blog/">Travel guides &amp; tips</a></li><li><a href="{root}contact/">Contact us</a></li></ul>
 <p style="margin-top:14px">Serving Mulund, Thane, Bhandup, Nahur, Powai, Ghatkopar and all of Mumbai.</p></div>
 </div><div class="copy">© {datetime.date.today().year} The Real Tours and Travels, Mulund West, Mumbai · GSTIN {GST} · All rights reserved.</div></footer>
 <a class="float-wa" href="{WA}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">💬</a>
@@ -306,7 +311,7 @@ def build():
     # Home
     cards = "".join(f'<a class="card" href="{s["slug"]}/"><div class="ic">{s["icon"]}</div><h3>{s["h1"]}</h3><p>{s["desc"][:120].rsplit(" ",1)[0]}…</p><span class="more">Explore →</span></a>' for s in SERVICES)
     revs = "".join(f'<div class="review"><div class="stars">★★★★★</div><p>“{t}”</p><b>— {n}</b></div>' for n, t in REVIEWS)
-    hero = "kashmir.jpg" if "kashmir.jpg" in imgs else None
+    hero = "gulmarg.jpg" if "gulmarg.jpg" in imgs else None
     hero_style = f' style="--hero:url(img/{hero})"' if hero else ""
     side = "dubai.jpg" if "dubai.jpg" in imgs else None
     side_html = f'<div class="photo"><img src="img/{side}" alt="Indian family holiday in Dubai planned by The Real Tours and Travels" loading="lazy" width="800" height="600"></div>' if side else '<div class="emblem"><img src="img/logo.png" alt="The Real Tours and Travels emblem"><b>Crafting Journeys Since 1981</b><p>A Mulund family business trusted by generations of Mumbai travellers.</p></div>'
@@ -384,8 +389,34 @@ def build():
     write("/contact/", page("/contact/", "Contact | The Real Tours and Travels, Mulund West, Mumbai", "Contact The Real Tours and Travels in Mulund West, Mumbai. Call/WhatsApp 98431 21212, email enquiry@therealtoursandtravels.com. Open daily 9 am – 10 pm.", contact))
     # 404
     open(os.path.join(root, "404.html"), "w").write(page("/404.html", "Page not found | The Real Tours and Travels", "Page not found.", f'<section><div class="wrap"><h1>Page not found</h1><p><a href="/">Go to the home page</a> or WhatsApp us on 98431 21212.</p></div></section>').replace('<meta name="robots" content="index,follow,max-image-preview:large">','<meta name="robots" content="noindex">'))
+    # Blog
+    svc = {x["slug"]: x for x in SERVICES}
+    cards_b = "".join(f'<a class="card post-card" href="{a["slug"]}/"><img src="../img/{a["img"]}" alt="{a["img_alt"]}" loading="lazy" width="1200" height="744"><div class="in"><h3>{a["h1"]}</h3><p>{a["desc"][:140].rsplit(" ",1)[0]}…</p><span class="more">Read guide →</span></div></a>' for a in ARTICLES)
+    blog = f"""<section class="hero"><div class="wrap"><div><div class="crumbs"><a href="../">Home</a> › Travel Guides</div><span class="kicker">Travel guides &amp; tips</span><h1>Travel Guides from The Real Tours and Travels</h1><p>Practical advice from 45+ years of planning holidays, yatras and visas for Mumbai families.</p></div>{seal("../")}</div></section>
+<section><div class="wrap"><div class="grid">{cards_b}</div></div></section>{cta_band()}"""
+    write("/blog/", page("/blog/", "Travel Guides & Tips | The Real Tours and Travels, Mumbai", "Travel guides and tips from The Real Tours and Travels, Mulund West, Mumbai – holiday ideas, Jain yatras, passport and visa checklists, travel insurance.", blog))
+    for a in ARTICLES:
+        rel = "".join(f'<a class="card" href="../../{r}/"><div class="ic">{svc[r]["icon"]}</div><h3>{svc[r]["h1"]}</h3><span class="more">Explore →</span></a>' for r in a["related"] if r in svc)
+        faqs = "".join(f"<details><summary>{q}</summary><p>{x}</p></details>" for q, x in a["faqs"])
+        d = datetime.date.fromisoformat(a["date"]).strftime("%-d %B %Y")
+        body = f"""<section style="padding-top:44px"><div class="wrap"><div class="article">
+<div class="crumbs"><a href="../../">Home</a> › <a href="../">Travel Guides</a></div>
+<h1 style="font-size:clamp(30px,4.4vw,46px);color:var(--wine);margin:0 0 10px">{a["h1"]}</h1>
+<p class="meta">By The Real Tours and Travels · Mulund West, Mumbai · {d}</p>
+<div class="cover"><img src="../../img/{a["img"]}" alt="{a["img_alt"]}" width="1200" height="744"></div>
+<p class="lead" style="font-size:19px">{a["intro"]}</p>
+{a["body"]}
+<p><a class="btn gold" href="{WA}" target="_blank" rel="noopener">💬 Plan with us on WhatsApp</a></p>
+</div></div></section>
+<section class="alt faq"><div class="wrap" style="max-width:860px"><div class="head"><span class="kicker">Quick answers</span><h2>Frequently asked questions</h2></div>{faqs}</div></section>
+<section><div class="wrap"><div class="head"><span class="kicker">Related services</span><h2>How we can help</h2></div><div class="grid">{rel}</div></div></section>{cta_band()}"""
+        url = f"{SITE}/blog/{a['slug']}/"
+        art_ld = {"@context":"https://schema.org","@type":"Article","headline":a["h1"],"description":a["desc"],"image":f"{SITE}/img/{a['img']}","datePublished":a["date"],"dateModified":a["date"],"author":{"@type":"Organization","name":NAME,"url":SITE},"publisher":{"@id":SITE+"/#agency"},"mainEntityOfPage":url}
+        faq_ld = {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":x}} for q,x in a["faqs"]]}
+        crumbs = {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":SITE+"/"},{"@type":"ListItem","position":2,"name":"Travel Guides","item":SITE+"/blog/"},{"@type":"ListItem","position":3,"name":a["h1"],"item":url}]}
+        write(f"/blog/{a['slug']}/", page(f"/blog/{a['slug']}/", a["title"] + " | The Real Tours and Travels", a["desc"], body, [art_ld, faq_ld, crumbs], a["img"]))
     # sitemap / robots / CNAME
-    urls = ["/"] + [f"/{s['slug']}/" for s in SERVICES] + ["/contact/"]
+    urls = ["/"] + [f"/{s['slug']}/" for s in SERVICES] + ["/blog/"] + [f"/blog/{a['slug']}/" for a in ARTICLES] + ["/contact/"]
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{SITE}{u}</loc><lastmod>{TODAY}</lastmod><priority>{'1.0' if u=='/' else '0.8'}</priority></url>\n" for u in urls) + "</urlset>\n"
     open(os.path.join(root, "sitemap.xml"), "w").write(sm)
     open(os.path.join(root, "robots.txt"), "w").write(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
