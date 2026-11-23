@@ -221,7 +221,8 @@ REVIEWS = [
  ("Annu S.", "One stop for all your travelling requirements. Would personally recommend."),
 ]
 
-CSS = """
+CSS = """.about-story h2{margin:6px 0 14px}.about-story .kicker{display:flex;margin:40px 0 0}.about-story .kicker:first-child{margin-top:0}.about-story p{font-size:17px;line-height:1.75}.about-quote{margin:24px 0;padding:18px 24px;border-left:4px solid var(--red);background:#fdf0f0;border-radius:0 14px 14px 0;font-style:italic;font-weight:600;font-size:19px;line-height:1.6;color:var(--crimson)}.about-sign{margin-top:34px;text-align:center;padding:28px 18px;border-top:1px solid var(--line)}.about-sign b{display:block;font-size:22px;letter-spacing:2px;color:var(--crimson)}.about-sign span{display:block;color:var(--muted);letter-spacing:3px;text-transform:uppercase;font-size:13px;margin:4px 0 14px}.about-sign strong{display:block;font-size:18px}.about-sign em{display:block;margin-top:8px;color:var(--muted);font-size:17px}
+
 /* VOICE: refined, warm, trustworthy family luxury
    IDEA: an engraved travel certificate / luggage-tag seal
    PICTURE: the red seal logo large on a white field with a soft red halo
@@ -623,16 +624,57 @@ def build():
     write("/account/", page("/account/", "My Account – Login or Sign up | The Real Tours and Travels", "Log in or create your free The Real Tours and Travels account to save your details and see your enquiries.", account.account_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band)).replace('<meta name="robots" content="index,follow,max-image-preview:large">','<meta name="robots" content="noindex">'))
     # About us
     about = f"""<section class="hero"><div class="wrap"><div><div class="crumbs"><a href="../">Home</a> › About Us</div>
-<span class="kicker">Since 1981</span><h1>About The Real Tours and Travels</h1>
-<p>A family-run travel company in Mulund West, Mumbai, planning holidays, pilgrimages, visas and business travel for families and companies in India and abroad for over four decades.</p></div>{seal("../")}</div></section>
-<section><div class="wrap two"><div><h2>Our story</h2>
-<p>The Real Tours and Travels began in <b>1981</b> with a simple idea – that every family deserves a holiday planned with the same care we would take for our own. More than four decades later, we are still a family business, and that personal touch is still how we work.</p>
-<p>From Kashmir and Kerala to Dubai, Europe and the Maldives – and from Palitana and Sammed Shikharji yatras with our own Maharaj cooking pure Jain food, to group tours, honeymoons and corporate (FIT &amp; MICE) travel – generations of travellers have trusted us with their journeys.</p>
-<p>Today we handle everything in one place: <b>flights, hotels and cruises, visas and passports, travel insurance and fully customised tour packages</b>, with one point of contact who stays on call throughout your trip.</p></div>
-<div><h2>Why families choose us</h2><ul class="ticks">
-<li>45+ years of experience – established 1981</li><li>Rated 4.8 ★ on Google by our travellers</li><li>Personal service – one dedicated contact, available during your trip</li>
-<li>Pure vegetarian and Jain food arrangements, including yatras with our own Maharaj</li><li>Visas, passports, insurance, flights and hotels handled under one roof</li>
-<li>Transparent, GST-compliant billing – GSTIN {GST}</li><li>Secure online payments and document uploads</li></ul></div></div></section>
+<span class="kicker">Crafting Journeys Since 1981</span><h1>About The Real Tours and Travels</h1>
+<p><b>45 Years of Trust. Generations of Memories. A Legacy That Continues.</b></p></div>{seal("../")}</div></section>
+<section class="about-story"><div class="wrap" style="max-width:900px">
+<span class="kicker">1981</span><h2>Our Story – A Journey That Began in 1981</h2>
+<p>Every great journey begins with a vision. The story of <b>THE REAL TOURS AND TRAVELS</b> began in 1981, when our founder, <b>Mr. Deepak Devji Kotak</b>, laid the foundation of a travel business built on trust, commitment, personal relationships and a passion for serving travellers.</p>
+<p>At a time when the travel industry operated very differently from today, Mr. Deepak Devji Kotak envisioned creating a reliable travel service that people could confidently turn to for their travel requirements. With determination, dedication and years of hard work, he transformed that vision into a business that gradually earned the confidence of its customers.</p>
+<p>His philosophy was simple: travel was not merely about booking tickets or arranging holidays; it was about understanding people, fulfilling their expectations and making every journey comfortable and memorable.</p>
+<p>What started as a humble initiative became the foundation of a legacy that continues to inspire us even today.</p>
+
+<span class="kicker">2015</span><h2>A New Chapter – Continuing the Legacy After 2015</h2>
+<p class="lead"><b>Every legacy has a story, and every story has a responsibility to continue.</b></p>
+<p>In 2015, our company faced one of its most challenging and emotional moments when our founder, Mr. Deepak Devji Kotak, left us. His absence created a void that could never truly be filled. Along with the personal loss came the responsibility of protecting and carrying forward everything he had built since 1981.</p>
+<p>It was then that <b>Mr. Pratik Deepak Kotak</b> stepped forward to take charge of the business and shoulder the responsibility of continuing his father's vision.</p>
+<p>Taking over an established business is never easy, especially when it carries decades of relationships, expectations and trust. The challenge was not simply to manage an existing business, but to preserve its identity, uphold its values and prepare it for a rapidly changing travel industry.</p>
+<p>With determination, patience and a strong sense of responsibility, Mr. Pratik Deepak Kotak took the journey forward.</p>
+<p>His approach was to respect the foundations laid by his father while recognising that the future of travel demanded a fresh outlook. He focused on strengthening customer relationships, improving service standards, expanding travel offerings and adapting to the evolving expectations of modern travellers.</p>
+<p>The traditional values of personal attention, honest communication and customer satisfaction remained unchanged, while the company's approach continued to evolve with time.</p>
+<p>For Mr. Pratik Deepak Kotak, this was more than taking over a family business. It was about preserving his father's dream, protecting a name built over decades and creating something meaningful for the next generation.</p>
+<blockquote class="about-quote">The founder may no longer be with us, but his vision continues to live through every journey we organise and every customer we serve.</blockquote>
+
+<span class="kicker">Today</span><h2>Where We Stand Today – Tradition Meets Modern Travel</h2>
+<p>Today, under the leadership of <b>Mr. Pratik Deepak Kotak</b>, THE REAL TOURS AND TRAVELS continues its journey with the same founding principles while embracing the opportunities of the modern travel industry.</p>
+<p>From its beginnings in 1981, the company has developed its service portfolio to cater to a wide range of travel requirements. We serve individuals, families, corporate organisations, large groups and religious communities with comprehensive travel solutions.</p>
+<p>Our services extend across domestic and international holiday packages, flight and railway ticketing, hotel and resort reservations, cruise bookings, group tours, corporate travel, Jain pilgrimage tours, specialised religious tours, visa and passport assistance, travel insurance, bus ticketing and car rentals.</p>
+<p>We also understand the unique requirements of group and pilgrimage travel, including Jain food arrangements, specialised itineraries, transportation coordination and other essential arrangements that make large-scale journeys comfortable and organised.</p>
+<p>As the travel industry moves towards digitalisation, we are equally focused on modernising the way customers discover, plan and book their journeys. Our vision is to combine the reliability of a travel company established in 1981 with the convenience, accessibility and efficiency of modern technology.</p>
+<p>We are working towards building a stronger digital presence, improving customer accessibility and bringing more travel services together under one platform.</p>
+<p>Our objective is not just to keep pace with the changing industry, but to create better and more convenient travel experiences for the generations ahead.</p>
+</div></section>
+<section class="alt"><div class="wrap" style="max-width:1000px"><div class="head"><span class="kicker">Our values</span><h2>What We Believe In</h2></div>
+<p style="text-align:center;max-width:760px;margin:0 auto 22px">At THE REAL TOURS AND TRAVELS, we believe that every traveller deserves attention, every requirement deserves a thoughtful solution and every journey deserves careful planning. Our foundation rests on five important values:</p>
+<div class="grid">
+<div class="card"><div class="ic">🤝</div><h3>Trust</h3><p>Building relationships that last beyond a single booking.</p></div>
+<div class="card"><div class="ic">🧭</div><h3>Experience</h3><p>Applying decades of industry understanding to every travel arrangement.</p></div>
+<div class="card"><div class="ic">💬</div><h3>Personal Attention</h3><p>Understanding the individual needs of every customer.</p></div>
+<div class="card"><div class="ic">🌍</div><h3>Adaptability</h3><p>Embracing new destinations, technology and changing travel trends.</p></div>
+<div class="card"><div class="ic">🙏</div><h3>Commitment</h3><p>Carrying forward the principles on which our company was established.</p></div>
+</div></div></section>
+<section class="about-story"><div class="wrap" style="max-width:900px">
+<span class="kicker">Tomorrow</span><h2>Our Vision for the Future</h2>
+<p>Our vision is to establish THE REAL TOURS AND TRAVELS as a trusted name in the domestic and international travel industry, recognised for its experience, personalised service and comprehensive travel solutions.</p>
+<p>We aim to expand our reach, strengthen our partnerships, introduce modern booking facilities and continue creating memorable experiences for travellers across generations.</p>
+<p>While our methods may evolve with time, our founding values will always remain the same.</p>
+
+<span class="kicker">1981 – 2026</span><h2>45 Years of Trust – One Legacy, Many Journeys</h2>
+<p>From 1981 to 2026, our journey has been shaped by dedication, challenges, learning and the trust of thousands of travellers.</p>
+<p>We began with the vision of Mr. Deepak Devji Kotak. We continued through the determination and leadership of Mr. Pratik Deepak Kotak. Today, we stand committed to taking that legacy forward with renewed energy and a vision for tomorrow.</p>
+<p>We are grateful to every customer, associate, business partner and well-wisher who has been part of our journey. Your confidence has been our greatest strength and your satisfaction continues to be our greatest reward.</p>
+<p>As we look ahead, our promise remains unchanged: to serve with honesty, plan with care and make every journey worthwhile.</p>
+<div class="about-sign"><b>THE REAL TOURS AND TRAVELS</b><span>Crafting Journeys Since 1981</span><strong>45 Years of Trust. A Legacy That Moves Forward.</strong><em>We don't just carry people to destinations; we carry forward a legacy built on trust.</em></div>
+</div></section>
 <section class="alt"><div class="wrap"><div class="head"><span class="kicker">What we do</span><h2>Our services</h2></div>
 <div class="grid">
 <a class="card" href="../flights-hotels/#flights"><div class="ic">✈️</div><h3>Flights</h3><p>Domestic and international air tickets at the best available fares.</p></a>
@@ -648,7 +690,7 @@ def build():
 <p><span class="gst">GSTIN: {GST}</span></p><div class="btns"><a class="btn gold" href="{WA}" target="_blank" rel="noopener">💬 WhatsApp us</a><a class="btn outline" href="{MAPS}" target="_blank" rel="noopener">📍 Directions</a></div></div>
 <div class="emblem"><img src="../img/logo.png" alt="The Real Tours and Travels emblem"><b>Crafting Journeys Since 1981</b><p>A Mulund family business trusted by generations of travellers in India and abroad.</p></div></div></section>{cta_band()}"""
     about_ld = {"@context":"https://schema.org","@type":"AboutPage","name":"About The Real Tours and Travels","url":SITE+"/about/","about":{"@id":SITE+"/#agency"}}
-    write("/about/", page("/about/", "About Us | The Real Tours and Travels – Mulund, Mumbai, Since 1981", "The Real Tours and Travels is a family-run travel company in Mulund West, Mumbai since 1981 – holidays, flights, hotels, cruises, visas, passports, insurance and Jain yatras.", about, [about_ld]))
+    write("/about/", page("/about/", "About Us | The Real Tours and Travels – Mulund, Mumbai, Since 1981", "The story of The Real Tours and Travels – founded in 1981 by Mr. Deepak Devji Kotak and led today by Mr. Pratik Deepak Kotak. 45 years of trust in holidays, flights, hotels, cruises, visas, passports, insurance and Jain yatras.", about, [about_ld]))
     write("/insurance/", page("/insurance/", "Travel Insurance Quotation – International & Domestic | The Real Tours and Travels, Mumbai", "Get a travel insurance quotation for international, Schengen visa, USA, domestic, senior citizen, student and annual multi-trip plans from The Real Tours and Travels, Mulund West, Mumbai.", insurance_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band), None, "flight.jpg"))
     write("/passport/", page("/passport/", "Passport Services in Mulund, Mumbai – New, Renewal, Tatkaal | The Real Tours and Travels", "Passport services in Mulund West, Mumbai – fresh passport, renewal, minor, Tatkaal and lost passport. See documents required, request the price and upload documents securely.", passport_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band), None, "passport.jpg"))
     def legal(slug, title, html):
