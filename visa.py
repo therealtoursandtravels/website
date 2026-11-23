@@ -59,31 +59,12 @@ COUNTRIES = [
 
 
 PASSPORT = [
- ("fresh", "🆕", "Fresh Passport (Adult)", "Online application, then appointment at the Passport Seva Kendra and police verification",
-  ["Proof of present address – Aadhaar card, electricity / water / telephone bill, bank passbook with photo, or registered rent agreement",
-   "Proof of date of birth – birth certificate, PAN card, Aadhaar card or school leaving certificate",
-   "Educational certificate (10th marksheet or higher), if available – for non-ECR status",
-   "Marriage certificate, if you want your spouse's name on the passport"]),
- ("renewal", "🔁", "Passport Renewal / Re-issue", "When your passport has expired, is about to expire or the pages are full",
-  ["Original old passport",
-   "Self-attested copies of the first two and last two pages of the old passport (including ECR / non-ECR page)",
-   "Proof of present address, if it has changed since your last passport",
-   "Name change documents (marriage certificate / gazette notification), if applicable"]),
- ("minor", "👶", "Passport for Minors (below 18)", "Both parents' consent is required",
-  ["Birth certificate of the child",
-   "Copies of both parents' passports (or address proof of parents if they do not have passports)",
-   "Declaration / consent of both parents in the prescribed format (we prepare it)",
-   "Proof of present address in the parents' name"]),
- ("tatkaal", "⚡", "Tatkaal (Urgent) Passport", "Faster processing on payment of the Tatkaal fee",
-  ["All documents required for a fresh passport or re-issue",
-   "Additional identity proofs as required under the Tatkaal scheme – we confirm the exact list for your case",
-   "Proof of present address"]),
- ("lost", "🧾", "Lost / Damaged Passport", "Re-issue of a lost, stolen or damaged passport",
-  ["Police report / FIR for a lost or stolen passport (original)",
-   "Damaged passport (original), if applicable",
-   "Copy of the old passport, if available",
-   "Proof of present address and date of birth",
-   "Affidavit / declaration explaining how the passport was lost or damaged (we prepare it)"]),
+ ('fresh', '🆕', 'Fresh Passport (Adult)', 'Online application, then appointment at the Passport Seva Kendra and police verification. Carry originals plus one set of self-attested copies', ["Proof of present address (any one): Aadhaar / e-Aadhaar, Voter ID, electricity / water / telephone / gas bill, bank passbook or account statement with photo, income tax assessment order, registered rent agreement, or your spouse's passport (if your address is the same)", 'Proof of date of birth (any one): birth certificate from the Registrar of Births and Deaths / Municipal Corporation, school leaving / transfer / matriculation certificate, PAN card, driving licence, Voter ID, LIC or public-company policy bond, or service record / pay pension order (government employees and pensioners)', 'Aadhaar is accepted as address proof, but not as proof of date of birth under the 2025 passport rules', '10th marksheet or higher qualification certificate, if you have one – for non-ECR status', 'Name change documents (gazette notification or marriage certificate), if your name differs across documents', 'Government / PSU employees: Identity Certificate (Annexure A) or No Objection Certificate (Annexure B) from your office', 'Appointment confirmation (we book it and fill the application for you)', "Your name, date of birth and parents' names should match on every document – we check this before your appointment"]),
+ ('renewal', '🔁', 'Passport Renewal / Re-issue', 'When your passport has expired, is about to expire or the pages are full', ['Original old passport', 'Self-attested copies of the first two and last two pages of the old passport (including ECR / non-ECR page)', 'Proof of present address, if it has changed since your last passport', 'Name change documents (marriage certificate / gazette notification), if applicable']),
+ ('minor', '👶', 'Passport for Minors (below 18) – both parents', 'Both parents give consent by signing the declaration (Annexure D). Ideally both parents come to the appointment with the child', ['Birth certificate of the child – for children born on or after 1 October 2023 this is the only accepted proof of date of birth', 'Children born before 1 October 2023 may instead use another accepted proof, such as a school leaving certificate', 'Proof of present address in the name of either parent', "Self-attested copies of both parents' passports (first two and last two pages), if they hold passports", 'Annexure D – declaration signed by both parents (we prepare it)', "If the child's name is to be printed with a surname different from the parents', supporting documents – we advise"]),
+ ('minorsingle', '👩\u200d👦', 'Minor – Single Parent / One Parent Unavailable', "A child's passport can still be issued when only one parent can apply – the documents depend on the situation. We prepare the right declaration for your case", ['Birth certificate of the child – for children born on or after 1 October 2023 this is the only accepted proof of date of birth', 'Proof of present address and passport copy (if any) of the parent who is applying', 'One parent has passed away: Annexure D signed by the surviving parent, plus the death certificate of the other parent', "Divorced or separated: Annexure C – declaration by the applying parent, plus a copy of the divorce decree or custody order, if one exists. If custody is being disputed in court, the court's permission may be needed", "Unmarried / single parent, or the other parent's whereabouts are unknown: Annexure C – declaration by the applying parent. Only one parent's name needs to be printed on the passport", 'Other parent gives consent but cannot come: declaration signed by both parents (Annexure D)', 'Legal guardian applying: guardianship order from the court plus Annexure D', 'Annexure formats are updated from time to time – we always use the current format from Passport Seva and confirm the exact documents for your case']),
+ ('tatkaal', '⚡', 'Tatkaal (Urgent) Passport', 'Faster processing on payment of the Tatkaal fee', ['All documents required for a fresh passport or re-issue', 'Additional identity proofs as required under the Tatkaal scheme – we confirm the exact list for your case', 'Proof of present address']),
+ ('lost', '🧾', 'Lost / Damaged Passport', 'Re-issue of a lost, stolen or damaged passport', ['Police report / FIR for a lost or stolen passport (original)', 'Damaged passport (original), if applicable', 'Copy of the old passport, if available', 'Proof of present address and date of birth', 'Affidavit / declaration explaining how the passport was lost or damaged (we prepare it)']),
 ]
 
 # ---- Visa & entry requirements for Indian passport holders (researched Nov 2026; reviewed weekly) ----
