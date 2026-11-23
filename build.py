@@ -164,6 +164,7 @@ nav.main a.cta{background:linear-gradient(135deg,var(--red),var(--crimson));colo
 img{max-width:100%;height:auto}
 html,body{overflow-x:hidden}
 .ridge{display:none}
+.paybox{max-width:620px;margin:0 auto;text-align:center;background:#fff;border:1px solid var(--line);border-radius:22px;padding:40px 28px;box-shadow:0 20px 44px rgba(0,0,0,.07)}.paybox form{margin:22px 0 8px;min-height:50px}.copy a{color:var(--muted)}
 .article{max-width:780px;margin:0 auto}.article h2{margin-top:38px}.article h3{font-size:22px;color:var(--crimson);margin:26px 0 8px}.article p{font-size:17px}
 .cover{border-radius:20px;overflow:hidden;margin:0 0 34px;box-shadow:0 20px 44px rgba(0,0,0,.10)}.cover img{width:100%;display:block}
 .meta{color:var(--muted);font-size:14px;margin-bottom:6px}
@@ -272,7 +273,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <header class="site"><div class="wrap">
 <a class="brand" href="{root or './'}"><img src="{root}img/logo.png" alt="The Real Tours and Travels logo – Estd. 1981" width="64" height="64"><span><b>The Real Tours and Travels</b><small>Crafting Journeys Since 1981</small></span></a>
 <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('nav.main').classList.toggle('open')">☰</button>
-<nav class="main"><a href="{root or './'}#services">Services</a><a href="{root}international-holiday-packages/">International</a><a href="{root}jain-yatra-tours-with-maharaj/">Jain Yatra</a><a href="{root}blog/">Travel Guides</a><a href="{root}contact/">Contact</a><a class="cta" href="{WA}" target="_blank" rel="noopener">WhatsApp Us</a></nav>
+<nav class="main"><a href="{root or './'}#services">Services</a><a href="{root}international-holiday-packages/">International</a><a href="{root}jain-yatra-tours-with-maharaj/">Jain Yatra</a><a href="{root}blog/">Travel Guides</a><a href="{root}contact/">Contact</a><a href="{root}pay/">Pay Online</a><a class="cta" href="{WA}" target="_blank" rel="noopener">WhatsApp Us</a></nav>
 </div></header>
 <main>
 {body}
@@ -284,9 +285,9 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <p><a href="tel:{PHONE_RAW}">📞 {PHONE}</a><br><a href="mailto:{EMAIL}">✉️ {EMAIL}</a><br>
 <a href="{IG}" target="_blank" rel="noopener">📸 @therealtoursandtravels</a> · <a href="{FB}" target="_blank" rel="noopener">Facebook</a></p></div>
 <div><h4>Our Services</h4><ul>{nav}</ul></div>
-<div><h4>Visit Us</h4><ul><li>Open every day, 9 am – 10 pm</li><li><a href="{MAPS}" target="_blank" rel="noopener">Get directions on Google Maps</a></li><li><a href="{REVIEW}" target="_blank" rel="noopener">⭐ Review us on Google</a></li><li><a href="{root}blog/">Travel guides &amp; tips</a></li><li><a href="{root}contact/">Contact us</a></li></ul>
+<div><h4>Visit Us</h4><ul><li>Open every day, 9 am – 10 pm</li><li><a href="{MAPS}" target="_blank" rel="noopener">Get directions on Google Maps</a></li><li><a href="{REVIEW}" target="_blank" rel="noopener">⭐ Review us on Google</a></li><li><a href="{root}blog/">Travel guides &amp; tips</a></li><li><a href="{root}pay/">💳 Pay online</a></li><li><a href="{root}contact/">Contact us</a></li></ul>
 <p style="margin-top:14px">Serving Mulund, Thane, Bhandup, Nahur, Powai, Ghatkopar and all of Mumbai.</p></div>
-</div><div class="copy">© {datetime.date.today().year} The Real Tours and Travels, Mulund West, Mumbai · GSTIN {GST} · All rights reserved.</div></footer>
+</div><div class="copy">© {datetime.date.today().year} The Real Tours and Travels, Mulund West, Mumbai · GSTIN {GST} · All rights reserved.<br><a href="{root}terms/">Terms &amp; Conditions</a> · <a href="{root}privacy-policy/">Privacy Policy</a> · <a href="{root}cancellation-refund-policy/">Cancellation &amp; Refund Policy</a></div></footer>
 <a class="float-wa" href="{WA}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">💬</a>
 </body></html>"""
 
@@ -415,8 +416,42 @@ def build():
         faq_ld = {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":x}} for q,x in a["faqs"]]}
         crumbs = {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":SITE+"/"},{"@type":"ListItem","position":2,"name":"Travel Guides","item":SITE+"/blog/"},{"@type":"ListItem","position":3,"name":a["h1"],"item":url}]}
         write(f"/blog/{a['slug']}/", page(f"/blog/{a['slug']}/", a["title"] + " | The Real Tours and Travels", a["desc"], body, [art_ld, faq_ld, crumbs], a["img"]))
+    # Pay online
+    pay = f"""<section class="hero"><div class="wrap"><div><div class="crumbs"><a href="../">Home</a> › Pay Online</div><span class="kicker">Secure payment</span><h1>Pay The Real Tours and Travels Online</h1><p>Pay your booking amount securely by UPI, debit or credit card, net banking or wallet through Razorpay.</p></div>{seal("../")}</div></section>
+<section><div class="wrap"><div class="paybox">
+<h2>Make a payment</h2>
+<p class="lead">Please pay only the amount confirmed by our team for your booking. Enter your name, phone, email and tour or booking details so we can match your payment.</p>
+<form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_U3RKkNsxkSYwez" async></script></form>
+<p style="font-size:14px;color:var(--muted)">🔒 Payments are processed securely by Razorpay. You will receive a payment receipt by email.<br>Questions? Call or WhatsApp <a href="tel:{PHONE_RAW}">{PHONE}</a> or email <a href="mailto:{EMAIL}">{EMAIL}</a>.</p>
+<p style="font-size:13px;color:var(--muted)">By paying you agree to our <a href="../terms/">Terms</a> and <a href="../cancellation-refund-policy/">Cancellation &amp; Refund Policy</a>.</p>
+</div></div></section>"""
+    write("/pay/", page("/pay/", "Pay Online | The Real Tours and Travels, Mulund West, Mumbai", "Pay your booking amount to The Real Tours and Travels securely online by UPI, card, net banking or wallet via Razorpay.", pay))
+    def legal(slug, title, html):
+        body = f"""<section style="padding-top:44px"><div class="wrap"><div class="article"><div class="crumbs"><a href="../">Home</a> › {title}</div><h1 style="font-size:clamp(30px,4.4vw,44px);color:var(--wine)">{title}</h1><p class="meta">Last updated: {datetime.date.today().strftime("%-d %B %Y")}</p>{html}
+<h2>Contact us</h2><p>The Real Tours and Travels<br>{'<br>'.join(ADDR)}<br>Phone/WhatsApp: {PHONE}<br>Email: <a href="mailto:{EMAIL}">{EMAIL}</a><br>GSTIN: {GST}</p></div></div></section>"""
+        write(f"/{slug}/", page(f"/{slug}/", f"{title} | The Real Tours and Travels", f"{title} of The Real Tours and Travels, Mulund West, Mumbai.", body))
+    legal("terms", "Terms & Conditions", """
+<p>These terms apply to all bookings and payments made with The Real Tours and Travels ("we", "us"), a travel agency in Mulund West, Mumbai. By making a booking or payment you agree to these terms.</p>
+<h2>Bookings</h2><ul class="ticks"><li>A booking is confirmed only after we receive the required payment and send you written confirmation.</li><li>Itineraries, hotels and services are subject to availability at the time of confirmation.</li><li>Travellers must provide correct names (as per passport/ID), contact details and documents. We are not responsible for losses caused by incorrect information provided by the customer.</li></ul>
+<h2>Payments</h2><ul class="ticks"><li>Online payments are processed securely by Razorpay. We do not store your card or bank details.</li><li>Please pay only the amount confirmed by our team for your booking. The balance, if any, must be paid by the date shared with you.</li><li>Applicable taxes (including GST/TCS where applicable) are charged as per government rules.</li></ul>
+<h2>Travel documents and visas</h2><p>Travellers are responsible for holding a valid passport, visas and other documents. We assist with visa applications, but the decision to grant a visa rests solely with the embassy or authority, and we cannot guarantee approval.</p>
+<h2>Third-party services</h2><p>Airlines, hotels, transport operators and other suppliers provide services under their own terms. We act as an agent and are not liable for delays, cancellations, changes or deficiencies caused by these suppliers or by events beyond our control (such as weather, strikes, natural events or government restrictions).</p>
+<h2>Changes</h2><p>We may update these terms from time to time. The version on this page applies at the time of your booking.</p>
+<h2>Governing law</h2><p>These terms are governed by the laws of India, and courts in Mumbai shall have jurisdiction.</p>""")
+    legal("privacy-policy", "Privacy Policy", """
+<p>The Real Tours and Travels respects your privacy. This policy explains what information we collect and how we use it.</p>
+<h2>Information we collect</h2><ul class="ticks"><li>Name, phone number, email address and booking details you share with us by call, WhatsApp, email, our website or in person.</li><li>Traveller details and documents (such as passport copies) needed to make bookings and visa applications.</li><li>Payment information is collected and processed by our payment partner Razorpay; we do not store card or bank details.</li></ul>
+<h2>How we use your information</h2><ul class="ticks"><li>To plan and book your travel, apply for visas and insurance, and contact you about your trip.</li><li>To send payment receipts and service updates.</li><li>To share travel offers, only if you have agreed to receive them. You can opt out at any time.</li></ul>
+<h2>Sharing</h2><p>We share your details only with airlines, hotels, insurers, embassies/visa centres and other service providers as needed for your booking, or when required by law. We do not sell your personal information.</p>
+<h2>Security and retention</h2><p>We take reasonable steps to protect your information and keep it only as long as needed for your bookings and legal requirements.</p>
+<h2>Your choices</h2><p>You may ask us to access, correct or delete your personal information by contacting us using the details below.</p>""")
+    legal("cancellation-refund-policy", "Cancellation & Refund Policy", """
+<p>This policy explains how cancellations and refunds work for bookings and payments made with The Real Tours and Travels.</p>
+<h2>Cancellation by the customer</h2><ul class="ticks"><li>Cancellation requests must be sent in writing by email to enquiry@therealtoursandtravels.com or on WhatsApp at 98431 21212.</li><li>Cancellation charges depend on the airline, hotel and other suppliers' rules and on how close to the travel date you cancel. The applicable charges for your booking will be shared with you at the time of booking and on request.</li><li>Visa fees, service fees, insurance premiums and non-refundable tickets or hotel bookings are not refundable once processed.</li></ul>
+<h2>Refunds</h2><ul class="ticks"><li>Eligible refunds are processed after deducting applicable cancellation charges and once we receive the refund from the supplier.</li><li>Refunds for online payments are made to the original payment method. Once initiated, a refund usually reaches your account within 5–10 working days, depending on your bank.</li><li>Payments made by mistake or in excess of the confirmed amount will be refunded in full after verification.</li></ul>
+<h2>Cancellation or changes by us or suppliers</h2><p>If a service is cancelled by us or a supplier, we will offer an alternative or refund the amount received for that service, as per the supplier's policy.</p>""")
     # sitemap / robots / CNAME
-    urls = ["/"] + [f"/{s['slug']}/" for s in SERVICES] + ["/blog/"] + [f"/blog/{a['slug']}/" for a in ARTICLES] + ["/contact/"]
+    urls = ["/"] + [f"/{s['slug']}/" for s in SERVICES] + ["/blog/"] + [f"/blog/{a['slug']}/" for a in ARTICLES] + ["/contact/", "/pay/", "/terms/", "/privacy-policy/", "/cancellation-refund-policy/"]
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{SITE}{u}</loc><lastmod>{TODAY}</lastmod><priority>{'1.0' if u=='/' else '0.8'}</priority></url>\n" for u in urls) + "</urlset>\n"
     open(os.path.join(root, "sitemap.xml"), "w").write(sm)
     open(os.path.join(root, "robots.txt"), "w").write(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")

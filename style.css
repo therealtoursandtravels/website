@@ -35,6 +35,7 @@ nav.main a.cta{background:linear-gradient(135deg,var(--red),var(--crimson));colo
 img{max-width:100%;height:auto}
 html,body{overflow-x:hidden}
 .ridge{display:none}
+.paybox{max-width:620px;margin:0 auto;text-align:center;background:#fff;border:1px solid var(--line);border-radius:22px;padding:40px 28px;box-shadow:0 20px 44px rgba(0,0,0,.07)}.paybox form{margin:22px 0 8px;min-height:50px}.copy a{color:var(--muted)}
 .article{max-width:780px;margin:0 auto}.article h2{margin-top:38px}.article h3{font-size:22px;color:var(--crimson);margin:26px 0 8px}.article p{font-size:17px}
 .cover{border-radius:20px;overflow:hidden;margin:0 0 34px;box-shadow:0 20px 44px rgba(0,0,0,.10)}.cover img{width:100%;display:block}
 .meta{color:var(--muted);font-size:14px;margin-bottom:6px}
