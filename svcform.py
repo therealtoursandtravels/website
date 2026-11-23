@@ -28,6 +28,32 @@ YATRA_EXTRA = """<div class="sf-row"><label>Senior citizens in the group<select 
 <label>Helicopter / pony / palki help?<select name="x_help" data-lbl="Help needed"><option value="">Not needed</option><option>Yes – please arrange</option><option>Not sure yet</option></select></label></div>
 <label class="sf-chk1"><input type="checkbox" name="x_jain" value="Jain / pure vegetarian food needed"> Jain / pure vegetarian food needed</label>"""
 
+TRANSFER_EXTRA = """<div class="sf-row"><label>Type of trip<select name="x_type" data-lbl="Trip"><option>Airport pick-up</option><option>Airport drop</option><option>Outstation round trip</option><option>Outstation one way</option><option>Local car hire (full / half day)</option></select></label>
+<label>Date &amp; time<input name="x_dt" data-lbl="Date &amp; time" type="datetime-local"></label></div>
+<div class="sf-row"><label>Car<select name="x_car" data-lbl="Car"><option value="">Please suggest</option><option>Sedan (4 seats)</option><option>SUV (6–7 seats)</option><option>Innova Crysta</option><option>Tempo Traveller (12–17 seats)</option><option>Luxury car</option></select></label>
+<label>Flight number (for airport trips)<input name="x_flt" data-lbl="Flight" maxlength="12" placeholder="e.g. 6E 2131" autocomplete="off"></label></div>"""
+
+WEEKEND_EXTRA = """<div class="sf-row"><label>Stay<select name="x_stay" data-lbl="Stay"><option value="">Please suggest</option><option>Resort</option><option>Private villa / bungalow</option><option>Hotel</option></select></label>
+<label>Car from Mumbai?<select name="x_car" data-lbl="Car"><option value="">Yes – please arrange</option><option>No – we will drive</option></select></label></div>"""
+
+SENIOR_EXTRA = """<div class="sf-row"><label>Number of senior citizens<input name="x_sen" data-lbl="Senior citizens" type="number" min="1" max="200"></label>
+<label>Wheelchair needed?<select name="x_wc" data-lbl="Wheelchair"><option value="">No</option><option>Yes – at airports</option><option>Yes – throughout the trip</option></select></label></div>
+<div class="sf-row"><label>Walking comfort<select name="x_walk" data-lbl="Walking"><option value="">Comfortable walking</option><option>Short walks only</option><option>Needs assistance</option></select></label>
+<label>Food<select name="x_food1" data-lbl="Food"><option value="">Any</option><option>Pure vegetarian</option><option>Jain</option></select></label></div>"""
+
+WEDDING_EXTRA = """<div class="sf-row"><label>Occasion<select name="x_occ" data-lbl="Occasion"><option>Wedding</option><option>Engagement</option><option>Anniversary</option><option>Birthday</option><option>Other family function</option></select></label>
+<label>Rooms needed (approx.)<input name="x_rooms" data-lbl="Rooms" type="number" min="1" max="500"></label></div>
+<label class="sf-chk1"><input type="checkbox" name="x_guest" value="Guest flights / trains needed"> Arrange flights / trains for guests</label>"""
+
+EDU_EXTRA = """<div class="sf-row"><label>School / college name<input name="x_inst" data-lbl="Institution" maxlength="100" autocomplete="organization"></label>
+<label>Class / year<input name="x_cls" data-lbl="Class" maxlength="40" placeholder="e.g. Std 8, FY BCom"></label></div>
+<div class="sf-row"><label>Teachers / staff travelling<input name="x_staff" data-lbl="Teachers" type="number" min="0" max="100"></label>
+<label>Theme<select name="x_theme" data-lbl="Theme"><option value="">Please suggest</option><option>Heritage &amp; history</option><option>Science / space</option><option>Industrial visit</option><option>Nature &amp; adventure camp</option><option>International tour</option></select></label></div>"""
+
+PCC_EXTRA = """<div class="sf-row"><label>Purpose<select name="x_pur" data-lbl="Purpose"><option>Visa – long stay / work</option><option>Study abroad</option><option>Emigration / PR</option><option>Job abroad</option><option>Other</option></select></label>
+<label>Service needed<select name="x_svc" data-lbl="Service"><option>Police Clearance Certificate (PCC)</option><option>Attestation / apostille</option><option>Both</option></select></label></div>
+<div class="sf-row"><label>Is your current address the same as in your passport?<select name="x_addr" data-lbl="Address same as passport"><option value="">Not sure</option><option>Yes</option><option>No</option></select></label><span></span></div>"""
+
 CFG = {
  "domestic-holiday-packages": ("Domestic holiday", "Where in India?", "e.g. Kashmir, Kerala, Goa – or suggest", ""),
  "international-holiday-packages": ("International holiday", "Which country or countries?", "e.g. Dubai, Bali, Europe – or suggest", ""),
@@ -35,6 +61,12 @@ CFG = {
  "group-tours": ("Group tour", "Where would the group like to go?", "e.g. Rajasthan, Thailand – or suggest", GROUP_EXTRA),
  "honeymoon-packages": ("Honeymoon", "Where would you like to go?", "e.g. Maldives, Bali, Kashmir – or suggest", HONEY_EXTRA),
  "fit-mice-tours": ("FIT / MICE", "Destination or city", "e.g. Goa offsite, Dubai incentive trip", MICE_EXTRA),
+ "airport-transfers-outstation-cabs": ("Airport transfer / cab", "Pick-up and drop (from → to)", "e.g. Mulund → Mumbai airport T2", TRANSFER_EXTRA),
+ "weekend-getaways-from-mumbai": ("Weekend getaway", "Where would you like to go?", "e.g. Lonavala, Alibaug – or suggest", WEEKEND_EXTRA),
+ "senior-citizen-tours": ("Senior citizen tour", "Where would you like to go?", "e.g. Kerala, Char Dham, Singapore – or suggest", SENIOR_EXTRA),
+ "destination-weddings-family-functions": ("Wedding / family function", "Preferred destination", "e.g. Udaipur, Goa, Dubai – or suggest", WEDDING_EXTRA),
+ "school-college-educational-tours": ("Educational tour", "Where would you like to go?", "e.g. Delhi–Agra, ISRO Bengaluru, Singapore", EDU_EXTRA),
+ "police-clearance-certificate-pcc-document-services": ("PCC / document", "Country the document is for", "e.g. Canada, UAE, Germany", PCC_EXTRA),
  "jain-yatra-tours-with-maharaj": ("Jain yatra", "Which tirth(s)?", "e.g. Palitana, Sammed Shikharji, Girnar", JAIN_EXTRA),
 }
 
@@ -44,7 +76,7 @@ def svc_form(slug, root="../"):
         return ""
     name, dlabel, dph, extra = CFG[slug]
     return f"""<section class="alt" id="enquire"><div class="wrap" style="max-width:860px">
-<div class="head"><span class="kicker">Quick enquiry</span><h2>Tell us about your {name if name.split()[0] in ('Jain','FIT') else name.lower()} plans</h2><p class="lead">Takes a minute – we reply with options on WhatsApp or email.</p></div>
+<div class="head"><span class="kicker">Quick enquiry</span><h2>Tell us about your {name if name.split()[0] in ('Jain','FIT','PCC') else name.lower()} plans</h2><p class="lead">Takes a minute – we reply with options on WhatsApp or email.</p></div>
 <form class="sform" data-svc="{name}" novalidate>
 <div class="sf-row"><label>{dlabel}*<input name="dest" required maxlength="120" placeholder="{dph}" autocomplete="off"></label>
 <label>Month of travel<input name="month" type="month"></label></div>

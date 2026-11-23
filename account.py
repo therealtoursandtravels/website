@@ -167,7 +167,8 @@ header.site .hrow{position:relative}
 .acct-top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.acct-top .btn{border:1.5px solid var(--ink);background:#fff;cursor:pointer;font-family:inherit}
 .acct-quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.acct-quick a{border:1px solid var(--line);border-radius:999px;padding:8px 14px;text-decoration:none;color:var(--ink);font-weight:500;background:#fff}.acct-quick a:hover{border-color:var(--red);color:var(--red)}
 ul.enq{list-style:none;padding:0;margin:0}ul.enq li{padding:12px 0;border-bottom:1px solid var(--line);color:var(--ink);font-size:15px}.eref{font-size:12px;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:1px 8px;color:var(--muted)}
-@media(max-width:1100px){.acct-link{right:70px;padding:7px 12px;font-size:14px}}
+@media(max-width:1100px){.acct-link{position:static;transform:none;margin-left:auto;margin-right:6px;flex:none;padding:7px 12px;font-size:14px}header.site .brand{min-width:0;flex:1 1 auto}header.site .brand span{min-width:0}}
+@media(max-width:560px){header.site .brand b{white-space:normal;font-size:15.5px}header.site .brand{gap:8px}}
 @media(max-width:800px){.acct-grid{grid-template-columns:1fr}.acct-card{padding:18px}}
 @media(max-width:420px){.acct-link{font-size:0;padding:7px 10px}.acct-link:before{content:'👤';font-size:18px}}
 html.is-app .acct-link{display:none}

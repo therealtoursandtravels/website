@@ -1,7 +1,7 @@
 """Installable app (PWA): manifest, service worker, install button and offline page."""
 import json
 
-VERSION = "rtt-v5"
+VERSION = "rtt-v6"
 
 def manifest(NAME):
     return json.dumps({
@@ -68,7 +68,7 @@ BODY = """<nav class="appbar" aria-label="App">
 <a href="/"><span>🏠</span>Home</a><a href="/flights-hotels/#flights"><span>✈️</span>Book</a><a href="/customize-your-package/"><span>✨</span>Plan</a><a href="/visa/"><span>🛂</span>Visa</a><a href="/account/"><span>👤</span>Me</a><a href="https://wa.me/919843121212" target="_blank" rel="noopener"><span>💬</span>Chat</a></nav>
 <button type="button" class="app-install" id="appInstall" hidden>📲 Install app</button>
 <div class="ios-tip" id="iosTip" hidden role="dialog" aria-label="Install on iPhone"><button type="button" class="ios-x" aria-label="Close">✕</button>
-<b>Install The Real Tours and Travels app</b><p>Tap <span class="ios-share">⬆︎</span> <b>Share</b> at the bottom of Safari, then <b>Add to Home Screen</b>.</p></div>
+<b>Install The Real Tours and Travels app</b><ol class="ios-steps" id="iosSteps"><li>Tap the <span class="ios-share">⬆︎</span> <b>Share</b> button (in newer iPhones it is inside the <b>•••</b> menu).</li><li>Scroll down and tap <b>Add to Home Screen</b>.</li><li>Keep <b>Open as Web App</b> switched on if you see it, then tap <b>Add</b>.</li></ol><p class="ios-inapp" id="iosInapp" hidden>You are inside the Instagram / Facebook / WhatsApp browser. Tap <b>•••</b> and choose <b>Open in Safari</b> (or Open in browser) first, then follow the steps.</p></div>
 <script>
 (function(){
  if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
@@ -80,9 +80,14 @@ BODY = """<nav class="appbar" aria-label="App">
  let ev=null;
  addEventListener('beforeinstallprompt',e=>{e.preventDefault();ev=e;btn.hidden=false;});
  btn.addEventListener('click',async()=>{if(ev){ev.prompt();await ev.userChoice;ev=null;btn.hidden=true;}else{tip.hidden=false;}});
- const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)&&!/crios|fxios/i.test(navigator.userAgent);
- if(ios){btn.hidden=false;}
- tip.querySelector('.ios-x').addEventListener('click',()=>{tip.hidden=true;btn.hidden=true;try{localStorage.setItem('rtt_app_x','1');}catch(_){}});
+ const ua=navigator.userAgent;
+ const ios=/iphone|ipad|ipod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+ const inapp=/FBAN|FBAV|Instagram|Line\/|WhatsApp|Snapchat/i.test(ua);
+ if(ios){btn.hidden=false;document.getElementById('iosInapp').hidden=!inapp;
+  if(/crios|edgios|fxios/i.test(ua))document.getElementById('iosSteps').firstElementChild.innerHTML='Tap the <span class="ios-share">⬆︎</span> <b>Share</b> button at the top-right, next to the address bar.';}
+ tip.querySelector('.ios-x').addEventListener('click',()=>{tip.hidden=true;btn.hidden=true;try{localStorage.setItem('rtt_app_x',String(Date.now()));}catch(_){}});
+ // a dismissed button comes back after 7 days
+ try{const t=+localStorage.getItem('rtt_app_x');dismissed=t>1&&Date.now()-t<7*864e5;}catch(_){}
  if(dismissed&&ios)btn.hidden=true;
  addEventListener('appinstalled',()=>{btn.hidden=true;});
 })();
@@ -92,7 +97,7 @@ CSS = """
 .app-install{position:fixed;left:16px;bottom:18px;z-index:60;border:0;background:#fff;color:var(--crimson);font:600 15px 'Jost',sans-serif;padding:12px 18px;border-radius:999px;box-shadow:0 8px 22px rgba(0,0,0,.18);border:1.5px solid var(--red);cursor:pointer}
 .app-install[hidden],.ios-tip[hidden]{display:none!important}
 .ios-tip{position:fixed;left:12px;right:12px;bottom:84px;z-index:70;background:#fff;border:1px solid var(--line);border-top:5px solid var(--red);border-radius:16px;padding:16px 18px;box-shadow:0 16px 40px rgba(0,0,0,.2)}
-.ios-tip p{margin:6px 0 0;color:var(--muted)}.ios-share{display:inline-block;border:1px solid var(--line);border-radius:6px;padding:0 6px;color:#0a84ff}
+.ios-tip p{margin:6px 0 0;color:var(--muted)}.ios-steps{margin:8px 0 0;padding-left:20px;color:var(--ink);font-size:14.5px}.ios-steps li{margin:4px 0}.ios-inapp{background:#fdf0f0;border-radius:10px;padding:8px 10px;color:var(--crimson)!important;font-size:13.5px}.ios-share{display:inline-block;border:1px solid var(--line);border-radius:6px;padding:0 6px;color:#0a84ff}
 .ios-x{position:absolute;right:10px;top:8px;border:0;background:none;font-size:18px;color:var(--muted);cursor:pointer}
 html.is-app .topbar,html.is-app .float-wa,html.is-app .app-install,html.is-app .hcta{display:none!important}
 .appbar{display:none}

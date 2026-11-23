@@ -10,6 +10,7 @@ import pwa
 from insurance import insurance_page
 import account
 from svcform import svc_form, SVC_CSS
+import fx
 
 SITE = "https://www.therealtoursandtravels.com"
 NAME = "The Real Tours and Travels"
@@ -106,6 +107,66 @@ SERVICES = [
   faqs=[("What does MICE stand for?","Meetings, Incentives, Conferences and Exhibitions/Events – business travel for groups."),
         ("Do you arrange corporate offsites near Mumbai?","Yes, as well as domestic and international incentive trips."),
         ("Can you handle visas for a corporate group?","Yes, we coordinate group visas, flights and insurance.")]),
+ dict(slug="airport-transfers-outstation-cabs", short="Airport Transfers & Cabs", icon="🚖", img=None,
+  title="Mumbai Airport Transfers & Outstation Cabs | Car Hire from Mulund",
+  h1="Airport Transfers & Outstation Cabs from Mumbai",
+  desc="Mumbai airport pick-up and drop, outstation cabs and car hire from Mulund and Thane – sedans, SUVs, Innova and tempo travellers with experienced drivers. Book with The Real Tours and Travels.",
+  intro="On-time airport pick-ups and drops at Mumbai (BOM) and Navi Mumbai airports, and comfortable cars for weekend trips, pilgrimages and outstation journeys – with experienced drivers and one number to call.",
+  points=["Mumbai and Navi Mumbai airport pick-up and drop","Outstation one-way and round trips – Pune, Nashik, Shirdi, Lonavala, Goa and more","Sedan, SUV, Innova Crysta and tempo traveller options","Meet & greet with name board on arrival","Full-day and half-day local car hire","Cars for weddings, groups and corporate guests"],
+  why="We have arranged travel for Mumbai families for over four decades. Every booking is confirmed with the driver's details in advance, and we are on call if plans change.",
+  faqs=[("Do you track flight delays for pick-ups?","Share your flight number and we plan the pick-up around the actual arrival time."),
+        ("Can I book a cab for a multi-day trip?","Yes – outstation round trips for any number of days, with the same car and driver."),
+        ("Which cars are available?","Sedans, SUVs, Innova Crysta and tempo travellers for larger groups. Tell us the number of passengers and luggage and we suggest the right car.")]),
+ dict(slug="weekend-getaways-from-mumbai", short="Weekend Getaways", icon="🏞️", img=None,
+  title="Weekend Getaways from Mumbai | Lonavala, Mahabaleshwar, Alibaug, Igatpuri",
+  h1="Weekend Getaways from Mumbai",
+  desc="Short weekend trips from Mumbai – Lonavala, Mahabaleshwar, Alibaug, Igatpuri, Matheran, Karjat, Panchgani and Dapoli – with resorts, villas and car transfers planned by The Real Tours and Travels.",
+  intro="Need a quick break? We plan relaxed 1–3 night getaways close to Mumbai – the right resort or villa, a comfortable car from your doorstep and a simple plan for the weekend.",
+  points=["Lonavala and Khandala","Mahabaleshwar and Panchgani","Alibaug, Kashid and Dapoli beaches","Igatpuri, Karjat and Matheran","Pool villas and family resorts","Doorstep car pick-up from Mumbai and Thane"],
+  why="We know the hotels and resorts around Mumbai well and match them to your family – kids, seniors, pets or a quiet couple's break.",
+  faqs=[("Can you plan a trip for this weekend?","Often yes – WhatsApp us your dates and we check what's available right away."),
+        ("Do you arrange villas for large families?","Yes, private villas and bungalows for family and friends' groups."),
+        ("Is transport included?","We can include a car from your home, or you can drive yourself – your choice.")]),
+ dict(slug="senior-citizen-tours", short="Senior Citizen Tours", icon="👴", img=None,
+  title="Senior Citizen Tours from Mumbai | Slow-paced, Wheelchair-friendly Holidays",
+  h1="Senior Citizen Tours – Comfortable, Slow-paced Holidays",
+  desc="Holidays and yatras planned for senior citizens from Mumbai – relaxed pacing, wheelchair-friendly hotels, airport assistance, lifts and ground-floor rooms, and pure veg or Jain food.",
+  intro="Travel at a pace that suits you. We plan trips for parents and grandparents with fewer hotel changes, shorter drives, wheelchair and airport assistance, and someone to call at any time.",
+  points=["Relaxed itineraries with rest time every day","Wheelchair and airport assistance arranged with airlines","Hotels with lifts, ground-floor or accessible rooms","Pure vegetarian and Jain food arrangements","Domestic tours, yatras and international holidays","Travel insurance for senior citizens"],
+  why="Many of our travellers have been with us for decades. We plan every senior citizen trip as carefully as we would for our own parents.",
+  faqs=[("Can you arrange a wheelchair at the airport?","Yes, we request wheelchair assistance with the airline when booking the tickets."),
+        ("Do you have group tours only for seniors?","We plan both private family trips and group tours for senior citizens – ask us about upcoming groups."),
+        ("Is travel insurance available for people above 70?","Yes, there are plans for travellers above 60 and 70. Pre-existing conditions must be declared.")]),
+ dict(slug="destination-weddings-family-functions", short="Destination Weddings", icon="💍", img=None,
+  title="Destination Weddings & Family Functions | Venues, Room Blocks, Guest Travel",
+  h1="Destination Weddings & Family Functions",
+  desc="Destination weddings, engagements, anniversaries and family functions in India and abroad – venues, hotel room blocks, guest flights, transfers and Jain or vegetarian catering, planned by The Real Tours and Travels.",
+  intro="Celebrate with everyone together. We handle the travel side of your wedding or family function – venue and hotel options, room blocks for guests, flights and trains, transfers and on-ground coordination.",
+  points=["Wedding and function venues in India and abroad","Hotel room blocks for all your guests","Group flights, trains and coaches for guests","Airport and venue transfers","Jain and vegetarian catering arrangements","One coordinator for the families from start to finish"],
+  why="Big family events need calm planning. With 45+ years of group travel experience, we take care of the logistics so the family can enjoy the occasion.",
+  faqs=[("Where can we plan a destination wedding?","Popular choices include Udaipur, Jaipur, Goa, Kerala, Dubai, Bali and Thailand – we suggest venues to suit your guest list and budget."),
+        ("Can you book rooms for 100+ guests?","Yes, we arrange room blocks and group rates with hotels and resorts."),
+        ("Do you arrange guest travel from different cities?","Yes, we book flights and trains for guests travelling from different cities.")]),
+ dict(slug="school-college-educational-tours", short="Educational Tours", icon="🎓", img=None,
+  title="School & College Educational Tours from Mumbai | Study Trips & Industrial Visits",
+  h1="School & College Educational Tours",
+  desc="Educational tours for schools and colleges from Mumbai – study trips, industrial visits, heritage and science tours, adventure camps and international student tours with safe transport and supervised stays.",
+  intro="Learning trips that are safe, well-organised and fun. We plan educational tours for schools, colleges and coaching institutes – with student-friendly stays, safe transport and a clear day-by-day plan for teachers.",
+  points=["Heritage and history tours","Science, space and industrial visits","Nature, wildlife and adventure camps","College and university tours abroad","Safe AC coaches and train bookings","Supervised stays and pure veg meals"],
+  why="Safety comes first. We share the full itinerary, hotel and transport details with the school in advance and stay in touch with the teachers throughout.",
+  faqs=[("Do you provide a tour manager?","Yes, a tour manager can travel with the group to coordinate stays, meals and visits."),
+        ("Can you handle permissions and documents?","We help with the travel documents and ID lists needed for trains, flights and hotels; school approvals are handled by the institution."),
+        ("Do you arrange international student tours?","Yes, including visas and travel insurance for students and teachers.")]),
+ dict(slug="police-clearance-certificate-pcc-document-services", short="PCC & Documents", icon="📄", img="passport.jpg",
+  title="Police Clearance Certificate (PCC) & Document Help | Mulund, Mumbai",
+  h1="Police Clearance Certificate (PCC) & Document Help",
+  desc="Help with the Police Clearance Certificate (PCC) for Indian passport holders – for visas, emigration, study or jobs abroad – plus help with document attestation and apostille. The Real Tours and Travels, Mulund West.",
+  intro="Many countries ask for a Police Clearance Certificate (PCC) for long-stay visas, study, work or permanent residence. We help you fill the application, book the appointment and prepare the right documents.",
+  points=["PCC application for Indian passport holders via Passport Seva","Appointment booking at the Passport Seva Kendra / POPSK","Document checklist for your case (current address, passport details)","Help with attestation and apostille of certificates through authorised agencies","Visa file preparation for long-stay, study and work visas","Reminders and follow-up until your certificate is ready"],
+  why="We have helped Mumbai families with passports and visas for decades. We check your documents before your appointment, so you go once and go prepared.",
+  faqs=[("Who needs a Police Clearance Certificate?","It is usually asked for long-stay, work, study, emigration or permanent residence visas. The embassy or employer will tell you if you need one."),
+        ("How long does a PCC take?","It depends on your address and whether police verification is needed. We tell you the expected time for your case before you apply."),
+        ("Can you help with apostille?","Yes, we help with attestation and apostille of documents through authorised agencies, as required by the country you are going to.")]),
  dict(slug="jain-yatra-tours-with-maharaj", short="Jain Yatra with Maharaj", icon="🙏", img="jain.jpg",
   title="Jain Yatra Tours with Maharaj | Pure Jain Food on Tour from Mumbai",
   h1="Jain Yatra Tours with Maharaj (Pure Jain Food)",
@@ -242,7 +303,9 @@ def jsonld_org():
       "image":SITE+"/img/logo-512.png","telephone":PHONE_RAW,"email":EMAIL,"foundingDate":"1981","taxID":GST,"vatID":GST,
       "address":{"@type":"PostalAddress","streetAddress":"204, B10, Rachana Building, Govardhan Nagar, Lal Bahadur Shastri Marg","addressLocality":"Mulund West, Mumbai","addressRegion":"Maharashtra","postalCode":"400080","addressCountry":"IN"},
       "openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"09:00","closes":"22:00"}],
-      "areaServed":{"@type":"Country","name":"India"},
+      "areaServed":[{"@type":"Country","name":"India"},{"@type":"Place","name":"Worldwide"}],
+      "priceRange":"₹₹","currenciesAccepted":"INR","paymentAccepted":"Cash, UPI, Credit Card, Debit Card, Net Banking",
+      "knowsLanguage":["en","hi","gu","mr"],
       "hasMap":MAPS,"sameAs":[IG,FB,MAPS],
       "makesOffer":[{"@type":"Offer","itemOffered":{"@type":"Service","name":s["h1"],"url":f"{SITE}/{s['slug']}/"}} for s in SERVICES]}
 
@@ -264,7 +327,27 @@ def jain_extra(s):
 <div><h3>🎒 What to pack</h3><ul><li>Puja clothes and a small puja kit</li><li>Comfortable footwear that is easy to remove</li><li>Personal medicines and a copy of prescriptions</li><li>Light woollens for early mornings in winter</li><li>Original photo ID (Aadhaar / passport) for every traveller</li></ul></div>
 </div></div></section>'''
 
+def seo_title(t, limit=65):
+    """Keep titles short enough for Google results: drop secondary parts before cutting."""
+    if len(t) <= limit:
+        return t
+    brand = " | The Real Tours and Travels"
+    base = t[:-len(brand)] if t.endswith(brand) else t
+    for sep in (" | ", " – ", ": "):
+        while len(base + brand) > limit and sep in base:
+            base = base.rsplit(sep, 1)[0]
+    if len(base + brand) <= limit:
+        return base + brand
+    return base if len(base) <= limit else base[:limit - 1].rsplit(" ", 1)[0] + "…"
+
+def seo_desc(d, limit=158):
+    if len(d) <= limit:
+        return d
+    cut = d[:limit].rsplit(" ", 1)[0].rstrip(",;–- ")
+    return cut + "…"
+
 def page(path, title, desc, body, extra_ld=None, hero_img=None):
+    title, desc = seo_title(title), seo_desc(desc)
     canonical = SITE + path
     lds = [jsonld_org()] + (extra_ld or [])
     ld = "\n".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in lds)
@@ -282,7 +365,9 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <meta property="og:type" content="website"><meta property="og:site_name" content="{NAME}">
 <meta property="og:title" content="{title}"><meta property="og:description" content="{desc}">
 <meta property="og:url" content="{canonical}"><meta property="og:image" content="{og}">
-<meta name="twitter:card" content="summary_large_image">
+<meta property="og:locale" content="en_IN"><meta property="og:image:alt" content="{NAME}">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{title}"><meta name="twitter:description" content="{desc}"><meta name="twitter:image" content="{og}">
+<meta name="geo.region" content="IN-MH"><meta name="geo.placename" content="Mulund West, Mumbai">{'<link rel="preload" as="image" href="img/hero-travel.jpg" fetchpriority="high">' if path=="/" else ''}
 <meta name="theme-color" content="#ffffff">
 {pwa.HEAD}
 {account.SITE_JS}
@@ -318,7 +403,9 @@ function chk(){{q=0;w.style.pointerEvents='none';const r=w.getBoundingClientRect
 const hit=[.15,.5,.85].flatMap(fx=>[.15,.5,.85].map(fy=>[r.left+r.width*fx,r.top+r.height*fy])).some(([x,y])=>{{const e=document.elementFromPoint(x,y);return e&&e!==w&&e.closest('a,button,input,select,textarea,label,summary');}});
 w.style.pointerEvents='';w.classList.toggle('tuck',hit);}} /* hide the WhatsApp bubble while it would cover a button or form field */
 addEventListener('scroll',()=>{{if(!q)q=requestAnimationFrame(chk);}},{{passive:true}});addEventListener('resize',chk);addEventListener('load',chk);chk();}})();</script>
+{fx.jain_popup(root)}
 {pwa.BODY}
+{fx.JS}
 </body></html>"""
 
 def write(path, html):
@@ -340,7 +427,7 @@ CSSV = "0"
 def build():
     root = os.path.dirname(os.path.abspath(__file__))
     global CSSV
-    css_all = CSS + VISA_CSS + PLANNER_CSS + FLIGHT_CSS + TOOL_CSS + pwa.CSS + account.ACCOUNT_CSS + SVC_CSS
+    css_all = CSS + VISA_CSS + PLANNER_CSS + FLIGHT_CSS + TOOL_CSS + pwa.CSS + account.ACCOUNT_CSS + SVC_CSS + fx.CSS
     CSSV = __import__("hashlib").md5(css_all.encode()).hexdigest()[:8]
     open(os.path.join(root, "style.css"), "w").write(css_all)
     imgs = set(os.listdir(os.path.join(root, "img")))
@@ -348,30 +435,30 @@ def build():
     cards = "".join(f'<a class="card" href="{s["slug"]}/"><div class="ic">{s["icon"]}</div><h3>{s["h1"]}</h3><p>{s["desc"][:120].rsplit(" ",1)[0]}…</p><span class="more">Explore →</span></a>' for s in SERVICES)
     cards += '<a class="card" href="customize-your-package/"><div class="ic">✨</div><h3>Customized Packages – Plan Your Own Trip</h3><p>Type the places you want to visit, choose your dates and hotels, and get an instant day-by-day itinerary…</p><span class="more">Explore →</span></a>'
     revs = "".join(f'<div class="review"><div class="stars">★★★★★</div><p>“{t}”</p><b>— {n}</b></div>' for n, t in REVIEWS)
-    hero = "gulmarg.jpg" if "gulmarg.jpg" in imgs else None
+    hero = "hero-travel.jpg" if "hero-travel.jpg" in imgs else None
+    RJ = fx.load_reviews()
     hero_style = f' style="--hero:url(img/{hero})"' if hero else ""
     side = "dubai.jpg" if "dubai.jpg" in imgs else None
     side_html = f'<div class="photo"><img src="img/{side}" alt="Indian family holiday in Dubai planned by The Real Tours and Travels" loading="lazy" width="800" height="600"></div>' if side else '<div class="emblem"><img src="img/logo.png" alt="The Real Tours and Travels emblem"><b>Crafting Journeys Since 1981</b><p>A Mulund family business trusted by generations of Mumbai travellers.</p></div>'
     home = f"""
-<section class="hero"{hero_style}><div class="wrap"><div>
+<section class="hero home-hero"{hero_style}><div class="wrap"><div>
 <span class="kicker">Mumbai's family travel experts · Since 1981</span>
 <h1>Travel Agency in Mulund, Mumbai for All Your Travel Needs</h1>
 <p>Domestic and international holiday packages, honeymoons, yatras, Jain tours with Maharaj, group tours, passport &amp; visa services and travel insurance – planned personally by The Real Tours and Travels.</p>
 <div class="btns"><a class="btn gold" href="customize-your-package/">✨ Customized Packages</a><a class="btn ghost" href="{WA}" target="_blank" rel="noopener">💬 WhatsApp 98431 21212</a></div>
-<div class="trust"><div><b>45+ years</b>serving travellers since 1981</div><div><b>4.8 ★</b>rating on Google</div><div><b>10+</b>travel services under one roof</div></div>
+<div class="trust"><div><b>45+ years</b>serving travellers since 1981</div><div><b>{RJ["rating"]} ★</b>rating on Google</div><div><b>10+</b>travel services under one roof</div></div>
 </div>{seal("")}</div>{RIDGE}</section>
 <section class="fsec"><div class="wrap">{flight_widget("")}</div></section>
 <section id="services"><div class="wrap">
 <div class="head"><span class="kicker">What we do</span><h2>Our Travel Services</h2><p class="lead">Everything you need for a stress-free trip – from the first idea to the day you return home.</p></div>
 <div class="grid">{cards}</div></div></section>
+{fx.gallery("")}
 <section class="alt"><div class="wrap two">
 <div><h2>Why Mumbai families choose The Real Tours and Travels</h2>
 <span class="kicker">Our promise</span><p class="lead" style="margin-bottom:20px">We are a family-run travel agency in Mulund West. For over four decades we have planned holidays, yatras and business trips – in India and around the world.</p>
 <ul class="ticks"><li>Personal service – one point of contact, on call during your trip</li><li>Family-friendly hotels and comfortable pacing for kids and seniors</li><li>Visas, travel insurance, flights and hotels handled in one place</li><li>Pure vegetarian and Jain food arrangements, including tours with our own Maharaj</li><li>Transparent planning – no hidden surprises</li></ul></div>
 {side_html}</div></section>
-<section><div class="wrap"><div class="head"><span class="kicker">Reviews</span><h2>What our travellers say</h2><p class="lead">Rated 4.8 ★ on Google by our customers.</p></div>
-<div class="grid">{revs}</div>
-<p style="margin-top:30px;text-align:center"><a class="btn outline" href="{MAPS}" target="_blank" rel="noopener">Read all reviews on Google</a> <a class="btn gold" href="{REVIEW}" target="_blank" rel="noopener">⭐ Write a review</a></p></div></section>
+{fx.reviews_carousel(MAPS, REVIEW)}
 <section class="alt faq"><div class="wrap" style="max-width:860px"><div class="head"><span class="kicker">Good to know</span><h2>Frequently asked questions</h2></div>
 <details><summary>Where is The Real Tours and Travels located?</summary><p>We are at 204, B10, Rachana Building, Govardhan Nagar, LBS Marg, Mulund West, Mumbai 400080, open every day from 9 am to 10 pm.</p></details>
 <details><summary>Do you plan both domestic and international holidays?</summary><p>Yes – from Kashmir, Kerala and Manali to Dubai, Thailand, Bali and Europe, with flights, hotels, visas and insurance.</p></details>
@@ -404,8 +491,7 @@ def build():
 <div><h2>Why book with us</h2><p>{s['why']}</p><p>Visit our office in <b>Mulund West, Mumbai</b> (open daily 9 am – 10 pm), or plan everything over call and WhatsApp.</p>
 <p><a class="btn red" href="{'#enquire' if s['slug'] in SVC_SLUGS else WA}"{'' if s['slug'] in SVC_SLUGS else ' target="_blank" rel="noopener"'}>Plan my trip</a></p></div></div></section>
 {jain_extra(s) if s['slug']=='jain-yatra-tours-with-maharaj' else ''}{svc_form(s['slug'])}
-<section class="revstrip"><div class="wrap"><div class="head"><span class="kicker">Reviews</span><h2>What our travellers say</h2><p class="lead">Rated 4.8 ★ on Google by our customers.</p></div><div class="grid">{revs3}</div>
-<p style="margin-top:24px;text-align:center"><a class="btn outline" href="{MAPS}" target="_blank" rel="noopener">Read all reviews on Google</a> <a class="btn gold" href="{REVIEW}" target="_blank" rel="noopener">⭐ Write a review</a></p></div></section>
+{fx.reviews_carousel(MAPS, REVIEW)}
 <section class="faq"><div class="wrap" style="max-width:860px"><div class="head"><span class="kicker">Good to know</span><h2>Frequently asked questions</h2></div>{faqs}</div></section>
 <section><div class="wrap"><div class="head"><span class="kicker">More from us</span><h2>Explore our other services</h2></div><div class="grid">{others}</div></div></section>
 {cta_band()}"""
