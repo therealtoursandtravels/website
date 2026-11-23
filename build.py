@@ -9,6 +9,7 @@ from tools import gst_tool_page, TOOL_CSS
 import pwa
 from insurance import insurance_page
 import account
+from svcform import svc_form, SVC_CSS
 
 SITE = "https://www.therealtoursandtravels.com"
 NAME = "The Real Tours and Travels"
@@ -95,16 +96,6 @@ SERVICES = [
   faqs=[("When should we book our honeymoon?","2–3 months before the wedding is ideal, especially for peak wedding season dates."),
         ("Can you include honeymoon extras?","Yes – room decoration, cake, candlelight dinner and other surprises can be arranged with most hotels."),
         ("Do you plan honeymoons in India too?","Yes, Kashmir, Himachal, Kerala, Andaman and Goa are all popular choices.")]),
- dict(slug="customised-tours", short="Customised Tours", icon="🧭", img=None,
-  title="Customised Tour Packages | Tailor-made Holidays from Mumbai",
-  h1="Customised Tours – Planned Around You",
-  desc="Tailor-made holiday packages from Mumbai built around your dates, interests and travel style – for families, couples, seniors and solo travellers, in India and worldwide.",
-  intro="Not every family fits a fixed package. Tell us how you like to travel and we will build an itinerary from scratch – the destinations, hotels, pace, food preferences and activities you want.",
-  points=["Your dates and number of nights","Hotel category and room types of your choice","Relaxed pacing for kids and senior citizens","Vegetarian and Jain food arrangements","Special interests – wildlife, adventure, culture, shopping","Multi-country and multi-city itineraries"],
-  why="Since 1981 we have planned journeys personally. You speak directly to the people who plan your trip.",
-  faqs=[("How do I start a customised tour?","Call or WhatsApp 98431 21212 with your dates, number of travellers and ideas – we will send a suggested itinerary."),
-        ("Can you combine two countries in one trip?","Yes, multi-country trips are a speciality."),
-        ("Can changes be made after booking?","Within the rules of airlines and hotels, yes – we will help you with any changes.")]),
  dict(slug="fit-mice-tours", short="FIT & MICE", icon="💼", img=None,
   title="FIT & MICE Tours | Corporate Travel, Incentive Trips & Conferences",
   h1="FIT & MICE Tours – Corporate Travel and Events",
@@ -125,6 +116,10 @@ SERVICES = [
   faqs=[("Does the Maharaj travel with the group?","Yes, the Maharaj travels with the group and cooks fresh Jain food daily."),
         ("Is chauvihar / sunset meal timing followed?","Yes, meal timings are planned to respect chauvihar and other observances."),
         ("Can you arrange Jain food on international trips?","Yes, we arrange Jain food options for many international destinations too.")]),
+]
+
+# Upcoming group yatras with Maharaj – add (title, dates, short note) to publish them. No prices.
+UPCOMING_YATRAS = [
 ]
 
 REVIEWS = [
@@ -251,6 +246,24 @@ def jsonld_org():
       "hasMap":MAPS,"sameAs":[IG,FB,MAPS],
       "makesOffer":[{"@type":"Offer","itemOffered":{"@type":"Service","name":s["h1"],"url":f"{SITE}/{s['slug']}/"}} for s in SERVICES]}
 
+from svcform import CFG as _SVC_CFG
+SVC_SLUGS = set(_SVC_CFG)
+
+def jain_extra(s):
+    if UPCOMING_YATRAS:
+        up = "".join(f'<div class="yd"><div><b>{t}</b><br><span class="meta">{d}{(" · " + n) if n else ""}</span></div><a class="btn outline" href="#enquire" data-yatra="{t}">Register interest</a></div>' for t, d, n in UPCOMING_YATRAS)
+    else:
+        up = '<div class="ynone"><p style="margin:0 0 10px">New <b>group yatra dates with Maharaj</b> are announced here and on our Instagram <b>@therealtoursandtravels</b>.</p><a class="btn gold" href="#enquire" data-yatra="">🔔 Tell me about the next group yatra</a></div>'
+    return f'''<section class="alt" id="upcoming"><div class="wrap" style="max-width:960px"><div class="head"><span class="kicker">Group yatras</span><h2>Upcoming group yatras with Maharaj</h2><p class="lead">Join a group yatra with pure Jain food cooked fresh every day – or plan a private yatra for your family.</p></div>
+<div class="yup">{up}</div></div></section>
+<section><div class="wrap"><div class="head"><span class="kicker">On tour</span><h2>What to expect on our Jain yatras</h2></div>
+<div class="yexp">
+<div><h3>🍲 Food &amp; kitchen</h3><ul><li>Our Maharaj travels with the group and cooks fresh Jain food every day</li><li>No onion, garlic, potatoes or other root vegetables</li><li>Meal times planned for chovihar, with tithi days respected</li><li>Boiled or filtered drinking water arranged</li></ul></div>
+<div><h3>🛕 A day on yatra</h3><ul><li>Early starts for darshan and puja, before the heat</li><li>Sensible daily distances and rest breaks for elders</li><li>Help with dolis / palkis for climbs such as Palitana and Girnar</li><li>One tour manager looking after the group throughout</li></ul></div>
+<div><h3>🏨 Stays &amp; travel</h3><ul><li>Clean dharamshalas or hotels close to the tirth – your choice</li><li>Comfortable AC coach, tempo traveller or car, as per group size</li><li>Train or flight tickets arranged from Mumbai</li><li>Travel insurance available for senior citizens</li></ul></div>
+<div><h3>🎒 What to pack</h3><ul><li>Puja clothes and a small puja kit</li><li>Comfortable footwear that is easy to remove</li><li>Personal medicines and a copy of prescriptions</li><li>Light woollens for early mornings in winter</li><li>Original photo ID (Aadhaar / passport) for every traveller</li></ul></div>
+</div></div></section>'''
+
 def page(path, title, desc, body, extra_ld=None, hero_img=None):
     canonical = SITE + path
     lds = [jsonld_org()] + (extra_ld or [])
@@ -258,7 +271,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
     depth = path.strip("/").count("/") + (1 if path.strip("/") else 0)
     root = "../" * depth if depth else ""
     og = SITE + "/img/" + (hero_img or "logo-512.png")
-    nav = "".join(f'<li><a href="{root}{s["slug"]}/">{s["short"]}</a></li>' for s in SERVICES)
+    nav = "".join(f'<li><a href="{root}{s["slug"]}/">{s["short"]}</a></li>' for s in SERVICES) + f'<li><a href="{root}customize-your-package/">Customized Packages</a></li>'
     return f"""<!doctype html>
 <html lang="en-IN"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -327,12 +340,13 @@ CSSV = "0"
 def build():
     root = os.path.dirname(os.path.abspath(__file__))
     global CSSV
-    css_all = CSS + VISA_CSS + PLANNER_CSS + FLIGHT_CSS + TOOL_CSS + pwa.CSS + account.ACCOUNT_CSS
+    css_all = CSS + VISA_CSS + PLANNER_CSS + FLIGHT_CSS + TOOL_CSS + pwa.CSS + account.ACCOUNT_CSS + SVC_CSS
     CSSV = __import__("hashlib").md5(css_all.encode()).hexdigest()[:8]
     open(os.path.join(root, "style.css"), "w").write(css_all)
     imgs = set(os.listdir(os.path.join(root, "img")))
     # Home
     cards = "".join(f'<a class="card" href="{s["slug"]}/"><div class="ic">{s["icon"]}</div><h3>{s["h1"]}</h3><p>{s["desc"][:120].rsplit(" ",1)[0]}…</p><span class="more">Explore →</span></a>' for s in SERVICES)
+    cards += '<a class="card" href="customize-your-package/"><div class="ic">✨</div><h3>Customized Packages – Plan Your Own Trip</h3><p>Type the places you want to visit, choose your dates and hotels, and get an instant day-by-day itinerary…</p><span class="more">Explore →</span></a>'
     revs = "".join(f'<div class="review"><div class="stars">★★★★★</div><p>“{t}”</p><b>— {n}</b></div>' for n, t in REVIEWS)
     hero = "gulmarg.jpg" if "gulmarg.jpg" in imgs else None
     hero_style = f' style="--hero:url(img/{hero})"' if hero else ""
@@ -357,7 +371,7 @@ def build():
 {side_html}</div></section>
 <section><div class="wrap"><div class="head"><span class="kicker">Reviews</span><h2>What our travellers say</h2><p class="lead">Rated 4.8 ★ on Google by our customers.</p></div>
 <div class="grid">{revs}</div>
-<p style="margin-top:30px;text-align:center"><a class="btn outline" href="{MAPS}" target="_blank" rel="noopener">Read all reviews on Google</a></p></div></section>
+<p style="margin-top:30px;text-align:center"><a class="btn outline" href="{MAPS}" target="_blank" rel="noopener">Read all reviews on Google</a> <a class="btn gold" href="{REVIEW}" target="_blank" rel="noopener">⭐ Write a review</a></p></div></section>
 <section class="alt faq"><div class="wrap" style="max-width:860px"><div class="head"><span class="kicker">Good to know</span><h2>Frequently asked questions</h2></div>
 <details><summary>Where is The Real Tours and Travels located?</summary><p>We are at 204, B10, Rachana Building, Govardhan Nagar, LBS Marg, Mulund West, Mumbai 400080, open every day from 9 am to 10 pm.</p></details>
 <details><summary>Do you plan both domestic and international holidays?</summary><p>Yes – from Kashmir, Kerala and Manali to Dubai, Thailand, Bali and Europe, with flights, hotels, visas and insurance.</p></details>
@@ -372,6 +386,7 @@ def build():
         "Trusted travel agency in Mulund West, Mumbai since 1981. Domestic & international holiday packages, honeymoons, yatras, Jain tours with Maharaj, group tours, visas and travel insurance. Call/WhatsApp 98431 21212.",
         home, [faq_home], hero))
     # Service pages
+    revs3 = "".join(f'<div class="review"><div class="stars">★★★★★</div><p>“{t}”</p><b>— {n}</b></div>' for n, t in REVIEWS[:3])
     for s in SERVICES:
         others = "".join(f'<a class="card" href="../{o["slug"]}/"><div class="ic">{o["icon"]}</div><h3>{o["h1"]}</h3><span class="more">Explore →</span></a>' for o in SERVICES if o is not s)[:100000]
         pts = "".join(f"<li>{p}</li>" for p in s["points"])
@@ -383,18 +398,22 @@ def build():
 <div class="crumbs"><a href="../">Home</a> › {s['short']}</div>
 <span class="kicker">{s['icon']} {s['short']}</span>
 <h1>{s['h1']}</h1><p>{s['intro']}</p>
-<div class="btns">{'<a class="btn gold" href="../visa/">📄 Visa documents &amp; upload</a><a class="btn outline" href="../passport/">🛂 Passport services</a>' if s['slug']=='passport-visa-services' else ('<a class="btn gold" href="../insurance/#ins-form">🛡️ Get insurance quotation</a>' if s['slug']=='travel-insurance' else '')}<a class="btn gold" href="{WA}" target="_blank" rel="noopener">💬 Get a free plan on WhatsApp</a><a class="btn ghost" href="tel:{PHONE_RAW}">📞 98431 21212</a></div>
+<div class="btns">{'<a class="btn gold" href="#enquire">📝 Send an enquiry</a>' if s['slug'] in SVC_SLUGS else ''}{'<a class="btn gold" href="../visa/">📄 Visa documents &amp; upload</a><a class="btn outline" href="../passport/">🛂 Passport services</a>' if s['slug']=='passport-visa-services' else ('<a class="btn gold" href="../insurance/#ins-form">🛡️ Get insurance quotation</a>' if s['slug']=='travel-insurance' else '')}<a class="btn gold" href="{WA}" target="_blank" rel="noopener">💬 Get a free plan on WhatsApp</a><a class="btn ghost" href="tel:{PHONE_RAW}">📞 98431 21212</a></div>
 </div>{seal("../")}</div>{RIDGE}</section>
 <section><div class="wrap two"><div><h2>What we offer</h2><ul class="ticks">{pts}</ul></div>
 <div><h2>Why book with us</h2><p>{s['why']}</p><p>Visit our office in <b>Mulund West, Mumbai</b> (open daily 9 am – 10 pm), or plan everything over call and WhatsApp.</p>
-<p><a class="btn red" href="{WA}" target="_blank" rel="noopener">Plan my trip</a></p></div></div></section>
-<section class="alt faq"><div class="wrap" style="max-width:860px"><div class="head"><span class="kicker">Good to know</span><h2>Frequently asked questions</h2></div>{faqs}</div></section>
+<p><a class="btn red" href="{'#enquire' if s['slug'] in SVC_SLUGS else WA}"{'' if s['slug'] in SVC_SLUGS else ' target="_blank" rel="noopener"'}>Plan my trip</a></p></div></div></section>
+{jain_extra(s) if s['slug']=='jain-yatra-tours-with-maharaj' else ''}{svc_form(s['slug'])}
+<section class="revstrip"><div class="wrap"><div class="head"><span class="kicker">Reviews</span><h2>What our travellers say</h2><p class="lead">Rated 4.8 ★ on Google by our customers.</p></div><div class="grid">{revs3}</div>
+<p style="margin-top:24px;text-align:center"><a class="btn outline" href="{MAPS}" target="_blank" rel="noopener">Read all reviews on Google</a> <a class="btn gold" href="{REVIEW}" target="_blank" rel="noopener">⭐ Write a review</a></p></div></section>
+<section class="faq"><div class="wrap" style="max-width:860px"><div class="head"><span class="kicker">Good to know</span><h2>Frequently asked questions</h2></div>{faqs}</div></section>
 <section><div class="wrap"><div class="head"><span class="kicker">More from us</span><h2>Explore our other services</h2></div><div class="grid">{others}</div></div></section>
 {cta_band()}"""
         faq_ld = {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}} for q,a in s["faqs"]]}
         svc_ld = {"@context":"https://schema.org","@type":"Service","name":s["h1"],"description":s["desc"],"provider":{"@id":SITE+"/#agency"},"areaServed":{"@type":"Country","name":"India"},"url":f"{SITE}/{s['slug']}/"}
         crumbs = {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":SITE+"/"},{"@type":"ListItem","position":2,"name":s["short"],"item":f"{SITE}/{s['slug']}/"}]}
         write(f"/{s['slug']}/", page(f"/{s['slug']}/", s["title"] + " | The Real Tours and Travels", s["desc"], body, [svc_ld, faq_ld, crumbs], img))
+    write("/customised-tours/", '<!doctype html><html lang="en-IN"><head><meta charset="utf-8"><title>Customized Packages | The Real Tours and Travels</title><link rel="canonical" href="'+SITE+'/customize-your-package/"><meta name="robots" content="noindex,follow"><meta http-equiv="refresh" content="0; url=../customize-your-package/"><script>location.replace("../customize-your-package/"+location.hash)</script></head><body><p>This page has moved to <a href="../customize-your-package/">Customized Packages</a>.</p></body></html>')
     # Contact
     contact = f"""
 <section class="hero"><div class="wrap"><div><div class="crumbs"><a href="../">Home</a> › Contact</div>
