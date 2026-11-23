@@ -60,7 +60,7 @@ def flight_widget(root):
 <div class="fgrid">
 <label class="fcell">From<input name="from" list="fapts" required placeholder="Mumbai (BOM)" value="Mumbai (BOM)" autocomplete="off"></label>
 <button type="button" class="fswap" aria-label="Swap from and to">⇄</button>
-<label class="fcell">To<input name="to" list="fapts" required placeholder="City or airport" autocomplete="off"></label>
+<label class="fcell">To<input name="to" required maxlength="80" placeholder="Type the city, e.g. London" autocomplete="off"></label>
 <label class="fcell">Departure<input name="depart" type="date" required></label>
 <label class="fcell fret">Return<input name="ret" type="date"></label>
 <label class="fcell">Travellers &amp; class<span class="fpax">{_sel("adults","Adults",range(1,10),AD)}{_sel("children","Children",range(0,10),CH)}{_sel("infants","Infants",range(0,10),INF)}<select name="cabin" aria-label="Class"><option>Economy</option><option>Premium Economy</option><option>Business</option><option>First</option></select></span></label>
