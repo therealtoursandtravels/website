@@ -2,6 +2,7 @@
 """Static site generator for The Real Tours and Travels (SEO site)."""
 import json, os, datetime
 from articles import ARTICLES
+from visa import visa_page, VISA_CSS
 
 SITE = "https://www.therealtoursandtravels.com"
 NAME = "The Real Tours and Travels"
@@ -273,7 +274,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <header class="site"><div class="wrap">
 <a class="brand" href="{root or './'}"><img src="{root}img/logo.png" alt="The Real Tours and Travels logo – Estd. 1981" width="64" height="64"><span><b>The Real Tours and Travels</b><small>Crafting Journeys Since 1981</small></span></a>
 <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('nav.main').classList.toggle('open')">☰</button>
-<nav class="main"><a href="{root or './'}#services">Services</a><a href="{root}international-holiday-packages/">International</a><a href="{root}jain-yatra-tours-with-maharaj/">Jain Yatra</a><a href="{root}blog/">Travel Guides</a><a href="{root}contact/">Contact</a><a href="{root}pay/">Pay Online</a><a class="cta" href="{WA}" target="_blank" rel="noopener">WhatsApp Us</a></nav>
+<nav class="main"><a href="{root or './'}#services">Services</a><a href="{root}visa/">Visa</a><a href="{root}jain-yatra-tours-with-maharaj/">Jain Yatra</a><a href="{root}blog/">Travel Guides</a><a href="{root}contact/">Contact</a><a href="{root}pay/">Pay Online</a><a class="cta" href="{WA}" target="_blank" rel="noopener">WhatsApp Us</a></nav>
 </div></header>
 <main>
 {body}
@@ -307,7 +308,7 @@ def cta_band():
 
 def build():
     root = os.path.dirname(os.path.abspath(__file__))
-    open(os.path.join(root, "style.css"), "w").write(CSS)
+    open(os.path.join(root, "style.css"), "w").write(CSS + VISA_CSS)
     imgs = set(os.listdir(os.path.join(root, "img")))
     # Home
     cards = "".join(f'<a class="card" href="{s["slug"]}/"><div class="ic">{s["icon"]}</div><h3>{s["h1"]}</h3><p>{s["desc"][:120].rsplit(" ",1)[0]}…</p><span class="more">Explore →</span></a>' for s in SERVICES)
@@ -360,7 +361,7 @@ def build():
 <div class="crumbs"><a href="../">Home</a> › {s['short']}</div>
 <span class="kicker">{s['icon']} {s['short']}</span>
 <h1>{s['h1']}</h1><p>{s['intro']}</p>
-<div class="btns"><a class="btn gold" href="{WA}" target="_blank" rel="noopener">💬 Get a free plan on WhatsApp</a><a class="btn ghost" href="tel:{PHONE_RAW}">📞 98431 21212</a></div>
+<div class="btns">{'<a class="btn gold" href="../visa/">📄 Documents required &amp; upload</a>' if s['slug']=='passport-visa-services' else ''}<a class="btn gold" href="{WA}" target="_blank" rel="noopener">💬 Get a free plan on WhatsApp</a><a class="btn ghost" href="tel:{PHONE_RAW}">📞 98431 21212</a></div>
 </div>{seal("../")}</div>{RIDGE}</section>
 <section><div class="wrap two"><div><h2>What we offer</h2><ul class="ticks">{pts}</ul></div>
 <div><h2>Why book with us</h2><p>{s['why']}</p><p>Visit our office in <b>Mulund West, Mumbai</b> (open daily 9 am – 10 pm), or plan everything over call and WhatsApp. We serve travellers across Mulund, Thane, Bhandup, Nahur, Powai, Ghatkopar and the rest of Mumbai.</p>
@@ -416,6 +417,8 @@ def build():
         faq_ld = {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":x}} for q,x in a["faqs"]]}
         crumbs = {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":SITE+"/"},{"@type":"ListItem","position":2,"name":"Travel Guides","item":SITE+"/blog/"},{"@type":"ListItem","position":3,"name":a["h1"],"item":url}]}
         write(f"/blog/{a['slug']}/", page(f"/blog/{a['slug']}/", a["title"] + " | The Real Tours and Travels", a["desc"], body, [art_ld, faq_ld, crumbs], a["img"]))
+    # Visa section
+    write("/visa/", page("/visa/", "Visa Services in Mulund, Mumbai – Documents Required & Upload | The Real Tours and Travels", "Visa services in Mulund West, Mumbai for Dubai, Thailand, Singapore, Europe (Schengen), UK, USA, Canada, Australia, Japan and more. See documents required, request the price and upload documents securely.", visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band), None, "passport.jpg"))
     # Pay online
     pay = f"""<section class="hero"><div class="wrap"><div><div class="crumbs"><a href="../">Home</a> › Pay Online</div><span class="kicker">Secure payment</span><h1>Pay The Real Tours and Travels Online</h1><p>Pay your booking amount securely by UPI, debit or credit card, net banking or wallet through Razorpay.</p></div>{seal("../")}</div></section>
 <section><div class="wrap"><div class="paybox">
@@ -451,7 +454,7 @@ def build():
 <h2>Refunds</h2><ul class="ticks"><li>Eligible refunds are processed after deducting applicable cancellation charges and once we receive the refund from the supplier.</li><li>Refunds for online payments are made to the original payment method. Once initiated, a refund usually reaches your account within 5–10 working days, depending on your bank.</li><li>Payments made by mistake or in excess of the confirmed amount will be refunded in full after verification.</li></ul>
 <h2>Cancellation or changes by us or suppliers</h2><p>If a service is cancelled by us or a supplier, we will offer an alternative or refund the amount received for that service, as per the supplier's policy.</p>""")
     # sitemap / robots / CNAME
-    urls = ["/"] + [f"/{s['slug']}/" for s in SERVICES] + ["/blog/"] + [f"/blog/{a['slug']}/" for a in ARTICLES] + ["/contact/", "/pay/", "/terms/", "/privacy-policy/", "/cancellation-refund-policy/"]
+    urls = ["/"] + [f"/{s['slug']}/" for s in SERVICES] + ["/blog/", "/visa/"] + [f"/blog/{a['slug']}/" for a in ARTICLES] + ["/contact/", "/pay/", "/terms/", "/privacy-policy/", "/cancellation-refund-policy/"]
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{SITE}{u}</loc><lastmod>{TODAY}</lastmod><priority>{'1.0' if u=='/' else '0.8'}</priority></url>\n" for u in urls) + "</urlset>\n"
     open(os.path.join(root, "sitemap.xml"), "w").write(sm)
     open(os.path.join(root, "robots.txt"), "w").write(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")

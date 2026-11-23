@@ -101,3 +101,25 @@ nav.main.open{display:block}nav.main a{display:block;margin:12px 0}.menu-btn{dis
 .faq summary{font-size:16px}.review{padding:22px}}
 @media(max-width:380px){.seal{width:170px;height:170px}.brand small{display:none}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
+
+.vtabs{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:26px}
+.vtab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 16px;font:500 15px 'Jost',sans-serif;color:var(--ink);cursor:pointer}
+.vtab.on,.vtab:hover{border-color:var(--red);color:var(--red);background:#fdf0f0}
+.vbox{background:#fff;border:1px solid var(--line);border-radius:20px;padding:30px;box-shadow:0 16px 36px rgba(0,0,0,.05)}
+.vhead{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:10px}
+.vhead h3{margin:0;font-size:26px;color:var(--wine)}.vhead .meta{margin:4px 0 0}
+.vprice{display:flex;align-items:center;gap:14px;background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:10px 12px 10px 18px}
+.vprice span{font-weight:600;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-size:13px}
+.vbox h4{font-family:'Playfair Display',serif;font-size:20px;color:var(--crimson);margin:18px 0 6px}
+.vform{background:#fff;border:1px solid var(--line);border-radius:20px;padding:30px;display:grid;gap:16px}
+.vform .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.vform label{display:grid;gap:6px;font-weight:500;font-size:15px;color:var(--wine)}
+.vform small{font-weight:400;color:var(--muted)}
+.vform input,.vform select,.vform textarea{font:400 16px 'Jost',sans-serif;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);width:100%}
+.vform input:focus,.vform select:focus,.vform textarea:focus{outline:2px solid var(--red);border-color:var(--red)}
+.vform .chk{display:flex;gap:10px;align-items:flex-start;font-weight:400;color:var(--muted);font-size:14px}.vform .chk input{width:auto;margin-top:3px}
+.flist{display:flex;flex-wrap:wrap;gap:8px}.flist span{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:13px}
+.vmsg{margin:0;font-size:15px}.vmsg.ok{color:#17703a;background:#eef9f1;border:1px solid #cdebd6;padding:12px 14px;border-radius:12px}.vmsg.err{color:var(--crimson)}
+.vform button{border:0;justify-self:start;cursor:pointer;font-family:inherit}
+.vform button[disabled]{opacity:.6;cursor:wait}
+@media(max-width:700px){.vform .row{grid-template-columns:1fr}.vbox,.vform{padding:20px}.vhead h3{font-size:22px}.vprice{width:100%;justify-content:space-between}.vtab{font-size:14px;padding:8px 13px}}
