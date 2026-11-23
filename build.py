@@ -712,8 +712,8 @@ def build():
     # Private office admin panel (noindex, not in sitemap, access enforced by Supabase RLS)
     write("/admin/", admin.admin_page())
     # Old addresses moved to new ones (redirect pages, not indexed)
-    for old_p, new_p in {"/weekend-getaways-from-mumbai/": "/weekend-getaways/", "/blog/best-december-holidays-from-mumbai/": "/blog/best-december-family-holidays/", "/police-clearance-certificate-pcc-document-services/": "/passport/"}.items():
-        write(old_p, f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><link rel="canonical" href="{SITE}{new_p}"><meta http-equiv="refresh" content="0; url={new_p}"><title>Moved</title></head><body><a href="{new_p}">This page has moved</a></body></html>')
+    for old_p, new_p in {"/weekend-getaways-from-mumbai/": "/weekend-getaways/", "/blog/best-december-holidays-from-mumbai/": "/blog/best-december-family-holidays/", "/police-clearance-certificate-pcc-document-services/": "/passport/", "/review/": "https://search.google.com/local/writereview?placeid=ChIJn8v1TlS45zsRAQu5MAlfr1U"}.items():
+        write(old_p, f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><link rel="canonical" href="{new_p if new_p.startswith('http') else SITE+new_p}"><meta http-equiv="refresh" content="0; url={new_p}"><title>Moved</title></head><body><a href="{new_p}">This page has moved</a></body></html>')
     # sitemap / robots / CNAME
     urls = ["/"] + [f"/{s['slug']}/" for s in SERVICES] + ["/blog/", "/visa/", "/passport/", "/insurance/", "/about/", "/flights-hotels/", "/customize-your-package/"] + [f"/blog/{a['slug']}/" for a in ARTICLES] + ["/contact/", "/terms/", "/privacy-policy/", "/cancellation-refund-policy/"]
     def _img(u):
