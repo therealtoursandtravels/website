@@ -112,28 +112,40 @@ ENTRY = {
 GROUPS = [("visa", "🛂 Visas"), ("card", "📲 Digital Arrival Cards / Travel Permits")]
 
 # Suggested lead time (our recommendation, not a rule) – shown on each visa panel.
+# Kept generous on purpose: allows for weekends, public holidays in India and the destination country, and peak-season slot shortages.
 WHEN = {
- "uae": "at least 1–2 weeks before travel",
- "singapore": "at least 2–3 weeks before travel",
- "vietnam": "at least 2 weeks before travel",
- "schengen": "4–8 weeks before travel (applications open up to 6 months ahead)",
- "uk": "6–8 weeks before travel (you can apply up to 3 months ahead)",
+ "uae": "at least 2–3 weeks before travel",
+ "singapore": "at least 3–4 weeks before travel",
+ "vietnam": "at least 3–4 weeks before travel",
+ "schengen": "8–12 weeks before travel (applications open up to 6 months ahead; appointments fill up fast in summer and the Christmas season)",
+ "uk": "8–12 weeks before travel (you can apply up to 3 months ahead)",
  "usa": "as early as possible – interview waiting times can run into months",
- "canada": "at least 2–3 months before travel",
- "australia": "at least 6–8 weeks before travel",
- "japan": "3–4 weeks before travel (applications are accepted up to 3 months ahead)",
- "southkorea": "3–4 weeks before travel",
- "srilanka": "at least 1 week before travel",
- "bhutan": "at least 2–3 weeks before travel",
- "seychelles": "at least 1–2 weeks before travel",
- "indonesia": "at least 1 week before travel",
- "turkey": "3–4 weeks before travel",
- "georgia": "at least 2–3 weeks before travel",
- "azerbaijan": "at least 1–2 weeks before travel",
- "kenya": "at least 2 weeks before travel",
- "oman": "at least 1–2 weeks before travel",
- "newzealand": "at least 4–6 weeks before travel",
- "egypt": "at least 3–4 weeks before travel",
+ "canada": "at least 3–4 months before travel",
+ "australia": "at least 8–10 weeks before travel",
+ "japan": "4–6 weeks before travel (applications are accepted up to 3 months ahead)",
+ "southkorea": "4–6 weeks before travel",
+ "bhutan": "at least 3–4 weeks before travel",
+ "seychelles": "at least 2–3 weeks before travel",
+ "indonesia": "at least 2–3 weeks before travel",
+ "turkey": "4–6 weeks before travel",
+ "georgia": "at least 3–4 weeks before travel",
+ "azerbaijan": "at least 2–3 weeks before travel",
+ "kenya": "at least 3–4 weeks before travel",
+ "oman": "at least 2–3 weeks before travel",
+ "newzealand": "at least 6–8 weeks before travel",
+ "egypt": "4–6 weeks before travel",
+}
+
+# Express / faster processing – shown only where the country actually offers it (no fee amounts on the site).
+EXPRESS = {
+ "uk": "Available – Priority (decision in about 5 working days) and Super Priority (about 1 working day) after biometrics, for an extra government fee",
+ "uae": "Available – express processing, usually within 1–2 working days",
+ "usa": "Only for urgent, genuine reasons (e.g. medical, family emergency, urgent business) – an earlier interview date can be requested, and the embassy decides",
+ "canada": "Only for genuine emergencies (e.g. serious illness or death in the family) – urgent processing can be requested, and the embassy decides",
+ "schengen": "Not available – processing time is the same for everyone, so apply within the time above",
+ "australia": "Not available – please apply within the time above",
+ "newzealand": "Not available – please apply within the time above",
+ "japan": "Not available – please apply within the time above",
 }
 
 # Biometrics (fingerprints / photo in person) – shown on each visa panel. Keep short and factual.
@@ -161,12 +173,12 @@ BIOMETRICS = {
  "egypt": "Usually not required for tourist visas – confirmed for your case when you apply",
 }
 
-# Arrival cards / travel permits – when to submit
+# Arrival cards / travel permits – when to apply (generous, to allow for weekends and holidays)
 CARD_WHEN = {
- "thailand": "within 3 days before arrival",
- "malaysia": "within 3 days before arrival",
- "maldives": "within 96 hours before arrival, and again before departure",
- "mauritius": "before departure from India",
- "hongkong": "before you travel",
- "philippines": "before arrival",
+ "thailand": "at least 1 week before travel (the card itself can only be filed within the 3 days before arrival)",
+ "malaysia": "at least 1 week before travel (the card itself can only be filed within the 3 days before arrival)",
+ "maldives": "at least 1 week before travel (the declaration is filed within the 96 hours before arrival, and again before departure)",
+ "mauritius": "at least 1 week before travel (it must be completed before you leave India)",
+ "hongkong": "at least 2–3 weeks before travel",
+ "philippines": "at least 1 week before travel (the form itself can only be filed within the 3 days before arrival)",
 }

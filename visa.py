@@ -69,7 +69,7 @@ PASSPORT = [
 ]
 
 # ---- Visa & entry requirements for Indian passport holders (researched Nov 2026; reviewed weekly) ----
-from entry import UPDATES, NEW_COUNTRIES, ENTRY, GROUPS, SCHENGEN_EXTRA, WHEN, BIOMETRICS, CARD_WHEN
+from entry import UPDATES, NEW_COUNTRIES, ENTRY, GROUPS, SCHENGEN_EXTRA, WHEN, BIOMETRICS, CARD_WHEN, EXPRESS
 COUNTRIES = [(c, f, n, UPDATES[c][0] if c in UPDATES else how,
               (UPDATES[c][1] if c in UPDATES and UPDATES[c][1] is not None else docs) + ([SCHENGEN_EXTRA] if c == "schengen" else []))
              for (c, f, n, how, docs) in COUNTRIES] + NEW_COUNTRIES
@@ -126,7 +126,7 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
         free = (not P) and g == "card"
         wa = "https://wa.me/919843121212?text=" + ("Hi%20The%20Real%20Tours%20and%20Travels%2C%20please%20share%20the%20price%20for%20" + n.replace(" ","%20").replace("/","%2F").replace("(","").replace(")","") + ("." if P else "%20visa.%20Travellers%3A%20%20Travel%20date%3A%20"))
         panels += f"""<div class="vpanel" data-c="{c}"{'' if i==0 else ' hidden'}>
-<div class="vhead"><div><h3>{f} {n}</h3>{badges}{f'<p class="meta">{how}</p>' if P else ''}{f'<p class="vwhen">⏱️ <b>When to apply:</b> {WHEN[c]}.</p>' if (not P and c in WHEN) else ''}{f'<p class="vwhen">⏱️ <b>When to submit:</b> {CARD_WHEN[c]}.</p>' if (not P and c in CARD_WHEN) else ''}{f'<p class="vwhen">🖐️ <b>Biometrics:</b> {BIOMETRICS[c]}.</p>' if (not P and c in BIOMETRICS) else ''}</div>
+<div class="vhead"><div><h3>{f} {n}</h3>{badges}{f'<p class="meta">{how}</p>' if P else ''}{f'<p class="vwhen">⏱️ <b>When to apply:</b> {WHEN[c]}.</p>' if (not P and c in WHEN) else ''}{f'<p class="vwhen">⏱️ <b>When to apply:</b> {CARD_WHEN[c]}.</p>' if (not P and c in CARD_WHEN) else ''}{f'<p class="vwhen">⚡ <b>Express visa:</b> {EXPRESS[c]}.</p>' if (not P and c in EXPRESS) else ''}{f'<p class="vwhen">🖐️ <b>Biometrics:</b> {BIOMETRICS[c]}.</p>' if (not P and c in BIOMETRICS) else ''}</div>
 <div class="vprice"><span>Price</span><a class="btn gold" href="{wa_free(n, card) if free else wa}" target="_blank" rel="noopener">Request Price</a></div></div>
 <p class="meta" style="margin:8px 0 0">{"Price = our service fee + 18% GST." if free else "Price = government / embassy fee (no GST) + our service fee + 18% GST on the service fee."}</p><h4>Documents required</h4><ul class="ticks">{lis}</ul>
 {"" if P or free or not card else f'<p class="meta">📲 The {card} is also required before you land.</p>'}<p class="meta">{"Requirements are set by Passport Seva (Ministry of External Affairs) and can change. We confirm the final checklist for your case before you apply." if P else "Rules for Indian passport holders – last checked November 2026 and reviewed every week. Requirements can change and may differ for business, student or family visits; we confirm the final checklist for your case before you travel."}</p>
@@ -159,7 +159,7 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
       k2="Choose your service" if P else "Visas & arrival cards",
       h2="Documents required by service" if P else "Visas & Digital Arrival Cards",
       lead2=("Select a service to see the checklist. Tap <b>Request Price</b> to get the government fee and our service charge on WhatsApp." if P else
-             "Pick a country to see the documents required, when to apply and whether biometrics are needed, then tap <b>Request Price</b>. Need a <b>multiple-entry</b> visa? Choose it in the form below."),
+             "Pick a country to see the documents required, when to apply and whether biometrics are needed, then tap <b>Request Price</b>. Need a <b>multiple-entry</b> or <b>express</b> visa? Choose it in the form below. Suggested times allow for weekends and public holidays in India and the destination country – apply earlier around festivals and peak season."),
       h3="Upload your passport documents" if P else "Upload your visa documents",
       team="passport team" if P else "visa team",
       sel_label="Service*" if P else "Country*",
@@ -351,7 +351,7 @@ VISA_FORM_NEW = r"""<form id="vform" class="vform" novalidate>
 <label id="natwrap" hidden>Which nationality?*<input name="nationality_other" maxlength="40" autocomplete="off" placeholder="e.g. British, American, Canadian (OCI card holders too)"></label>
 <div class="row"><label>Country*<select name="country" required>__OPTS__</select></label>
 <label>Visa type<select name="visa_type"><option>Tourist</option><option>Business</option><option>Visiting family / friends</option><option>Student</option><option>Transit</option><option>Medical</option><option>Conference / Event</option><option>Work / Employment</option><option>Pilgrimage (e.g. Umrah)</option><option>Not sure – please advise</option></select></label></div>
-<div class="row"><label>Entries needed<select name="entries"><option>Single entry</option><option>Multiple entry</option></select></label><span class="vnote">Multiple-entry visas are issued at the embassy's discretion and often depend on your travel history – we advise what you can apply for.</span></div>
+<div class="row"><label>Entries needed<select name="entries"><option>Single entry</option><option>Multiple entry</option></select></label><label>Processing<select name="speed"><option>Standard</option><option>Express (where available)</option></select></label><span class="vnote">Multiple-entry visas are issued at the embassy's discretion and often depend on your travel history – we advise what you can apply for.</span></div>
 <label id="ocwrap" hidden>Which country?*<input name="other_country" maxlength="60" autocomplete="off" placeholder="e.g. Kenya, Bhutan, South Korea"></label>
 __OTHERLIST__
 <div class="row"><label>Travel date<input name="travel_date" type="date"></label>
@@ -499,7 +499,7 @@ f.addEventListener('submit',async e=>{
    if(!r.ok)throw new Error('upload '+r.status);
    paths.push(p);
   }
-  const det=['Entries: '+(d.get('entries')||'Single entry'),'Passport nationality: '+nat,'Return date: '+(ret||'not given'),'Employment: '+(emp||'not given'),
+  const det=['Entries: '+(d.get('entries')||'Single entry'),'Processing: '+(d.get('speed')||'Standard'),'Passport nationality: '+nat,'Return date: '+(ret||'not given'),'Employment: '+(emp||'not given'),
    'Ever refused a visa: '+d.get('refused'),'Visited US/UK/Schengen/Canada/Australia in last 5 years: '+d.get('history')].concat(appt?['City for visa-centre appointment: '+appt]:[])
    .concat(T.map((t,i)=>'Traveller '+(i+1)+': '+t.name+(t.rel?' ('+t.rel+')':'')+(t.expiry?' – passport expires '+t.expiry+(t.warn?' (⚠ under 6 months validity)':''):'')+(later?'':t.same?' – documents in Traveller 1\'s file':' – '+t.files.length+' file'+(t.files.length==1?'':'s'))));
   if(later)det.push('Documents: client will send them later');
