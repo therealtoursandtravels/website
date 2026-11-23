@@ -1,3 +1,4 @@
+import re
 """Visa section: country checklists, Request Price button, secure document upload (Supabase)."""
 import json
 
@@ -68,13 +69,37 @@ PASSPORT = [
 ]
 
 # ---- Visa & entry requirements for Indian passport holders (researched Nov 2026; reviewed weekly) ----
-from entry import UPDATES, NEW_COUNTRIES, ENTRY, GROUPS, SCHENGEN_EXTRA, WHEN
+from entry import UPDATES, NEW_COUNTRIES, ENTRY, GROUPS, SCHENGEN_EXTRA, WHEN, BIOMETRICS, CARD_WHEN
 COUNTRIES = [(c, f, n, UPDATES[c][0] if c in UPDATES else how,
               (UPDATES[c][1] if c in UPDATES and UPDATES[c][1] is not None else docs) + ([SCHENGEN_EXTRA] if c == "schengen" else []))
              for (c, f, n, how, docs) in COUNTRIES] + NEW_COUNTRIES
 
 def passport_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band):
     return visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="passport")
+
+_CLEAN = [
+    (re.compile(r"\s*\((?:we|our)[^)]*\)", re.I), ""),            # "(we fill it for you)", "(we apply for you)"
+    (re.compile(r"\s*[–-]\s*we (?:will |can )?(?:advise|check|apply|fill|book|prepare)[^.;]*", re.I), ""),
+    (re.compile(r"\bfree,?\s*", re.I), ""),
+    (re.compile(r"\b(?:filled|applied)\s+online\b", re.I), "submitted"),
+    (re.compile(r",?\s*\bonline\b", re.I), ""),
+    (re.compile(r"\s*\(for the e-?visa\)", re.I), ""),
+    (re.compile(r"\s*[–-]\s*,", re.I), " –"),
+    (re.compile(r"\s*[–-]\s*$"), ""),
+    (re.compile(r"\s{2,}"), " "),
+]
+_DROP = re.compile(r"visa on arrival|e-?VOA|\be-?visa\b|\bVFS\b", re.I)
+def clean_docs(docs):
+    out = []
+    for d in docs:
+        if _DROP.search(d):
+            continue
+        for rx, rp in _CLEAN:
+            d = rx.sub(rp, d)
+        d = d.strip(" ,–-")
+        if d:
+            out.append(d[0].upper() + d[1:] if not (len(d) > 1 and d[1].isupper()) else d)
+    return out
 
 def wa_free(n, card):
     import urllib.parse as U
@@ -95,16 +120,16 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
         tabs = tabs.replace('class="vtab"', 'class="vtab on"', 1)
     panels = ""
     for i,(c,f,n,how,docs) in enumerate(ITEMS):
-        lis = "".join(f"<li>{d}</li>" for d in docs)
+        lis = "".join(f"<li>{d}</li>" for d in (docs if P else clean_docs(docs)))
         g, badge, card = ENTRY.get(c, ("visa", "Visa required", None)) if not P else ("visa", "", None)
         badges = ""
         free = (not P) and g == "card"
         wa = "https://wa.me/919843121212?text=" + ("Hi%20The%20Real%20Tours%20and%20Travels%2C%20please%20share%20the%20price%20for%20" + n.replace(" ","%20").replace("/","%2F").replace("(","").replace(")","") + ("." if P else "%20visa.%20Travellers%3A%20%20Travel%20date%3A%20"))
         panels += f"""<div class="vpanel" data-c="{c}"{'' if i==0 else ' hidden'}>
-<div class="vhead"><div><h3>{f} {n}</h3>{badges}<p class="meta">{how}</p>{f'<p class="vwhen">⏱️ <b>When to apply:</b> we suggest {WHEN[c]}.</p>' if (not P and c in WHEN) else ''}</div>
+<div class="vhead"><div><h3>{f} {n}</h3>{badges}{f'<p class="meta">{how}</p>' if P else ''}{f'<p class="vwhen">⏱️ <b>When to apply:</b> {WHEN[c]}.</p>' if (not P and c in WHEN) else ''}{f'<p class="vwhen">⏱️ <b>When to submit:</b> {CARD_WHEN[c]}.</p>' if (not P and c in CARD_WHEN) else ''}{f'<p class="vwhen">🖐️ <b>Biometrics:</b> {BIOMETRICS[c]}.</p>' if (not P and c in BIOMETRICS) else ''}</div>
 <div class="vprice"><span>Price</span><a class="btn gold" href="{wa_free(n, card) if free else wa}" target="_blank" rel="noopener">Request Price</a></div></div>
-<p class="meta" style="margin:8px 0 0">{"Price = our service fee + 18% GST." if free else "Price = government / embassy fee (no GST) + our service fee + 18% GST on the service fee."}</p><h4>{"What we need from you" if free else "Documents required"}</h4><ul class="ticks">{lis}</ul>
-{"" if P or free or not card else f'<p class="meta">📲 The {card} is also required before you land – we fill it for you.</p>'}<p class="meta">{"Requirements are set by Passport Seva (Ministry of External Affairs) and can change. We confirm the final checklist for your case before you apply." if P else "Rules for Indian passport holders – last checked November 2026 and reviewed every week. Requirements can change and may differ for business, student or family visits; we confirm the final checklist for your case before you travel."}</p>
+<p class="meta" style="margin:8px 0 0">{"Price = our service fee + 18% GST." if free else "Price = government / embassy fee (no GST) + our service fee + 18% GST on the service fee."}</p><h4>Documents required</h4><ul class="ticks">{lis}</ul>
+{"" if P or free or not card else f'<p class="meta">📲 The {card} is also required before you land.</p>'}<p class="meta">{"Requirements are set by Passport Seva (Ministry of External Affairs) and can change. We confirm the final checklist for your case before you apply." if P else "Rules for Indian passport holders – last checked November 2026 and reviewed every week. Requirements can change and may differ for business, student or family visits; we confirm the final checklist for your case before you travel."}</p>
 {'<p class="meta">🛡️ Schengen visas need travel insurance with at least €30,000 medical cover. <a href="../insurance/?cover=schengen#ins-form">Get a Schengen insurance quote →</a></p>' if c=="schengen" and not P else ""}{"" if free else f'<p><a class="btn outline" href="#upload" data-pick="{c}">Upload documents for {n}</a></p>'}</div>"""
     opts = "".join(f'<option value="{n}">{n}</option>' for (_,_,n,_,_) in ITEMS) + ('' if P else '<option value="Other">Other country – type below</option>')
     other_list = ""
@@ -113,7 +138,7 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
         tabs = tabs.replace('</div></div>', '<button type="button" class="vtab" data-c="other">🌐 Other country</button></div></div>', 1)
         tabs = tabs[:tabs.rfind('</div></div>')] + '<button type="button" class="vtab" data-c="othercard">🌐 Other country</button></div></div>'
         panels += """<div class="vpanel" data-c="othercard" hidden>
-<div class="vhead"><div><h3>🌐 Other country – arrival card / travel permit</h3><p class="meta">Need an arrival card, travel permit or travel registration for a country not listed above? Type the country – we fill and submit it for you.</p></div></div>
+<div class="vhead"><div><h3>🌐 Other country – arrival card / travel permit</h3><p class="meta">Need an arrival card, travel permit or travel registration for a country not listed above? Type the country to request the requirements and price.</p></div></div>
 <div class="vother"><label>Which country are you visiting?<input id="voc_country" maxlength="60" autocomplete="off" placeholder="e.g. Japan, Taiwan, Cambodia"></label>
 <a class="btn gold" id="voc_wa" href="https://wa.me/919843121212" target="_blank" rel="noopener">Request Price</a></div>
 <p id="voc_msg" class="vmsg" role="status" aria-live="polite"></p>
@@ -134,7 +159,7 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
       k2="Choose your service" if P else "Visas & arrival cards",
       h2="Documents required by service" if P else "Visas & Digital Arrival Cards",
       lead2=("Select a service to see the checklist. Tap <b>Request Price</b> to get the government fee and our service charge on WhatsApp." if P else
-             "Pick a country to see the documents required, then tap <b>Request Price</b>. Some countries ask for a digital arrival card before you land – we fill and submit it for you."),
+             "Pick a country to see the documents required, when to apply and whether biometrics are needed, then tap <b>Request Price</b>. Need a <b>multiple-entry</b> visa? Choose it in the form below."),
       h3="Upload your passport documents" if P else "Upload your visa documents",
       team="passport team" if P else "visa team",
       sel_label="Service*" if P else "Country*",
@@ -242,7 +267,7 @@ f.addEventListener('submit',async e=>{{
 <div class="paybox" id="pay"><span class="kicker" style="justify-content:center">Secure payment</span><h3 style="font-size:26px;margin:4px 0 8px">Pay {T["payfor"]} online</h3>
 <p class="lead" style="font-size:16px">Enter the fees confirmed by our team to see the GST and total, then pay securely. Add your name, phone and reference in the payment window so we can match your payment. UPI, cards, net banking and wallets accepted.</p>
 <div class="gcalc" id="gcalc">
-<div class="grow"><label>Government / embassy / VFS fee <small>(as confirmed by us – no GST)</small><span class="gin">₹<input type="number" min="0" step="1" inputmode="decimal" id="g_gov" placeholder="0"></span></label>
+<div class="grow"><label>Government / embassy fee <small>(as confirmed by us – no GST)</small><span class="gin">₹<input type="number" min="0" step="1" inputmode="decimal" id="g_gov" placeholder="0"></span></label>
 <label>Our service fee <small>(as confirmed by us)</small><span class="gin">₹<input type="number" min="0" step="1" inputmode="decimal" id="g_fee" placeholder="0"></span></label></div>
 <label class="chk gb2b"><input type="checkbox" id="g_b2b"><span>I need a <b>GST invoice</b> for my business (enter your GSTIN)</span></label>
 <div class="grow" id="g_bizrow" hidden><label>Client GSTIN<span class="gin"><input id="g_gstin" maxlength="15" placeholder="e.g. 27ABCDE1234F1Z5" style="text-transform:uppercase;letter-spacing:1px" autocomplete="off"></span><small id="g_gmsg"></small></label>
@@ -326,6 +351,7 @@ VISA_FORM_NEW = r"""<form id="vform" class="vform" novalidate>
 <label id="natwrap" hidden>Which nationality?*<input name="nationality_other" maxlength="40" autocomplete="off" placeholder="e.g. British, American, Canadian (OCI card holders too)"></label>
 <div class="row"><label>Country*<select name="country" required>__OPTS__</select></label>
 <label>Visa type<select name="visa_type"><option>Tourist</option><option>Business</option><option>Visiting family / friends</option><option>Student</option><option>Transit</option><option>Medical</option><option>Conference / Event</option><option>Work / Employment</option><option>Pilgrimage (e.g. Umrah)</option><option>Not sure – please advise</option></select></label></div>
+<div class="row"><label>Entries needed<select name="entries"><option>Single entry</option><option>Multiple entry</option><option>Not sure – please advise</option></select></label><span class="vnote">Multiple-entry visas are issued at the embassy's discretion and often depend on your travel history – we advise what you can apply for.</span></div>
 <label id="ocwrap" hidden>Which country?*<input name="other_country" maxlength="60" autocomplete="off" placeholder="e.g. Kenya, Bhutan, South Korea"></label>
 __OTHERLIST__
 <div class="row"><label>Travel date<input name="travel_date" type="date"></label>
@@ -473,7 +499,7 @@ f.addEventListener('submit',async e=>{
    if(!r.ok)throw new Error('upload '+r.status);
    paths.push(p);
   }
-  const det=['Passport nationality: '+nat,'Return date: '+(ret||'not given'),'Employment: '+(emp||'not given'),
+  const det=['Entries: '+(d.get('entries')||'Single entry'),'Passport nationality: '+nat,'Return date: '+(ret||'not given'),'Employment: '+(emp||'not given'),
    'Ever refused a visa: '+d.get('refused'),'Visited US/UK/Schengen/Canada/Australia in last 5 years: '+d.get('history')].concat(appt?['City for visa-centre appointment: '+appt]:[])
    .concat(T.map((t,i)=>'Traveller '+(i+1)+': '+t.name+(t.rel?' ('+t.rel+')':'')+(t.expiry?' – passport expires '+t.expiry+(t.warn?' (⚠ under 6 months validity)':''):'')+(later?'':t.same?' – documents in Traveller 1\'s file':' – '+t.files.length+' file'+(t.files.length==1?'':'s'))));
   if(later)det.push('Documents: client will send them later');

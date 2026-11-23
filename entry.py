@@ -27,7 +27,7 @@ UPDATES = {  # code: (how, docs)  – replaces the existing entry's line and lis
    ["Clear colour scan of passport bio page (valid at least 6 months)", "Recent passport-size photo with white background", "Travel dates and entry/exit airport", "Hotel address in Vietnam"]),
  "australia": ("Visitor visa (subclass 600) applied online. From 26 October 2026 applicants in India may be asked to give fingerprints and a photo at a visa centre – we book it if needed",
    [PP, "Copies of old passports, if any", "Recent passport-size photo"] + STD_FIN + ["Confirmed return flight booking", "Hotel bookings for the whole stay", "Day-wise travel itinerary"]),
- "japan": ("Visa required – tourist eVISA or sticker visa, applied through the Japan Visa Application Centre (VFS Global). We prepare and submit the application",
+ "japan": ("Visa required – tourist eVISA or sticker visa, applied through the Japan visa application centre",
    None),  # documents unchanged
 }
 SCHENGEN_EXTRA = "At the Schengen border your fingerprints and photo are recorded in the EU Entry/Exit System (EES) – this replaces passport stamps"
@@ -126,4 +126,37 @@ WHEN = {
  "azerbaijan": "at least 1–2 weeks before travel",
  "kenya": "at least 2 weeks before travel",
  "oman": "at least 1–2 weeks before travel",
+}
+
+# Biometrics (fingerprints / photo in person) – shown on each visa panel. Keep short and factual.
+BIOMETRICS = {
+ "uae": "Not required",
+ "singapore": "Not required",
+ "vietnam": "Not required",
+ "schengen": "Required – fingerprints and photo in person at the visa application centre (not repeated if given in the last 59 months)",
+ "uk": "Required – fingerprints and photo in person at the visa application centre",
+ "usa": "Required – fingerprints at the visa application centre, followed by an interview at the US Embassy / Consulate (some renewals may not need an interview)",
+ "canada": "Required – fingerprints and photo in person (valid for 10 years once given)",
+ "australia": "Required for applicants in India from 26 October 2026 – fingerprints and photo in person",
+ "japan": "Not required",
+ "southkorea": "Not required",
+ "srilanka": "Not required",
+ "bhutan": "Not required",
+ "seychelles": "Not required",
+ "indonesia": "Not required",
+ "turkey": "Depends on the type of visa – we confirm for your case",
+ "georgia": "Not required",
+ "azerbaijan": "Not required",
+ "kenya": "Not required",
+ "oman": "Not required",
+}
+
+# Arrival cards / travel permits – when to submit
+CARD_WHEN = {
+ "thailand": "within 3 days before arrival",
+ "malaysia": "within 3 days before arrival",
+ "maldives": "within 96 hours before arrival, and again before departure",
+ "mauritius": "before departure from India",
+ "hongkong": "before you travel",
+ "philippines": "before arrival",
 }

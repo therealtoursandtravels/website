@@ -130,7 +130,7 @@
 <div class="paybox" id="pay"><span class="kicker" style="justify-content:center">Secure payment</span><h3 style="font-size:26px;margin:4px 0 8px">Pay passport service fees online</h3>
 <p class="lead" style="font-size:16px">Enter the fees confirmed by our team to see the GST and total, then pay securely. Add your name, phone and reference in the payment window so we can match your payment. UPI, cards, net banking and wallets accepted.</p>
 <div class="gcalc" id="gcalc">
-<div class="grow"><label>Government / embassy / VFS fee <small>(as confirmed by us – no GST)</small><span class="gin">₹<input type="number" min="0" step="1" inputmode="decimal" id="g_gov" placeholder="0"></span></label>
+<div class="grow"><label>Government / embassy fee <small>(as confirmed by us – no GST)</small><span class="gin">₹<input type="number" min="0" step="1" inputmode="decimal" id="g_gov" placeholder="0"></span></label>
 <label>Our service fee <small>(as confirmed by us)</small><span class="gin">₹<input type="number" min="0" step="1" inputmode="decimal" id="g_fee" placeholder="0"></span></label></div>
 <label class="chk gb2b"><input type="checkbox" id="g_b2b"><span>I need a <b>GST invoice</b> for my business (enter your GSTIN)</span></label>
 <div class="grow" id="g_bizrow" hidden><label>Client GSTIN<span class="gin"><input id="g_gstin" maxlength="15" placeholder="e.g. 27ABCDE1234F1Z5" style="text-transform:uppercase;letter-spacing:1px" autocomplete="off"></span><small id="g_gmsg"></small></label>
@@ -303,7 +303,7 @@ addEventListener('scroll',()=>{if(!q)q=requestAnimationFrame(chk);},{passive:tru
  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
  // 3D scroll reveal
  const sel='.card,.review,.gtile,.yexp>div,.head,.ticks li,.iday,.vpanel:not([hidden]),.sform,.fbar,.trust>div,.yd,.ynone';
- const els=[...document.querySelectorAll(sel)].filter(e=>!e.closest('.jpop'));
+ const els=[...document.querySelectorAll(sel)].filter(e=>!e.closest('.jpop,.vpanel,.vtabs'));
  if(!reduce&&'IntersectionObserver' in window){
   els.forEach((e,i)=>{e.classList.add('rv3');e.style.setProperty('--d',(i%4)*70+'ms');});
   const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}}),{rootMargin:'0px 0px -8% 0px',threshold:.08});

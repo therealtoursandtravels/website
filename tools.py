@@ -10,7 +10,7 @@ ITEMS = [
  ("air_fee", "Air ticket service fee", "998551", 18, ""),
  ("hotel_pa", "Hotel charges – reimbursement (pure agent)", "", 0, "pa"),
  ("hotel_fee", "Hotel booking service fee", "998553", 18, ""),
- ("visa_gov", "Visa / passport / embassy / VFS fee – reimbursement (pure agent)", "", 0, "pa"),
+ ("visa_gov", "Visa / passport / embassy fee – reimbursement (pure agent)", "", 0, "pa"),
  ("visa_fee", "Visa / passport service fee", "998559", 18, ""),
  ("ins_prem", "Travel insurance premium – reimbursement (pure agent)", "", 0, "pa"),
  ("cruise_pa", "Cruise fare – reimbursement (pure agent)", "", 0, "pa"),
