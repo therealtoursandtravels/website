@@ -23,7 +23,7 @@ GST_STATES = [("01","Jammu and Kashmir"),("02","Himachal Pradesh"),("03","Punjab
 GST_STATE_OPTS = ('<option value="27">Maharashtra</option>' + "".join(f'<option value="{c}">{n}</option>' for c, n in sorted(GST_STATES, key=lambda x: x[1]) if c != "27")
                   + '<option value="OUT">Outside India (NRI / foreign client)</option>')
 
-VISA_CENTRE_CODES = {"schengen", "uk", "usa", "canada"}  # visa needs a visit to a visa centre / consulate
+VISA_CENTRE_CODES = {"schengen", "uk", "usa", "canada", "australia"}  # visa needs a visit to a visa centre / consulate
 
 COUNTRIES = [
  ("uae", "🇦🇪", "Dubai / UAE", "E-visa, usually processed online",
@@ -86,23 +86,45 @@ PASSPORT = [
    "Affidavit / declaration explaining how the passport was lost or damaged (we prepare it)"]),
 ]
 
+# ---- Visa & entry requirements for Indian passport holders (researched Nov 2026; reviewed weekly) ----
+from entry import UPDATES, NEW_COUNTRIES, ENTRY, GROUPS, SCHENGEN_EXTRA
+COUNTRIES = [(c, f, n, UPDATES[c][0] if c in UPDATES else how,
+              (UPDATES[c][1] if c in UPDATES and UPDATES[c][1] is not None else docs) + ([SCHENGEN_EXTRA] if c == "schengen" else []))
+             for (c, f, n, how, docs) in COUNTRIES] + NEW_COUNTRIES
+
 def passport_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band):
     return visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="passport")
+
+def wa_free(n, card):
+    import urllib.parse as U
+    return "https://wa.me/919843121212?text=" + U.quote(f"Hi The Real Tours and Travels, I am travelling to {n}. Please help me with the entry requirements" + (f" and the {card}" if card else "") + ".\nTravellers: \nTravel date: ")
 
 def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
     P = mode == "passport"
     ITEMS = PASSPORT if P else COUNTRIES
-    tabs = "".join(f'<button type="button" class="vtab{" on" if i==0 else ""}" data-c="{c}">{f} {n}</button>' for i,(c,f,n,_,_) in enumerate(ITEMS))
+    if P:
+        tabs = "".join(f'<button type="button" class="vtab{" on" if i==0 else ""}" data-c="{c}">{f} {n}</button>' for i,(c,f,n,_,_) in enumerate(ITEMS))
+    else:
+        # group the destinations by what Indian travellers need: nothing in advance / online / a visa
+        ITEMS = [it for g, _ in GROUPS for it in ITEMS if ENTRY.get(it[0], ("visa",))[0] == g]
+        tabs = ""
+        for g, gl in GROUPS:
+            row = "".join(f'<button type="button" class="vtab" data-c="{c}">{f} {n}</button>' for (c, f, n, _, _) in ITEMS if ENTRY.get(c, ("visa",))[0] == g)
+            tabs += f'<div class="vgrp vg-{g}"><span class="vgl">{gl}</span><div class="vgrow">{row}</div></div>'
+        tabs = tabs.replace('class="vtab"', 'class="vtab on"', 1)
     panels = ""
     for i,(c,f,n,how,docs) in enumerate(ITEMS):
         lis = "".join(f"<li>{d}</li>" for d in docs)
+        g, badge, card = ENTRY.get(c, ("visa", "Visa required", None)) if not P else ("visa", "", None)
+        badges = "" if P else f'<div class="vbadges"><span class="vb vb-{g}">{badge}</span>' + (f'<span class="vb vb-card">📲 {card} needed</span>' if card else "") + '</div>'
+        free = (not P) and g == "free"
         wa = "https://wa.me/919843121212?text=" + ("Hi%20The%20Real%20Tours%20and%20Travels%2C%20please%20share%20the%20price%20for%20" + n.replace(" ","%20").replace("/","%2F").replace("(","").replace(")","") + ("." if P else "%20visa.%20Travellers%3A%20%20Travel%20date%3A%20"))
         panels += f"""<div class="vpanel" data-c="{c}"{'' if i==0 else ' hidden'}>
-<div class="vhead"><div><h3>{f} {n}</h3><p class="meta">{how}</p></div>
-<div class="vprice"><span>Price</span><a class="btn gold" href="{wa}" target="_blank" rel="noopener">Request Price</a></div></div>
-<p class="meta" style="margin:8px 0 0">Price = government / embassy fee (no GST) + our service fee + 18% GST on the service fee.</p><h4>Documents required</h4><ul class="ticks">{lis}</ul>
-<p class="meta">{"Requirements are set by Passport Seva (Ministry of External Affairs) and can change. We confirm the final checklist for your case before you apply." if P else "Requirements can change and may differ for business, student or family visits. We confirm the final checklist for your case before you apply."}</p>
-<p><a class="btn outline" href="#upload" data-pick="{c}">Upload documents for {n}</a></p></div>"""
+<div class="vhead"><div><h3>{f} {n}</h3>{badges}<p class="meta">{how}</p></div>
+<div class="vprice"><span>{"Need help?" if free else "Price"}</span><a class="btn gold" href="{wa_free(n, card) if free else wa}" target="_blank" rel="noopener">{"Ask us on WhatsApp" if free else "Request Price"}</a></div></div>
+{"" if free else '<p class="meta" style="margin:8px 0 0">Price = government / embassy fee (no GST) + our service fee + 18% GST on the service fee.</p>'}<h4>{"What to carry" if free else "Documents required"}</h4><ul class="ticks">{lis}</ul>
+<p class="meta">{"Requirements are set by Passport Seva (Ministry of External Affairs) and can change. We confirm the final checklist for your case before you apply." if P else "Rules for Indian passport holders – last checked November 2026 and reviewed every week. Requirements can change and may differ for business, student or family visits; we confirm the final checklist for your case before you travel."}</p>
+{"" if free else f'<p><a class="btn outline" href="#upload" data-pick="{c}">Upload documents for {n}</a></p>'}</div>"""
     opts = "".join(f'<option value="{n}">{n}</option>' for (_,_,n,_,_) in ITEMS) + ('' if P else '<option value="Other">Other country – type below</option>')
     other_list = ""
     if not P:
@@ -121,10 +143,10 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
       h1="Passport Services in Mulund, Mumbai" if P else "Visa Services in Mulund, Mumbai",
       intro=("New passport, renewal, minor, Tatkaal or lost passport – check the documents required, request the price, and upload your documents securely. We fill the forms and book your Passport Seva Kendra appointment." if P else
              "Check the documents required for your visa, request the price, and upload your documents securely – our visa team will review them and call you back."),
-      k2="Choose your service" if P else "Choose your destination",
-      h2="Documents required by service" if P else "Documents required by country",
+      k2="Choose your service" if P else "Visa & entry requirements",
+      h2="Documents required by service" if P else "Visa & Entry Requirements for Indian Travellers",
       lead2=("Select a service to see the checklist. Tap <b>Request Price</b> to get the government fee and our service charge on WhatsApp." if P else
-             "Select a country to see the checklist. Tap <b>Request Price</b> to get the current visa fee and our service charge on WhatsApp."),
+             "Many countries no longer need a visa – but most now ask for an online authorisation or a digital arrival card before you land. Pick a country to see exactly what Indian passport holders need and what to carry. We handle visas, e-visas and arrival cards for you."),
       h3="Upload your passport documents" if P else "Upload your visa documents",
       team="passport team" if P else "visa team",
       sel_label="Service*" if P else "Country*",
@@ -335,7 +357,7 @@ const empow=document.getElementById('empow');f.employment.addEventListener('chan
 // ---- visa-centre city: only asked when the visa needs a visit (or the country is not listed) ----
 const apptw=document.getElementById('apptwrap'),apptn=document.getElementById('apptnote');
 function syncAppt(){const c=csel.value,need=CENTRE.includes(c),oth=c==='Other';apptw.hidden=!(need||oth);
- apptn.textContent=need?c+' visas need a visit to a visa centre'+(c==='United States'?' and an interview at the US consulate':' for fingerprints and a photo')+'. Tell us where you live – we\'ll book your appointment at the nearest centre and tell you exactly where to go and what to carry.'
+ apptn.textContent=need&&c==='Australia'?'Australia may ask applicants in India to give fingerprints and a photo at a visa centre. Tell us where you live – if it is needed, we\'ll book the nearest centre for you.':need?c+' visas need a visit to a visa centre'+(c==='United States'?' and an interview at the US consulate':' for fingerprints and a photo')+'. Tell us where you live – we\'ll book your appointment at the nearest centre and tell you exactly where to go and what to carry.'
   :'If '+countryName()+' needs a visa-centre visit, we\'ll book it at the centre nearest to you. Many countries are online-only – we\'ll let you know.';}
 csel.addEventListener('change',syncAppt);f.other_country.addEventListener('input',syncAppt);
 // ---- one block per traveller: name, passport expiry, documents ----
@@ -463,6 +485,9 @@ VISA_CSS = """
 .gb2b{font-weight:400!important;color:var(--ink)!important}.gcalc .chk{display:flex!important;gap:8px;align-items:flex-start}.gcalc .chk input{width:auto;margin-top:3px}#g_gmsg{font-size:12.5px}
 .vtabs{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:26px}
 .vother{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-top:6px}.vother label{flex:1;min-width:220px;display:grid;gap:6px;font-weight:500}.vother input{font:inherit;padding:12px 14px;border:1px solid var(--line);border-radius:12px}.vother input:focus{outline:2px solid var(--red);border-color:var(--red)}
+.vgrp{display:grid;gap:8px;margin-bottom:14px;justify-items:center}.vgl{font-size:13px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}.vgrow{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.vbadges{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px}.vb{font-size:13px;font-weight:600;border-radius:999px;padding:4px 12px;border:1px solid}
+.vb-free{color:#17703a;border-color:#cdebd6;background:#eef9f1}.vb-online{color:var(--wine);border-color:var(--line);background:var(--bg)}.vb-visa{color:var(--crimson);border-color:#f1c9cb;background:#fdf0f0}.vb-card{color:var(--ink);border-color:var(--line);background:#fff}
 .vtab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 16px;font:500 15px 'Jost',sans-serif;color:var(--ink);cursor:pointer}
 .vtab.on,.vtab:hover{border-color:var(--red);color:var(--red);background:#fdf0f0}
 .vbox{background:#fff;border:1px solid var(--line);border-radius:20px;padding:30px;box-shadow:0 16px 36px rgba(0,0,0,.05)}
