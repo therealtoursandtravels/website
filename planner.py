@@ -1,6 +1,7 @@
 """Customized Packages: trip form -> saves lead -> branded day-by-day itinerary (no prices)."""
 import json
 from visa import SB_URL, SB_KEY
+from flights import AIRPORTS
 
 # Each destination: airport, rail (None = no rail), intl flag, ordered stops: (base, nights_weight, [activity lines])
 DEST = {
@@ -68,6 +69,9 @@ DEST = {
 def planner_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band, ADDR, GST):
     # Suggestions only – customers can type ANY place; these just speed up typing.
     sugg = "".join(f'<option value="{d}"></option>' for d in DEST)
+    # Departure-city suggestions: every city in the flight list (India + abroad) – customers can still type any city.
+    _cities = list(dict.fromkeys(c.split(" (")[0] for c, _, _ in AIRPORTS))
+    origins = "".join(f'<option value="{c}"></option>' for c in _cities)
     return f"""
 <section class="hero"><div class="wrap"><div><div class="crumbs"><a href="../">Home</a> › Customized Packages</div>
 <span class="kicker">✨ Smart trip planner</span>
@@ -86,9 +90,9 @@ def planner_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band, ADDR, GST):
 <small class="phint">Any city, state, region or country – in India or abroad. Going to more than one place? Add them in the order you'd like to travel, e.g. Paris → Rome → Barcelona.</small>
 <datalist id="psug">{sugg}</datalist>
 <div id="pnights" class="pnights" hidden><div class="pnhead"><b>Nights in each place</b><small>Change these and the number of days updates automatically.</small></div><div id="pnrows" class="pnrows"></div></div></div>
-<div class="row"><label>Departing from*<input name="origin" maxlength="60" value="Mumbai" required list="porig" autocomplete="off"></label>
+<div class="row"><label>Departing from <small>(leave blank for Mumbai)</small><input name="origin" maxlength="60" list="porig" autocomplete="off" placeholder="Type any city – e.g. Pune, Ahmedabad, Dubai, London"></label>
 <label>1) Number of days*<input name="days" type="number" min="2" max="30" value="6" required></label></div>
-<datalist id="porig"><option value="Mumbai"></option><option value="Pune"></option><option value="Ahmedabad"></option><option value="Surat"></option><option value="Nashik"></option><option value="Delhi"></option><option value="Bengaluru"></option><option value="Hyderabad"></option><option value="Chennai"></option><option value="Kolkata"></option><option value="Indore"></option><option value="Nagpur"></option></datalist>
+<datalist id="porig">{origins}</datalist>
 <div class="row"><div class="pdate"><label id="dwrap">Start date<input name="start_date" type="date"></label>
 <label id="mwrap" hidden>Month of travel<input name="travel_month" type="month"></label>
 <label class="chk psm"><input type="checkbox" name="flexible"><span>Not sure of exact dates? Pick a month instead</span></label></div>
@@ -231,7 +235,7 @@ f.addEventListener('submit',async e=>{{
  if(!places.length){{msg.textContent='Please type at least one place you want to visit, then press Enter or + Add.';msg.classList.add('err');pin.focus();return;}}
  const nd=Math.min(30,Math.max(2,parseInt(d.get('days'))||6));
  if(places.length>nd-1){{msg.textContent=places.length+' places need at least '+(places.length+1)+' days (one night in each). Please add days or remove a place.';msg.classList.add('err');f.days.focus();return;}}
- const origin=(d.get('origin')||'').trim();if(origin.length<2)return fail('Please tell us which city you are travelling from.',f.origin);
+ const origin=(d.get('origin')||'').trim()||'Mumbai';
  const adults=Math.max(1,parseInt(d.get('adults'))||1),rooms=Math.max(1,parseInt(d.get('rooms'))||1);
  if(rooms>adults)return fail('Each room needs at least one adult – please check the number of rooms.',f.rooms);
  const cages=[...csel.querySelectorAll('select')].map(x=>x.value);
