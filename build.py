@@ -274,7 +274,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <link rel="icon" type="image/png" href="{root}favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{root}style.css">
+<link rel="stylesheet" href="{root}style.css?v={CSSV}">
 {ld}
 </head><body>
 <div class="topbar"><div class="wrap"><span>📍 Mulund West, Mumbai · Open daily 9 am – 10 pm</span><span><a href="tel:{PHONE_RAW}">📞 {PHONE}</a> · <a href="mailto:{EMAIL}">✉️ {EMAIL}</a></span></div></div>
@@ -314,9 +314,14 @@ def cta_band():
     return f"""<section class="band"><div class="wrap"><span class="kicker">Since 1981</span><h2>Plan your next holiday with us</h2><p>Tell us where you want to go – we'll handle the rest. No obligation.</p>
 <div class="btns" style="justify-content:center"><a class="btn gold" href="{WA}" target="_blank" rel="noopener">💬 WhatsApp 98431 21212</a><a class="btn ghost" href="tel:{PHONE_RAW}">📞 Call now</a></div></div></section>"""
 
+CSSV = "0"
+
 def build():
     root = os.path.dirname(os.path.abspath(__file__))
-    open(os.path.join(root, "style.css"), "w").write(CSS + VISA_CSS + PLANNER_CSS + FLIGHT_CSS + TOOL_CSS + pwa.CSS)
+    global CSSV
+    css_all = CSS + VISA_CSS + PLANNER_CSS + FLIGHT_CSS + TOOL_CSS + pwa.CSS
+    CSSV = __import__("hashlib").md5(css_all.encode()).hexdigest()[:8]
+    open(os.path.join(root, "style.css"), "w").write(css_all)
     imgs = set(os.listdir(os.path.join(root, "img")))
     # Home
     cards = "".join(f'<a class="card" href="{s["slug"]}/"><div class="ic">{s["icon"]}</div><h3>{s["h1"]}</h3><p>{s["desc"][:120].rsplit(" ",1)[0]}…</p><span class="more">Explore →</span></a>' for s in SERVICES)
@@ -498,7 +503,7 @@ def build():
     open(os.path.join(root, "sitemap.xml"), "w").write(sm)
     # Installable app (PWA)
     open(os.path.join(root, "manifest.webmanifest"), "w").write(pwa.manifest(NAME))
-    open(os.path.join(root, "sw.js"), "w").write(pwa.service_worker(urls))
+    open(os.path.join(root, "sw.js"), "w").write(pwa.service_worker(urls, CSSV))
     write("/offline/", page("/offline/", "Offline | The Real Tours and Travels", "You are offline.", pwa.offline_body(PHONE, PHONE_RAW, WA)).replace('<meta name="robots" content="index,follow,max-image-preview:large">','<meta name="robots" content="noindex">'))
     open(os.path.join(root, "robots.txt"), "w").write(f"User-agent: *\nAllow: /\nDisallow: /tools/\n\nSitemap: {SITE}/sitemap.xml\n")
     open(os.path.join(root, "CNAME"), "w").write("www.therealtoursandtravels.com\n")

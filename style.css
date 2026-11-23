@@ -205,5 +205,11 @@ footer ul{list-style:none;padding:0;margin:0}footer li{margin:7px 0}
 .ios-tip{position:fixed;left:12px;right:12px;bottom:84px;z-index:70;background:#fff;border:1px solid var(--line);border-top:5px solid var(--red);border-radius:16px;padding:16px 18px;box-shadow:0 16px 40px rgba(0,0,0,.2)}
 .ios-tip p{margin:6px 0 0;color:var(--muted)}.ios-share{display:inline-block;border:1px solid var(--line);border-radius:6px;padding:0 6px;color:#0a84ff}
 .ios-x{position:absolute;right:10px;top:8px;border:0;background:none;font-size:18px;color:var(--muted);cursor:pointer}
-html.is-app .topbar{display:none}
+html.is-app .topbar,html.is-app .float-wa,html.is-app .app-install,html.is-app .hcta{display:none!important}
+.appbar{display:none}
+html.is-app .appbar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:80;background:#fff;border-top:1px solid var(--line);box-shadow:0 -6px 18px rgba(0,0,0,.06);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+.appbar a{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--muted);font-size:11.5px;font-weight:600}.appbar a span{font-size:20px;line-height:1}.appbar a.on{color:var(--red)}
+html.is-app body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+html.is-app .hero .seal{display:none}html.is-app .hero .wrap{padding-top:22px!important;padding-bottom:30px!important}html.is-app .fsec{margin-top:0}
+@media(max-width:700px){.float-wa{bottom:16px;right:12px;width:50px;height:50px;font-size:22px}main .btns{padding-right:0}}
 @media print{.app-install,.ios-tip{display:none!important}}

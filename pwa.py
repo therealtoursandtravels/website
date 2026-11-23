@@ -1,7 +1,7 @@
 """Installable app (PWA): manifest, service worker, install button and offline page."""
 import json
 
-VERSION = "rtt-v3"
+VERSION = "rtt-v4"
 
 def manifest(NAME):
     return json.dumps({
@@ -31,8 +31,8 @@ def manifest(NAME):
         ],
     }, ensure_ascii=False, indent=1)
 
-def service_worker(urls):
-    pre = ["/", "/offline/", "/style.css", "/img/logo.png", "/img/icon-192.png", "/favicon.png"] + [u for u in urls if u != "/"]
+def service_worker(urls, cssv):
+    pre = ["/", "/offline/", "/style.css?v=" + cssv, "/img/logo.png", "/img/icon-192.png", "/favicon.png"] + [u for u in urls if u != "/"]
     return f"""// The Real Tours and Travels – app service worker
 const CACHE='{VERSION}';
 const PRECACHE={json.dumps(pre)};
@@ -57,13 +57,16 @@ def offline_body(PHONE, PHONE_RAW, WA):
 <div class="btns" style="justify-content:center;margin-top:20px"><a class="btn gold" href="tel:{PHONE_RAW}">📞 Call {PHONE}</a><a class="btn ghost" href="{WA}">💬 WhatsApp</a><a class="btn outline" href="/">Try again</a></div>
 </div></section>"""
 
-HEAD = """<link rel="manifest" href="/manifest.webmanifest">
+HEAD = """<script>if(matchMedia('(display-mode: standalone)').matches||navigator.standalone)document.documentElement.classList.add('is-app');</script>
+<link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="Real Tours">"""
 
 # Install button + iPhone instructions + service-worker registration
-BODY = """<button type="button" class="app-install" id="appInstall" hidden>📲 Install app</button>
+BODY = """<nav class="appbar" aria-label="App">
+<a href="/"><span>🏠</span>Home</a><a href="/flights-hotels/#flights"><span>✈️</span>Book</a><a href="/customize-your-package/"><span>✨</span>Plan</a><a href="/visa/"><span>🛂</span>Visa</a><a href="https://wa.me/919843121212" target="_blank" rel="noopener"><span>💬</span>Chat</a></nav>
+<button type="button" class="app-install" id="appInstall" hidden>📲 Install app</button>
 <div class="ios-tip" id="iosTip" hidden role="dialog" aria-label="Install on iPhone"><button type="button" class="ios-x" aria-label="Close">✕</button>
 <b>Install The Real Tours and Travels app</b><p>Tap <span class="ios-share">⬆︎</span> <b>Share</b> at the bottom of Safari, then <b>Add to Home Screen</b>.</p></div>
 <script>
@@ -71,7 +74,8 @@ BODY = """<button type="button" class="app-install" id="appInstall" hidden>📲 
  if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
  const btn=document.getElementById('appInstall'),tip=document.getElementById('iosTip');
  const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
- if(standalone){document.documentElement.classList.add('is-app');return;}
+ if(standalone){document.documentElement.classList.add('is-app');
+  const here=location.pathname;document.querySelectorAll('.appbar a').forEach(a=>{const h=new URL(a.href,location).pathname;if(h===here||(h!=='/'&&here.startsWith(h)))a.classList.add('on');});return;}
  let dismissed=false;try{dismissed=localStorage.getItem('rtt_app_x')==='1';}catch(_){}
  let ev=null;
  addEventListener('beforeinstallprompt',e=>{e.preventDefault();ev=e;btn.hidden=false;});
@@ -90,6 +94,12 @@ CSS = """
 .ios-tip{position:fixed;left:12px;right:12px;bottom:84px;z-index:70;background:#fff;border:1px solid var(--line);border-top:5px solid var(--red);border-radius:16px;padding:16px 18px;box-shadow:0 16px 40px rgba(0,0,0,.2)}
 .ios-tip p{margin:6px 0 0;color:var(--muted)}.ios-share{display:inline-block;border:1px solid var(--line);border-radius:6px;padding:0 6px;color:#0a84ff}
 .ios-x{position:absolute;right:10px;top:8px;border:0;background:none;font-size:18px;color:var(--muted);cursor:pointer}
-html.is-app .topbar{display:none}
+html.is-app .topbar,html.is-app .float-wa,html.is-app .app-install,html.is-app .hcta{display:none!important}
+.appbar{display:none}
+html.is-app .appbar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:80;background:#fff;border-top:1px solid var(--line);box-shadow:0 -6px 18px rgba(0,0,0,.06);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+.appbar a{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--muted);font-size:11.5px;font-weight:600}.appbar a span{font-size:20px;line-height:1}.appbar a.on{color:var(--red)}
+html.is-app body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+html.is-app .hero .seal{display:none}html.is-app .hero .wrap{padding-top:22px!important;padding-bottom:30px!important}html.is-app .fsec{margin-top:0}
+@media(max-width:700px){.float-wa{bottom:16px;right:12px;width:50px;height:50px;font-size:22px}main .btns{padding-right:0}}
 @media print{.app-install,.ios-tip{display:none!important}}
 """
