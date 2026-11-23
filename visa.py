@@ -44,11 +44,6 @@ COUNTRIES = [
   COMMON + ["Recent passport-size photo"] + FIN + JOB + TRIP),
  ("japan", "🇯🇵", "Japan", "Application through an authorised agency",
   COMMON + ["Recent photo, 45 × 35 mm, white background", "Visa application form (we fill it for you)"] + FIN + JOB + TRIP),
- ("passport", "🛂", "Indian Passport (new / renewal)", "Passport Seva Kendra appointment",
-  ["Proof of address (Aadhaar card, electricity bill, bank passbook or rent agreement)",
-   "Proof of date of birth (birth certificate, PAN card, Aadhaar or school leaving certificate)",
-   "Old passport (for renewal), including first two and last two pages",
-   "For minors: parents' passports and birth certificate"]),
 ]
 
 
@@ -86,14 +81,14 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band):
 <label>Mobile number*<input name="phone" required inputmode="tel" maxlength="20" autocomplete="tel" placeholder="10-digit mobile"></label></div>
 <div class="row"><label>Email<input name="email" type="email" maxlength="160" autocomplete="email"></label>
 <label>Country*<select name="country" required>{opts}</select></label></div>
-<div class="row"><label>Visa type<select name="visa_type"><option>Tourist</option><option>Business</option><option>Visiting family / friends</option><option>Student</option><option>Transit</option><option>Passport (new / renewal)</option></select></label>
+<div class="row"><label>Visa type<select name="visa_type"><option>Tourist</option><option>Business</option><option>Visiting family / friends</option><option>Student</option><option>Transit</option></select></label>
 <label>Travel date<input name="travel_date" type="date"></label></div>
 <div class="row"><label>Number of travellers<input name="travellers" type="number" min="1" max="50" value="1"></label><span></span></div>
 <label>Documents* <small>(select multiple files – passport, photo, bank statements, ITR, bookings…)</small>
 <input name="files" type="file" multiple required accept=".pdf,.jpg,.jpeg,.png,.heic,.heif,.webp,application/pdf,image/*"></label>
 <div id="flist" class="flist"></div>
 <label>Notes for our team<textarea name="notes" maxlength="2000" rows="3" placeholder="Anything we should know – e.g. previous visa refusals, travelling with children"></textarea></label>
-<label class="chk"><input type="checkbox" name="consent" required><span>I agree that The Real Tours and Travels may use these documents only to process my visa/passport application, as per the <a href="../privacy-policy/">Privacy Policy</a>.</span></label>
+<label class="chk"><input type="checkbox" name="consent" required><span>I agree that The Real Tours and Travels may use these documents only to process my visa application, as per the <a href="../privacy-policy/">Privacy Policy</a>.</span></label>
 <button class="btn gold" type="submit" id="vsubmit">Upload documents securely</button>
 <p id="vmsg" class="vmsg" role="status" aria-live="polite"></p>
 </form>
@@ -107,7 +102,7 @@ const tabs=document.querySelectorAll('.vtab'),panels=document.querySelectorAll('
 function show(c){{tabs.forEach(t=>t.classList.toggle('on',t.dataset.c===c));panels.forEach(p=>p.hidden=p.dataset.c!==c);}}
 tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.c)));
 const names={json.dumps({c:n for (c,_,n,_,_) in COUNTRIES})};
-document.querySelectorAll('[data-pick]').forEach(a=>a.addEventListener('click',()=>{{const s=document.querySelector('select[name=country]');s.value=names[a.dataset.pick];if(a.dataset.pick==='passport')document.querySelector('select[name=visa_type]').value='Passport (new / renewal)';}}));
+document.querySelectorAll('[data-pick]').forEach(a=>a.addEventListener('click',()=>{{const s=document.querySelector('select[name=country]');s.value=names[a.dataset.pick];}}));
 const f=document.getElementById('vform'),msg=document.getElementById('vmsg'),btn=document.getElementById('vsubmit'),fl=document.getElementById('flist');
 f.files.addEventListener('change',()=>{{fl.innerHTML=[...f.files.files].map(x=>'<span>📄 '+x.name.replace(/[<>&]/g,'')+' · '+(x.size/1048576).toFixed(1)+' MB</span>').join('');}});
 function uuid(){{return (crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{{const r=Math.random()*16|0;return (c=='x'?r:(r&3|8)).toString(16);}}));}}
