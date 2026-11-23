@@ -102,6 +102,7 @@ def planner_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band, ADDR, GST):
 <div id="cages" class="cages" hidden><small>Age of each child – hotels and airlines price children by age</small><div id="cagesel" class="cagesel"></div></div></div>
 <fieldset><legend>Type of trip <small>(choose any that apply)</small></legend><div class="chips">
 <label><input type="checkbox" name="ttype" value="Family">👨‍👩‍👧 Family</label><label><input type="checkbox" name="ttype" value="Honeymoon">💑 Honeymoon</label><label><input type="checkbox" name="ttype" value="Senior Citizens">👴 Senior Citizens</label><label><input type="checkbox" name="ttype" value="Group">👥 Group</label><label><input type="checkbox" name="ttype" value="Pilgrimage / Yatra">🛕 Pilgrimage / Yatra</label><label><input type="checkbox" name="ttype" value="Jain food with Maharaj">🍽️ Jain food with Maharaj</label><label><input type="checkbox" name="ttype" value="Adventure">🧗 Adventure</label><label><input type="checkbox" name="ttype" value="Corporate (MICE)">💼 Corporate (MICE)</label></div></fieldset>
+<fieldset><legend>What do you enjoy? <small>(optional – we plan your days around these)</small></legend><div class="chips"><label><input type="checkbox" name="interest" value="Sightseeing & culture">🏛️ Sightseeing & culture</label><label><input type="checkbox" name="interest" value="Nature & scenery">🏞️ Nature & scenery</label><label><input type="checkbox" name="interest" value="Adventure activities">🪂 Adventure activities</label><label><input type="checkbox" name="interest" value="Beaches">🏖️ Beaches</label><label><input type="checkbox" name="interest" value="Shopping">🛍️ Shopping</label><label><input type="checkbox" name="interest" value="Local food">🍜 Local food</label><label><input type="checkbox" name="interest" value="Wildlife">🐘 Wildlife</label><label><input type="checkbox" name="interest" value="Kid-friendly activities">🧸 Kid-friendly activities</label><label><input type="checkbox" name="interest" value="Relaxed pace">🌿 Relaxed pace</label><label><input type="checkbox" name="interest" value="Temples & spiritual places">🛕 Temples & spiritual places</label></div></fieldset>
 <fieldset><legend>3) Hotel category*</legend><div class="chips">
 <label><input type="radio" name="hotel" value="3 Star" required>3 Star</label><label><input type="radio" name="hotel" value="4 Star" checked>4 Star</label><label><input type="radio" name="hotel" value="5 Star">5 Star</label><label><input type="radio" name="hotel" value="Luxury / Boutique">Luxury / Boutique</label></div></fieldset>
 <fieldset id="carset"><legend>4) Car</legend><div class="chips">
@@ -124,7 +125,10 @@ def planner_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band, ADDR, GST):
 <div class="btns no-print" style="justify-content:center;margin-top:24px">
 <a class="btn gold" id="wabtn" target="_blank" rel="noopener" href="{WA}">💬 Send to our team on WhatsApp</a>
 <button class="btn ghost" type="button" onclick="window.print()">🖨️ Save as PDF / Print</button>
+<button class="btn outline" type="button" id="sharebtn">🔗 Share this plan</button>
 <a class="btn outline" href="#planner">Change details</a></div>
+<p id="sharemsg" class="vmsg no-print" role="status" aria-live="polite" style="text-align:center"></p>
+<p id="sharedby" class="pnote no-print" hidden style="text-align:center">👀 You are viewing a shared plan. Like it? <a href="#planner">Create your own itinerary</a> or <a href="https://wa.me/919843121212" target="_blank" rel="noopener" id="sharedwa">WhatsApp us about this plan</a>.</p>
 </div></section>
 {cta_band()}
 <script>
@@ -187,7 +191,7 @@ function build(o){{
    let t,a;
    if(days.length===0){{t='Arrival in '+p;a=['Travel from '+o.origin+' and arrive in '+p,'Transfer to your hotel; evening at leisure'];}}
    else if(n===0){{t=P[pi-1]+' → '+p;a=['Check out and travel to '+p+(o.scope==='International'?' – by flight, train or road, whichever connects best':' – by road, train or flight, whichever connects best'),'Check in and explore at your own pace'];}}
-   else{{t='Explore '+p;a=acts.length?[acts[(n-1)%acts.length]]:['Sightseeing in '+p+' – our team will plan this day around your interests'];}}
+   else{{t='Explore '+p;a=acts.length?[acts[(n-1)%acts.length]]:['Sightseeing in '+p+' – our team will plan this day around your interests'+(o.interests&&o.interests.length?' ('+o.interests.slice(0,3).join(', ').toLowerCase()+')':'')];}}
    days.push({{t,a,s:p}});}}}});
   days.push({{t:'Departure from '+P[P.length-1],a:['Breakfast and check out','Transfer for your journey home to '+o.origin+' with beautiful memories'],s:''}});
   return days;
@@ -218,12 +222,36 @@ function render(o,days,ref){{
  const travel=o.mode==='Railway'&&D&&!D.rail&&!intl?'Flight (no rail connection)':(intl&&o.mode==='Railway'?'Flight (international)':o.mode);
  return '<div class="ihead"><img src="../img/logo.png" alt="The Real Tours and Travels" width="72" height="72"><div><b>The Real Tours and Travels</b><small>Crafting Journeys Since 1981 · Mulund West, Mumbai</small></div><span class="iref">Ref '+ref+'</span></div>'+
  '<h2 class="ititle">'+esc(o.destName)+' – '+(o.days-1)+' Nights / '+o.days+' Days</h2>'+
- '<div class="ifacts"><span>'+(o.scope==='International'?'🌍':'🇮🇳')+' '+o.scope+'</span><span>👥 '+o.adults+' Adult'+(o.adults>1?'s':'')+(o.children?' + '+o.children+' Child'+(o.children>1?'ren':''):'')+(o.infants?' + '+o.infants+' Infant'+(o.infants>1?'s':''):'')+'</span><span>🏨 '+esc(o.hotel)+'</span>'+'<span>🛫 From '+esc(o.origin)+'</span><span>🛏️ '+o.rooms+' Room'+(o.rooms>1?'s':'')+'</span>'+(D&&D.nocar||!o.car?'':'<span>🚗 '+esc(o.car)+'</span>')+'<span>'+(travel.startsWith('Rail')?'🚆':'✈️')+' '+esc(travel)+'</span>'+(start?'<span>📅 '+fmt(start)+'</span>':(o.month?'<span>📅 '+esc(o.monthTxt)+' (flexible)</span>':''))+(o.types.length?'<span>⭐ '+esc(o.types.join(', '))+'</span>':'')+'</div>'+
+ '<div class="ifacts"><span>'+(o.scope==='International'?'🌍':'🇮🇳')+' '+o.scope+'</span><span>👥 '+o.adults+' Adult'+(o.adults>1?'s':'')+(o.children?' + '+o.children+' Child'+(o.children>1?'ren':''):'')+(o.infants?' + '+o.infants+' Infant'+(o.infants>1?'s':''):'')+'</span><span>🏨 '+esc(o.hotel)+'</span>'+'<span>🛫 From '+esc(o.origin)+'</span><span>🛏️ '+o.rooms+' Room'+(o.rooms>1?'s':'')+'</span>'+(D&&D.nocar||!o.car?'':'<span>🚗 '+esc(o.car)+'</span>')+'<span>'+(travel.startsWith('Rail')?'🚆':'✈️')+' '+esc(travel)+'</span>'+(start?'<span>📅 '+fmt(start)+'</span>':(o.month?'<span>📅 '+esc(o.monthTxt)+' (flexible)</span>':''))+(o.types.length?'<span>⭐ '+esc(o.types.join(', '))+'</span>':'')+(o.interests&&o.interests.length?'<span>❤️ '+esc(o.interests.join(', '))+'</span>':'')+'</div>'+
  '<div class="idays">'+rows+'</div>'+
  '<div class="iinc"><div><h4>Package can include</h4><ul><li>'+o.rooms+' room'+(o.rooms>1?'s':'')+' in '+esc(o.hotel)+' accommodation with breakfast</li>'+(o.car?'<li>Private '+esc(o.car)+' for transfers and sightseeing</li>':'<li>Transfers and sightseeing as per itinerary</li>')+'<li>'+(travel.startsWith('Rail')?'Train tickets':'Flight tickets')+' on request</li><li>Visa and travel insurance assistance'+(intl?'':' (if needed)')+'</li><li>Pure veg / Jain meals on request</li></ul></div>'+
  '<div><h4>Next step</h4><p>This is a suggested plan. Our travel expert will call you to personalise it and share the best options for your dates.</p><p><b>📞 {PHONE}</b><br>✉️ {EMAIL}<br>🌐 www.therealtoursandtravels.com<br>📸 @therealtoursandtravels</p></div></div>'+
  '<p class="ifoot" style="margin-top:14px">GST as applicable: '+(intl?'5% GST on the package value + 2% TCS on overseas tour packages (adjustable against your income tax)':'5% GST on the tour package value')+'. Final price shared by our team.</p>'+'<p class="ifoot">The Real Tours and Travels · {", ".join(ADDR)} · GSTIN {GST} · Sightseeing subject to weather, permits and local conditions.</p>';
 }}
+// ---- Save & share: the plan (without contact details) is packed into the link ----
+let lastPlan=null;
+const PICK=(v,L,d)=>L.includes(v)?v:d;
+const TT=[...f.querySelectorAll('input[name=ttype]')].map(x=>x.value),IN=[...f.querySelectorAll('input[name=interest]')].map(x=>x.value);
+function pack(o,ref){{const k={{v:1,r:ref,p:o.places,d:o.days,a:o.adults,c:o.children,i:o.infants,sc:o.scope,h:o.hotel,car:o.car,m:o.mode,s:o.start,mo:o.month,or:o.origin,rm:o.rooms,n:o.nights,t:o.types,in:o.interests}};return btoa(unescape(encodeURIComponent(JSON.stringify(k)))).replace(/\\+/g,'-').replace(/\\//g,'_').replace(/=+$/,'');}}
+function unpack(str){{try{{const k=JSON.parse(decodeURIComponent(escape(atob(str.replace(/-/g,'+').replace(/_/g,'/')))));
+ const P=(Array.isArray(k.p)?k.p:[]).map(x=>String(x).slice(0,60)).filter(Boolean).slice(0,10);if(!P.length)return null;
+ const int=(x,a,b,d)=>{{x=parseInt(x);return isNaN(x)?d:Math.min(b,Math.max(a,x));}};
+ const days=int(k.d,2,30,6),mo=/^\\d{{4}}-\\d{{2}}$/.test(k.mo||'')?k.mo:'',st=/^\\d{{4}}-\\d{{2}}-\\d{{2}}$/.test(k.s||'')?k.s:'';
+ const sc=PICK(k.sc,['Domestic','International'],'Domestic');
+ const nights=Array.isArray(k.n)&&k.n.length===P.length?k.n.map(x=>int(x,1,29,1)):null;
+ const o={{dest:P.length===1?match(P[0]):null,places:P,destName:P.join(' → '),days,adults:int(k.a,1,60,2),children:int(k.c,0,30,0),infants:int(k.i,0,20,0),scope:sc,hotel:PICK(k.h,['3 Star','4 Star','5 Star','Luxury / Boutique'],'4 Star'),car:sc==='International'?'':PICK(k.car,['SUV','Hatchback','Sedan','Tempo Traveller'],'SUV'),mode:PICK(k.m,['Flight','Railway'],'Flight'),start:st,origin:String(k.or||'Mumbai').slice(0,60),rooms:int(k.rm,1,30,1),childAges:[],nights,month:mo,monthTxt:mo?new Date(mo+'-01T00:00').toLocaleDateString('en-IN',{{month:'long',year:'numeric'}}):'',types:(Array.isArray(k.t)?k.t:[]).filter(x=>TT.includes(x)),interests:(Array.isArray(k.in)?k.in:[]).filter(x=>IN.includes(x)),budget:''}};
+ return {{o,ref:/^[A-Z0-9]{{8}}$/.test(k.r||'')?k.r:'SHARED'}};}}catch(_){{return null;}}}}
+document.getElementById('sharebtn').addEventListener('click',async()=>{{if(!lastPlan)return;const sm=document.getElementById('sharemsg');sm.className='vmsg';
+ const url=location.origin+location.pathname+'#plan='+pack(lastPlan.o,lastPlan.ref);const title='Trip plan: '+lastPlan.o.destName+' – The Real Tours and Travels';
+ if(navigator.share){{try{{await navigator.share({{title,text:title,url}});return;}}catch(_){{}}}}
+ let copied=false;try{{await navigator.clipboard.writeText(url);copied=true;}}catch(_){{}}
+ sm.innerHTML=(copied?'✅ Link copied – paste it to your family. ':'')+'<a class="btn gold" style="margin-top:8px" target="_blank" rel="noopener" href="https://wa.me/?text='+encodeURIComponent(title+'\\n'+url)+'">💬 Share on WhatsApp</a>';sm.classList.add('ok');}});
+function loadShared(){{const m=location.hash.match(/^#plan=([A-Za-z0-9_-]+)$/);if(!m)return;const sp=unpack(m[1]);if(!sp)return;
+ document.getElementById('itin').innerHTML=render(sp.o,build(sp.o),sp.ref);lastPlan=sp;
+ const sb=document.getElementById('sharedby');sb.hidden=false;document.getElementById('sharedwa').href='https://wa.me/919843121212?text='+encodeURIComponent('Hi The Real Tours and Travels, I saw this trip plan ('+sp.o.destName+', '+sp.o.days+' days, Ref '+sp.ref+') and would like a quote: '+location.href);
+ document.getElementById('wabtn').href=document.getElementById('sharedwa').href;
+ const res=document.getElementById('result');res.hidden=false;setTimeout(()=>res.scrollIntoView(),200);}}
+loadShared();
 f.addEventListener('submit',async e=>{{
  e.preventDefault();msg.className='vmsg';msg.textContent='';
  if(f.company_website.value){{msg.textContent='✅ Thank you – request received.';msg.classList.add('ok');return;}} // spam trap
@@ -245,15 +273,15 @@ f.addEventListener('submit',async e=>{{
  const flex=!!f.flexible.checked,month=flex?(d.get('travel_month')||''):'';
  if(!isEmail&&!isPhone)return fail('Please enter a valid mobile number (outside India, start with your country code, e.g. +971…) or an email address.',f.contact);
  const one=places.length===1?match(places[0]):null;
- const o={{dest:one,places:places.slice(),destName:places.join(' → '),days:Math.min(30,Math.max(2,parseInt(d.get('days'))||6)),adults:Math.max(1,parseInt(d.get('adults'))||1),children:Math.max(0,parseInt(d.get('children'))||0),infants:Math.max(0,parseInt(d.get('infants'))||0),scope:scope(),hotel:d.get('hotel')||'4 Star',car:scope()==='International'?'':(d.get('car')||'SUV'),mode:d.get('mode')||'Flight',start:flex?'':(d.get('start_date')||''),origin,rooms,childAges:cages,nights:nightsArr,month,monthTxt:month?new Date(month+'-01T00:00').toLocaleDateString('en-IN',{{month:'long',year:'numeric'}}):'',types:d.getAll('ttype'),budget:d.get('budget')||''}};
- const extra=['Departing from: '+o.origin,'Rooms: '+o.rooms,o.childAges.length?'Child ages: '+o.childAges.join(', '):'',o.nights?'Nights: '+o.places.map((p,i)=>p+' '+o.nights[i]).join(', '):'',o.month?'Travel month (flexible): '+o.monthTxt:'',o.types.length?'Trip type: '+o.types.join(', '):'',o.budget?'Budget per person: '+o.budget:'',o.destName.length>80?'Full route: '+o.destName:''].filter(Boolean);
+ const o={{dest:one,places:places.slice(),destName:places.join(' → '),days:Math.min(30,Math.max(2,parseInt(d.get('days'))||6)),adults:Math.max(1,parseInt(d.get('adults'))||1),children:Math.max(0,parseInt(d.get('children'))||0),infants:Math.max(0,parseInt(d.get('infants'))||0),scope:scope(),hotel:d.get('hotel')||'4 Star',car:scope()==='International'?'':(d.get('car')||'SUV'),mode:d.get('mode')||'Flight',start:flex?'':(d.get('start_date')||''),origin,rooms,childAges:cages,nights:nightsArr,month,monthTxt:month?new Date(month+'-01T00:00').toLocaleDateString('en-IN',{{month:'long',year:'numeric'}}):'',types:d.getAll('ttype'),interests:d.getAll('interest'),budget:d.get('budget')||''}};
+ const extra=['Departing from: '+o.origin,'Rooms: '+o.rooms,o.childAges.length?'Child ages: '+o.childAges.join(', '):'',o.nights?'Nights: '+o.places.map((p,i)=>p+' '+o.nights[i]).join(', '):'',o.month?'Travel month (flexible): '+o.monthTxt:'',o.types.length?'Trip type: '+o.types.join(', '):'',o.interests.length?'Interests: '+o.interests.join(', '):'',o.budget?'Budget per person: '+o.budget:'',o.destName.length>80?'Full route: '+o.destName:''].filter(Boolean);
  const btn=document.getElementById('psubmit');btn.disabled=true;msg.textContent='✨ Creating your itinerary…';
  const id=uuid(),ref=id.slice(0,8).toUpperCase();
  const row={{id,full_name:(d.get('full_name')||'').trim()||null,phone:isPhone?digits:null,email:isEmail?contact:null,destination:o.destName.slice(0,80),days:o.days,adults:o.adults,children:o.children,infants:o.infants,trip_scope:o.scope,hotel_category:o.hotel,car_type:o.car||'Transfers as per itinerary',travel_mode:o.mode,start_date:o.start||null,notes:[extra.join('\\n'),(d.get('notes')||'').trim()].filter(Boolean).join('\\n')||null}};
  try{{const r=await fetch(SB+'/rest/v1/trip_requests',{{method:'POST',headers:{{apikey:KEY,Authorization:'Bearer '+(window.RTT_TOKEN||KEY),'Content-Type':'application/json',Prefer:'return=minimal'}},body:JSON.stringify(row)}});if(!r.ok)throw 0;}}
  catch(_){{btn.disabled=false;msg.textContent='Sorry, something went wrong. Please try again or WhatsApp us on 98431 21212.';msg.classList.add('err');return;}}
  const days=build(o);
- document.getElementById('itin').innerHTML=render(o,days,ref);
+ document.getElementById('itin').innerHTML=render(o,days,ref);lastPlan={{o,ref}};document.getElementById('sharedby').hidden=true;
  const wa='Hi The Real Tours and Travels, I created an itinerary on your website (Ref '+ref+'): '+o.destName+', '+o.days+' days, '+o.adults+' adults'+(o.children?' + '+o.children+' children':'')+(o.infants?' + '+o.infants+' infants':'')+', '+o.scope+', '+o.hotel+(o.car?', '+o.car:'')+', '+o.mode+(o.start?', start '+o.start:'')+'. '+extra.join('; ')+'. Please share the best price.';
  document.getElementById('wabtn').href='https://wa.me/919843121212?text='+encodeURIComponent(wa);
  notify('New itinerary request '+ref+' – '+(row.full_name||contact),wa.replace('Hi The Real Tours and Travels, I created an itinerary on your website ','')+(row.full_name?'\\nName: '+row.full_name:'')+'\\nContact: '+contact+(row.notes?'\\nNotes: '+row.notes:''),isEmail?contact:'');
