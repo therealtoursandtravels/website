@@ -285,7 +285,7 @@ footer ul{list-style:none;padding:0;margin:0}footer li{margin:7px 0}
 @media(max-width:900px){.hero .wrap{grid-template-columns:1fr;gap:28px;padding:36px 18px 56px;text-align:left}.seal{width:200px;height:200px;order:-1;box-shadow:0 0 0 8px #fdf0f0,0 14px 30px rgba(0,0,0,.10)}
 .two,.contact-grid,footer .wrap{grid-template-columns:1fr}section{padding:52px 0}.brand b{font-size:16px}.brand img{width:48px;height:48px}.brand small{font-size:10px;letter-spacing:1.2px}
 .wrap{padding-left:18px;padding-right:18px}header.site .wrap{padding:8px 18px}.topbar .wrap{justify-content:center;gap:6px 14px;font-size:12.5px}
-.hero h1{font-size:clamp(28px,8vw,38px)}.hero p{font-size:16.5px;margin-bottom:22px}.kicker{font-size:12px;letter-spacing:1.6px}
+.hero h1{font-size:clamp(28px,8vw,38px)}.hero p{font-size:16.5px;margin-bottom:22px}.kicker{font-size:11px;letter-spacing:1.2px;flex-wrap:wrap;row-gap:4px}
 .btns{flex-direction:column}.btns .btn{justify-content:center;width:100%}
 .trust{gap:18px 28px;margin-top:28px}.trust b{font-size:24px}
 .head{margin-bottom:30px}.card{padding:24px 20px}.emblem{padding:34px 22px}.emblem img{width:150px}
