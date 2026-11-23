@@ -54,6 +54,20 @@ PCC_EXTRA = """<div class="sf-row"><label>Purpose<select name="x_pur" data-lbl="
 <label>Service needed<select name="x_svc" data-lbl="Service"><option>Police Clearance Certificate (PCC)</option><option>Attestation / apostille</option><option>Both</option></select></label></div>
 <div class="sf-row"><label>Is your current address the same as in your passport?<select name="x_addr" data-lbl="Address same as passport"><option value="">Not sure</option><option>Yes</option><option>No</option></select></label><span></span></div>"""
 
+SAFARI_EXTRA = """<div class="sf-row"><label>Preferred park<select name="x_park" data-lbl="Park"><option value="">Please suggest</option><option>Tadoba</option><option>Ranthambore</option><option>Jim Corbett</option><option>Kanha / Bandhavgarh</option><option>Gir</option><option>Kenya – Masai Mara</option><option>Tanzania – Serengeti</option></select></label>
+<label>Number of safari drives<select name="x_drives" data-lbl="Safari drives"><option value="">Please suggest</option><option>2</option><option>3–4</option><option>5 or more</option></select></label></div>
+<div class="sf-row"><label>Stay<select name="x_stay" data-lbl="Stay"><option value="">Please suggest</option><option>Comfortable resort</option><option>Luxury jungle lodge</option><option>Budget stay</option></select></label><span></span></div>"""
+
+WOMEN_EXTRA = """<div class="sf-row"><label>How would you like to travel?<select name="x_how" data-lbl="Trip type"><option>Join a women-only group departure</option><option>Private trip for our own group</option></select></label>
+<label>Age group (approx.)<select name="x_age" data-lbl="Age group"><option value="">Mixed</option><option>18–30</option><option>30–45</option><option>45–60</option><option>60+</option></select></label></div>
+<div class="sf-row"><label>Room preference<select name="x_room" data-lbl="Rooms"><option value="">Twin sharing</option><option>Single rooms</option><option>Triple sharing</option></select></label>
+<label>Food<select name="x_food1" data-lbl="Food"><option value="">Any</option><option>Pure vegetarian</option><option>Jain</option></select></label></div>
+<label class="sf-chk1"><input type="checkbox" name="x_tm" value="Woman tour manager requested"> Woman tour manager requested</label>"""
+
+TREK_EXTRA = """<div class="sf-row"><label>Experience level<select name="x_lvl" data-lbl="Experience"><option>First trek / beginner</option><option>Done 1–2 treks</option><option>Experienced trekker</option></select></label>
+<label>Type of adventure<select name="x_adv" data-lbl="Adventure"><option value="">Please suggest</option><option>Himalayan trek</option><option>Ladakh / Spiti road trip</option><option>Rafting / paragliding / camping</option><option>Bhutan / Nepal</option><option>Sahyadri trek near Mumbai</option></select></label></div>
+<label class="sf-chk1"><input type="checkbox" name="x_gear" value="Needs rental trekking gear"> We'll need rental gear (jackets, poles, sleeping bags)</label>"""
+
 CFG = {
  "domestic-holiday-packages": ("Domestic holiday", "Where in India?", "e.g. Kashmir, Kerala, Goa – or suggest", ""),
  "international-holiday-packages": ("International holiday", "Which country or countries?", "e.g. Dubai, Bali, Europe – or suggest", ""),
@@ -67,6 +81,9 @@ CFG = {
  "destination-weddings-family-functions": ("Wedding / family function", "Preferred destination", "e.g. Udaipur, Goa, Dubai – or suggest", WEDDING_EXTRA),
  "school-college-educational-tours": ("Educational tour", "Where would you like to go?", "e.g. Delhi–Agra, ISRO Bengaluru, Singapore", EDU_EXTRA),
  "police-clearance-certificate-pcc-document-services": ("PCC / document", "Country the document is for", "e.g. Canada, UAE, Germany", PCC_EXTRA),
+ "wildlife-safari-tours": ("Wildlife safari", "Where would you like to go?", "e.g. Tadoba, Ranthambore, Kenya – or suggest", SAFARI_EXTRA),
+ "women-only-group-tours": ("Women-only tour", "Where would you like to go?", "e.g. Kerala, Bhutan, Vietnam – or suggest", WOMEN_EXTRA),
+ "adventure-trekking-tours": ("Adventure / trek", "Where would you like to go?", "e.g. Kedarkantha, Ladakh, Rishikesh – or suggest", TREK_EXTRA),
  "jain-yatra-tours-with-maharaj": ("Jain yatra", "Which tirth(s)?", "e.g. Palitana, Sammed Shikharji, Girnar", JAIN_EXTRA),
 }
 
