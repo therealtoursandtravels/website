@@ -3,6 +3,7 @@
 import json, os, datetime
 from articles import ARTICLES
 from visa import visa_page, VISA_CSS
+from planner import planner_page, PLANNER_CSS
 
 SITE = "https://www.therealtoursandtravels.com"
 NAME = "The Real Tours and Travels"
@@ -149,7 +150,7 @@ header.site .wrap{display:flex;align-items:center;justify-content:space-between;
 .brand img{width:64px;height:64px}
 .brand b{font-family:'Playfair Display',serif;font-size:22px;letter-spacing:.2px;line-height:1.1;color:var(--crimson)}
 .brand small{display:block;color:var(--muted);font-weight:500;font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-top:3px}
-nav.main a{color:var(--wine);text-decoration:none;font-weight:500;margin-left:24px;font-size:15.5px}
+nav.main a{color:var(--wine);text-decoration:none;font-weight:500;margin-left:18px;font-size:15px}
 nav.main a:hover{color:var(--red)}
 nav.main a.cta{background:linear-gradient(135deg,var(--red),var(--crimson));color:#fff;padding:10px 20px;border-radius:999px;box-shadow:0 6px 16px rgba(142,14,22,.25)}
 .menu-btn{display:none;background:none;border:0;font-size:28px;color:var(--crimson);width:44px;height:44px}
@@ -274,7 +275,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <header class="site"><div class="wrap">
 <a class="brand" href="{root or './'}"><img src="{root}img/logo.png" alt="The Real Tours and Travels logo – Estd. 1981" width="64" height="64"><span><b>The Real Tours and Travels</b><small>Crafting Journeys Since 1981</small></span></a>
 <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('nav.main').classList.toggle('open')">☰</button>
-<nav class="main"><a href="{root or './'}#services">Services</a><a href="{root}visa/">Visa</a><a href="{root}jain-yatra-tours-with-maharaj/">Jain Yatra</a><a href="{root}blog/">Travel Guides</a><a href="{root}contact/">Contact</a><a href="{root}pay/">Pay Online</a><a class="cta" href="{WA}" target="_blank" rel="noopener">WhatsApp Us</a></nav>
+<nav class="main"><a href="{root or './'}#services">Services</a><a href="{root}customize-your-package/">Customize Trip</a><a href="{root}visa/">Visa</a><a href="{root}jain-yatra-tours-with-maharaj/">Jain Yatra</a><a href="{root}blog/">Guides</a><a href="{root}contact/">Contact</a><a href="{root}pay/">Pay Online</a><a class="cta" href="{WA}" target="_blank" rel="noopener">WhatsApp Us</a></nav>
 </div></header>
 <main>
 {body}
@@ -286,7 +287,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <p><a href="tel:{PHONE_RAW}">📞 {PHONE}</a><br><a href="mailto:{EMAIL}">✉️ {EMAIL}</a><br>
 <a href="{IG}" target="_blank" rel="noopener">📸 @therealtoursandtravels</a> · <a href="{FB}" target="_blank" rel="noopener">Facebook</a></p></div>
 <div><h4>Our Services</h4><ul>{nav}</ul></div>
-<div><h4>Visit Us</h4><ul><li>Open every day, 9 am – 10 pm</li><li><a href="{MAPS}" target="_blank" rel="noopener">Get directions on Google Maps</a></li><li><a href="{REVIEW}" target="_blank" rel="noopener">⭐ Review us on Google</a></li><li><a href="{root}blog/">Travel guides &amp; tips</a></li><li><a href="{root}pay/">💳 Pay online</a></li><li><a href="{root}contact/">Contact us</a></li></ul>
+<div><h4>Visit Us</h4><ul><li>Open every day, 9 am – 10 pm</li><li><a href="{MAPS}" target="_blank" rel="noopener">Get directions on Google Maps</a></li><li><a href="{REVIEW}" target="_blank" rel="noopener">⭐ Review us on Google</a></li><li><a href="{root}customize-your-package/">✨ Customize your package</a></li><li><a href="{root}blog/">Travel guides &amp; tips</a></li><li><a href="{root}pay/">💳 Pay online</a></li><li><a href="{root}contact/">Contact us</a></li></ul>
 <p style="margin-top:14px">Serving Mulund, Thane, Bhandup, Nahur, Powai, Ghatkopar and all of Mumbai.</p></div>
 </div><div class="copy">© {datetime.date.today().year} The Real Tours and Travels, Mulund West, Mumbai · GSTIN {GST} · All rights reserved.<br><a href="{root}terms/">Terms &amp; Conditions</a> · <a href="{root}privacy-policy/">Privacy Policy</a> · <a href="{root}cancellation-refund-policy/">Cancellation &amp; Refund Policy</a></div></footer>
 <a class="float-wa" href="{WA}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">💬</a>
@@ -308,7 +309,7 @@ def cta_band():
 
 def build():
     root = os.path.dirname(os.path.abspath(__file__))
-    open(os.path.join(root, "style.css"), "w").write(CSS + VISA_CSS)
+    open(os.path.join(root, "style.css"), "w").write(CSS + VISA_CSS + PLANNER_CSS)
     imgs = set(os.listdir(os.path.join(root, "img")))
     # Home
     cards = "".join(f'<a class="card" href="{s["slug"]}/"><div class="ic">{s["icon"]}</div><h3>{s["h1"]}</h3><p>{s["desc"][:120].rsplit(" ",1)[0]}…</p><span class="more">Explore →</span></a>' for s in SERVICES)
@@ -322,7 +323,7 @@ def build():
 <span class="kicker">Mumbai's family travel experts · Since 1981</span>
 <h1>Travel Agency in Mulund, Mumbai for Family Holidays, Tours &amp; Visas</h1>
 <p>Domestic and international holiday packages, honeymoons, yatras, Jain tours with Maharaj, group tours, passport &amp; visa services and travel insurance – planned personally by The Real Tours and Travels.</p>
-<div class="btns"><a class="btn gold" href="{WA}" target="_blank" rel="noopener">💬 WhatsApp 98431 21212</a><a class="btn ghost" href="tel:{PHONE_RAW}">📞 Call now</a></div>
+<div class="btns"><a class="btn gold" href="customize-your-package/">✨ Customize your package</a><a class="btn ghost" href="{WA}" target="_blank" rel="noopener">💬 WhatsApp 98431 21212</a></div>
 <div class="trust"><div><b>45+ years</b>serving travellers since 1981</div><div><b>4.8 ★</b>rating on Google</div><div><b>10+</b>travel services under one roof</div></div>
 </div>{seal("")}</div>{RIDGE}</section>
 <section id="services"><div class="wrap">
@@ -417,6 +418,8 @@ def build():
         faq_ld = {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":x}} for q,x in a["faqs"]]}
         crumbs = {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":SITE+"/"},{"@type":"ListItem","position":2,"name":"Travel Guides","item":SITE+"/blog/"},{"@type":"ListItem","position":3,"name":a["h1"],"item":url}]}
         write(f"/blog/{a['slug']}/", page(f"/blog/{a['slug']}/", a["title"] + " | The Real Tours and Travels", a["desc"], body, [art_ld, faq_ld, crumbs], a["img"]))
+    # Customize your package
+    write("/customize-your-package/", page("/customize-your-package/", "Customize Your Holiday Package – Instant Itinerary | The Real Tours and Travels", "Customize your holiday package from Mumbai – choose destination, days, travellers, hotel category, car (SUV, Sedan, Hatchback) and flight or train, and get an instant day-by-day itinerary.", planner_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band, ADDR, GST), None, "gulmarg.jpg"))
     # Visa section
     write("/visa/", page("/visa/", "Visa Services in Mulund, Mumbai – Documents Required & Upload | The Real Tours and Travels", "Visa services in Mulund West, Mumbai for Dubai, Thailand, Singapore, Europe (Schengen), UK, USA, Canada, Australia, Japan and more. See documents required, request the price and upload documents securely.", visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band), None, "passport.jpg"))
     # Pay online
@@ -454,7 +457,7 @@ def build():
 <h2>Refunds</h2><ul class="ticks"><li>Eligible refunds are processed after deducting applicable cancellation charges and once we receive the refund from the supplier.</li><li>Refunds for online payments are made to the original payment method. Once initiated, a refund usually reaches your account within 5–10 working days, depending on your bank.</li><li>Payments made by mistake or in excess of the confirmed amount will be refunded in full after verification.</li></ul>
 <h2>Cancellation or changes by us or suppliers</h2><p>If a service is cancelled by us or a supplier, we will offer an alternative or refund the amount received for that service, as per the supplier's policy.</p>""")
     # sitemap / robots / CNAME
-    urls = ["/"] + [f"/{s['slug']}/" for s in SERVICES] + ["/blog/", "/visa/"] + [f"/blog/{a['slug']}/" for a in ARTICLES] + ["/contact/", "/pay/", "/terms/", "/privacy-policy/", "/cancellation-refund-policy/"]
+    urls = ["/"] + [f"/{s['slug']}/" for s in SERVICES] + ["/blog/", "/visa/", "/customize-your-package/"] + [f"/blog/{a['slug']}/" for a in ARTICLES] + ["/contact/", "/pay/", "/terms/", "/privacy-policy/", "/cancellation-refund-policy/"]
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{SITE}{u}</loc><lastmod>{TODAY}</lastmod><priority>{'1.0' if u=='/' else '0.8'}</priority></url>\n" for u in urls) + "</urlset>\n"
     open(os.path.join(root, "sitemap.xml"), "w").write(sm)
     open(os.path.join(root, "robots.txt"), "w").write(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
