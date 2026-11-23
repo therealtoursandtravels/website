@@ -109,6 +109,7 @@ footer ul{list-style:none;padding:0;margin:0}footer li{margin:7px 0}
 .vcheck h4{margin:4px 0 6px;font-family:'Playfair Display',serif;font-size:18px;color:var(--wine)}.vcheck ul{margin:0 0 8px;padding-left:20px}.vcheck li{margin:3px 0}.vcheck p{margin:4px 0}
 .tlist{display:grid;gap:14px}.tblock{border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:#fff;display:grid;gap:10px}
 .tblock h4{margin:0;font-family:'Playfair Display',serif;font-size:18px;color:var(--wine)}
+.tminor{margin:0;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px}.famnote{background:#fdf0f0;border-radius:12px;padding:10px 14px}.appt{display:grid;gap:6px}
 .pwarn{margin:0;background:#fff4e5;border:1px solid #f2c48b;color:#7a4300;border-radius:12px;padding:10px 14px;font-size:14px}.pwarn a{color:var(--crimson);font-weight:500}
 
 .gcalc{text-align:left;margin:16px 0 6px;display:grid;gap:12px}.grow{display:grid;grid-template-columns:1fr 1fr;gap:12px}

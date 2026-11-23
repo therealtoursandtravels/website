@@ -23,6 +23,8 @@ GST_STATES = [("01","Jammu and Kashmir"),("02","Himachal Pradesh"),("03","Punjab
 GST_STATE_OPTS = ('<option value="27">Maharashtra</option>' + "".join(f'<option value="{c}">{n}</option>' for c, n in sorted(GST_STATES, key=lambda x: x[1]) if c != "27")
                   + '<option value="OUT">Outside India (NRI / foreign client)</option>')
 
+VISA_CENTRE_CODES = {"schengen", "uk", "usa", "canada"}  # visa needs a visit to a visa centre / consulate
+
 COUNTRIES = [
  ("uae", "🇦🇪", "Dubai / UAE", "E-visa, usually processed online",
   ["Clear colour scan of passport front and back pages", "Recent passport-size photo with white background",
@@ -192,7 +194,8 @@ f.addEventListener('submit',async e=>{{
 }});"""
     else:
         form_html = VISA_FORM_NEW.replace("__OPTS__", opts).replace("__OTHERLIST__", other_list)
-        form_js = VISA_JS_NEW.replace("__DOCS__", json.dumps({n: docs for (_, _, n, _, docs) in ITEMS}, ensure_ascii=False))
+        form_js = (VISA_JS_NEW.replace("__DOCS__", json.dumps({n: docs for (_, _, n, _, docs) in ITEMS}, ensure_ascii=False))
+                   .replace("__CENTRE__", json.dumps([n for (c, _, n, _, _) in ITEMS if c in VISA_CENTRE_CODES])))
     return f"""
 <section class="hero"><div class="wrap"><div><div class="crumbs"><a href="../">Home</a> › {T["crumb"]}</div>
 <span class="kicker">{T["kicker"]}</span>
@@ -278,13 +281,16 @@ __OTHERLIST__
 <div class="row"><label>Travel date<input name="travel_date" type="date"></label>
 <label>Return date<input name="return_date" type="date"></label></div>
 <div class="row"><label>Employment status<select name="employment"><option value="">Select…</option><option>Salaried</option><option>Self-employed / Business owner</option><option>Student</option><option>Retired</option><option>Homemaker</option><option>Other</option></select></label>
-<label>Preferred appointment city <small>(for fingerprints &amp; photo at the visa centre)</small><select name="appt_city"><option>Not needed / not sure</option><option>Mumbai</option><option>Pune</option><option>Ahmedabad</option><option>Goa</option><option>Nagpur</option><option>Delhi</option><option>Bengaluru</option><option>Hyderabad</option><option>Chennai</option><option>Kolkata</option></select></label></div>
+<label id="empow" hidden>Your occupation<input name="employment_other" maxlength="60" placeholder="e.g. freelancer, farmer, NRI, between jobs"></label></div>
+<div id="apptwrap" class="appt" hidden><label>Your city or town <small>(for the visa-centre appointment)</small><input name="appt_city" maxlength="60" autocomplete="address-level2" placeholder="e.g. Mumbai, Thane, Nashik, Surat"></label>
+<p class="vnote" id="apptnote"></p></div>
 <div class="row"><fieldset class="yn"><legend>Ever been refused a visa for any country?</legend><div class="chips"><label><input type="radio" name="refused" value="No" checked>No</label><label><input type="radio" name="refused" value="Yes">Yes</label></div></fieldset>
 <fieldset class="yn"><legend>Visited the US, UK, Schengen, Canada or Australia in the last 5 years?</legend><div class="chips"><label><input type="radio" name="history" value="No" checked>No</label><label><input type="radio" name="history" value="Yes">Yes</label></div></fieldset></div>
 <p id="refnote" class="vnote" hidden>Please mention the country and year of the refusal in the notes below – it helps us prepare a stronger application.</p>
 <div class="row"><label>Number of travellers<input name="travellers" type="number" min="1" max="10" value="1"></label><span class="vnote">For groups of more than 10, please WhatsApp us on 98431 21212.</span></div>
 <div id="vcheck" class="vcheck" hidden></div>
 <label class="chk"><input type="checkbox" name="later"><span>I'll send my documents later – just save my details for now</span></label>
+<p class="vnote famnote" id="famnote" hidden>👨‍👩‍👧‍👦 <b>Family or group trip?</b> Upload each person's passport and photo under their own name. Shared documents – bank statements, ITR, flight and hotel bookings – only need to be uploaded once, under the person paying for the trip. Scanned everyone into one file? Upload it under Traveller 1 and tick the box for the others.</p>
 <div id="tlist" class="tlist"></div>
 <label>Notes for our team<textarea name="notes" maxlength="1000" rows="3" placeholder="Anything we should know – e.g. details of a previous refusal, travelling with children, urgent travel"></textarea></label>
 <label class="chk"><input type="checkbox" name="consent" required><span>I agree that The Real Tours and Travels may use my details and documents only to process my visa application, as per the <a href="../privacy-policy/">Privacy Policy</a>.</span></label>
@@ -299,7 +305,10 @@ const EMP={"Salaried":["Last 3 months' salary slips","Leave / NOC letter from yo
 "Self-employed / Business owner":["Business proof – GST certificate, Shop Act licence or company registration","Income tax returns (ITR) for the last 3 years","Personal and business bank statements for the last 6 months","Cover letter on your business letterhead"],
 "Student":["College ID card and bonafide / enrolment letter","NOC / leave letter from your college","Parents' bank statements and ITR, with a sponsorship letter"],
 "Retired":["Retirement letter or pension proof","Bank statements for the last 6 months","Income tax returns (ITR), if filed"],
-"Homemaker":["Spouse's bank statements and ITR","Sponsorship letter from your spouse","Marriage certificate (if asked for)"]};
+"Homemaker":["Spouse's bank statements and ITR","Sponsorship letter from your spouse","Marriage certificate (if asked for)"],
+"Other":["Proof of income – recent bank statements, and ITR if you file one","If someone else is paying for the trip: their bank statements, ITR and a sponsorship letter"]};
+const CENTRE=__CENTRE__; // countries whose visa needs a visit to a visa centre / consulate
+const REL=['Self (main contact)','Spouse','Child (under 18)','Child (18 or older)','Parent','Sibling','Other relative','Friend / colleague'];
 const ACCEPT='.pdf,.jpg,.jpeg,.png,.heic,.heif,.webp,application/pdf,image/*';
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
 const today=new Date(Date.now()+330*60000).toISOString().slice(0,10);
@@ -316,19 +325,32 @@ function drawCheck(){const c=csel.value,emp=f.employment.value;if(!c){vcheck.hid
  let h='<h4>📋 Documents checklist – '+esc(countryName())+'</h4>';
  if(DOCS[c])h+='<ul>'+DOCS[c].map(x=>'<li>'+x+'</li>').join('')+'</ul>';
  else h+='<p>Our visa team will share the exact checklist for '+esc(countryName())+'. Usually needed: passport (front &amp; back), a recent photo with white background, bank statements, ITR and your flight / hotel bookings.</p>';
- if(EMP[emp])h+='<h4>Also needed – '+esc(emp)+'</h4><ul>'+EMP[emp].map(x=>'<li>'+x+'</li>').join('')+'</ul>';
+ if(EMP[emp])h+='<h4>Also needed – '+esc(emp==='Other'?(f.employment_other.value.trim()||'your occupation'):emp)+'</h4><ul>'+EMP[emp].map(x=>'<li>'+x+'</li>').join('')+'</ul>';
  h+='<p class="vnote">Upload what you have – our team will tell you if anything else is needed for your case.</p>';
  vcheck.innerHTML=h;vcheck.hidden=false;}
 csel.addEventListener('change',drawCheck);f.employment.addEventListener('change',drawCheck);f.other_country.addEventListener('input',drawCheck);
+// ---- employment "Other": ask what they do ----
+const empow=document.getElementById('empow');f.employment.addEventListener('change',()=>{empow.hidden=f.employment.value!=='Other';});f.employment_other.addEventListener('input',drawCheck);
+// ---- visa-centre city: only asked when the visa needs a visit (or the country is not listed) ----
+const apptw=document.getElementById('apptwrap'),apptn=document.getElementById('apptnote');
+function syncAppt(){const c=csel.value,need=CENTRE.includes(c),oth=c==='Other';apptw.hidden=!(need||oth);
+ apptn.textContent=need?c+' visas need a visit to a visa centre'+(c==='United States'?' and an interview at the US consulate':' for fingerprints and a photo')+'. Tell us where you live – we\'ll book your appointment at the nearest centre and tell you exactly where to go and what to carry.'
+  :'If '+countryName()+' needs a visa-centre visit, we\'ll book it at the centre nearest to you. Many countries are online-only – we\'ll let you know.';}
+csel.addEventListener('change',syncAppt);f.other_country.addEventListener('input',syncAppt);
 // ---- one block per traveller: name, passport expiry, documents ----
 const tlist=document.getElementById('tlist');
 function block(i){const b=document.createElement('div');b.className='tblock';
  b.innerHTML='<h4>Traveller '+(i+1)+'</h4><div class="row"><label>Name as on passport'+(i?'*':' <small>(if different from main contact)</small>')+'<input data-tn maxlength="80" autocomplete="off"></label>'+
- '<label>Passport expiry date<input data-tx type="date"></label></div><p class="pwarn" hidden></p>'+
+ '<label>Relationship to main contact<select data-tr>'+(i?'<option value="">Select…</option>':'')+REL.map(r=>'<option>'+r+'</option>').join('')+'</select></label></div>'+
+ '<div class="row"><label>Passport expiry date<input data-tx type="date"></label><span></span></div><p class="pwarn" hidden></p>'+
+ '<p class="tminor" hidden></p>'+
+ (i?'<label class="chk tsame"><input type="checkbox" data-ts><span>This traveller\'s documents are in the same file(s) as Traveller 1</span></label>':'')+
  '<label class="tfiles">Documents for this traveller* <small>(select several files – passport, photo, bank statements, ITR…)</small><input data-tf type="file" multiple accept="'+ACCEPT+'"></label><div class="flist"></div>';
- const fi=b.querySelector('[data-tf]'),fl=b.querySelector('.flist');
+ const fi=b.querySelector('[data-tf]'),fl=b.querySelector('.flist'),tr=b.querySelector('[data-tr]'),tm=b.querySelector('.tminor'),ts=b.querySelector('[data-ts]');
  fi.addEventListener('change',()=>{fl.innerHTML=[...fi.files].map(x=>{const big=x.size>10485760,shr=/^image\/(jpeg|png|webp)$/.test(x.type)&&x.size>3145728;
   return '<span>📄 '+esc(x.name)+' · '+(x.size/1048576).toFixed(1)+' MB'+(shr?' – will be resized':big?' – too large (max 10 MB)':'')+'</span>';}).join('');});
+ tr.addEventListener('change',()=>{tm.hidden=tr.value!=='Child (under 18)';tm.innerHTML='<b>For children under 18, usually also needed:</b> birth certificate · copies of both parents\' passports · if travelling with only one parent, a consent (NOC) letter from the other parent. We confirm the exact list for '+esc(countryName())+'.';});
+ if(ts)ts.addEventListener('change',()=>syncFiles(b));
  b.querySelector('[data-tx]').addEventListener('change',checkPassports);return b;}
 function drawTravellers(){const n=Math.min(10,Math.max(1,parseInt(f.travellers.value)||1));
  while(tlist.children.length<n)tlist.appendChild(block(tlist.children.length));
@@ -336,7 +358,8 @@ function drawTravellers(){const n=Math.min(10,Math.max(1,parseInt(f.travellers.v
  syncLater();checkPassports();}
 f.travellers.addEventListener('input',drawTravellers);
 // ---- send documents later ----
-function syncLater(){const later=f.later.checked;tlist.querySelectorAll('.tfiles,.flist').forEach(x=>x.hidden=later);btn.textContent=later?'Save my details':'Upload documents securely';}
+function syncFiles(b){const later=f.later.checked,ts=b.querySelector('[data-ts]'),same=!!(ts&&ts.checked);b.querySelectorAll('.tfiles,.flist').forEach(x=>x.hidden=later||same);if(ts)ts.closest('label').hidden=later;}
+function syncLater(){const later=f.later.checked;tlist.querySelectorAll('.tblock').forEach(syncFiles);document.getElementById('famnote').hidden=later||tlist.children.length<2;btn.textContent=later?'Save my details':'Upload documents securely';}
 f.later.addEventListener('change',syncLater);
 // ---- passport validity: most countries need 6 months beyond the return date ----
 function checkPassports(){const trav=f.travel_date.value,ret=f.return_date.value||trav;
@@ -375,9 +398,12 @@ f.addEventListener('submit',async e=>{
  const blocks=[...tlist.querySelectorAll('.tblock')],T=[];
  for(let i=0;i<blocks.length;i++){const b=blocks[i],nm=b.querySelector('[data-tn]').value.trim();
   if(i&&nm.length<2)return fail('Please enter the name of traveller '+(i+1)+' as on their passport.',b.querySelector('[data-tn]'));
-  const files=[...b.querySelector('[data-tf]').files];
-  if(!later&&!files.length)return fail('Please choose the documents for traveller '+(i+1)+' – or tick "I\'ll send my documents later".',b.querySelector('[data-tf]'));
-  T.push({name:nm||d.get('full_name').trim(),expiry:b.querySelector('[data-tx]').value,warn:!!b.dataset.warn,files:later?[]:files});}
+  const ts=b.querySelector('[data-ts]'),same=!!(ts&&ts.checked),files=same?[]:[...b.querySelector('[data-tf]').files];
+  if(!later&&!same&&!files.length)return fail('Please choose the documents for traveller '+(i+1)+' – or tick "I\'ll send my documents later".',b.querySelector('[data-tf]'));
+  T.push({name:nm||d.get('full_name').trim(),rel:b.querySelector('[data-tr]').value,same,expiry:b.querySelector('[data-tx]').value,warn:!!b.dataset.warn,files:later?[]:files});}
+ if(!later&&T.some(t=>t.same)&&!T[0].files.length)return fail('Please upload the combined file under Traveller 1.',blocks[0].querySelector('[data-tf]'));
+ let emp=d.get('employment')||'';if(emp==='Other')emp='Other – '+((d.get('employment_other')||'').trim()||'not specified');
+ const appt=apptw.hidden?'':((d.get('appt_city')||'').trim()||'not given');
  const total=T.reduce((a,t)=>a+t.files.length,0);
  if(total>30)return fail('Please upload up to 30 files in total – WhatsApp us any extra documents.');
  const tooBig=T.flatMap(t=>t.files).find(x=>x.size>10485760&&!/^image\/(jpeg|png|webp)$/.test(x.type));
@@ -396,9 +422,9 @@ f.addEventListener('submit',async e=>{
    if(!r.ok)throw new Error('upload '+r.status);
    paths.push(p);
   }
-  const det=['Passport nationality: '+nat,'Return date: '+(ret||'not given'),'Employment: '+(d.get('employment')||'not given'),
-   'Ever refused a visa: '+d.get('refused'),'Visited US/UK/Schengen/Canada/Australia in last 5 years: '+d.get('history'),'Preferred appointment city: '+d.get('appt_city')]
-   .concat(T.map((t,i)=>'Traveller '+(i+1)+': '+t.name+(t.expiry?' – passport expires '+t.expiry+(t.warn?' (⚠ under 6 months validity)':''):'')+(later?'':' – '+t.files.length+' file'+(t.files.length==1?'':'s'))));
+  const det=['Passport nationality: '+nat,'Return date: '+(ret||'not given'),'Employment: '+(emp||'not given'),
+   'Ever refused a visa: '+d.get('refused'),'Visited US/UK/Schengen/Canada/Australia in last 5 years: '+d.get('history')].concat(appt?['City for visa-centre appointment: '+appt]:[])
+   .concat(T.map((t,i)=>'Traveller '+(i+1)+': '+t.name+(t.rel?' ('+t.rel+')':'')+(t.expiry?' – passport expires '+t.expiry+(t.warn?' (⚠ under 6 months validity)':''):'')+(later?'':t.same?' – documents in Traveller 1\'s file':' – '+t.files.length+' file'+(t.files.length==1?'':'s'))));
   if(later)det.push('Documents: client will send them later');
   const un=(d.get('notes')||'').trim();
   const notes=(det.join('\n')+(un?'\n---\n'+un:'')).slice(0,2000);
@@ -406,7 +432,7 @@ f.addEventListener('submit',async e=>{
   const r2=await fetch(SB+'/rest/v1/visa_applications',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+(window.RTT_TOKEN||KEY),'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(row)});
   if(!r2.ok)throw new Error('save '+r2.status);
   notify('New visa '+(later?'enquiry (documents to follow) ':'documents ')+ref+' – '+row.full_name,'Name: '+row.full_name+'\nPhone: '+row.phone+(row.email?'\nEmail: '+row.email:'')+'\nCountry: '+row.country+'\nVisa type: '+row.visa_type+(trav?'\nTravel date: '+trav:'')+'\nTravellers: '+T.length+'\n'+det.join('\n')+(un?'\nNotes: '+un:'')+'\nFiles uploaded: '+paths.length+(paths.length?' (stored privately in Supabase › Storage › visa-documents/applications/'+id+')':''),row.email||'');
-  f.reset();tlist.innerHTML='';drawTravellers();syncOther();drawCheck();natw.hidden=true;document.getElementById('refnote').hidden=true;
+  f.reset();tlist.innerHTML='';drawTravellers();syncOther();drawCheck();syncAppt();empow.hidden=true;natw.hidden=true;document.getElementById('refnote').hidden=true;
   const wa='https://wa.me/919843121212?text='+encodeURIComponent((later?'Hi, I saved my visa details on your website and will send my documents. Reference: ':'Hi, I uploaded my visa documents on your website. Reference: ')+ref);
   msg.innerHTML=later?'✅ Thank you! Your details are saved (reference: <b>'+ref+'</b>). Send your documents any time – <a href="'+wa+'" target="_blank" rel="noopener">WhatsApp them to us with this reference</a>, or upload them here.':'✅ Thank you! Your documents were uploaded securely (reference: <b>'+ref+'</b>). Our team will call you shortly. For faster service, <a href="'+wa+'" target="_blank" rel="noopener">WhatsApp us your reference</a>.';
   msg.classList.add('ok');
@@ -422,6 +448,7 @@ VISA_CSS = """
 .vcheck h4{margin:4px 0 6px;font-family:'Playfair Display',serif;font-size:18px;color:var(--wine)}.vcheck ul{margin:0 0 8px;padding-left:20px}.vcheck li{margin:3px 0}.vcheck p{margin:4px 0}
 .tlist{display:grid;gap:14px}.tblock{border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:#fff;display:grid;gap:10px}
 .tblock h4{margin:0;font-family:'Playfair Display',serif;font-size:18px;color:var(--wine)}
+.tminor{margin:0;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px}.famnote{background:#fdf0f0;border-radius:12px;padding:10px 14px}.appt{display:grid;gap:6px}
 .pwarn{margin:0;background:#fff4e5;border:1px solid #f2c48b;color:#7a4300;border-radius:12px;padding:10px 14px;font-size:14px}.pwarn a{color:var(--crimson);font-weight:500}
 
 .gcalc{text-align:left;margin:16px 0 6px;display:grid;gap:12px}.grow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
