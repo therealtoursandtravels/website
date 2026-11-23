@@ -35,13 +35,15 @@ HOTEL_CITIES = ["Mumbai","Delhi","Goa","Jaipur","Udaipur","Jodhpur","Jaisalmer",
 def _sel(name, label, rng, unit):
     return f'<select name="{name}" aria-label="{label}">' + "".join(f'<option value="{i}">{i} {unit(i)}</option>' for i in rng) + '</select>'
 
-def _contact(btn):
+def _contact(btn, root=""):
     return f"""<div class="fgrid2">
 <label class="fcell">Your name<input name="name" maxlength="120" autocomplete="name"></label>
-<label class="fcell">Mobile or email*<input name="contact" required maxlength="160" placeholder="98xxxxxxxx or you@example.com" autocomplete="tel"></label>
+<label class="fcell">Mobile or email*<input name="contact" required maxlength="160" placeholder="98xxxxxxxx, +971… or you@example.com" autocomplete="tel"></label>
 <label class="fcell">Notes<input name="notes" maxlength="200" placeholder=""></label>
 <button class="btn gold fgo" type="submit">{btn} on WhatsApp</button></div>
-<p class="fmsg vmsg" role="status" aria-live="polite"></p>"""
+<div class="hp" aria-hidden="true"><label>Leave this empty<input name="company_website" tabindex="-1" autocomplete="off"></label></div>
+<p class="fmsg vmsg" role="status" aria-live="polite"></p>
+<p class="fpriv">🔒 We use your details only to reply to this enquiry – never shared or sold. <a href="{root}privacy-policy/">Privacy Policy</a></p>"""
 
 AD = lambda i: "Adult" + ("s" if i > 1 else "")
 CH = lambda i: "Child" + ("ren" if i != 1 else "")
@@ -62,7 +64,7 @@ def flight_widget(root):
 <label class="fcell">Departure<input name="depart" type="date" required></label>
 <label class="fcell fret">Return<input name="ret" type="date"></label>
 <label class="fcell">Travellers &amp; class<span class="fpax">{_sel("adults","Adults",range(1,10),AD)}{_sel("children","Children",range(0,10),CH)}{_sel("infants","Infants",range(0,10),INF)}<select name="cabin" aria-label="Class"><option>Economy</option><option>Premium Economy</option><option>Business</option><option>First</option></select></span></label>
-</div>{_contact("Get Flight Quote")}</form>"""
+</div>{_contact("Get Flight Quote", root)}</form>"""
     hotel = f"""<form class="fform" data-kind="hotel" novalidate hidden>
 <div class="fgrid fg-h">
 <label class="fcell">City, area or hotel name<input name="dest" required maxlength="80" placeholder="e.g. Dubai, Manali, Taj Lands End" list="hcities" autocomplete="off"></label>
@@ -70,7 +72,7 @@ def flight_widget(root):
 <label class="fcell">Check-out<input name="out" type="date" required></label>
 <label class="fcell">Rooms &amp; guests<span class="fpax f3">{_sel("rooms","Rooms",range(1,11),RM)}{_sel("adults","Adults",range(1,21),AD)}{_sel("children","Children",range(0,11),CH)}</span></label>
 <label class="fcell">Hotel category<select name="cat"><option>Any</option><option>3 Star</option><option>4 Star</option><option>5 Star</option><option>Luxury / Resort</option><option>Villa / Homestay</option></select></label>
-</div>{_contact("Get Hotel Quote")}</form>"""
+</div><div class="fages" hidden><span>Age of each child (at check-in)</span><div class="fagesel"></div></div>{_contact("Get Hotel Quote", root)}</form>"""
     cruise = f"""<form class="fform" data-kind="cruise" novalidate hidden>
 <div class="fgrid fg-c">
 <label class="fcell">Cruise line<select name="line">{"".join(f"<option>{x}</option>" for x in CRUISE_LINES)}</select></label>
@@ -78,7 +80,7 @@ def flight_widget(root):
 <label class="fcell">Month of travel<input name="month" type="month" required></label>
 <label class="fcell">Nights<select name="nights"><option value="2">2–3 nights</option><option value="4">4–5 nights</option><option value="6">6–7 nights</option><option value="8">8–10 nights</option><option value="11">11+ nights</option></select></label>
 <label class="fcell">Guests &amp; cabin<span class="fpax f3">{_sel("adults","Adults",range(1,21),AD)}{_sel("children","Children",range(0,11),CH)}<select name="cabin" aria-label="Cabin"><option>Interior</option><option>Ocean view</option><option>Balcony</option><option>Suite</option></select></span></label>
-</div>{_contact("Get Cruise Quote")}</form>"""
+</div>{_contact("Get Cruise Quote", root)}</form>"""
     hc = "".join(f'<option value="{c}">' for c in ["Dubai","Singapore","Bangkok","Pattaya","Phuket","Bali","Maldives","Kuala Lumpur","London","Paris","Srinagar","Gulmarg","Manali","Shimla","Goa","Jaipur","Udaipur","Munnar","Alleppey","Darjeeling","Gangtok","Port Blair","Havelock","Leh","Lonavala","Mahabaleshwar","Mumbai"])
     return f"""
 <div class="fbar" id="flight-search">
@@ -110,9 +112,13 @@ F.querySelector('.fswap').addEventListener('click',()=>{{const a=F.from.value;F.
 function uuid(){{return crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{{const r=Math.random()*16|0;return (c=='x'?r:(r&3|8)).toString(16);}});}}
 const fd=d=>new Date(d+'T00:00').toLocaleDateString('en-IN',{{day:'numeric',month:'short',year:'numeric'}});
 const pl=(n,w,p)=>n+' '+(n==1?w:p);
+const agesBox=H.querySelector('.fages'),agesSel=H.querySelector('.fagesel');
+function drawAges(){{const n=+H.children.value,old=[...agesSel.querySelectorAll('select')].map(x=>x.value);let h='';for(let i=0;i<n;i++){{h+='<select name="child_age" aria-label="Age of child '+(i+1)+'"><option value="">Child '+(i+1)+' age</option>'+[...Array(18).keys()].map(a=>'<option value="'+a+'"'+(old[i]==String(a)?' selected':'')+'>'+(a?a+' yr'+(a>1?'s':''):'Under 1')+'</option>').join('')+'</select>';}}agesSel.innerHTML=h;agesBox.hidden=!n;}}
+H.children.addEventListener('change',drawAges);drawAges();
 Object.entries(forms).forEach(([kind,f])=>f.addEventListener('submit',async e=>{{
  e.preventDefault();const msg=f.querySelector('.fmsg');msg.className='fmsg vmsg';
- const c=f.contact.value.trim();const isEmail=/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(c),digits=c.replace(/[^0-9]/g,''),isPhone=!isEmail&&digits.length>=10&&digits.length<=13;
+ if(f.company_website.value){{msg.textContent='✅ Thank you – enquiry received.';msg.classList.add('ok');return;}} // spam trap: bots fill hidden field
+ const c=f.contact.value.trim();const isEmail=/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(c),digits=c.replace(/[^0-9]/g,''),isPhone=!isEmail&&(c.startsWith('+')?digits.length>=8&&digits.length<=15:digits.length>=10&&digits.length<=13);
  const id=uuid(),name=f.name.value.trim()||null,notes=f.notes.value.trim()||null;let err='',table,row,ref,lines;
  if(kind==='flight'){{
   const from=f.from.value.trim(),to=f.to.value.trim(),t=trip(),ad=+f.adults.value,ch=+f.children.value,inf=+f.infants.value;
@@ -131,10 +137,13 @@ Object.entries(forms).forEach(([kind,f])=>f.addEventListener('submit',async e=>{
   else if(!ci||!co)err='Please choose check-in and check-out dates.';
   else if(co<=ci)err='Check-out must be after check-in.';
   else if(rooms>ad)err='Each room needs at least one adult.';
+  const cages=[...f.querySelectorAll('select[name=child_age]')].map(x=>x.value);
+  if(!err&&cages.some(a=>a===''))err='Please choose the age of each child – hotels price children by age.';
   const nights=ci&&co?Math.round((new Date(co)-new Date(ci))/864e5):null;
   table='booking_enquiries';ref='HT-'+id.slice(0,6).toUpperCase();
-  row={{id,kind:'hotel',destination:dest.slice(0,80),start_date:ci||null,end_date:co||null,nights,rooms,adults:ad,children:ch,category:f.cat.value,full_name:name,notes}};
-  lines=['🏨 Hotel quote request ('+ref+')','Where: '+dest,ci&&co?'Stay: '+fd(ci)+' → '+fd(co)+' ('+pl(nights,'night','nights')+')':'',pl(rooms,'Room','Rooms')+' · '+pl(ad,'Adult','Adults')+(ch?', '+pl(ch,'Child','Children'):'')+' · '+f.cat.value];
+  const agesTxt=ch?'Child ages: '+cages.map(a=>a==='0'?'under 1':a).join(', '):'';
+  row={{id,kind:'hotel',destination:dest.slice(0,80),start_date:ci||null,end_date:co||null,nights,rooms,adults:ad,children:ch,category:f.cat.value,full_name:name,notes:[agesTxt,notes].filter(Boolean).join(' | ')||null}};
+  lines=['🏨 Hotel quote request ('+ref+')','Where: '+dest,ci&&co?'Stay: '+fd(ci)+' → '+fd(co)+' ('+pl(nights,'night','nights')+')':'',pl(rooms,'Room','Rooms')+' · '+pl(ad,'Adult','Adults')+(ch?', '+pl(ch,'Child','Children'):'')+' · '+f.cat.value,agesTxt];
  }}else{{
   const m=f.month.value,ad=+f.adults.value,ch=+f.children.value,nt=f.nights.options[f.nights.selectedIndex].text;
   if(!m)err='Please choose your month of travel.';
@@ -143,7 +152,7 @@ Object.entries(forms).forEach(([kind,f])=>f.addEventListener('submit',async e=>{
   row={{id,kind:'cruise',destination:('From '+f.port.value).slice(0,80),travel_month:mon||null,nights:+f.nights.value,adults:ad,children:ch,category:f.cabin.value,provider:f.line.value,full_name:name,notes}};
   lines=['🛳️ Cruise quote request ('+ref+')','Cruise line: '+f.line.value,'Departure port: '+f.port.value,'Month: '+mon+' · '+nt,pl(ad,'Adult','Adults')+(ch?', '+pl(ch,'Child','Children'):'')+' · '+f.cabin.value+' cabin'];
  }}
- if(!err&&!isEmail&&!isPhone)err='Please enter a valid 10-digit mobile number or email so we can send your quote.';
+ if(!err&&!isEmail&&!isPhone)err='Please enter a valid mobile number (outside India, start with your country code, e.g. +971…) or an email so we can send your quote.';
  if(err){{msg.textContent=err;msg.classList.add('err');return;}}
  row.phone=isPhone?digits:null;row.email=isEmail?c:null;
  const btn=f.querySelector('.fgo');btn.disabled=true;msg.textContent='Sending your enquiry…';
@@ -161,6 +170,10 @@ Object.entries(forms).forEach(([kind,f])=>f.addEventListener('submit',async e=>{
 </script>"""
 
 FLIGHT_CSS = """
+.hp{position:absolute!important;left:-10000px!important;top:auto;width:1px;height:1px;overflow:hidden}
+.fpriv,.vpriv{margin:2px 0 0;font-size:12.5px;color:var(--muted)}.fpriv a,.vpriv a{color:var(--crimson)}
+.fages{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:12.5px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+.fagesel{display:flex;flex-wrap:wrap;gap:6px}.fagesel select{font:500 14.5px 'Jost',sans-serif;padding:9px 10px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
 .gstline{display:block;margin-top:6px;font-size:12px;color:var(--muted)}
 .btabs{display:flex;gap:6px;margin:-4px 0 14px;border-bottom:1px solid var(--line)}
 .btab{border:0;background:none;font:600 16px 'Jost',sans-serif;color:var(--muted);padding:8px 16px 12px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}

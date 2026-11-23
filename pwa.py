@@ -24,7 +24,7 @@ def manifest(NAME):
         ],
         "shortcuts": [
             {"name": "Flights, Hotels & Cruise", "short_name": "Book travel", "url": "/flights-hotels/?source=app", "icons": [{"src": "/img/icon-192.png", "sizes": "192x192"}]},
-            {"name": "Customize your package", "short_name": "Plan a trip", "url": "/customize-your-package/?source=app", "icons": [{"src": "/img/icon-192.png", "sizes": "192x192"}]},
+            {"name": "Customized Packages", "short_name": "Plan a trip", "url": "/customize-your-package/?source=app", "icons": [{"src": "/img/icon-192.png", "sizes": "192x192"}]},
             {"name": "Visa services", "short_name": "Visa", "url": "/visa/?source=app", "icons": [{"src": "/img/icon-192.png", "sizes": "192x192"}]},
             {"name": "Travel insurance quote", "short_name": "Insurance", "url": "/insurance/?source=app", "icons": [{"src": "/img/icon-192.png", "sizes": "192x192"}]},
             {"name": "Passport services", "short_name": "Passport", "url": "/passport/?source=app", "icons": [{"src": "/img/icon-192.png", "sizes": "192x192"}]},

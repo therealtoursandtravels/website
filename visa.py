@@ -133,7 +133,7 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
 <div class="head"><span class="kicker">Secure upload</span><h2>{T["h3"]}</h2><p class="lead">Upload clear scans or photos (PDF, JPG or PNG, up to 10 MB each). Your documents are stored privately and seen only by our {T["team"]}.</p></div>
 <form id="vform" class="vform" novalidate>
 <div class="row"><label>Full name*<input name="full_name" required maxlength="120" autocomplete="name"></label>
-<label>Mobile number*<input name="phone" required inputmode="tel" maxlength="20" autocomplete="tel" placeholder="10-digit mobile"></label></div>
+<label>Mobile number*<input name="phone" required inputmode="tel" maxlength="20" autocomplete="tel" placeholder="10-digit mobile, or +country code"></label></div>
 <div class="row"><label>Email<input name="email" type="email" maxlength="160" autocomplete="email"></label>
 <label>{T["sel_label"]}<select name="country" required>{opts}</select></label></div>
 <div class="row">{T["type_row"]}
@@ -144,6 +144,7 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
 <div id="flist" class="flist"></div>
 <label>Notes for our team<textarea name="notes" maxlength="2000" rows="3" placeholder="{T["notes_ph"]}"></textarea></label>
 <label class="chk"><input type="checkbox" name="consent" required><span>I agree that The Real Tours and Travels may use these documents only {T["consent"]}, as per the <a href="../privacy-policy/">Privacy Policy</a>.</span></label>
+<div class="hp" aria-hidden="true"><label>Leave this empty<input name="company_website" tabindex="-1" autocomplete="off"></label></div>
 <button class="btn gold" type="submit" id="vsubmit">Upload documents securely</button>
 <p id="vmsg" class="vmsg" role="status" aria-live="polite"></p>
 </form>
@@ -192,6 +193,7 @@ function uuid(){{return (crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4x
 function safe(n){{return n.normalize('NFKD').replace(/[^A-Za-z0-9._-]+/g,'_').slice(-80)||'file';}}
 f.addEventListener('submit',async e=>{{
  e.preventDefault();msg.className='vmsg';
+ if(f.company_website.value){{msg.textContent='✅ Thank you – documents received.';msg.classList.add('ok');return;}} // spam trap
  const d=new FormData(f),files=[...f.files.files];
  const phone=(d.get('phone')||'').replace(/[^0-9+]/g,'');
  if(!d.get('full_name').trim()||phone.length<10){{msg.textContent='Please enter your name and a valid mobile number.';msg.classList.add('err');return;}}

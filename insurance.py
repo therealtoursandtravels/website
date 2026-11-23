@@ -41,10 +41,12 @@ def insurance_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band):
 <label>Any pre-existing medical condition?<select name="pre_existing"><option>No</option><option>Yes</option><option>Not sure</option></select></label></div>
 <label class="chk"><input type="checkbox" name="visa"><span>I need this policy for a <b>visa application</b> (we'll make sure it meets the embassy's requirements).</span></label>
 <div class="row"><label>Your name<input name="full_name" maxlength="120" autocomplete="name"></label>
-<label>Mobile or email* <small>(to send your quotation)</small><input name="contact" required maxlength="160" autocomplete="tel" placeholder="98xxxxxxxx or you@example.com"></label></div>
+<label>Mobile or email* <small>(to send your quotation)</small><input name="contact" required maxlength="160" autocomplete="tel" placeholder="98xxxxxxxx, +971… or you@example.com"></label></div>
 <label>Notes<textarea name="notes" rows="2" maxlength="1000" placeholder="e.g. adventure activities, cruise, cover for trip cancellation"></textarea></label>
+<div class="hp" aria-hidden="true"><label>Leave this empty<input name="company_website" tabindex="-1" autocomplete="off"></label></div>
 <button class="btn gold" type="submit" id="isubmit">🛡️ Get Quotation on WhatsApp</button>
 <p id="imsg" class="vmsg" role="status" aria-live="polite"></p>
+<p class="vpriv">🔒 We use your details only to prepare your quotation – never shared or sold. <a href="../privacy-policy/">Privacy Policy</a></p>
 <p class="meta" style="margin:0">Premiums include GST as charged by the insurer. Policies are issued by the insurance company; terms, exclusions and claim decisions are as per the policy wording.</p>
 </form></div></section>
 {cta_band()}
@@ -62,8 +64,9 @@ function uuid(){{return crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xx
 const fd=d=>new Date(d+'T00:00').toLocaleDateString('en-IN',{{day:'numeric',month:'short',year:'numeric'}});
 f.addEventListener('submit',async e=>{{
  e.preventDefault();msg.className='vmsg';
+ if(f.company_website.value){{msg.textContent='✅ Thank you – request received.';msg.classList.add('ok');return;}} // spam trap
  const t=tt(),c=f.contact.value.trim(),n=parseInt(f.travellers.value)||0,ages=f.ages.value.trim();
- const isEmail=/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(c),digits=c.replace(/[^0-9]/g,''),isPhone=!isEmail&&digits.length>=10&&digits.length<=13;
+ const isEmail=/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(c),digits=c.replace(/[^0-9]/g,''),isPhone=!isEmail&&(c.startsWith('+')?digits.length>=8&&digits.length<=15:digits.length>=10&&digits.length<=13);
  const ageList=(ages.match(/\\d+/g)||[]).map(Number);
  let err='';
  if(!f.start.value)err='Please choose your travel start date.';
@@ -71,7 +74,7 @@ f.addEventListener('submit',async e=>{{
  else if(t!=='Annual multi-trip'&&f.end.value<f.start.value)err='End date must be after the start date.';
  else if(n<1||n>30)err='Please enter the number of travellers.';
  else if(!ageList.length||ageList.some(a=>a<0||a>100))err='Please enter the age of each traveller, e.g. 45, 42, 12.';
- else if(!isEmail&&!isPhone)err='Please enter a valid 10-digit mobile number or email so we can send your quotation.';
+ else if(!isEmail&&!isPhone)err='Please enter a valid mobile number (outside India, start with your country code, e.g. +971…) or an email so we can send your quotation.';
  if(err){{msg.textContent=err;msg.classList.add('err');return;}}
  btn.disabled=true;msg.textContent='Sending your request…';
  let w=null;try{{w=window.open('','_blank');if(w)w.document.write('<p style="font:16px sans-serif;padding:20px">Opening WhatsApp…</p>');}}catch(_){{w=null;}}
