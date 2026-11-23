@@ -72,6 +72,10 @@ NEW_COUNTRIES = [
  ("southkorea", "🇰🇷", "South Korea", "Visa required (tourist C-3-9) through the Korea Visa Application Centre – K-ETA is not available to Indians. The free Korea e-Arrival Card must be submitted within 3 days before arrival",
    [PP, "Copies of old passports, if any", "Recent photo, 35 × 45 mm, white background", "Visa application form (we fill it for you)"] + STD_FIN +
    ["Confirmed return flight booking", "Hotel bookings and day-wise itinerary", "Korea e-Arrival Card – free, online within 3 days before arrival (we can fill it for you)"]),
+  ("newzealand", "🇳🇿", "New Zealand", "Visitor visa required",
+   [PP, "Completed visitor visa application", "2 recent colour photos (taken in the last 6 months)", "Covering letter explaining the purpose of travel", "Bank statements for the last 6 months and income tax returns (ITR) for the last 2–3 years", "Salaried: salary slips and leave/NOC letter from employer; self-employed: business proof", "Confirmed return flight booking", "Hotel bookings and day-wise itinerary", "Invitation letter and host's details, if visiting family or friends"]),
+  ("egypt", "🇪🇬", "Egypt", "Tourist visa required",
+   [PP, "Visa application form", "2 recent passport-size photos with white background", "Covering letter explaining the purpose of travel", "Bank statements for the last 6 months", "Income tax returns (ITR) for the last 2 years", "Confirmed return flight booking", "Hotel bookings for the whole stay", "Travel insurance for the whole stay"]),
 ]
 
 # group: card = digital arrival card only (we fill it), visa = visa / e-visa / permit (we apply)
@@ -91,6 +95,8 @@ ENTRY = {
  "indonesia": ("visa", "e-VOA / visa on arrival", "All Indonesia arrival card"),
  "turkey": ("visa", "E-visa (with US/UK/Schengen visa) or visa", None),
  "georgia": ("visa", "E-visa", None),
+ "newzealand": ("visa", "Visa", None),
+ "egypt": ("visa", "Visa", None),
  "azerbaijan": ("visa", "E-visa", None),
  "kenya": ("visa", "eTA", None),
  "oman": ("visa", "E-visa", None),
@@ -126,6 +132,8 @@ WHEN = {
  "azerbaijan": "at least 1–2 weeks before travel",
  "kenya": "at least 2 weeks before travel",
  "oman": "at least 1–2 weeks before travel",
+ "newzealand": "at least 4–6 weeks before travel",
+ "egypt": "at least 3–4 weeks before travel",
 }
 
 # Biometrics (fingerprints / photo in person) – shown on each visa panel. Keep short and factual.
@@ -149,6 +157,8 @@ BIOMETRICS = {
  "azerbaijan": "Not required",
  "kenya": "Not required",
  "oman": "Not required",
+ "newzealand": "May be requested – if Immigration New Zealand asks, fingerprints and photo are given in person at the visa application centre",
+ "egypt": "Usually not required for tourist visas – confirmed for your case when you apply",
 }
 
 # Arrival cards / travel permits – when to submit

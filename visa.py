@@ -112,7 +112,7 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
         tabs = "".join(f'<button type="button" class="vtab{" on" if i==0 else ""}" data-c="{c}">{f} {n}</button>' for i,(c,f,n,_,_) in enumerate(ITEMS))
     else:
         # group the destinations by what Indian travellers need: nothing in advance / online / a visa
-        ITEMS = [it for g, _ in GROUPS for it in ITEMS if it[0] not in ("nepal", "qatar") and ENTRY.get(it[0], ("visa",))[0] == g]
+        ITEMS = [it for g, _ in GROUPS for it in ITEMS if it[0] not in ("nepal", "qatar", "srilanka") and ENTRY.get(it[0], ("visa",))[0] == g]
         tabs = ""
         for g, gl in GROUPS:
             row = "".join(f'<button type="button" class="vtab" data-c="{c}">{f} {n}</button>' for (c, f, n, _, _) in ITEMS if ENTRY.get(c, ("visa",))[0] == g)
@@ -351,7 +351,7 @@ VISA_FORM_NEW = r"""<form id="vform" class="vform" novalidate>
 <label id="natwrap" hidden>Which nationality?*<input name="nationality_other" maxlength="40" autocomplete="off" placeholder="e.g. British, American, Canadian (OCI card holders too)"></label>
 <div class="row"><label>Country*<select name="country" required>__OPTS__</select></label>
 <label>Visa type<select name="visa_type"><option>Tourist</option><option>Business</option><option>Visiting family / friends</option><option>Student</option><option>Transit</option><option>Medical</option><option>Conference / Event</option><option>Work / Employment</option><option>Pilgrimage (e.g. Umrah)</option><option>Not sure – please advise</option></select></label></div>
-<div class="row"><label>Entries needed<select name="entries"><option>Single entry</option><option>Multiple entry</option><option>Not sure – please advise</option></select></label><span class="vnote">Multiple-entry visas are issued at the embassy's discretion and often depend on your travel history – we advise what you can apply for.</span></div>
+<div class="row"><label>Entries needed<select name="entries"><option>Single entry</option><option>Multiple entry</option></select></label><span class="vnote">Multiple-entry visas are issued at the embassy's discretion and often depend on your travel history – we advise what you can apply for.</span></div>
 <label id="ocwrap" hidden>Which country?*<input name="other_country" maxlength="60" autocomplete="off" placeholder="e.g. Kenya, Bhutan, South Korea"></label>
 __OTHERLIST__
 <div class="row"><label>Travel date<input name="travel_date" type="date"></label>
