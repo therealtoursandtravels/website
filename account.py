@@ -116,7 +116,7 @@ window.rttClient().then(async c=>{{
   loadEnq();
  }}
  async function loadEnq(){{
-  const T=[['flight_enquiries','FL','✈️ Flight',r=>r.from_city+' → '+r.to_city+' · '+r.depart_date],['booking_enquiries','',null,r=>r.destination+(r.start_date?' · '+r.start_date:(r.travel_month?' · '+r.travel_month:''))],['insurance_enquiries','IN','🛡️ Insurance',r=>r.destination+' · '+r.start_date],['trip_requests','','✨ Package',r=>r.destination+' · '+r.days+' days'],['visa_applications','','🛂 Visa / Passport',r=>r.country]];
+  const T=[['flight_enquiries','FL','✈️ Flight',r=>r.from_city+' → '+r.to_city+' · '+r.depart_date],['booking_enquiries','',null,r=>r.destination+(r.start_date?' · '+r.start_date:(r.travel_month?' · '+r.travel_month:''))],['insurance_enquiries','IN','🛡️ Insurance',r=>r.destination+' · '+r.start_date],['trip_requests','','✨ Package',r=>r.destination+' · '+r.days+' days'],['visa_applications','','🛂 Visa / Passport',r=>r.country],['service_enquiries','SV','🧳 Enquiry',r=>r.service+' · '+(r.destination||r.travel_month||'')]];
   let rows=[];
   for(const [t,pre,label,desc] of T){{const {{data}}=await c.from(t).select('*').order('created_at',{{ascending:false}}).limit(20);(data||[]).forEach(r=>{{const lb=label||(r.kind==='hotel'?'🏨 Hotel':'🛳️ Cruise');const pf=pre||(t==='booking_enquiries'?(r.kind==='hotel'?'HT':'CR'):'');rows.push({{at:r.created_at,lb,ref:(pf?pf+'-'+r.id.slice(0,6):r.id.slice(0,8)).toUpperCase(),d:desc(r),st:r.status}});}});}}
   rows.sort((a,b)=>b.at.localeCompare(a.at));

@@ -106,8 +106,9 @@ SVC_CSS = """
 .sform .sf-chk label,.sform label.sf-chk1{display:flex;gap:6px;align-items:center;font-weight:500;color:var(--ink);font-size:14.5px}
 .sform input[type=checkbox]{accent-color:var(--red)}.sform button{justify-self:start;border:0;cursor:pointer;font-family:inherit}.sform button[disabled]{opacity:.6}
 .sf-msg:empty{display:none}
-.yexp{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}.yexp>div{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px}.yexp h3{font-size:19px;margin:0 0 8px}.yexp ul{margin:0;padding-left:18px}.yexp li{margin:4px 0}
+.yexp{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}.yexp>div{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px}.yexp h3{font-size:19px;margin:0 0 8px}.yexp ul{margin:0;padding-left:18px}.yexp li{margin:4px 0}
 .yup{display:grid;gap:10px}.yup .yd{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:center;background:#fff;border:1px solid var(--line);border-left:4px solid var(--red);border-radius:14px;padding:14px 16px}
 .ynone{background:#fff;border:1px dashed var(--line);border-radius:14px;padding:18px;text-align:center}
+.iages{display:grid;gap:6px}.iages>span{font-size:14px;font-weight:600;color:var(--ink)}.iages small{font-weight:400;color:var(--muted)}.iagesel{display:flex;flex-wrap:wrap;gap:8px}.iagesel input{width:120px;font:500 15px 'Jost',sans-serif;padding:10px;border:1px solid var(--line);border-radius:12px}
 .revstrip .grid{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
 """
