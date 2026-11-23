@@ -149,7 +149,7 @@ h1,h2,h3{font-family:'Playfair Display',Georgia,serif;font-weight:600;line-heigh
 .topbar .wrap{display:flex;gap:18px;justify-content:space-between;flex-wrap:wrap;padding:7px 22px}
 .topbar a{color:#fff;text-decoration:none}
 header.site{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-header.site .hrow{display:flex;align-items:center;justify-content:space-between;padding:10px 22px;max-width:1320px}header.site{position:sticky}
+header.site .hrow{display:flex;align-items:center;justify-content:space-between;padding:10px 22px;max-width:1320px}@media(min-width:1101px){header.site .hrow{justify-content:center}}header.site{position:sticky}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--wine)}
 .brand img{width:64px;height:64px}
 .brand b{white-space:nowrap;font-family:'Playfair Display',serif;font-size:22px;letter-spacing:.2px;line-height:1.1;color:var(--crimson)}
@@ -224,7 +224,6 @@ footer ul{list-style:none;padding:0;margin:0}footer li{margin:7px 0}
 .info p{margin:0 0 14px}
 .map{border:0;width:100%;min-height:380px;height:100%;border-radius:18px;outline:1px solid var(--line)}
 :focus-visible{outline:3px solid var(--red);outline-offset:3px}
-@media(max-width:600px){.hcta{display:none}}
 @media(max-width:1100px){nav.main{display:none;position:absolute;left:0;right:0;top:100%;background:#fff;box-shadow:0 10px 24px rgba(0,0,0,.1)}nav.main.open{display:block}.navrow{flex-direction:column;align-items:flex-start;padding:10px 22px 16px!important}nav.main a{display:block;padding:10px 0;font-size:16px;border-bottom:1px solid var(--line);width:100%}.menu-btn{display:block}}
 @media(max-width:900px){.hero .wrap{grid-template-columns:1fr;gap:28px;padding:36px 18px 56px;text-align:left}.seal{width:200px;height:200px;order:-1;box-shadow:0 0 0 8px #fdf0f0,0 14px 30px rgba(0,0,0,.10)}
 .two,.contact-grid,footer .wrap{grid-template-columns:1fr}section{padding:52px 0}.brand b{font-size:16px}.brand img{width:48px;height:48px}.brand small{font-size:10px;letter-spacing:1.2px}
@@ -280,7 +279,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <div class="topbar"><div class="wrap"><span>📍 Mulund West, Mumbai · Open daily 9 am – 10 pm</span><span><a href="tel:{PHONE_RAW}">📞 {PHONE}</a> · <a href="mailto:{EMAIL}">✉️ {EMAIL}</a></span></div></div>
 <header class="site"><div class="wrap hrow">
 <a class="brand" href="{root or './'}"><img src="{root}img/logo.png" alt="The Real Tours and Travels logo – Estd. 1981" width="64" height="64"><span><b>The Real Tours and Travels</b><small>Crafting Journeys Since 1981</small></span></a>
-<div class="hact"><a class="hcta" href="{WA}" target="_blank" rel="noopener">💬 WhatsApp Us</a><button class="menu-btn" aria-label="Menu" aria-expanded="false" onclick="const n=document.querySelector('nav.main');n.classList.toggle('open');this.setAttribute('aria-expanded',n.classList.contains('open'))">☰</button></div></div>
+<div class="hact"><button class="menu-btn" aria-label="Menu" aria-expanded="false" onclick="const n=document.querySelector('nav.main');n.classList.toggle('open');this.setAttribute('aria-expanded',n.classList.contains('open'))">☰</button></div></div>
 <nav class="main" aria-label="Main"><div class="wrap navrow"><a href="{root}flights-hotels/#flights">Flights</a><a href="{root}flights-hotels/#hotels">Hotels</a><a href="{root}flights-hotels/#cruise">Cruise</a><a href="{root}visa/">Visa</a><a href="{root}passport/">Passport</a><a href="{root}insurance/">Travel Insurance</a><a href="{root}customize-your-package/">Customize Packages</a><a href="{root}jain-yatra-tours-with-maharaj/">Jain Yatra</a><a href="{root or './'}#services">Services</a><a href="{root}contact/">Contact Us</a><a href="{root}about/">About Us</a></div></nav>
 </header>
 <main>
