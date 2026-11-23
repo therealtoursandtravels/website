@@ -66,14 +66,13 @@ DEST = {
 }
 
 def planner_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band, ADDR, GST):
-    dom = "".join(f'<option value="{d}">{d}</option>' for d,v in DEST.items() if not v.get("intl")) + '<option value="Other">Other Indian destination – type below</option>'
-    intl = "".join(f'<option value="{d}">{d}</option>' for d,v in DEST.items() if v.get("intl")) + '<option value="Other">Other country – type below</option>'
-    opts = dom
+    # Suggestions only – customers can type ANY place; these just speed up typing.
+    sugg = "".join(f'<option value="{d}"></option>' for d in DEST)
     return f"""
 <section class="hero"><div class="wrap"><div><div class="crumbs"><a href="../">Home</a> › Customize Your Package</div>
 <span class="kicker">✨ Smart trip planner</span>
 <h1>Customize Your Holiday Package</h1>
-<p>Choose your destination, days, travellers, hotel, car and how you want to travel – get an instant day-by-day itinerary from The Real Tours and Travels. Our team will then personalise it for you.</p>
+<p>Tell us any place you want to go – a corner of India or anywhere in the world, one destination or several – plus your days, travellers, hotel, car and how you want to travel. Get an instant day-by-day itinerary from The Real Tours and Travels; our team will then personalise it for you.</p>
 <div class="btns"><a class="btn gold" href="#planner">Start planning</a></div>
 </div>{seal("../")}</div></section>
 
@@ -82,10 +81,13 @@ def planner_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band, ADDR, GST):
 <form id="pform" class="vform" novalidate>
 <fieldset><legend>Where do you want to go?*</legend><div class="chips scope">
 <label><input type="radio" name="scope" value="Domestic" checked>🇮🇳 Domestic (India)</label><label><input type="radio" name="scope" value="International">🌍 International</label></div></fieldset>
-<div class="row"><label><span id="destlbl">Domestic destination*</span><select name="destination" required>{opts}</select></label>
-<label>Start date<input name="start_date" type="date"></label></div>
-<label id="otherwrap" hidden>Which destination?<input name="other" maxlength="60" placeholder="e.g. Coorg, Japan, Kenya"></label>
-<div class="row"><label>1) Number of days*<input name="days" type="number" min="2" max="21" value="6" required></label>
+<div class="pfield"><label for="pin">Places you want to visit*</label>
+<div class="pbox" id="pbox"><ol class="plist" id="plist"></ol><div class="padd"><input id="pin" list="psug" maxlength="60" autocomplete="off" enterkeyhint="done" placeholder="Type any place and press Enter – e.g. Kutch, Thimphu, Paris"><button type="button" class="btn outline" id="paddbtn">+ Add</button></div></div>
+<small class="phint">Any city, state, region or country – in India or abroad. Going to more than one place? Add them in the order you'd like to travel, e.g. Paris → Rome → Barcelona.</small>
+<datalist id="psug">{sugg}</datalist></div>
+<div class="row"><label>Start date<input name="start_date" type="date"></label>
+<label>1) Number of days*<input name="days" type="number" min="2" max="30" value="6" required></label></div>
+<div>
 <label>2) Number of passengers*<span class="pax pax3"><span><small>Adults (12+ yrs)</small><input name="adults" type="number" min="1" max="60" value="2" required></span><span><small>Children (2–11 yrs)</small><input name="children" type="number" min="0" max="30" value="0"></span><span><small>Infants (under 2)</small><input name="infants" type="number" min="0" max="20" value="0"></span></span></label></div>
 <fieldset><legend>3) Hotel category*</legend><div class="chips">
 <label><input type="radio" name="hotel" value="3 Star" required>3 Star</label><label><input type="radio" name="hotel" value="4 Star" checked>4 Star</label><label><input type="radio" name="hotel" value="5 Star">5 Star</label><label><input type="radio" name="hotel" value="Luxury / Boutique">Luxury / Boutique</label></div></fieldset>
@@ -113,20 +115,43 @@ def planner_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band, ADDR, GST):
 const SB="{SB_URL}",KEY="{SB_KEY}";
 const notify=(s,t,r)=>{{try{{fetch('https://formsubmit.co/ajax/enquiry@therealtoursandtravels.com',{{method:'POST',headers:{{'Content-Type':'application/json',Accept:'application/json'}},body:JSON.stringify({{_subject:s,message:t,_replyto:r||'',_template:'table',_captcha:'false',source:location.href}})}}).catch(()=>{{}});}}catch(_){{}}}};
 const DEST={json.dumps(DEST, ensure_ascii=False)};
-const f=document.getElementById('pform'),msg=document.getElementById('pmsg');
-f.destination.addEventListener('change',()=>{{document.getElementById('otherwrap').hidden=f.destination.value!=='Other';}});
-const OPTS={{Domestic:{json.dumps(dom)},International:{json.dumps(intl)}}};
-const scope=()=>f.querySelector('input[name=scope]:checked').value;
-f.querySelectorAll('input[name=scope]').forEach(r=>r.addEventListener('change',()=>{{const sc=scope();f.destination.innerHTML=OPTS[sc];document.getElementById('destlbl').textContent=sc+' destination*';document.getElementById('otherwrap').hidden=true;
- const rail=f.querySelector('input[name=mode][value=Railway]');rail.disabled=sc==='International';rail.closest('label').style.opacity=sc==='International'?.4:1;if(sc==='International')f.querySelector('input[name=mode][value=Flight]').checked=true;}}));
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}})[c]);
+const f=document.getElementById('pform'),msg=document.getElementById('pmsg');
+const scope=()=>f.querySelector('input[name=scope]:checked').value;
+f.querySelectorAll('input[name=scope]').forEach(r=>r.addEventListener('change',()=>{{const sc=scope();
+ const rail=f.querySelector('input[name=mode][value=Railway]');rail.disabled=sc==='International';rail.closest('label').style.opacity=sc==='International'?.4:1;if(sc==='International')f.querySelector('input[name=mode][value=Flight]').checked=true;}}));
+// ---- Free-text places (any destination, one or many, in travel order) ----
+const places=[],MAXP=10,pin=document.getElementById('pin'),plist=document.getElementById('plist');
+const norm=s=>String(s).toLowerCase().replace(/&/g,' and ').replace(/[^a-z0-9]+/g,' ').trim();
+const ALIAS={{"Kashmir":["srinagar","jammu and kashmir","gulmarg","pahalgam"],"Himachal (Shimla–Manali)":["himachal","himachal pradesh","shimla","manali","shimla manali","shimla and manali"],"Andaman":["andaman and nicobar","andamans","andaman islands","port blair","havelock"],"Darjeeling & Sikkim":["sikkim","darjeeling","gangtok"],"Ladakh":["leh","leh ladakh"],"Dubai":["uae","dubai and abu dhabi"],"Singapore & Malaysia":["singapore"],"Europe (Switzerland & Paris)":["switzerland and paris","paris and switzerland"]}};
+function match(p){{const n=norm(p);for(const k in DEST){{if(norm(k)===n||(ALIAS[k]||[]).includes(n))return k;}}return null;}}
+function drawPlaces(){{plist.innerHTML=places.map((p,i)=>'<li><span>'+esc(p)+'</span>'+(places.length>1?'<button type="button" data-mv="'+i+'" aria-label="Move '+esc(p)+' earlier" '+(i?'':'disabled')+'>↑</button>':'')+'<button type="button" data-rm="'+i+'" aria-label="Remove '+esc(p)+'">×</button></li>').join('');
+ plist.hidden=!places.length;pin.placeholder=places.length?'Add another place (optional)':'Type any place and press Enter – e.g. Kutch, Thimphu, Paris';}}
+function addPlace(){{const v=pin.value.replace(/\\s+/g,' ').trim();if(!v)return true;
+ if(places.length>=MAXP){{msg.className='vmsg err';msg.textContent='You can add up to '+MAXP+' places – tell us the rest in Special requests.';return false;}}
+ if(!places.some(p=>norm(p)===norm(v)))places.push(v.charAt(0).toUpperCase()+v.slice(1));pin.value='';msg.textContent='';drawPlaces();return true;}}
+pin.addEventListener('keydown',e=>{{if(e.key==='Enter'){{e.preventDefault();addPlace();}}}});
+pin.addEventListener('change',()=>{{if(pin.value&&match(pin.value))addPlace();}}); // picked from suggestions
+document.getElementById('paddbtn').addEventListener('click',()=>{{addPlace();pin.focus();}});
+plist.addEventListener('click',e=>{{const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.rm){{places.splice(+b.dataset.rm,1);}}else if(b.dataset.mv){{const i=+b.dataset.mv;if(i>0)[places[i-1],places[i]]=[places[i],places[i-1]];}}drawPlaces();}});
+drawPlaces();
 function uuid(){{return crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{{const r=Math.random()*16|0;return (c=='x'?r:(r&3|8)).toString(16);}});}}
 function fmt(d){{return d.toLocaleDateString('en-IN',{{weekday:'short',day:'numeric',month:'short'}});}}
 function hotelLine(h){{return {{'3 Star':'comfortable 3-star hotel','4 Star':'4-star hotel','5 Star':'5-star hotel','Luxury / Boutique':'luxury / boutique property'}}[h]||'hotel';}}
 function build(o){{
  const D=DEST[o.dest];const N=o.days;const days=[];
- if(!D){{ // generic plan for other destinations
-  for(let i=1;i<=N;i++){{days.push({{t:i==1?'Arrival in '+o.destName:(i==N?'Departure':'Explore '+o.destName),a:i==1?['Arrive and transfer to your hotel','Evening at leisure']:(i==N?['Check out and transfer for your journey home']:['Sightseeing as per your interests – our team will customise this day']),s:i==N?'':o.destName}});}}
+ if(!D){{ // any place(s) typed by the customer – one or a multi-stop route in their order
+  const P=o.places,nights=N-1;
+  const alloc=P.map((_,i)=>Math.floor(nights/P.length)+(i<nights%P.length?1:0));
+  const pool=p=>{{const k=match(p);return k?DEST[k].stops.flatMap(s=>s[1]).map(x=>x.replace(/^Arrive[^;]*;\\s*/,'')).filter(x=>!/^(Arrive|Drive|Transfer|Ferry|Coach|Train|Board|Scenic drive)\\b/.test(x)).map(x=>x.charAt(0).toUpperCase()+x.slice(1)):[];}};
+  P.forEach((p,pi)=>{{const acts=pool(p);for(let n=0;n<alloc[pi];n++){{
+   let t,a;
+   if(days.length===0){{t='Arrival in '+p;a=['Arrive in '+p+' and transfer to your hotel','Evening at leisure'];}}
+   else if(n===0){{t=P[pi-1]+' → '+p;a=['Check out and travel to '+p+(o.scope==='International'?' – by flight, train or road, whichever connects best':' – by road, train or flight, whichever connects best'),'Check in and explore at your own pace'];}}
+   else{{t='Explore '+p;a=acts.length?[acts[(n-1)%acts.length]]:['Sightseeing in '+p+' – our team will plan this day around your interests'];}}
+   days.push({{t,a,s:p}});}}}});
+  days.push({{t:'Departure from '+P[P.length-1],a:['Breakfast and check out','Transfer for your journey home with beautiful memories'],s:''}});
   return days;
  }}
  const stops=D.stops;const total=stops.reduce((a,s)=>a+s[1].length,0);
@@ -151,7 +176,7 @@ function render(o,days,ref){{
  const start=o.start?new Date(o.start+'T00:00'):null;
  const rows=days.map((d,i)=>{{const dt=start?' · '+fmt(new Date(start.getTime()+i*864e5)):'';
   return '<div class="iday"><div class="inum">Day '+(i+1)+'</div><div><h4>'+esc(d.t)+'<span>'+dt+'</span></h4><ul>'+d.a.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>'+(d.s?'<p class="istay">🏨 Overnight: '+esc(d.s)+' – '+hotelLine(o.hotel)+'</p>':'')+'</div></div>';}}).join('');
- const D=DEST[o.dest];const intl=D&&D.intl;
+ const D=DEST[o.dest];const intl=(D&&D.intl)||o.scope==='International';
  const travel=o.mode==='Railway'&&D&&!D.rail&&!intl?'Flight (no rail connection)':(intl&&o.mode==='Railway'?'Flight (international)':o.mode);
  return '<div class="ihead"><img src="../img/logo.png" alt="The Real Tours and Travels" width="72" height="72"><div><b>The Real Tours and Travels</b><small>Crafting Journeys Since 1981 · Mulund West, Mumbai</small></div><span class="iref">Ref '+ref+'</span></div>'+
  '<h2 class="ititle">'+esc(o.destName)+' – '+(o.days-1)+' Nights / '+o.days+' Days</h2>'+
@@ -167,12 +192,15 @@ f.addEventListener('submit',async e=>{{
  const isEmail=/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(contact);const digits=contact.replace(/[^0-9]/g,'');
  const isPhone=!isEmail&&digits.length>=10&&digits.length<=13;
  if(!isEmail&&!isPhone){{msg.textContent='Please enter a valid 10-digit mobile number or email address.';msg.classList.add('err');f.contact.focus();return;}}
- let dest=d.get('destination');const other=(d.get('other')||'').trim();
- if(dest==='Other'&&!other){{msg.textContent='Please type the destination you want to visit.';msg.classList.add('err');return;}}
- const o={{dest,destName:dest==='Other'?other:dest,days:Math.min(21,Math.max(2,parseInt(d.get('days'))||6)),adults:Math.max(1,parseInt(d.get('adults'))||1),children:Math.max(0,parseInt(d.get('children'))||0),infants:Math.max(0,parseInt(d.get('infants'))||0),scope:scope(),hotel:d.get('hotel')||'4 Star',car:d.get('car')||'SUV',mode:d.get('mode')||'Flight',start:d.get('start_date')||''}};
+ if(!addPlace())return;
+ if(!places.length){{msg.textContent='Please type at least one place you want to visit, then press Enter or + Add.';msg.classList.add('err');pin.focus();return;}}
+ const nd=Math.min(30,Math.max(2,parseInt(d.get('days'))||6));
+ if(places.length>nd-1){{msg.textContent=places.length+' places need at least '+(places.length+1)+' days (one night in each). Please add days or remove a place.';msg.classList.add('err');f.days.focus();return;}}
+ const one=places.length===1?match(places[0]):null;
+ const o={{dest:one,places:places.slice(),destName:places.join(' → '),days:Math.min(30,Math.max(2,parseInt(d.get('days'))||6)),adults:Math.max(1,parseInt(d.get('adults'))||1),children:Math.max(0,parseInt(d.get('children'))||0),infants:Math.max(0,parseInt(d.get('infants'))||0),scope:scope(),hotel:d.get('hotel')||'4 Star',car:d.get('car')||'SUV',mode:d.get('mode')||'Flight',start:d.get('start_date')||''}};
  const btn=document.getElementById('psubmit');btn.disabled=true;msg.textContent='✨ Creating your itinerary…';
  const id=uuid(),ref=id.slice(0,8).toUpperCase();
- const row={{id,full_name:(d.get('full_name')||'').trim()||null,phone:isPhone?digits:null,email:isEmail?contact:null,destination:o.destName.slice(0,80),days:o.days,adults:o.adults,children:o.children,infants:o.infants,trip_scope:o.scope,hotel_category:o.hotel,car_type:o.car,travel_mode:o.mode,start_date:o.start||null,notes:(d.get('notes')||'').trim()||null}};
+ const row={{id,full_name:(d.get('full_name')||'').trim()||null,phone:isPhone?digits:null,email:isEmail?contact:null,destination:o.destName.slice(0,80),days:o.days,adults:o.adults,children:o.children,infants:o.infants,trip_scope:o.scope,hotel_category:o.hotel,car_type:o.car,travel_mode:o.mode,start_date:o.start||null,notes:((o.destName.length>80?'Full route: '+o.destName+'\\n':'')+(d.get('notes')||'').trim())||null}};
  try{{const r=await fetch(SB+'/rest/v1/trip_requests',{{method:'POST',headers:{{apikey:KEY,Authorization:'Bearer '+(window.RTT_TOKEN||KEY),'Content-Type':'application/json',Prefer:'return=minimal'}},body:JSON.stringify(row)}});if(!r.ok)throw 0;}}
  catch(_){{btn.disabled=false;msg.textContent='Sorry, something went wrong. Please try again or WhatsApp us on 98431 21212.';msg.classList.add('err');return;}}
  const days=build(o);
@@ -190,6 +218,15 @@ PLANNER_CSS = """
 .pax.pax3{grid-template-columns:1fr 1fr 1fr}.chips.scope label{font-size:16px;padding:11px 20px}
 @media(max-width:520px){.pax.pax3{grid-template-columns:1fr 1fr 1fr;gap:6px}.pax.pax3 small{font-size:11px}}
 .vform [hidden],[hidden]{display:none!important}
+.pfield{display:grid;gap:8px}.pfield>label{font-weight:500}.phint{color:var(--muted);font-size:13.5px;line-height:1.45}
+.pbox{border:1px solid var(--line);border-radius:14px;background:#fff;padding:8px}.pbox:focus-within{border-color:var(--red)}
+.plist{list-style:none;counter-reset:pl;display:flex;flex-wrap:wrap;gap:8px;margin:0 0 8px;padding:0}
+.plist li{counter-increment:pl;display:flex;align-items:center;gap:4px;background:#fdf0f0;border:1px solid var(--red);color:var(--crimson);border-radius:999px;padding:5px 6px 5px 12px;font-weight:500}
+.plist li::before{content:counter(pl);background:var(--red);color:#fff;border-radius:50%;width:20px;height:20px;display:grid;place-items:center;font-size:12px;margin-right:4px}
+.plist li+li{margin-left:14px;position:relative}.plist li+li::after{content:'→';position:absolute;left:-17px;color:var(--muted)}
+.plist button{border:0;background:none;color:var(--crimson);font-size:16px;line-height:1;width:26px;height:26px;border-radius:50%;cursor:pointer;padding:0}
+.plist button:hover:not(:disabled){background:#fff}.plist button:disabled{opacity:.3;cursor:default}
+.padd{display:flex;gap:8px}.padd input{flex:1;min-width:0;border:0!important;box-shadow:none!important;outline:0}.padd .btn{padding:9px 16px;white-space:nowrap}
 .vform fieldset{border:0;padding:0;margin:0;display:grid;gap:8px}.vform legend{font-weight:500;font-size:15px;color:var(--wine);margin-bottom:8px}
 .chips{display:flex;flex-wrap:wrap;gap:10px}.chips label{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:9px 16px;cursor:pointer;font-weight:500;background:#fff}
 .chips input{accent-color:var(--red);width:auto}.chips label:has(input:checked){border-color:var(--red);background:#fdf0f0;color:var(--crimson)}
