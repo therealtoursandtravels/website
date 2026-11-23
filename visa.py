@@ -113,13 +113,14 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
       files_hint="(select multiple files – address proof, birth proof, old passport…)" if P else "(select multiple files – passport, photo, bank statements, ITR, bookings…)",
       notes_ph="e.g. change of name or address, urgent travel" if P else "Anything we should know – e.g. previous visa refusals, travelling with children",
       consent="to process my passport application" if P else "to process my visa application",
+      payfor="passport service fees" if P else "visa fees",
     )
     return f"""
 <section class="hero"><div class="wrap"><div><div class="crumbs"><a href="../">Home</a> › {T["crumb"]}</div>
 <span class="kicker">{T["kicker"]}</span>
 <h1>{T["h1"]}</h1>
 <p>{T["intro"]}</p>
-<div class="btns"><a class="btn gold" href="#countries">See documents required</a><a class="btn ghost" href="#upload">Upload documents</a></div>
+<div class="btns"><a class="btn gold" href="#countries">See documents required</a><a class="btn ghost" href="#upload">Upload documents</a><a class="btn outline" href="#pay">💳 Pay online</a></div>
 </div>{seal("../")}</div></section>
 
 <section id="countries"><div class="wrap">
@@ -146,6 +147,10 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
 <button class="btn gold" type="submit" id="vsubmit">Upload documents securely</button>
 <p id="vmsg" class="vmsg" role="status" aria-live="polite"></p>
 </form>
+<div class="paybox" id="pay"><span class="kicker" style="justify-content:center">Secure payment</span><h3 style="font-size:26px;margin:4px 0 8px">Pay {T["payfor"]} online</h3>
+<p class="lead" style="font-size:16px">Pay only the amount confirmed by our team. Enter your name, phone and reference / application details so we can match your payment. UPI, cards, net banking and wallets accepted.</p>
+<form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_U3RKkNsxkSYwez" async></script></form>
+<p style="font-size:13px;color:var(--muted);margin:6px 0 0">🔒 Secured by Razorpay · By paying you agree to our <a href="../terms/">Terms</a> and <a href="../cancellation-refund-policy/">Cancellation &amp; Refund Policy</a>.</p></div>
 <p class="meta" style="text-align:center;margin-top:16px">Prefer WhatsApp or visiting us? Call/WhatsApp <a href="tel:{PHONE_RAW}">{PHONE}</a> or visit our Mulund West office, open daily 9 am – 10 pm.</p>
 </div></section>
 {cta_band()}
@@ -192,6 +197,7 @@ f.addEventListener('submit',async e=>{{
 </script>"""
 
 VISA_CSS = """
+#upload .paybox{margin:28px auto 0}
 .vtabs{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:26px}
 .vtab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 16px;font:500 15px 'Jost',sans-serif;color:var(--ink);cursor:pointer}
 .vtab.on,.vtab:hover{border-color:var(--red);color:var(--red);background:#fdf0f0}
