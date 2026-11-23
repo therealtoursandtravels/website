@@ -165,7 +165,7 @@ f.addEventListener('submit',async e=>{{
  const btn=document.getElementById('psubmit');btn.disabled=true;msg.textContent='✨ Creating your itinerary…';
  const id=uuid(),ref=id.slice(0,8).toUpperCase();
  const row={{id,full_name:(d.get('full_name')||'').trim()||null,phone:isPhone?digits:null,email:isEmail?contact:null,destination:o.destName.slice(0,80),days:o.days,adults:o.adults,children:o.children,hotel_category:o.hotel,car_type:o.car,travel_mode:o.mode,start_date:o.start||null,notes:(d.get('notes')||'').trim()||null}};
- try{{const r=await fetch(SB+'/rest/v1/trip_requests',{{method:'POST',headers:{{apikey:KEY,Authorization:'Bearer '+KEY,'Content-Type':'application/json',Prefer:'return=minimal'}},body:JSON.stringify(row)}});if(!r.ok)throw 0;}}
+ try{{const r=await fetch(SB+'/rest/v1/trip_requests',{{method:'POST',headers:{{apikey:KEY,Authorization:'Bearer '+(window.RTT_TOKEN||KEY),'Content-Type':'application/json',Prefer:'return=minimal'}},body:JSON.stringify(row)}});if(!r.ok)throw 0;}}
  catch(_){{btn.disabled=false;msg.textContent='Sorry, something went wrong. Please try again or WhatsApp us on 98431 21212.';msg.classList.add('err');return;}}
  const days=build(o);
  document.getElementById('itin').innerHTML=render(o,days,ref);

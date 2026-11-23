@@ -8,6 +8,7 @@ from flights import flight_widget, FLIGHT_CSS
 from tools import gst_tool_page, TOOL_CSS
 import pwa
 from insurance import insurance_page
+import account
 
 SITE = "https://www.therealtoursandtravels.com"
 NAME = "The Real Tours and Travels"
@@ -270,6 +271,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#ffffff">
 {pwa.HEAD}
+{account.SITE_JS}
 <link rel="icon" type="image/png" href="{root}favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
@@ -279,6 +281,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <div class="topbar"><div class="wrap"><span>📍 Mulund West, Mumbai · Open daily 9 am – 10 pm</span><span><a href="tel:{PHONE_RAW}">📞 {PHONE}</a> · <a href="mailto:{EMAIL}">✉️ {EMAIL}</a></span></div></div>
 <header class="site"><div class="wrap hrow">
 <a class="brand" href="{root or './'}"><img src="{root}img/logo.png" alt="The Real Tours and Travels logo – Estd. 1981" width="64" height="64"><span><b>The Real Tours and Travels</b><small>Crafting Journeys Since 1981</small></span></a>
+<a class="acct-link" id="acctLink" href="{root}account/">👤 Login</a>
 <div class="hact"><button class="menu-btn" aria-label="Menu" aria-expanded="false" onclick="const n=document.querySelector('nav.main');n.classList.toggle('open');this.setAttribute('aria-expanded',n.classList.contains('open'))">☰</button></div></div>
 <nav class="main" aria-label="Main"><div class="wrap navrow"><a href="{root}flights-hotels/#flights">Flights</a><a href="{root}flights-hotels/#hotels">Hotels</a><a href="{root}flights-hotels/#cruise">Cruise</a><a href="{root}visa/">Visa</a><a href="{root}passport/">Passport</a><a href="{root}insurance/">Travel Insurance</a><a href="{root}customize-your-package/">Customize Packages</a><a href="{root}jain-yatra-tours-with-maharaj/">Jain Yatra</a><a href="{root or './'}#services">Services</a><a href="{root}contact/">Contact Us</a><a href="{root}about/">About Us</a></div></nav>
 </header>
@@ -292,7 +295,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <p><a href="tel:{PHONE_RAW}">📞 {PHONE}</a><br><a href="mailto:{EMAIL}">✉️ {EMAIL}</a><br>
 <a href="{IG}" target="_blank" rel="noopener">📸 @therealtoursandtravels</a> · <a href="{FB}" target="_blank" rel="noopener">Facebook</a></p></div>
 <div><h4>Our Services</h4><ul>{nav}</ul></div>
-<div><h4>Visit Us</h4><ul><li>Open every day, 9 am – 10 pm</li><li><a href="{MAPS}" target="_blank" rel="noopener">Get directions on Google Maps</a></li><li><a href="{REVIEW}" target="_blank" rel="noopener">⭐ Review us on Google</a></li><li><a href="{root}flights-hotels/">✈️ Flights, hotels &amp; cruise</a></li><li><a href="{root}customize-your-package/">✨ Customize your package</a></li><li><a href="{root}visa/">Visa documents &amp; upload</a></li><li><a href="{root}passport/">Passport services</a></li><li><a href="{root}insurance/">Travel insurance quote</a></li><li><a href="{root}blog/">Travel guides &amp; tips</a></li><li><a href="{root}about/">About us</a></li><li><a href="{root}contact/">Contact us</a></li></ul>
+<div><h4>Visit Us</h4><ul><li>Open every day, 9 am – 10 pm</li><li><a href="{MAPS}" target="_blank" rel="noopener">Get directions on Google Maps</a></li><li><a href="{REVIEW}" target="_blank" rel="noopener">⭐ Review us on Google</a></li><li><a href="{root}flights-hotels/">✈️ Flights, hotels &amp; cruise</a></li><li><a href="{root}customize-your-package/">✨ Customize your package</a></li><li><a href="{root}visa/">Visa documents &amp; upload</a></li><li><a href="{root}passport/">Passport services</a></li><li><a href="{root}insurance/">Travel insurance quote</a></li><li><a href="{root}blog/">Travel guides &amp; tips</a></li><li><a href="{root}account/">👤 My account / Login</a></li><li><a href="{root}about/">About us</a></li><li><a href="{root}contact/">Contact us</a></li></ul>
 <p style="margin-top:14px">Serving travellers across India.</p></div>
 </div><div class="copy">© {datetime.date.today().year} The Real Tours and Travels, Mulund West, Mumbai · GSTIN {GST} · All rights reserved.<br><a href="{root}terms/">Terms &amp; Conditions</a> · <a href="{root}privacy-policy/">Privacy Policy</a> · <a href="{root}cancellation-refund-policy/">Cancellation &amp; Refund Policy</a></div></footer>
 <a class="float-wa" href="{WA}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">💬</a>
@@ -318,7 +321,7 @@ CSSV = "0"
 def build():
     root = os.path.dirname(os.path.abspath(__file__))
     global CSSV
-    css_all = CSS + VISA_CSS + PLANNER_CSS + FLIGHT_CSS + TOOL_CSS + pwa.CSS
+    css_all = CSS + VISA_CSS + PLANNER_CSS + FLIGHT_CSS + TOOL_CSS + pwa.CSS + account.ACCOUNT_CSS
     CSSV = __import__("hashlib").md5(css_all.encode()).hexdigest()[:8]
     open(os.path.join(root, "style.css"), "w").write(css_all)
     imgs = set(os.listdir(os.path.join(root, "img")))
@@ -440,6 +443,7 @@ def build():
     write("/customize-your-package/", page("/customize-your-package/", "Customize Your Holiday Package – Instant Itinerary | The Real Tours and Travels", "Customize your holiday package from Mumbai – choose destination, days, travellers, hotel category, car (SUV, Sedan, Hatchback) and flight or train, and get an instant day-by-day itinerary.", planner_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band, ADDR, GST), None, "gulmarg.jpg"))
     # Visa section
     write("/visa/", page("/visa/", "Visa Services in Mulund, Mumbai – Documents Required & Upload | The Real Tours and Travels", "Visa services in Mulund West, Mumbai for Dubai, Thailand, Singapore, Europe (Schengen), UK, USA, Canada, Australia, Japan and more. See documents required, request the price and upload documents securely.", visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band), None, "passport.jpg"))
+    write("/account/", page("/account/", "My Account – Login or Sign up | The Real Tours and Travels", "Log in or create your free The Real Tours and Travels account to save your details and see your enquiries.", account.account_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band)).replace('<meta name="robots" content="index,follow,max-image-preview:large">','<meta name="robots" content="noindex">'))
     # About us
     about = f"""<section class="hero"><div class="wrap"><div><div class="crumbs"><a href="../">Home</a> › About Us</div>
 <span class="kicker">Since 1981</span><h1>About The Real Tours and Travels</h1>

@@ -148,7 +148,7 @@ Object.entries(forms).forEach(([kind,f])=>f.addEventListener('submit',async e=>{
  row.phone=isPhone?digits:null;row.email=isEmail?c:null;
  const btn=f.querySelector('.fgo');btn.disabled=true;msg.textContent='Sending your enquiry…';
  let w=null;try{{w=window.open('','_blank');if(w)w.document.write('<p style="font:16px sans-serif;padding:20px">Opening WhatsApp…</p>');}}catch(_){{w=null;}}
- try{{const r=await fetch(SB+'/rest/v1/'+table,{{method:'POST',headers:{{apikey:KEY,Authorization:'Bearer '+KEY,'Content-Type':'application/json',Prefer:'return=minimal'}},body:JSON.stringify(row)}});if(!r.ok)throw 0;}}
+ try{{const r=await fetch(SB+'/rest/v1/'+table,{{method:'POST',headers:{{apikey:KEY,Authorization:'Bearer '+(window.RTT_TOKEN||KEY),'Content-Type':'application/json',Prefer:'return=minimal'}},body:JSON.stringify(row)}});if(!r.ok)throw 0;}}
  catch(_){{if(w)w.close();btn.disabled=false;msg.textContent='Sorry, something went wrong. Please WhatsApp us on 98431 21212.';msg.classList.add('err');return;}}
  if(notes)lines.push('Notes: '+notes);if(name)lines.push('Name: '+name);lines.push('Contact: '+c);
  const wa='https://wa.me/919843121212?text='+encodeURIComponent(lines.filter(Boolean).join('\\n'));

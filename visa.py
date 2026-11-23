@@ -195,12 +195,12 @@ f.addEventListener('submit',async e=>{{
   for(let i=0;i<files.length;i++){{
    msg.textContent='Uploading '+(i+1)+' of '+files.length+'…';
    const p='applications/'+id+'/'+String(i+1).padStart(2,'0')+'-'+safe(files[i].name);
-   const r=await fetch(SB+'/storage/v1/object/visa-documents/'+p,{{method:'POST',headers:{{apikey:KEY,Authorization:'Bearer '+KEY,'Content-Type':files[i].type||'application/octet-stream','x-upsert':'false'}},body:files[i]}});
+   const r=await fetch(SB+'/storage/v1/object/visa-documents/'+p,{{method:'POST',headers:{{apikey:KEY,Authorization:'Bearer '+(window.RTT_TOKEN||KEY),'Content-Type':files[i].type||'application/octet-stream','x-upsert':'false'}},body:files[i]}});
    if(!r.ok)throw new Error('upload '+r.status);
    paths.push(p);
   }}
   const row={{id,full_name:d.get('full_name').trim(),phone,email:(d.get('email')||'').trim()||null,country:d.get('country'),visa_type:d.get('visa_type'),travel_date:d.get('travel_date')||null,travellers:parseInt(d.get('travellers'))||null,notes:(d.get('notes')||'').trim()||null,files:paths}};
-  const r2=await fetch(SB+'/rest/v1/visa_applications',{{method:'POST',headers:{{apikey:KEY,Authorization:'Bearer '+KEY,'Content-Type':'application/json',Prefer:'return=minimal'}},body:JSON.stringify(row)}});
+  const r2=await fetch(SB+'/rest/v1/visa_applications',{{method:'POST',headers:{{apikey:KEY,Authorization:'Bearer '+(window.RTT_TOKEN||KEY),'Content-Type':'application/json',Prefer:'return=minimal'}},body:JSON.stringify(row)}});
   if(!r2.ok)throw new Error('save '+r2.status);
   notify('New {"passport" if P else "visa"} documents '+id.slice(0,8).toUpperCase()+' – '+row.full_name,'Name: '+row.full_name+'\\nPhone: '+row.phone+(row.email?'\\nEmail: '+row.email:'')+'\\n{"Service" if P else "Country"}: '+row.country+'\\nType: '+row.visa_type+(row.travel_date?'\\nTravel date: '+row.travel_date:'')+'\\nApplicants: '+(row.travellers||1)+'\\nFiles uploaded: '+paths.length+' (see Supabase → Storage → visa-documents → applications/'+id+')'+(row.notes?'\\nNotes: '+row.notes:''),row.email||'');
   f.reset();fl.innerHTML='';

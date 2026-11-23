@@ -1,7 +1,7 @@
 """Installable app (PWA): manifest, service worker, install button and offline page."""
 import json
 
-VERSION = "rtt-v4"
+VERSION = "rtt-v5"
 
 def manifest(NAME):
     return json.dumps({
@@ -65,7 +65,7 @@ HEAD = """<script>if(matchMedia('(display-mode: standalone)').matches||navigator
 
 # Install button + iPhone instructions + service-worker registration
 BODY = """<nav class="appbar" aria-label="App">
-<a href="/"><span>🏠</span>Home</a><a href="/flights-hotels/#flights"><span>✈️</span>Book</a><a href="/customize-your-package/"><span>✨</span>Plan</a><a href="/visa/"><span>🛂</span>Visa</a><a href="https://wa.me/919843121212" target="_blank" rel="noopener"><span>💬</span>Chat</a></nav>
+<a href="/"><span>🏠</span>Home</a><a href="/flights-hotels/#flights"><span>✈️</span>Book</a><a href="/customize-your-package/"><span>✨</span>Plan</a><a href="/visa/"><span>🛂</span>Visa</a><a href="/account/"><span>👤</span>Me</a><a href="https://wa.me/919843121212" target="_blank" rel="noopener"><span>💬</span>Chat</a></nav>
 <button type="button" class="app-install" id="appInstall" hidden>📲 Install app</button>
 <div class="ios-tip" id="iosTip" hidden role="dialog" aria-label="Install on iPhone"><button type="button" class="ios-x" aria-label="Close">✕</button>
 <b>Install The Real Tours and Travels app</b><p>Tap <span class="ios-share">⬆︎</span> <b>Share</b> at the bottom of Safari, then <b>Add to Home Screen</b>.</p></div>
@@ -96,7 +96,7 @@ CSS = """
 .ios-x{position:absolute;right:10px;top:8px;border:0;background:none;font-size:18px;color:var(--muted);cursor:pointer}
 html.is-app .topbar,html.is-app .float-wa,html.is-app .app-install,html.is-app .hcta{display:none!important}
 .appbar{display:none}
-html.is-app .appbar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:80;background:#fff;border-top:1px solid var(--line);box-shadow:0 -6px 18px rgba(0,0,0,.06);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+html.is-app .appbar{display:grid;grid-template-columns:repeat(6,1fr);position:fixed;left:0;right:0;bottom:0;z-index:80;background:#fff;border-top:1px solid var(--line);box-shadow:0 -6px 18px rgba(0,0,0,.06);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
 .appbar a{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--muted);font-size:11.5px;font-weight:600}.appbar a span{font-size:20px;line-height:1}.appbar a.on{color:var(--red)}
 html.is-app body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
 html.is-app .hero .seal{display:none}html.is-app .hero .wrap{padding-top:22px!important;padding-bottom:30px!important}html.is-app .fsec{margin-top:0}
