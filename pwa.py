@@ -1,7 +1,7 @@
 """Installable app (PWA): manifest, service worker, install button and offline page."""
 import json
 
-VERSION = "rtt-v1"
+VERSION = "rtt-v2"
 
 def manifest(NAME):
     return json.dumps({
@@ -26,6 +26,7 @@ def manifest(NAME):
             {"name": "Flights, Hotels & Cruise", "short_name": "Book travel", "url": "/flights-hotels/?source=app", "icons": [{"src": "/img/icon-192.png", "sizes": "192x192"}]},
             {"name": "Customize your package", "short_name": "Plan a trip", "url": "/customize-your-package/?source=app", "icons": [{"src": "/img/icon-192.png", "sizes": "192x192"}]},
             {"name": "Visa services", "short_name": "Visa", "url": "/visa/?source=app", "icons": [{"src": "/img/icon-192.png", "sizes": "192x192"}]},
+            {"name": "Travel insurance quote", "short_name": "Insurance", "url": "/insurance/?source=app", "icons": [{"src": "/img/icon-192.png", "sizes": "192x192"}]},
             {"name": "Passport services", "short_name": "Passport", "url": "/passport/?source=app", "icons": [{"src": "/img/icon-192.png", "sizes": "192x192"}]},
         ],
     }, ensure_ascii=False, indent=1)

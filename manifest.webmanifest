@@ -69,6 +69,17 @@
    ]
   },
   {
+   "name": "Travel insurance quote",
+   "short_name": "Insurance",
+   "url": "/insurance/?source=app",
+   "icons": [
+    {
+     "src": "/img/icon-192.png",
+     "sizes": "192x192"
+    }
+   ]
+  },
+  {
    "name": "Passport services",
    "short_name": "Passport",
    "url": "/passport/?source=app",
