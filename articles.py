@@ -11,7 +11,7 @@ ARTICLES = [
 "title": "Best December Holiday Destinations from Mumbai for Families",
 "h1": "Best December Holidays from Mumbai: Where to Go This Winter",
 "desc": "Planning a December family holiday from Mumbai? Our pick of the best winter destinations in India and abroad – snow in Kashmir, Rajasthan forts, Kerala backwaters, Dubai and more.",
-"intro": "December is the busiest travel month for Mumbai families – schools close, the weather is pleasant almost everywhere and the festive mood is in the air. Here are the destinations we recommend most, from our 45+ years of planning winter holidays.",
+"intro": "December is the busiest travel month for families – schools close, the weather is pleasant almost everywhere and the festive mood is in the air. Here are the destinations we recommend most, from our 45+ years of planning winter holidays.",
 "body": """
 <h2>Snow holidays in India</h2>
 <h3>Kashmir – Gulmarg, Sonamarg and Pahalgam</h3>
@@ -105,7 +105,7 @@ ARTICLES = [
 "date": "2026-11-23",
 "title": "Passport & Visa Checklist for Indian Travellers (Mumbai)",
 "h1": "Passport and Visa Checklist for Indian Travellers",
-"desc": "A simple checklist for Mumbai travellers before an international trip – passport validity, renewal, common visa documents, and how The Real Tours and Travels helps with passport and visa services.",
+"desc": "A simple checklist for Indian travellers before an international trip – passport validity, renewal, common visa documents, and how The Real Tours and Travels helps with passport and visa services.",
 "intro": "Visa trouble is the most common reason international holidays get delayed. A little planning avoids most of it. Here is the checklist we go through with every family before they travel abroad.",
 "body": """
 <h2>1. Check your passport first</h2>
@@ -155,7 +155,7 @@ ARTICLES = [
 "img_alt": "View of clouds at sunset from an airplane window",
 "date": "2026-11-23",
 "title": "Why Travel Insurance Matters for Every Trip – A Simple Guide",
-"h1": "Why Travel Insurance Matters: A Simple Guide for Mumbai Travellers",
+"h1": "Why Travel Insurance Matters: A Simple Guide for Indian Travellers",
 "desc": "What travel insurance covers, when it is mandatory, and why families and senior citizens should never skip it. A plain-language guide from The Real Tours and Travels, Mulund.",
 "intro": "Travel insurance is the one thing most travellers skip – until something goes wrong. A medical emergency abroad or a lost bag can turn a dream holiday into a stressful one. Here is what you should know, in simple words.",
 "body": """

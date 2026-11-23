@@ -43,7 +43,7 @@ SERVICES = [
   desc="International tour packages from Mumbai to Dubai, Thailand, Bali, Singapore, Malaysia, Vietnam, Sri Lanka, Maldives, Europe and more – with flights, hotels, visas and travel insurance handled by The Real Tours and Travels.",
   intro="Travelling abroad with family should be exciting, not stressful. We plan international holidays end to end – flights from Mumbai, visas, hotels, transfers, sightseeing and travel insurance – and stay in touch with you throughout the trip.",
   points=["Dubai & Abu Dhabi – desert safari, Burj Khalifa, theme parks","Thailand – Bangkok, Pattaya, Phuket and Krabi","Bali, Singapore, Malaysia and Vietnam","Sri Lanka, Maldives and Mauritius","Europe – Switzerland, Paris, Italy, London and Scandinavia","Japan, Australia, New Zealand and the USA"],
-  why="Since 1981 we have sent thousands of Mumbai families abroad. We take care of the paperwork you worry about – visas, insurance, arrival cards – and suggest family-friendly hotels in the right locations.",
+  why="Since 1981 we have sent thousands of families abroad – from Mumbai, across India and beyond. We take care of the paperwork you worry about – visas, insurance, arrival cards – and suggest family-friendly hotels in the right locations.",
   faqs=[("Do you help with visas for international packages?","Yes. Our visa team guides you on documents and files tourist visas for Dubai, Singapore, Schengen/Europe, UK, USA, Australia and more."),
         ("Can you customise an international package?","Absolutely. Every package can be changed – hotels, number of nights, activities and pace – to suit your family."),
         ("Do you provide vegetarian and Jain food abroad?","We can recommend and pre-arrange vegetarian and Jain meals in most popular destinations.")]),
@@ -53,7 +53,7 @@ SERVICES = [
   desc="Fresh passport and renewal appointments, and tourist and business visa assistance for Dubai, Singapore, Thailand, Schengen, UK, USA, Canada and Australia. Visit The Real Tours and Travels, Mulund West.",
   intro="Visa rules change often and a small mistake in documents can delay your trip. Our team in Mulund West helps you prepare the right documents, books appointments and tracks your application – for passports and visas alike.",
   points=["Fresh passport and passport renewal appointment assistance","Tourist and business visas – Dubai/UAE, Singapore, Thailand, Malaysia","Schengen (Europe), UK, USA, Canada, Australia and New Zealand visas","e-Visas and arrival cards, including the Thailand Digital Arrival Card","Document checklist, form filling and appointment booking","Travel insurance required for Schengen and other visas"],
-  why="We have been handling visas for Mumbai travellers for decades, so we know what embassies look for and how to present your file correctly.",
+  why="We have been handling visas for travellers for decades, so we know what embassies look for and how to present your file correctly.",
   faqs=[("How early should I apply for a Schengen or UK visa?","Ideally 6–8 weeks before travel, especially in peak season. Contact us early and we will plan the timeline."),
         ("Can you help with a passport renewal?","Yes. We help with the online form, documents and Passport Seva appointment booking for fresh and renewal passports."),
         ("Do you guarantee visa approval?","No agent can guarantee a visa – the decision is the embassy's. We make sure your application is complete and correctly presented to give it the best chance.")]),
@@ -100,7 +100,7 @@ SERVICES = [
  dict(slug="fit-mice-tours", short="FIT & MICE", icon="💼", img=None,
   title="FIT & MICE Tours | Corporate Travel, Incentive Trips & Conferences",
   h1="FIT & MICE Tours – Corporate Travel and Events",
-  desc="FIT travel for individual travellers and MICE services – meetings, incentive trips, conferences and events – for Mumbai companies, in India and abroad. The Real Tours and Travels, since 1981.",
+  desc="FIT travel for individual travellers and MICE services – meetings, incentive trips, conferences and events – for companies in Mumbai, across India and abroad. The Real Tours and Travels, since 1981.",
   intro="We handle independent (FIT) travel for individuals and couples, and corporate MICE travel – meetings, incentive tours, conferences and events – with reliable logistics and a single point of contact.",
   points=["FIT – flexible independent itineraries for individuals and couples","Dealer and employee incentive trips","Conferences, offsites and annual meets","Venue, hotel and banquet sourcing","Group flights, visas and travel insurance","On-ground coordination and event support"],
   why="We combine personal service with the experience to manage group logistics, so your team or guests travel smoothly.",
@@ -113,7 +113,7 @@ SERVICES = [
   desc="Mumbai airport pick-up and drop, outstation cabs and car hire from Mulund and Thane – sedans, SUVs, Innova and tempo travellers with experienced drivers. Book with The Real Tours and Travels.",
   intro="On-time airport pick-ups and drops at Mumbai (BOM) and Navi Mumbai airports, and comfortable cars for weekend trips, pilgrimages and outstation journeys – with experienced drivers and one number to call.",
   points=["Mumbai and Navi Mumbai airport pick-up and drop","Outstation one-way and round trips – Pune, Nashik, Shirdi, Lonavala, Goa and more","Sedan, SUV, Innova Crysta and tempo traveller options","Meet & greet with name board on arrival","Full-day and half-day local car hire","Cars for weddings, groups and corporate guests"],
-  why="We have arranged travel for Mumbai families for over four decades. Every booking is confirmed with the driver's details in advance, and we are on call if plans change.",
+  why="We have arranged travel for families for over four decades. Every booking is confirmed with the driver's details in advance, and we are on call if plans change.",
   faqs=[("Do you track flight delays for pick-ups?","Share your flight number and we plan the pick-up around the actual arrival time."),
         ("Can I book a cab for a multi-day trip?","Yes – outstation round trips for any number of days, with the same car and driver."),
         ("Which cars are available?","Sedans, SUVs, Innova Crysta and tempo travellers for larger groups. Tell us the number of passengers and luggage and we suggest the right car.")]),
@@ -163,7 +163,7 @@ SERVICES = [
   desc="Help with the Police Clearance Certificate (PCC) for Indian passport holders – for visas, emigration, study or jobs abroad – plus help with document attestation and apostille. The Real Tours and Travels, Mulund West.",
   intro="Many countries ask for a Police Clearance Certificate (PCC) for long-stay visas, study, work or permanent residence. We help you fill the application, book the appointment and prepare the right documents.",
   points=["PCC application for Indian passport holders via Passport Seva","Appointment booking at the Passport Seva Kendra / POPSK","Document checklist for your case (current address, passport details)","Help with attestation and apostille of certificates through authorised agencies","Visa file preparation for long-stay, study and work visas","Reminders and follow-up until your certificate is ready"],
-  why="We have helped Mumbai families with passports and visas for decades. We check your documents before your appointment, so you go once and go prepared.",
+  why="We have helped families with passports and visas for decades. We check your documents before your appointment, so you go once and go prepared.",
   faqs=[("Who needs a Police Clearance Certificate?","It is usually asked for long-stay, work, study, emigration or permanent residence visas. The embassy or employer will tell you if you need one."),
         ("How long does a PCC take?","It depends on your address and whether police verification is needed. We tell you the expected time for your case before you apply."),
         ("Can you help with apostille?","Yes, we help with attestation and apostille of documents through authorised agencies, as required by the country you are going to.")]),
@@ -173,7 +173,7 @@ SERVICES = [
   desc="Jain tirth yatras and holidays with our own travelling Maharaj cooking pure Jain food – Palitana, Shikharji, Girnar, Ranakpur and more. Ideal for families, senior citizens and Jain groups from Mumbai.",
   intro="Food is often the biggest concern for Jain families on tour. On our Jain yatra tours, a Maharaj travels with the group and prepares fresh, pure Jain food (no root vegetables, timings respected) throughout the journey.",
   points=["Palitana (Shatrunjay) and Girnar yatra","Sammed Shikharji and eastern tirth yatra","Ranakpur, Nakoda and Rajasthan tirths","Shankheshwar and Gujarat tirths","Custom family and community group yatras","Holidays with Jain food in India and abroad"],
-  why="We are a Mumbai family business that has looked after Jain travellers for over four decades – comfortable stays, sensible pacing for elders and food you can trust.",
+  why="We are a family business from Mumbai that has looked after Jain travellers for over four decades – comfortable stays, sensible pacing for elders and food you can trust.",
   faqs=[("Does the Maharaj travel with the group?","Yes, the Maharaj travels with the group and cooks fresh Jain food daily."),
         ("Is chauvihar / sunset meal timing followed?","Yes, meal timings are planned to respect chauvihar and other observances."),
         ("Can you arrange Jain food on international trips?","Yes, we arrange Jain food options for many international destinations too.")]),
@@ -408,7 +408,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 </main>
 <footer><div class="wrap">
 <div><a class="brand" href="{root or './'}" ><img src="{root}img/logo.png" alt="" width="52" height="52"><span><b>The Real Tours and Travels</b><small>Crafting Journeys Since 1981</small></span></a>
-<p>Trusted Mumbai travel agency for family holidays, international tours, visas, yatras and Jain tours since 1981.</p>
+<p>Trusted travel agency since 1981 for family holidays, international tours, visas, yatras and Jain tours since 1981.</p>
 <p>{'<br>'.join(ADDR)}<br><span class="gst">GSTIN: {GST}</span></p>
 <p><a href="tel:{PHONE_RAW}">📞 {PHONE}</a><br><a href="mailto:{EMAIL}">✉️ {EMAIL}</a><br>
 <a href="{IG}" target="_blank" rel="noopener">📸 @therealtoursandtravels</a> · <a href="{FB}" target="_blank" rel="noopener">Facebook</a></p></div>
@@ -470,10 +470,10 @@ def build():
     RJ = fx.load_reviews()
     hero_style = f' style="--hero:url(img/{hero})"' if hero else ""
     side = "dubai.jpg" if "dubai.jpg" in imgs else None
-    side_html = f'<div class="photo"><img src="img/{side}" alt="Indian family holiday in Dubai planned by The Real Tours and Travels" loading="lazy" width="800" height="600"></div>' if side else '<div class="emblem"><img src="img/logo.png" alt="The Real Tours and Travels emblem"><b>Crafting Journeys Since 1981</b><p>A Mulund family business trusted by generations of Mumbai travellers.</p></div>'
+    side_html = f'<div class="photo"><img src="img/{side}" alt="Indian family holiday in Dubai planned by The Real Tours and Travels" loading="lazy" width="800" height="600"></div>' if side else '<div class="emblem"><img src="img/logo.png" alt="The Real Tours and Travels emblem"><b>Crafting Journeys Since 1981</b><p>A Mulund family business trusted by generations of travellers in India and abroad.</p></div>'
     home = f"""
 <section class="hero home-hero"{hero_style}><div class="wrap"><div>
-<span class="kicker">Mumbai's family travel experts · Since 1981</span>
+<span class="kicker">Trusted travel experts · Since 1981</span>
 <h1>Travel Agency in Mulund, Mumbai for All Your Travel Needs</h1>
 <p>Domestic and international holiday packages, honeymoons, yatras, Jain tours with Maharaj, group tours, passport &amp; visa services and travel insurance – planned personally by The Real Tours and Travels.</p>
 <div class="btns"><a class="btn gold" href="customize-your-package/">✨ Customized Packages</a><a class="btn ghost" href="{WA}" target="_blank" rel="noopener">💬 WhatsApp 98431 21212</a></div>
@@ -485,7 +485,7 @@ def build():
 <div class="grid">{cards}</div></div></section>
 {fx.gallery("")}
 <section class="alt"><div class="wrap two">
-<div><h2>Why Mumbai families choose The Real Tours and Travels</h2>
+<div><h2>Why travellers choose The Real Tours and Travels</h2>
 <span class="kicker">Our promise</span><p class="lead" style="margin-bottom:20px">We are a family-run travel agency in Mulund West. For over four decades we have planned holidays, yatras and business trips – in India and around the world.</p>
 <ul class="ticks"><li>Personal service – one point of contact, on call during your trip</li><li>Family-friendly hotels and comfortable pacing for kids and seniors</li><li>Visas, travel insurance, flights and hotels handled in one place</li><li>Pure vegetarian and Jain food arrangements, including tours with our own Maharaj</li><li>Transparent planning – no hidden surprises</li></ul></div>
 {side_html}</div></section>
@@ -555,7 +555,7 @@ def build():
     # Blog
     svc = {x["slug"]: x for x in SERVICES}
     cards_b = "".join(f'<a class="card post-card" href="{a["slug"]}/"><img src="../img/{a["img"]}" alt="{a["img_alt"]}" loading="lazy" width="1200" height="744"><div class="in"><h3>{a["h1"]}</h3><p>{a["desc"][:140].rsplit(" ",1)[0]}…</p><span class="more">Read guide →</span></div></a>' for a in ARTICLES)
-    blog = f"""<section class="hero"><div class="wrap"><div><div class="crumbs"><a href="../">Home</a> › Travel Guides</div><span class="kicker">Travel guides &amp; tips</span><h1>Travel Guides from The Real Tours and Travels</h1><p>Practical advice from 45+ years of planning holidays, yatras and visas for Mumbai families.</p></div>{seal("../")}</div></section>
+    blog = f"""<section class="hero"><div class="wrap"><div><div class="crumbs"><a href="../">Home</a> › Travel Guides</div><span class="kicker">Travel guides &amp; tips</span><h1>Travel Guides from The Real Tours and Travels</h1><p>Practical advice from 45+ years of planning holidays, yatras and visas for travellers in India and abroad.</p></div>{seal("../")}</div></section>
 <section><div class="wrap"><div class="grid">{cards_b}</div></div></section>{cta_band()}"""
     write("/blog/", page("/blog/", "Travel Guides & Tips | The Real Tours and Travels, Mumbai", "Travel guides and tips from The Real Tours and Travels, Mulund West, Mumbai – holiday ideas, Jain yatras, passport and visa checklists, travel insurance.", blog))
     for a in ARTICLES:
@@ -592,7 +592,7 @@ def build():
     # About us
     about = f"""<section class="hero"><div class="wrap"><div><div class="crumbs"><a href="../">Home</a> › About Us</div>
 <span class="kicker">Since 1981</span><h1>About The Real Tours and Travels</h1>
-<p>A family-run travel company in Mulund West, Mumbai, planning holidays, pilgrimages, visas and business travel for Mumbai families for over four decades.</p></div>{seal("../")}</div></section>
+<p>A family-run travel company in Mulund West, Mumbai, planning holidays, pilgrimages, visas and business travel for families and companies in India and abroad for over four decades.</p></div>{seal("../")}</div></section>
 <section><div class="wrap two"><div><h2>Our story</h2>
 <p>The Real Tours and Travels began in <b>1981</b> with a simple idea – that every family deserves a holiday planned with the same care we would take for our own. More than four decades later, we are still a family business, and that personal touch is still how we work.</p>
 <p>From Kashmir and Kerala to Dubai, Europe and the Maldives – and from Palitana and Sammed Shikharji yatras with our own Maharaj cooking pure Jain food, to group tours, honeymoons and corporate (FIT &amp; MICE) travel – generations of travellers have trusted us with their journeys.</p>
@@ -614,7 +614,7 @@ def build():
 </div></div></section>
 <section><div class="wrap two"><div><h2>Visit us</h2><p>{'<br>'.join(ADDR)}</p><p>Open every day, 9 am – 10 pm</p><p>📞 <a href="tel:{PHONE_RAW}">{PHONE}</a><br>✉️ <a href="mailto:{EMAIL}">{EMAIL}</a><br>📸 <a href="{IG}" target="_blank" rel="noopener">@therealtoursandtravels</a></p>
 <p><span class="gst">GSTIN: {GST}</span></p><div class="btns"><a class="btn gold" href="{WA}" target="_blank" rel="noopener">💬 WhatsApp us</a><a class="btn outline" href="{MAPS}" target="_blank" rel="noopener">📍 Directions</a></div></div>
-<div class="emblem"><img src="../img/logo.png" alt="The Real Tours and Travels emblem"><b>Crafting Journeys Since 1981</b><p>A Mulund family business trusted by generations of Mumbai travellers.</p></div></div></section>{cta_band()}"""
+<div class="emblem"><img src="../img/logo.png" alt="The Real Tours and Travels emblem"><b>Crafting Journeys Since 1981</b><p>A Mulund family business trusted by generations of travellers in India and abroad.</p></div></div></section>{cta_band()}"""
     about_ld = {"@context":"https://schema.org","@type":"AboutPage","name":"About The Real Tours and Travels","url":SITE+"/about/","about":{"@id":SITE+"/#agency"}}
     write("/about/", page("/about/", "About Us | The Real Tours and Travels – Mulund, Mumbai, Since 1981", "The Real Tours and Travels is a family-run travel company in Mulund West, Mumbai since 1981 – holidays, flights, hotels, cruises, visas, passports, insurance and Jain yatras.", about, [about_ld]))
     write("/insurance/", page("/insurance/", "Travel Insurance Quotation – International & Domestic | The Real Tours and Travels, Mumbai", "Get a travel insurance quotation for international, Schengen visa, USA, domestic, senior citizen, student and annual multi-trip plans from The Real Tours and Travels, Mulund West, Mumbai.", insurance_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band), None, "flight.jpg"))
