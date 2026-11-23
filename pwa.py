@@ -1,7 +1,7 @@
 """Installable app (PWA): manifest, service worker, install button and offline page."""
 import json
 
-VERSION = "rtt-v8"
+VERSION = "rtt-v9"
 
 def manifest(NAME):
     return json.dumps({
@@ -69,6 +69,7 @@ BODY = """<nav class="appbar" aria-label="App">
 <button type="button" class="app-install" id="appInstall" hidden>📲 Install app</button>
 <div class="ios-tip" id="iosTip" hidden role="dialog" aria-label="Install on iPhone"><button type="button" class="ios-x" aria-label="Close">✕</button>
 <b>Install The Real Tours and Travels app</b><ol class="ios-steps" id="iosSteps"><li>Tap <b>•••</b> at the bottom-right of Safari, then tap <span class="ios-share">⬆︎</span> <b>Share</b>. (Older iPhones: tap the <span class="ios-share">⬆︎</span> Share button in the bottom bar.)</li><li>Scroll down and tap <b>Add to Home Screen</b>.</li><li>Keep <b>Open as Web App</b> switched on if you see it, then tap <b>Add</b>.</li></ol><p class="ios-inapp" id="iosInapp" hidden>You are inside the Instagram / Facebook / WhatsApp browser. Tap <b>•••</b> and choose <b>Open in Safari</b> (or Open in browser) first, then follow the steps.</p></div>
+<div class="ios-arrow" id="iosArrow" hidden aria-hidden="true">⬇</div>
 <script>
 (function(){
  if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
@@ -80,14 +81,15 @@ BODY = """<nav class="appbar" aria-label="App">
  let dismissed=false;try{dismissed=localStorage.getItem('rtt_app_x')==='1';}catch(_){}
  let ev=null;
  addEventListener('beforeinstallprompt',e=>{e.preventDefault();ev=e;btn.hidden=false;});
- btn.addEventListener('click',async e=>{e.stopPropagation();if(ev){ev.prompt();await ev.userChoice;ev=null;btn.hidden=true;}else{tip.hidden=!tip.hidden;btn.classList.toggle('open',!tip.hidden);}});
- document.addEventListener('click',e=>{if(!tip.hidden&&!tip.contains(e.target)&&e.target!==btn){tip.hidden=true;btn.classList.remove('open');}});
+ btn.addEventListener('click',async e=>{e.stopPropagation();if(ev){ev.prompt();await ev.userChoice;ev=null;btn.hidden=true;}else{tip.hidden=!tip.hidden;btn.classList.toggle('open',!tip.hidden);const ar=document.getElementById('iosArrow');if(ar&&ios&&!inapp)ar.hidden=tip.hidden;}});
+ document.addEventListener('click',e=>{if(!tip.hidden&&!tip.contains(e.target)&&e.target!==btn){tip.hidden=true;btn.classList.remove('open');const ar=document.getElementById('iosArrow');if(ar)ar.hidden=true;}});
  const ua=navigator.userAgent;
  const ios=/iphone|ipad|ipod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
  const inapp=/FBAN|FBAV|Instagram|Line\\/|WhatsApp|Snapchat/i.test(ua);
+ const iv=+((ua.match(/Version\/(\d+)/)||[])[1]||0);if(ios&&iv&&iv<26)document.getElementById('iosArrow').classList.add('mid');
  if(ios){btn.hidden=false;document.getElementById('iosInapp').hidden=!inapp;
   if(/crios|edgios|fxios/i.test(ua))document.getElementById('iosSteps').firstElementChild.innerHTML='Tap the <span class="ios-share">⬆︎</span> <b>Share</b> button at the top-right, next to the address bar.';}
- tip.querySelector('.ios-x').addEventListener('click',()=>{tip.hidden=true;btn.hidden=true;try{localStorage.setItem('rtt_app_x',String(Date.now()));}catch(_){}});
+ tip.querySelector('.ios-x').addEventListener('click',()=>{tip.hidden=true;document.getElementById('iosArrow').hidden=true;btn.hidden=true;try{localStorage.setItem('rtt_app_x',String(Date.now()));}catch(_){}});
  // a dismissed button comes back after 7 days
  try{const t=+localStorage.getItem('rtt_app_x');dismissed=t>1&&Date.now()-t<7*864e5;}catch(_){}
  if(dismissed&&ios)btn.hidden=true;
@@ -109,6 +111,7 @@ html.is-app body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
 html.is-app .hero .seal{display:none}html.is-app .hero .wrap{padding-top:22px!important;padding-bottom:30px!important}html.is-app .fsec{margin-top:0}
 @media(max-width:700px){.float-wa{bottom:16px;right:12px;width:50px;height:50px;font-size:22px}main .btns{padding-right:0}}
 
+.ios-arrow{position:fixed;right:22px;bottom:6px;z-index:75;font-size:40px;color:var(--red);text-shadow:0 2px 8px rgba(0,0,0,.25);animation:iosb 1s ease-in-out infinite}.ios-arrow.mid{right:auto;left:50%;margin-left:-16px}.ios-arrow[hidden]{display:none!important}@keyframes iosb{0%,100%{transform:translateY(0)}50%{transform:translateY(10px)}}
 /* iPhone fixes */
 @supports(-webkit-touch-callout:none){input,select,textarea{font-size:16px!important}}
 html.is-app header.site{padding-top:env(safe-area-inset-top)}
