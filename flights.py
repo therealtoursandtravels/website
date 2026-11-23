@@ -96,6 +96,7 @@ const forms={{}};box.querySelectorAll('form').forEach(x=>forms[x.dataset.kind]=x
 const NOTE={{flight:'Preferred airline, timings, baggage…',hotel:'e.g. sea view, near beach, Jain food, early check-in',cruise:'e.g. dates flexible, senior citizens, Jain food'}};
 Object.entries(forms).forEach(([k,x])=>x.notes.placeholder=NOTE[k]);
 box.querySelectorAll('.ftab').forEach(t=>t.addEventListener('click',()=>{{box.querySelectorAll('.ftab').forEach(b=>b.classList.toggle('on',b===t));Object.entries(forms).forEach(([k,x])=>x.hidden=k!==t.dataset.k);}}));
+const HK={{flights:'flight',flight:'flight',hotels:'hotel',hotel:'hotel',cruise:'cruise'}};function fromHash(){{const k=HK[location.hash.slice(1)];if(!k)return;const t=box.querySelector('.ftab[data-k='+k+']');if(t){{t.click();box.scrollIntoView({{block:'start'}});window.scrollBy(0,-120);}}}}fromHash();addEventListener('hashchange',fromHash);
 const today=new Date(Date.now()+330*60000).toISOString().slice(0,10);
 const F=forms.flight,H=forms.hotel,C=forms.cruise;
 F.depart.min=F.ret.min=H['in'].min=H.out.min=today;C.month.min=today.slice(0,7);

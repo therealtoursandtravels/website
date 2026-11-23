@@ -14,14 +14,15 @@ h1,h2,h3{font-family:'Playfair Display',Georgia,serif;font-weight:600;line-heigh
 .topbar .wrap{display:flex;gap:18px;justify-content:space-between;flex-wrap:wrap;padding:7px 22px}
 .topbar a{color:#fff;text-decoration:none}
 header.site{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-header.site .wrap{display:flex;align-items:center;justify-content:space-between;padding:10px 22px;max-width:1320px}
+header.site .hrow{display:flex;align-items:center;justify-content:space-between;padding:10px 22px;max-width:1320px}header.site{position:sticky}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--wine)}
 .brand img{width:64px;height:64px}
 .brand b{white-space:nowrap;font-family:'Playfair Display',serif;font-size:22px;letter-spacing:.2px;line-height:1.1;color:var(--crimson)}
 .brand small{display:block;color:var(--muted);font-weight:500;font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-top:3px}
-nav.main a{color:var(--wine);text-decoration:none;font-weight:500;margin-left:16px;font-size:14.5px;white-space:nowrap}
+nav.main{border-top:1px solid var(--line)}.navrow{display:flex;justify-content:center;flex-wrap:wrap;gap:2px 22px;padding-top:9px!important;padding-bottom:9px!important;max-width:1320px}
+nav.main a{color:var(--wine);text-decoration:none;font-weight:500;font-size:15px;white-space:nowrap;padding:2px 0;border-bottom:2px solid transparent}nav.main a:hover{border-bottom-color:var(--red)}
+.hact{display:flex;align-items:center;gap:10px}.hcta{background:linear-gradient(135deg,var(--red),var(--crimson));color:#fff;text-decoration:none;font-weight:600;padding:10px 20px;border-radius:999px;box-shadow:0 6px 16px rgba(142,14,22,.25);white-space:nowrap}
 nav.main a:hover{color:var(--red)}
-nav.main a.cta{background:linear-gradient(135deg,var(--red),var(--crimson));color:#fff;padding:10px 20px;border-radius:999px;box-shadow:0 6px 16px rgba(142,14,22,.25)}
 .menu-btn{display:none;background:none;border:0;font-size:28px;color:var(--crimson);width:44px;height:44px}
 .hero{position:relative;color:var(--ink);overflow:hidden;background:radial-gradient(900px 500px at 85% 30%,rgba(215,25,31,.07),transparent 65%),#fff;border-bottom:1px solid var(--line)}
 .hero:before{content:"";position:absolute;inset:0;background:var(--hero,none) center/cover no-repeat;opacity:.12}
@@ -88,10 +89,9 @@ footer ul{list-style:none;padding:0;margin:0}footer li{margin:7px 0}
 .info p{margin:0 0 14px}
 .map{border:0;width:100%;min-height:380px;height:100%;border-radius:18px;outline:1px solid var(--line)}
 :focus-visible{outline:3px solid var(--red);outline-offset:3px}
-@media(max-width:1340px){nav.main{display:none;position:absolute;top:84px;left:0;right:0;background:#fff;padding:14px 22px;box-shadow:0 10px 24px rgba(0,0,0,.1)}nav.main.open{display:block}nav.main a{display:block;margin:12px 0}.menu-btn{display:block}}
+@media(max-width:600px){.hcta{display:none}}
+@media(max-width:1100px){nav.main{display:none;position:absolute;left:0;right:0;top:100%;background:#fff;box-shadow:0 10px 24px rgba(0,0,0,.1)}nav.main.open{display:block}.navrow{flex-direction:column;align-items:flex-start;padding:10px 22px 16px!important}nav.main a{display:block;padding:10px 0;font-size:16px;border-bottom:1px solid var(--line);width:100%}.menu-btn{display:block}}
 @media(max-width:900px){.hero .wrap{grid-template-columns:1fr;gap:28px;padding:36px 18px 56px;text-align:left}.seal{width:200px;height:200px;order:-1;box-shadow:0 0 0 8px #fdf0f0,0 14px 30px rgba(0,0,0,.10)}
-nav.main{display:none;position:absolute;top:84px;left:0;right:0;background:#fff;padding:14px 22px;box-shadow:0 10px 24px rgba(0,0,0,.1)}
-nav.main.open{display:block}nav.main a{display:block;margin:12px 0}.menu-btn{display:block}
 .two,.contact-grid,footer .wrap{grid-template-columns:1fr}section{padding:52px 0}.brand b{font-size:16px}.brand img{width:48px;height:48px}.brand small{font-size:10px;letter-spacing:1.2px}
 .wrap{padding-left:18px;padding-right:18px}header.site .wrap{padding:8px 18px}.topbar .wrap{justify-content:center;gap:6px 14px;font-size:12.5px}
 .hero h1{font-size:clamp(28px,8vw,38px)}.hero p{font-size:16.5px;margin-bottom:22px}.kicker{font-size:12px;letter-spacing:1.6px}

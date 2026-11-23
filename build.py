@@ -149,14 +149,15 @@ h1,h2,h3{font-family:'Playfair Display',Georgia,serif;font-weight:600;line-heigh
 .topbar .wrap{display:flex;gap:18px;justify-content:space-between;flex-wrap:wrap;padding:7px 22px}
 .topbar a{color:#fff;text-decoration:none}
 header.site{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-header.site .wrap{display:flex;align-items:center;justify-content:space-between;padding:10px 22px;max-width:1320px}
+header.site .hrow{display:flex;align-items:center;justify-content:space-between;padding:10px 22px;max-width:1320px}header.site{position:sticky}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--wine)}
 .brand img{width:64px;height:64px}
 .brand b{white-space:nowrap;font-family:'Playfair Display',serif;font-size:22px;letter-spacing:.2px;line-height:1.1;color:var(--crimson)}
 .brand small{display:block;color:var(--muted);font-weight:500;font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-top:3px}
-nav.main a{color:var(--wine);text-decoration:none;font-weight:500;margin-left:16px;font-size:14.5px;white-space:nowrap}
+nav.main{border-top:1px solid var(--line)}.navrow{display:flex;justify-content:center;flex-wrap:wrap;gap:2px 22px;padding-top:9px!important;padding-bottom:9px!important;max-width:1320px}
+nav.main a{color:var(--wine);text-decoration:none;font-weight:500;font-size:15px;white-space:nowrap;padding:2px 0;border-bottom:2px solid transparent}nav.main a:hover{border-bottom-color:var(--red)}
+.hact{display:flex;align-items:center;gap:10px}.hcta{background:linear-gradient(135deg,var(--red),var(--crimson));color:#fff;text-decoration:none;font-weight:600;padding:10px 20px;border-radius:999px;box-shadow:0 6px 16px rgba(142,14,22,.25);white-space:nowrap}
 nav.main a:hover{color:var(--red)}
-nav.main a.cta{background:linear-gradient(135deg,var(--red),var(--crimson));color:#fff;padding:10px 20px;border-radius:999px;box-shadow:0 6px 16px rgba(142,14,22,.25)}
 .menu-btn{display:none;background:none;border:0;font-size:28px;color:var(--crimson);width:44px;height:44px}
 .hero{position:relative;color:var(--ink);overflow:hidden;background:radial-gradient(900px 500px at 85% 30%,rgba(215,25,31,.07),transparent 65%),#fff;border-bottom:1px solid var(--line)}
 .hero:before{content:"";position:absolute;inset:0;background:var(--hero,none) center/cover no-repeat;opacity:.12}
@@ -223,10 +224,9 @@ footer ul{list-style:none;padding:0;margin:0}footer li{margin:7px 0}
 .info p{margin:0 0 14px}
 .map{border:0;width:100%;min-height:380px;height:100%;border-radius:18px;outline:1px solid var(--line)}
 :focus-visible{outline:3px solid var(--red);outline-offset:3px}
-@media(max-width:1340px){nav.main{display:none;position:absolute;top:84px;left:0;right:0;background:#fff;padding:14px 22px;box-shadow:0 10px 24px rgba(0,0,0,.1)}nav.main.open{display:block}nav.main a{display:block;margin:12px 0}.menu-btn{display:block}}
+@media(max-width:600px){.hcta{display:none}}
+@media(max-width:1100px){nav.main{display:none;position:absolute;left:0;right:0;top:100%;background:#fff;box-shadow:0 10px 24px rgba(0,0,0,.1)}nav.main.open{display:block}.navrow{flex-direction:column;align-items:flex-start;padding:10px 22px 16px!important}nav.main a{display:block;padding:10px 0;font-size:16px;border-bottom:1px solid var(--line);width:100%}.menu-btn{display:block}}
 @media(max-width:900px){.hero .wrap{grid-template-columns:1fr;gap:28px;padding:36px 18px 56px;text-align:left}.seal{width:200px;height:200px;order:-1;box-shadow:0 0 0 8px #fdf0f0,0 14px 30px rgba(0,0,0,.10)}
-nav.main{display:none;position:absolute;top:84px;left:0;right:0;background:#fff;padding:14px 22px;box-shadow:0 10px 24px rgba(0,0,0,.1)}
-nav.main.open{display:block}nav.main a{display:block;margin:12px 0}.menu-btn{display:block}
 .two,.contact-grid,footer .wrap{grid-template-columns:1fr}section{padding:52px 0}.brand b{font-size:16px}.brand img{width:48px;height:48px}.brand small{font-size:10px;letter-spacing:1.2px}
 .wrap{padding-left:18px;padding-right:18px}header.site .wrap{padding:8px 18px}.topbar .wrap{justify-content:center;gap:6px 14px;font-size:12.5px}
 .hero h1{font-size:clamp(28px,8vw,38px)}.hero p{font-size:16.5px;margin-bottom:22px}.kicker{font-size:12px;letter-spacing:1.6px}
@@ -278,11 +278,11 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 {ld}
 </head><body>
 <div class="topbar"><div class="wrap"><span>📍 Mulund West, Mumbai · Open daily 9 am – 10 pm</span><span><a href="tel:{PHONE_RAW}">📞 {PHONE}</a> · <a href="mailto:{EMAIL}">✉️ {EMAIL}</a></span></div></div>
-<header class="site"><div class="wrap">
+<header class="site"><div class="wrap hrow">
 <a class="brand" href="{root or './'}"><img src="{root}img/logo.png" alt="The Real Tours and Travels logo – Estd. 1981" width="64" height="64"><span><b>The Real Tours and Travels</b><small>Crafting Journeys Since 1981</small></span></a>
-<button class="menu-btn" aria-label="Menu" onclick="document.querySelector('nav.main').classList.toggle('open')">☰</button>
-<nav class="main"><a href="{root or './'}#services">Services</a><a href="{root}flights-hotels/">Flights · Hotels · Cruise</a><a href="{root}customize-your-package/">Customize Trip</a><a href="{root}visa/">Visa</a><a href="{root}passport/">Passport</a><a href="{root}insurance/">Insurance</a><a href="{root}jain-yatra-tours-with-maharaj/">Jain Yatra</a><a href="{root}contact/">Contact</a><a class="cta" href="{WA}" target="_blank" rel="noopener">WhatsApp Us</a></nav>
-</div></header>
+<div class="hact"><a class="hcta" href="{WA}" target="_blank" rel="noopener">💬 WhatsApp Us</a><button class="menu-btn" aria-label="Menu" aria-expanded="false" onclick="const n=document.querySelector('nav.main');n.classList.toggle('open');this.setAttribute('aria-expanded',n.classList.contains('open'))">☰</button></div></div>
+<nav class="main" aria-label="Main"><div class="wrap navrow"><a href="{root}flights-hotels/#flights">Flights</a><a href="{root}flights-hotels/#hotels">Hotels</a><a href="{root}flights-hotels/#cruise">Cruise</a><a href="{root}visa/">Visa</a><a href="{root}passport/">Passport</a><a href="{root}insurance/">Travel Insurance</a><a href="{root}customize-your-package/">Customize Packages</a><a href="{root}jain-yatra-tours-with-maharaj/">Jain Yatra</a><a href="{root or './'}#services">Services</a><a href="{root}contact/">Contact Us</a><a href="{root}about/">About Us</a></div></nav>
+</header>
 <main>
 {body}
 </main>
@@ -293,7 +293,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <p><a href="tel:{PHONE_RAW}">📞 {PHONE}</a><br><a href="mailto:{EMAIL}">✉️ {EMAIL}</a><br>
 <a href="{IG}" target="_blank" rel="noopener">📸 @therealtoursandtravels</a> · <a href="{FB}" target="_blank" rel="noopener">Facebook</a></p></div>
 <div><h4>Our Services</h4><ul>{nav}</ul></div>
-<div><h4>Visit Us</h4><ul><li>Open every day, 9 am – 10 pm</li><li><a href="{MAPS}" target="_blank" rel="noopener">Get directions on Google Maps</a></li><li><a href="{REVIEW}" target="_blank" rel="noopener">⭐ Review us on Google</a></li><li><a href="{root}flights-hotels/">✈️ Flights, hotels &amp; cruise</a></li><li><a href="{root}customize-your-package/">✨ Customize your package</a></li><li><a href="{root}visa/">Visa documents &amp; upload</a></li><li><a href="{root}passport/">Passport services</a></li><li><a href="{root}insurance/">Travel insurance quote</a></li><li><a href="{root}blog/">Travel guides &amp; tips</a></li><li><a href="{root}contact/">Contact us</a></li></ul>
+<div><h4>Visit Us</h4><ul><li>Open every day, 9 am – 10 pm</li><li><a href="{MAPS}" target="_blank" rel="noopener">Get directions on Google Maps</a></li><li><a href="{REVIEW}" target="_blank" rel="noopener">⭐ Review us on Google</a></li><li><a href="{root}flights-hotels/">✈️ Flights, hotels &amp; cruise</a></li><li><a href="{root}customize-your-package/">✨ Customize your package</a></li><li><a href="{root}visa/">Visa documents &amp; upload</a></li><li><a href="{root}passport/">Passport services</a></li><li><a href="{root}insurance/">Travel insurance quote</a></li><li><a href="{root}blog/">Travel guides &amp; tips</a></li><li><a href="{root}about/">About us</a></li><li><a href="{root}contact/">Contact us</a></li></ul>
 <p style="margin-top:14px">Serving Mulund, Thane, Bhandup, Nahur, Powai, Ghatkopar and all of Mumbai.</p></div>
 </div><div class="copy">© {datetime.date.today().year} The Real Tours and Travels, Mulund West, Mumbai · GSTIN {GST} · All rights reserved.<br><a href="{root}terms/">Terms &amp; Conditions</a> · <a href="{root}privacy-policy/">Privacy Policy</a> · <a href="{root}cancellation-refund-policy/">Cancellation &amp; Refund Policy</a></div></footer>
 <a class="float-wa" href="{WA}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">💬</a>
@@ -436,6 +436,34 @@ def build():
     write("/customize-your-package/", page("/customize-your-package/", "Customize Your Holiday Package – Instant Itinerary | The Real Tours and Travels", "Customize your holiday package from Mumbai – choose destination, days, travellers, hotel category, car (SUV, Sedan, Hatchback) and flight or train, and get an instant day-by-day itinerary.", planner_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band, ADDR, GST), None, "gulmarg.jpg"))
     # Visa section
     write("/visa/", page("/visa/", "Visa Services in Mulund, Mumbai – Documents Required & Upload | The Real Tours and Travels", "Visa services in Mulund West, Mumbai for Dubai, Thailand, Singapore, Europe (Schengen), UK, USA, Canada, Australia, Japan and more. See documents required, request the price and upload documents securely.", visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band), None, "passport.jpg"))
+    # About us
+    about = f"""<section class="hero"><div class="wrap"><div><div class="crumbs"><a href="../">Home</a> › About Us</div>
+<span class="kicker">Since 1981</span><h1>About The Real Tours and Travels</h1>
+<p>A family-run travel company in Mulund West, Mumbai, planning holidays, pilgrimages, visas and business travel for Mumbai families for over four decades.</p></div>{seal("../")}</div></section>
+<section><div class="wrap two"><div><h2>Our story</h2>
+<p>The Real Tours and Travels began in <b>1981</b> with a simple idea – that every family deserves a holiday planned with the same care we would take for our own. More than four decades later, we are still a family business, and that personal touch is still how we work.</p>
+<p>From Kashmir and Kerala to Dubai, Europe and the Maldives – and from Palitana and Sammed Shikharji yatras with our own Maharaj cooking pure Jain food, to group tours, honeymoons and corporate (FIT &amp; MICE) travel – generations of travellers from Mulund, Thane, Bhandup, Powai, Ghatkopar and across Mumbai have trusted us with their journeys.</p>
+<p>Today we handle everything in one place: <b>flights, hotels and cruises, visas and passports, travel insurance and fully customised tour packages</b>, with one point of contact who stays on call throughout your trip.</p></div>
+<div><h2>Why families choose us</h2><ul class="ticks">
+<li>45+ years of experience – established 1981</li><li>Rated 4.8 ★ on Google by our travellers</li><li>Personal service – one dedicated contact, available during your trip</li>
+<li>Pure vegetarian and Jain food arrangements, including yatras with our own Maharaj</li><li>Visas, passports, insurance, flights and hotels handled under one roof</li>
+<li>Transparent, GST-compliant billing – GSTIN {GST}</li><li>Secure online payments and document uploads</li></ul></div></div></section>
+<section class="alt"><div class="wrap"><div class="head"><span class="kicker">What we do</span><h2>Our services</h2></div>
+<div class="grid">
+<a class="card" href="../flights-hotels/#flights"><div class="ic">✈️</div><h3>Flights</h3><p>Domestic and international air tickets at the best available fares.</p></a>
+<a class="card" href="../flights-hotels/#hotels"><div class="ic">🏨</div><h3>Hotels</h3><p>Handpicked family-friendly hotels, resorts and villas in India and abroad.</p></a>
+<a class="card" href="../flights-hotels/#cruise"><div class="ic">🛳️</div><h3>Cruises</h3><p>Cordelia, Royal Caribbean, Costa, MSC and more – from Mumbai and abroad.</p></a>
+<a class="card" href="../visa/"><div class="ic">🛂</div><h3>Visa</h3><p>Documents, forms and appointments for tourist and business visas.</p></a>
+<a class="card" href="../passport/"><div class="ic">📘</div><h3>Passport</h3><p>New passport, renewal, minor, Tatkaal and lost passport assistance.</p></a>
+<a class="card" href="../insurance/"><div class="ic">🛡️</div><h3>Travel insurance</h3><p>Plans for families, seniors, students and Schengen visas.</p></a>
+<a class="card" href="../customize-your-package/"><div class="ic">✨</div><h3>Customized packages</h3><p>Your dates, your pace, your budget – an itinerary made for you.</p></a>
+<a class="card" href="../jain-yatra-tours-with-maharaj/"><div class="ic">🙏</div><h3>Jain yatra</h3><p>Tirth yatras with our own Maharaj and pure Jain food.</p></a>
+</div></div></section>
+<section><div class="wrap two"><div><h2>Visit us</h2><p>{'<br>'.join(ADDR)}</p><p>Open every day, 9 am – 10 pm</p><p>📞 <a href="tel:{PHONE_RAW}">{PHONE}</a><br>✉️ <a href="mailto:{EMAIL}">{EMAIL}</a><br>📸 <a href="{IG}" target="_blank" rel="noopener">@therealtoursandtravels</a></p>
+<p><span class="gst">GSTIN: {GST}</span></p><div class="btns"><a class="btn gold" href="{WA}" target="_blank" rel="noopener">💬 WhatsApp us</a><a class="btn outline" href="{MAPS}" target="_blank" rel="noopener">📍 Directions</a></div></div>
+<div class="emblem"><img src="../img/logo.png" alt="The Real Tours and Travels emblem"><b>Crafting Journeys Since 1981</b><p>A Mulund family business trusted by generations of Mumbai travellers.</p></div></div></section>{cta_band()}"""
+    about_ld = {"@context":"https://schema.org","@type":"AboutPage","name":"About The Real Tours and Travels","url":SITE+"/about/","about":{"@id":SITE+"/#agency"}}
+    write("/about/", page("/about/", "About Us | The Real Tours and Travels – Mulund, Mumbai, Since 1981", "The Real Tours and Travels is a family-run travel company in Mulund West, Mumbai since 1981 – holidays, flights, hotels, cruises, visas, passports, insurance and Jain yatras.", about, [about_ld]))
     write("/insurance/", page("/insurance/", "Travel Insurance Quotation – International & Domestic | The Real Tours and Travels, Mumbai", "Get a travel insurance quotation for international, Schengen visa, USA, domestic, senior citizen, student and annual multi-trip plans from The Real Tours and Travels, Mulund West, Mumbai.", insurance_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band), None, "flight.jpg"))
     write("/passport/", page("/passport/", "Passport Services in Mulund, Mumbai – New, Renewal, Tatkaal | The Real Tours and Travels", "Passport services in Mulund West, Mumbai – fresh passport, renewal, minor, Tatkaal and lost passport. See documents required, request the price and upload documents securely.", passport_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band), None, "passport.jpg"))
     def legal(slug, title, html):
@@ -465,7 +493,7 @@ def build():
     # Private GST quote tool (noindex, not in sitemap)
     write("/tools/gst-quote/", page("/tools/gst-quote/", "GST Quote & Invoice Maker | The Real Tours and Travels", "Internal tool.", gst_tool_page(NAME, ADDR, GST, PHONE, EMAIL)).replace('<meta name="robots" content="index,follow,max-image-preview:large">','<meta name="robots" content="noindex,nofollow">'))
     # sitemap / robots / CNAME
-    urls = ["/"] + [f"/{s['slug']}/" for s in SERVICES] + ["/blog/", "/visa/", "/passport/", "/insurance/", "/flights-hotels/", "/customize-your-package/"] + [f"/blog/{a['slug']}/" for a in ARTICLES] + ["/contact/", "/terms/", "/privacy-policy/", "/cancellation-refund-policy/"]
+    urls = ["/"] + [f"/{s['slug']}/" for s in SERVICES] + ["/blog/", "/visa/", "/passport/", "/insurance/", "/about/", "/flights-hotels/", "/customize-your-package/"] + [f"/blog/{a['slug']}/" for a in ARTICLES] + ["/contact/", "/terms/", "/privacy-policy/", "/cancellation-refund-policy/"]
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{SITE}{u}</loc><lastmod>{TODAY}</lastmod><priority>{'1.0' if u=='/' else '0.8'}</priority></url>\n" for u in urls) + "</urlset>\n"
     open(os.path.join(root, "sitemap.xml"), "w").write(sm)
     # Installable app (PWA)
