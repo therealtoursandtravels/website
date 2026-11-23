@@ -87,7 +87,7 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
         tabs = "".join(f'<button type="button" class="vtab{" on" if i==0 else ""}" data-c="{c}">{f} {n}</button>' for i,(c,f,n,_,_) in enumerate(ITEMS))
     else:
         # group the destinations by what Indian travellers need: nothing in advance / online / a visa
-        ITEMS = [it for g, _ in GROUPS for it in ITEMS if ENTRY.get(it[0], ("visa",))[0] == g]
+        ITEMS = [it for g, _ in GROUPS for it in ITEMS if it[0] != "nepal" and ENTRY.get(it[0], ("visa",))[0] == g]
         tabs = ""
         for g, gl in GROUPS:
             row = "".join(f'<button type="button" class="vtab" data-c="{c}">{f} {n}</button>' for (c, f, n, _, _) in ITEMS if ENTRY.get(c, ("visa",))[0] == g)
@@ -97,20 +97,20 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
     for i,(c,f,n,how,docs) in enumerate(ITEMS):
         lis = "".join(f"<li>{d}</li>" for d in docs)
         g, badge, card = ENTRY.get(c, ("visa", "Visa required", None)) if not P else ("visa", "", None)
-        badges = "" if P else f'<div class="vbadges"><span class="vb vb-{g}">{badge}</span>' + (f'<span class="vb vb-card">📲 {card} needed</span>' if card else "") + '</div>'
-        free = (not P) and g == "free"
+        badges = ""
+        free = (not P) and g == "card"
         wa = "https://wa.me/919843121212?text=" + ("Hi%20The%20Real%20Tours%20and%20Travels%2C%20please%20share%20the%20price%20for%20" + n.replace(" ","%20").replace("/","%2F").replace("(","").replace(")","") + ("." if P else "%20visa.%20Travellers%3A%20%20Travel%20date%3A%20"))
         panels += f"""<div class="vpanel" data-c="{c}"{'' if i==0 else ' hidden'}>
 <div class="vhead"><div><h3>{f} {n}</h3>{badges}<p class="meta">{how}</p></div>
-<div class="vprice"><span>{"Need help?" if free else "Price"}</span><a class="btn gold" href="{wa_free(n, card) if free else wa}" target="_blank" rel="noopener">{"Ask us on WhatsApp" if free else "Request Price"}</a></div></div>
-{"" if free else '<p class="meta" style="margin:8px 0 0">Price = government / embassy fee (no GST) + our service fee + 18% GST on the service fee.</p>'}<h4>{"What to carry" if free else "Documents required"}</h4><ul class="ticks">{lis}</ul>
-<p class="meta">{"Requirements are set by Passport Seva (Ministry of External Affairs) and can change. We confirm the final checklist for your case before you apply." if P else "Rules for Indian passport holders – last checked November 2026 and reviewed every week. Requirements can change and may differ for business, student or family visits; we confirm the final checklist for your case before you travel."}</p>
+<div class="vprice"><span>Price</span><a class="btn gold" href="{wa_free(n, card) if free else wa}" target="_blank" rel="noopener">Request Price</a></div></div>
+<p class="meta" style="margin:8px 0 0">{"Price = our service fee + 18% GST." if free else "Price = government / embassy fee (no GST) + our service fee + 18% GST on the service fee."}</p><h4>{"What we need from you" if free else "Documents required"}</h4><ul class="ticks">{lis}</ul>
+{"" if P or free or not card else f'<p class="meta">📲 The {card} is also required before you land – we fill it for you.</p>'}<p class="meta">{"Requirements are set by Passport Seva (Ministry of External Affairs) and can change. We confirm the final checklist for your case before you apply." if P else "Rules for Indian passport holders – last checked November 2026 and reviewed every week. Requirements can change and may differ for business, student or family visits; we confirm the final checklist for your case before you travel."}</p>
 {"" if free else f'<p><a class="btn outline" href="#upload" data-pick="{c}">Upload documents for {n}</a></p>'}</div>"""
     opts = "".join(f'<option value="{n}">{n}</option>' for (_,_,n,_,_) in ITEMS) + ('' if P else '<option value="Other">Other country – type below</option>')
     other_list = ""
     if not P:
         # Any destination not listed: customer types it, then requests the checklist/price or uploads documents.
-        tabs += '<button type="button" class="vtab" data-c="other">🌐 Other country</button>'
+        tabs = tabs.replace('</div></div>', '<button type="button" class="vtab" data-c="other">🌐 Other country</button></div></div>', 1)
         panels += f"""<div class="vpanel" data-c="other" hidden>
 <div class="vhead"><div><h3>🌐 Other country</h3><p class="meta">Travelling somewhere not listed above? Type the country – our visa team will send you the exact documents, fee and processing time for it.</p></div></div>
 <div class="vother"><label>Which country are you visiting?<input id="vo_country" maxlength="60" autocomplete="off" placeholder="e.g. Kenya, Bhutan, Brazil, South Korea"></label>
@@ -124,10 +124,10 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
       h1="Passport Services in Mulund, Mumbai" if P else "Visa Services in Mulund, Mumbai",
       intro=("New passport, renewal, minor, Tatkaal or lost passport – check the documents required, request the price, and upload your documents securely. We fill the forms and book your Passport Seva Kendra appointment." if P else
              "Check the documents required for your visa, request the price, and upload your documents securely – our visa team will review them and call you back."),
-      k2="Choose your service" if P else "Visa & entry requirements",
-      h2="Documents required by service" if P else "Visa & Entry Requirements for Indian Travellers",
+      k2="Choose your service" if P else "Visas & arrival cards",
+      h2="Documents required by service" if P else "Visas & Digital Arrival Cards",
       lead2=("Select a service to see the checklist. Tap <b>Request Price</b> to get the government fee and our service charge on WhatsApp." if P else
-             "Many countries no longer need a visa – but most now ask for an online authorisation or a digital arrival card before you land. Pick a country to see exactly what Indian passport holders need and what to carry. We handle visas, e-visas and arrival cards for you."),
+             "Pick a country to see the documents required, then tap <b>Request Price</b>. Some countries ask for a digital arrival card before you land – we fill and submit it for you."),
       h3="Upload your passport documents" if P else "Upload your visa documents",
       team="passport team" if P else "visa team",
       sel_label="Service*" if P else "Country*",
