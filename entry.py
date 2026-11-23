@@ -104,3 +104,26 @@ ENTRY = {
  "australia": ("visa", "Visa required", None),
 }
 GROUPS = [("visa", "🛂 Visas"), ("card", "📲 Digital Arrival Cards / Travel Permits")]
+
+# Suggested lead time (our recommendation, not a rule) – shown on each visa panel.
+WHEN = {
+ "uae": "at least 1–2 weeks before travel",
+ "singapore": "at least 2–3 weeks before travel",
+ "vietnam": "at least 2 weeks before travel",
+ "schengen": "4–8 weeks before travel (applications open up to 6 months ahead)",
+ "uk": "6–8 weeks before travel (you can apply up to 3 months ahead)",
+ "usa": "as early as possible – interview waiting times can run into months",
+ "canada": "at least 2–3 months before travel",
+ "australia": "at least 6–8 weeks before travel",
+ "japan": "3–4 weeks before travel (applications are accepted up to 3 months ahead)",
+ "southkorea": "3–4 weeks before travel",
+ "srilanka": "at least 1 week before travel",
+ "bhutan": "at least 2–3 weeks before travel",
+ "seychelles": "at least 1–2 weeks before travel",
+ "indonesia": "at least 1 week before travel",
+ "turkey": "3–4 weeks before travel",
+ "georgia": "at least 2–3 weeks before travel",
+ "azerbaijan": "at least 1–2 weeks before travel",
+ "kenya": "at least 2 weeks before travel",
+ "oman": "at least 1–2 weeks before travel",
+}

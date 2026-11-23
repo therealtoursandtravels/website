@@ -53,7 +53,7 @@ def insurance_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band):
 <script>
 (function(){{
 const SB="{SB_URL}",KEY="{SB_KEY}";
-const notify=(s,t,r)=>{{try{{fetch('https://formsubmit.co/ajax/enquiry@therealtoursandtravels.com',{{method:'POST',headers:{{'Content-Type':'application/json',Accept:'application/json'}},body:JSON.stringify({{_subject:s,message:t,_replyto:r||'',_template:'table',_captcha:'false',source:location.href}})}}).catch(()=>{{}});}}catch(_){{}}}};
+const notify=(s,t,r)=>{{try{{fetch('https://formsubmit.co/ajax/enquiry@therealtoursandtravels.com',{{method:'POST',headers:{{'Content-Type':'application/json',Accept:'application/json'}},body:JSON.stringify((()=>{{const o={{_subject:s,message:t,_replyto:r||'',_template:'table',_captcha:'false',source:location.href}};const m=(s.match(/(\\S+) – /)||[])[1]||'';const ref=/^[A-Z0-9-]{{6,}}$/.test(m)?m:'';if(r&&/@/.test(r)&&ref){{o.email=r;o._autoresponse='Thank you for contacting The Real Tours and Travels. We have received your request (reference '+ref+') and our team will get back to you shortly. Please quote this reference in any message to us. For anything urgent, call or WhatsApp +91 98431 21212. – The Real Tours and Travels, Mulund West, Mumbai · www.therealtoursandtravels.com';}}return o;}})())}}).catch(()=>{{}});}}catch(_){{}}}};
 const f=document.getElementById('iform'),msg=document.getElementById('imsg'),btn=document.getElementById('isubmit'),endw=document.getElementById('endwrap');
 const today=new Date(Date.now()+330*6e4).toISOString().slice(0,10);f.start.min=f.end.min=today;
 const tt=()=>f.querySelector('input[name=trip_type]:checked').value;

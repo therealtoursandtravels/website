@@ -68,7 +68,7 @@ PASSPORT = [
 ]
 
 # ---- Visa & entry requirements for Indian passport holders (researched Nov 2026; reviewed weekly) ----
-from entry import UPDATES, NEW_COUNTRIES, ENTRY, GROUPS, SCHENGEN_EXTRA
+from entry import UPDATES, NEW_COUNTRIES, ENTRY, GROUPS, SCHENGEN_EXTRA, WHEN
 COUNTRIES = [(c, f, n, UPDATES[c][0] if c in UPDATES else how,
               (UPDATES[c][1] if c in UPDATES and UPDATES[c][1] is not None else docs) + ([SCHENGEN_EXTRA] if c == "schengen" else []))
              for (c, f, n, how, docs) in COUNTRIES] + NEW_COUNTRIES
@@ -101,11 +101,11 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
         free = (not P) and g == "card"
         wa = "https://wa.me/919843121212?text=" + ("Hi%20The%20Real%20Tours%20and%20Travels%2C%20please%20share%20the%20price%20for%20" + n.replace(" ","%20").replace("/","%2F").replace("(","").replace(")","") + ("." if P else "%20visa.%20Travellers%3A%20%20Travel%20date%3A%20"))
         panels += f"""<div class="vpanel" data-c="{c}"{'' if i==0 else ' hidden'}>
-<div class="vhead"><div><h3>{f} {n}</h3>{badges}<p class="meta">{how}</p></div>
+<div class="vhead"><div><h3>{f} {n}</h3>{badges}<p class="meta">{how}</p>{f'<p class="vwhen">⏱️ <b>When to apply:</b> we suggest {WHEN[c]}.</p>' if (not P and c in WHEN) else ''}</div>
 <div class="vprice"><span>Price</span><a class="btn gold" href="{wa_free(n, card) if free else wa}" target="_blank" rel="noopener">Request Price</a></div></div>
 <p class="meta" style="margin:8px 0 0">{"Price = our service fee + 18% GST." if free else "Price = government / embassy fee (no GST) + our service fee + 18% GST on the service fee."}</p><h4>{"What we need from you" if free else "Documents required"}</h4><ul class="ticks">{lis}</ul>
 {"" if P or free or not card else f'<p class="meta">📲 The {card} is also required before you land – we fill it for you.</p>'}<p class="meta">{"Requirements are set by Passport Seva (Ministry of External Affairs) and can change. We confirm the final checklist for your case before you apply." if P else "Rules for Indian passport holders – last checked November 2026 and reviewed every week. Requirements can change and may differ for business, student or family visits; we confirm the final checklist for your case before you travel."}</p>
-{"" if free else f'<p><a class="btn outline" href="#upload" data-pick="{c}">Upload documents for {n}</a></p>'}</div>"""
+{'<p class="meta">🛡️ Schengen visas need travel insurance with at least €30,000 medical cover. <a href="../insurance/?cover=schengen#ins-form">Get a Schengen insurance quote →</a></p>' if c=="schengen" and not P else ""}{"" if free else f'<p><a class="btn outline" href="#upload" data-pick="{c}">Upload documents for {n}</a></p>'}</div>"""
     opts = "".join(f'<option value="{n}">{n}</option>' for (_,_,n,_,_) in ITEMS) + ('' if P else '<option value="Other">Other country – type below</option>')
     other_list = ""
     if not P:
@@ -157,17 +157,27 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
 {other_list}
 <div class="row">{T["type_row"]}
 <label>{T["date_label"]}<input name="travel_date" type="date"></label></div>
-<div class="row"><label>{T["trav_label"]}<input name="travellers" type="number" min="1" max="50" value="1"></label><span></span></div>
-<label>Documents* <small>{T["files_hint"]}</small>
+<div class="row"><label>{T["trav_label"]}<input name="travellers" type="number" min="1" max="50" value="1"></label><label>Preferred Passport Seva Kendra<input name="psk" maxlength="60" list="psklist" placeholder="e.g. PSK Thane – or leave blank" autocomplete="off"></label></div>
+<datalist id="psklist"><option value="PSK Thane"><option value="PSK Lower Parel (Mumbai)"><option value="PSK Andheri (Mumbai)"><option value="PSK Malad (Mumbai)"><option value="Nearest Post Office PSK (POPSK)"><option value="Not sure – please suggest the nearest"></datalist>
+<div class="row"><label class="pexp" hidden>Current passport expiry date<input name="old_expiry" type="date"></label><label>Has your address changed since your last passport?<select name="addr_change"><option value="">Not applicable / first passport</option><option>No</option><option>Yes</option><option>Not sure</option></select></label></div>
+<div id="pchk" class="pchk" hidden></div>
+<label class="chk"><input type="checkbox" name="later"><span>I don't have my documents ready – <b>I'll send them later</b> (we'll call you with the checklist).</span></label>
+<label class="pfiles">Documents* <small>{T["files_hint"]}</small>
 <input name="files" type="file" multiple required accept=".pdf,.jpg,.jpeg,.png,.heic,.heif,.webp,application/pdf,image/*"></label>
 <div id="flist" class="flist"></div>
-<label>Notes for our team<textarea name="notes" maxlength="2000" rows="3" placeholder="{T["notes_ph"]}"></textarea></label>
+<label>Notes for our team<textarea name="notes" maxlength="1500" rows="3" placeholder="{T["notes_ph"]}"></textarea></label>
 <label class="chk"><input type="checkbox" name="consent" required><span>I agree that The Real Tours and Travels may use these documents only {T["consent"]}, as per the <a href="../privacy-policy/">Privacy Policy</a>.</span></label>
 <div class="hp" aria-hidden="true"><label>Leave this empty<input name="company_website" tabindex="-1" autocomplete="off"></label></div>
 <button class="btn gold" type="submit" id="vsubmit">Upload documents securely</button>
 <p id="vmsg" class="vmsg" role="status" aria-live="polite"></p>
 </form>"""
+        pdocs = json.dumps({n: docs for (_, _, n, _, docs) in ITEMS}, ensure_ascii=False)
         form_js = f"""const f=document.getElementById('vform'),msg=document.getElementById('vmsg'),btn=document.getElementById('vsubmit'),fl=document.getElementById('flist');
+const PDOCS={pdocs};const pchk=document.getElementById('pchk'),pexp=f.querySelector('.pexp'),pfiles=f.querySelector('.pfiles');
+function syncP(){{const sv=f.country.value,L=PDOCS[sv]||[];pchk.innerHTML=L.length?'<b>Documents needed for '+sv+':</b><ul class="ticks">'+L.map(x=>'<li>'+x+'</li>').join('')+'</ul>':'';pchk.hidden=!L.length;pexp.hidden=/^Fresh/i.test(sv)||/minor/i.test(sv);
+document.querySelectorAll('.vtab').forEach(b=>{{if(b.textContent.trim().endsWith(sv))b.click();}});}}
+f.country.addEventListener('change',syncP);syncP();
+f.later.addEventListener('change',()=>{{pfiles.hidden=f.later.checked;f.files.required=!f.later.checked;}});
 f.files.addEventListener('change',()=>{{fl.innerHTML=[...f.files.files].map(x=>'<span>📄 '+x.name.replace(/[<>&]/g,'')+' · '+(x.size/1048576).toFixed(1)+' MB</span>').join('');}});
 function uuid(){{return (crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{{const r=Math.random()*16|0;return (c=='x'?r:(r&3|8)).toString(16);}}));}}
 function safe(n){{return n.normalize('NFKD').replace(/[^A-Za-z0-9._-]+/g,'_').slice(-80)||'file';}}
@@ -177,7 +187,8 @@ f.addEventListener('submit',async e=>{{
  const d=new FormData(f),files=[...f.files.files];
  const phone=(d.get('phone')||'').replace(/[^0-9+]/g,'');
  if(!d.get('full_name').trim()||phone.length<10){{msg.textContent='Please enter your name and a valid mobile number.';msg.classList.add('err');return;}}
- if(!files.length){{msg.textContent='Please choose at least one document to upload.';msg.classList.add('err');return;}}
+ const later=f.later.checked;
+ if(!later&&!files.length){{msg.textContent='Please choose at least one document to upload – or tick "I\\'ll send them later".';msg.classList.add('err');return;}}
  if(files.length>25){{msg.textContent='Please upload up to 25 files at a time.';msg.classList.add('err');return;}}
  const big=files.find(x=>x.size>10485760);if(big){{msg.textContent=big.name+' is larger than 10 MB. Please upload a smaller scan.';msg.classList.add('err');return;}}
  let country=d.get('country');
@@ -192,12 +203,13 @@ f.addEventListener('submit',async e=>{{
    if(!r.ok)throw new Error('upload '+r.status);
    paths.push(p);
   }}
-  const row={{id,full_name:d.get('full_name').trim(),phone,email:(d.get('email')||'').trim()||null,country:country.slice(0,80),visa_type:d.get('visa_type'),travel_date:d.get('travel_date')||null,travellers:parseInt(d.get('travellers'))||null,notes:(d.get('notes')||'').trim()||null,files:paths}};
+  const px=[(d.get('psk')||'').trim()?'Preferred PSK: '+d.get('psk').trim():'',d.get('old_expiry')?'Current passport expires: '+d.get('old_expiry'):'',d.get('addr_change')?'Address changed since last passport: '+d.get('addr_change'):'',later?'Documents: will send later':''].filter(Boolean);
+  const row={{id,full_name:d.get('full_name').trim(),phone,email:(d.get('email')||'').trim()||null,country:country.slice(0,60),visa_type:d.get('visa_type'),travel_date:d.get('travel_date')||null,travellers:parseInt(d.get('travellers'))||null,notes:[...px,(d.get('notes')||'').trim()].filter(Boolean).join(' | ').slice(0,2000)||null,files:paths}};
   const r2=await fetch(SB+'/rest/v1/visa_applications',{{method:'POST',headers:{{apikey:KEY,Authorization:'Bearer '+(window.RTT_TOKEN||KEY),'Content-Type':'application/json',Prefer:'return=minimal'}},body:JSON.stringify(row)}});
   if(!r2.ok)throw new Error('save '+r2.status);
   notify('New {"passport" if P else "visa"} documents '+id.slice(0,8).toUpperCase()+' – '+row.full_name,'Name: '+row.full_name+'\\nPhone: '+row.phone+(row.email?'\\nEmail: '+row.email:'')+'\\n{"Service" if P else "Country"}: '+row.country+'\\nType: '+row.visa_type+(row.travel_date?'\\nTravel date: '+row.travel_date:'')+'\\nApplicants: '+(row.travellers||1)+'\\nFiles uploaded: '+paths.length+' (see Supabase → Storage → visa-documents → applications/'+id+')'+(row.notes?'\\nNotes: '+row.notes:''),row.email||'');
-  f.reset();fl.innerHTML='';syncOther();
-  msg.innerHTML='✅ Thank you! Your documents were uploaded securely (reference: <b>'+id.slice(0,8).toUpperCase()+'</b>). Our team will call you shortly. For faster service, <a href="https://wa.me/919843121212?text='+encodeURIComponent('Hi, I uploaded my documents on your website. Reference: '+id.slice(0,8).toUpperCase())+'" target="_blank" rel="noopener">WhatsApp us your reference</a>.';
+  f.reset();fl.innerHTML='';syncOther();if(typeof syncP==='function'){{syncP();pfiles.hidden=false;f.files.required=true;}}
+  msg.innerHTML='✅ Thank you! '+(paths.length?'Your documents were uploaded securely':'Your request is saved')+' (reference: <b>'+id.slice(0,8).toUpperCase()+'</b>). Our team will call you shortly. For faster service, <a href="https://wa.me/919843121212?text='+encodeURIComponent('Hi, I uploaded my documents on your website. Reference: '+id.slice(0,8).toUpperCase())+'" target="_blank" rel="noopener">WhatsApp us your reference</a>.';
   msg.classList.add('ok');
  }}catch(err){{msg.textContent='Sorry, the upload did not complete. Please try again, or WhatsApp your documents to 98431 21212.';msg.classList.add('err');}}
  btn.disabled=false;
@@ -218,6 +230,10 @@ f.addEventListener('submit',async e=>{{
 <div class="head"><span class="kicker">{T["k2"]}</span><h2>{T["h2"]}</h2><p class="lead">{T["lead2"]}</p></div>
 <div class="vtabs" role="tablist">{tabs}</div>
 <div class="vbox">{panels}</div>
+<div class="vtrack" id="track"><div><b>🔎 Already applied with us? Track your application</b><p>Enter the reference number from your confirmation – we reply on WhatsApp with the latest status.</p></div>
+<div class="vtrk"><input id="trk_ref" maxlength="20" placeholder="Reference, e.g. 3F9A1C2B" autocomplete="off" aria-label="Your reference number"><a class="btn gold" id="trk_go" href="https://wa.me/919843121212" target="_blank" rel="noopener">Track on WhatsApp</a></div>
+<p class="vmsg" id="trk_msg" role="status" aria-live="polite"></p></div>
+{PREMIND if P else ""}
 </div></section>
 
 <section class="alt" id="upload"><div class="wrap" style="max-width:820px">
@@ -246,7 +262,7 @@ f.addEventListener('submit',async e=>{{
 <script>
 (function(){{
 const SB="{SB_URL}",KEY="{SB_KEY}";
-const notify=(s,t,r)=>{{try{{fetch('https://formsubmit.co/ajax/enquiry@therealtoursandtravels.com',{{method:'POST',headers:{{'Content-Type':'application/json',Accept:'application/json'}},body:JSON.stringify({{_subject:s,message:t,_replyto:r||'',_template:'table',_captcha:'false',source:location.href}})}}).catch(()=>{{}});}}catch(_){{}}}};
+const notify=(s,t,r)=>{{try{{fetch('https://formsubmit.co/ajax/enquiry@therealtoursandtravels.com',{{method:'POST',headers:{{'Content-Type':'application/json',Accept:'application/json'}},body:JSON.stringify((()=>{{const o={{_subject:s,message:t,_replyto:r||'',_template:'table',_captcha:'false',source:location.href}};const m=(s.match(/(\\S+) – /)||[])[1]||'';const ref=/^[A-Z0-9-]{{6,}}$/.test(m)?m:'';if(r&&/@/.test(r)&&ref){{o.email=r;o._autoresponse='Thank you for contacting The Real Tours and Travels. We have received your request (reference '+ref+') and our team will get back to you shortly. Please quote this reference in any message to us. For anything urgent, call or WhatsApp +91 98431 21212. – The Real Tours and Travels, Mulund West, Mumbai · www.therealtoursandtravels.com';}}return o;}})())}}).catch(()=>{{}});}}catch(_){{}}}};
 (function(){{const $=i=>document.getElementById(i),inr=n=>'₹'+n.toLocaleString('en-IN',{{minimumFractionDigits:2,maximumFractionDigits:2}}),r2=n=>Math.round(n*100)/100;
 function calc(){{const g=Math.max(0,+$('g_gov').value||0),f=Math.max(0,+$('g_fee').value||0),inS=$('g_state').value==='27';$('g_out').hidden=$('g_state').value!=='OUT';const c=r2(f*.09),i=r2(f*.18);
 $('o_gov').textContent=inr(g);$('o_fee').textContent=inr(f);$('o_c').textContent=$('o_s').textContent=inr(c);$('o_i').textContent=inr(i);
@@ -273,6 +289,23 @@ if(vo){{
   e.currentTarget.href='https://wa.me/919843121212?text='+encodeURIComponent('Hi The Real Tours and Travels, please share the documents required and the price for a '+c+' visa. Travellers:  Travel date: ');}});
  document.getElementById('vo_up').addEventListener('click',()=>{{csel.value='Other';const c=vo.value.trim();if(c)f.other_country.value=c;csel.dispatchEvent(new Event('change'));}});
 }}
+const trk=document.getElementById('trk_ref');
+if(trk){{const tm=document.getElementById('trk_msg');document.getElementById('trk_go').addEventListener('click',e=>{{const r=trk.value.trim().toUpperCase();tm.className='vmsg';tm.textContent='';
+ if(!/^[A-Z0-9-]{{6,20}}$/.test(r)){{e.preventDefault();tm.textContent='Please enter the reference number from your confirmation (letters and numbers).';tm.classList.add('err');trk.focus();return;}}
+ e.currentTarget.href='https://wa.me/919843121212?text='+encodeURIComponent('Hi The Real Tours and Travels, please update me on the status of my {"passport" if P else "visa"} application. Reference: '+r);}});}}
+const prm=document.getElementById('premind');
+if(prm){{const pm=prm.querySelector('.vmsg');prm.addEventListener('submit',async e=>{{e.preventDefault();pm.className='vmsg';
+ if(prm.company_website.value){{pm.textContent='✅ Done.';pm.classList.add('ok');return;}}
+ const nm=prm.rname.value.trim(),c=prm.rphone.value.trim(),dg=c.replace(/[^0-9]/g,''),ex=prm.rexp.value;
+ const okP=c.startsWith('+')?dg.length>=8&&dg.length<=15:dg.length>=10&&dg.length<=13;
+ if(!okP){{pm.textContent='Please enter a valid mobile number.';pm.classList.add('err');return;}}
+ if(!ex){{pm.textContent='Please choose your passport expiry date.';pm.classList.add('err');return;}}
+ const rd=new Date(ex+'T00:00');rd.setMonth(rd.getMonth()-9);const rdt=rd.toLocaleDateString('en-IN',{{month:'long',year:'numeric'}});
+ const id=(crypto.randomUUID?crypto.randomUUID():String(Date.now())),ref='PR-'+id.replace(/-/g,'').slice(0,6).toUpperCase();
+ try{{const r=await fetch(SB+'/rest/v1/service_enquiries',{{method:'POST',headers:{{apikey:KEY,Authorization:'Bearer '+(window.RTT_TOKEN||KEY),'Content-Type':'application/json',Prefer:'return=minimal'}},body:JSON.stringify({{id:crypto.randomUUID?id:undefined,service:'Passport expiry reminder',travel_month:ex,full_name:nm||null,phone:c.replace(/[^0-9+]/g,'').slice(0,20),notes:'Passport expires '+ex+'. Remind around '+rdt+'.'}})}});if(!r.ok)throw 0;}}
+ catch(_){{pm.textContent='Sorry, something went wrong. Please WhatsApp us on 98431 21212.';pm.classList.add('err');return;}}
+ notify('New passport reminder '+ref+' – '+(nm||c),'Name: '+(nm||'')+'\\nMobile: '+c+'\\nPassport expires: '+ex+'\\nSend renewal reminder around: '+rdt,'');
+ pm.innerHTML='✅ Done! We will remind you around <b>'+rdt+'</b> (ref '+ref+').';pm.classList.add('ok');prm.reset();}});}}
 const voc=document.getElementById('voc_country');
 if(voc){{
  const m=document.getElementById('voc_msg');
@@ -459,7 +492,18 @@ f.addEventListener('submit',async e=>{
 });"""
 
 
+PREMIND = """<form class="vtrack vrem" id="premind" novalidate><div><b>⏰ Passport expiring soon? Get a free reminder</b><p>Many countries need at least 6 months' passport validity. Tell us your expiry date and we'll WhatsApp you about 9 months before, in time to renew.</p></div>
+<div class="vtrk"><input name="rname" maxlength="120" placeholder="Your name" autocomplete="name" aria-label="Your name"><input name="rphone" maxlength="20" inputmode="tel" placeholder="Mobile number" autocomplete="tel" aria-label="Mobile number"><label class="rexp">Passport expiry<input name="rexp" type="date" aria-label="Passport expiry date"></label><button class="btn gold" type="submit">Remind me</button></div>
+<div class="hp" aria-hidden="true"><label>Leave this empty<input name="company_website" tabindex="-1" autocomplete="off"></label></div>
+<p class="vmsg" role="status" aria-live="polite"></p></form>"""
+
 VISA_CSS = """
+.vrem .vtrk input{text-transform:none;min-width:160px}.rexp{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}.rexp input{min-width:150px}
+.vwhen{margin:6px 0 0;font-size:14px;color:var(--ink)}
+.vtrack{margin-top:22px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:var(--bg)}
+.vtrack>div:first-child{flex:1 1 320px}.vtrack b{color:var(--wine)}.vtrack p{margin:4px 0 0;font-size:14px}
+.vtrk{display:flex;gap:8px;flex-wrap:wrap}.vtrk input{font:500 15px 'Jost',sans-serif;padding:10px 12px;border:1px solid var(--line);border-radius:12px;min-width:220px;text-transform:uppercase}
+.vtrack .vmsg{flex-basis:100%;margin:0}.vtrack .vmsg:empty{display:none}
 .yn{border:0;padding:0;margin:0;display:grid;gap:8px}.yn legend{font-weight:500;font-size:15px;margin-bottom:8px}
 .vnote{margin:0;font-size:13.5px;color:var(--muted);align-self:center}
 .vcheck{background:var(--bg);border:1px solid var(--line);border-left:4px solid var(--red);border-radius:14px;padding:14px 18px}

@@ -67,9 +67,9 @@ SERVICES = [
         ("How quickly can a policy be issued?","Usually the same day once we have your travel details.")]),
  dict(slug="yatra-tours", short="Yatra Tours", icon="🛕", img=None,
   title="Yatra Tour Packages from Mumbai | Char Dham, Kedarnath, Vaishno Devi",
-  h1="Yatra & Pilgrimage Tour Packages from Mumbai",
-  desc="Pilgrimage yatra packages from Mumbai – Char Dham, Kedarnath, Badrinath, Vaishno Devi, Amarnath, Kashi, Ayodhya, Shirdi, Dwarka and Jain tirth yatras – with comfortable stays and senior-friendly planning.",
-  intro="A yatra is a journey of faith, and it deserves careful planning. We organise comfortable, well-paced pilgrimage tours for families, senior citizens and groups, taking care of travel, stays, darshan planning and food.",
+  h1="Yatra Tour Packages from Mumbai",
+  desc="Yatra packages from Mumbai – Char Dham, Kedarnath, Badrinath, Vaishno Devi, Amarnath, Kashi, Ayodhya, Shirdi, Dwarka and Jain tirth yatras – with comfortable stays and senior-friendly planning.",
+  intro="A yatra is a journey of faith, and it deserves careful planning. We organise comfortable, well-paced yatras for families, senior citizens and groups, taking care of travel, stays, darshan planning and food.",
   points=["Char Dham Yatra – Yamunotri, Gangotri, Kedarnath, Badrinath","Vaishno Devi and Amarnath Yatra","Kashi Vishwanath, Prayagraj and Ayodhya","Shirdi, Trimbakeshwar and Jyotirlinga tours","Dwarka, Somnath and Gujarat pilgrimages","Jain tirth yatras – Palitana, Shikharji, Girnar, Ranakpur"],
   why="We plan yatras with senior citizens in mind – sensible daily distances, clean stays and help with helicopter, pony or palki bookings where available.",
   faqs=[("Are your yatras suitable for senior citizens?","Yes. We pace itineraries for elders and can arrange assistance where needed."),
@@ -297,7 +297,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <a href="{IG}" target="_blank" rel="noopener">📸 @therealtoursandtravels</a> · <a href="{FB}" target="_blank" rel="noopener">Facebook</a></p></div>
 <div><h4>Our Services</h4><ul>{nav}</ul></div>
 <div><h4>Visit Us</h4><ul><li>Open every day, 9 am – 10 pm</li><li><a href="{MAPS}" target="_blank" rel="noopener">Get directions on Google Maps</a></li><li><a href="{REVIEW}" target="_blank" rel="noopener">⭐ Review us on Google</a></li><li><a href="{root}flights-hotels/">✈️ Flights, hotels &amp; cruise</a></li><li><a href="{root}customize-your-package/">✨ Customized Packages</a></li><li><a href="{root}visa/">Visa documents &amp; upload</a></li><li><a href="{root}passport/">Passport services</a></li><li><a href="{root}insurance/">Travel insurance quote</a></li><li><a href="{root}blog/">Travel guides &amp; tips</a></li><li><a href="{root}account/">👤 My account / Login</a></li><li><a href="{root}about/">About us</a></li><li><a href="{root}contact/">Contact us</a></li></ul>
-<p style="margin-top:14px">Serving travellers across India.</p></div>
+</div>
  </div><div class="topbar"><div class="wrap"><span>📍 Mulund West, Mumbai · Open daily 9 am – 10 pm</span><span><a href="tel:{PHONE_RAW}">📞 {PHONE}</a> · <a href="mailto:{EMAIL}">✉️ {EMAIL}</a></span></div></div><div class="copy">© {datetime.date.today().year} The Real Tours and Travels, Mulund West, Mumbai · GSTIN {GST} · All rights reserved.<br><a href="{root}terms/">Terms &amp; Conditions</a> · <a href="{root}privacy-policy/">Privacy Policy</a> · <a href="{root}cancellation-refund-policy/">Cancellation &amp; Refund Policy</a></div></footer>
 <a class="float-wa" href="{WA}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">💬</a>
 <script>(function(){{const w=document.querySelector('.float-wa');if(!w)return;let q=0;
@@ -352,7 +352,7 @@ def build():
 <div class="grid">{cards}</div></div></section>
 <section class="alt"><div class="wrap two">
 <div><h2>Why Mumbai families choose The Real Tours and Travels</h2>
-<span class="kicker">Our promise</span><p class="lead" style="margin-bottom:20px">We are a family-run travel agency in Mulund West. For over four decades we have planned holidays, pilgrimages and business trips for families across India.</p>
+<span class="kicker">Our promise</span><p class="lead" style="margin-bottom:20px">We are a family-run travel agency in Mulund West. For over four decades we have planned holidays, yatras and business trips – in India and around the world.</p>
 <ul class="ticks"><li>Personal service – one point of contact, on call during your trip</li><li>Family-friendly hotels and comfortable pacing for kids and seniors</li><li>Visas, travel insurance, flights and hotels handled in one place</li><li>Pure vegetarian and Jain food arrangements, including tours with our own Maharaj</li><li>Transparent planning – no hidden surprises</li></ul></div>
 {side_html}</div></section>
 <section><div class="wrap"><div class="head"><span class="kicker">Reviews</span><h2>What our travellers say</h2><p class="lead">Rated 4.8 ★ on Google by our customers.</p></div>
@@ -386,7 +386,7 @@ def build():
 <div class="btns">{'<a class="btn gold" href="../visa/">📄 Visa documents &amp; upload</a><a class="btn outline" href="../passport/">🛂 Passport services</a>' if s['slug']=='passport-visa-services' else ('<a class="btn gold" href="../insurance/#ins-form">🛡️ Get insurance quotation</a>' if s['slug']=='travel-insurance' else '')}<a class="btn gold" href="{WA}" target="_blank" rel="noopener">💬 Get a free plan on WhatsApp</a><a class="btn ghost" href="tel:{PHONE_RAW}">📞 98431 21212</a></div>
 </div>{seal("../")}</div>{RIDGE}</section>
 <section><div class="wrap two"><div><h2>What we offer</h2><ul class="ticks">{pts}</ul></div>
-<div><h2>Why book with us</h2><p>{s['why']}</p><p>Visit our office in <b>Mulund West, Mumbai</b> (open daily 9 am – 10 pm), or plan everything over call and WhatsApp. We serve travellers across India.</p>
+<div><h2>Why book with us</h2><p>{s['why']}</p><p>Visit our office in <b>Mulund West, Mumbai</b> (open daily 9 am – 10 pm), or plan everything over call and WhatsApp.</p>
 <p><a class="btn red" href="{WA}" target="_blank" rel="noopener">Plan my trip</a></p></div></div></section>
 <section class="alt faq"><div class="wrap" style="max-width:860px"><div class="head"><span class="kicker">Good to know</span><h2>Frequently asked questions</h2></div>{faqs}</div></section>
 <section><div class="wrap"><div class="head"><span class="kicker">More from us</span><h2>Explore our other services</h2></div><div class="grid">{others}</div></div></section>
@@ -456,7 +456,7 @@ def build():
 <p>A family-run travel company in Mulund West, Mumbai, planning holidays, pilgrimages, visas and business travel for Mumbai families for over four decades.</p></div>{seal("../")}</div></section>
 <section><div class="wrap two"><div><h2>Our story</h2>
 <p>The Real Tours and Travels began in <b>1981</b> with a simple idea – that every family deserves a holiday planned with the same care we would take for our own. More than four decades later, we are still a family business, and that personal touch is still how we work.</p>
-<p>From Kashmir and Kerala to Dubai, Europe and the Maldives – and from Palitana and Sammed Shikharji yatras with our own Maharaj cooking pure Jain food, to group tours, honeymoons and corporate (FIT &amp; MICE) travel – generations of travellers across India have trusted us with their journeys.</p>
+<p>From Kashmir and Kerala to Dubai, Europe and the Maldives – and from Palitana and Sammed Shikharji yatras with our own Maharaj cooking pure Jain food, to group tours, honeymoons and corporate (FIT &amp; MICE) travel – generations of travellers have trusted us with their journeys.</p>
 <p>Today we handle everything in one place: <b>flights, hotels and cruises, visas and passports, travel insurance and fully customised tour packages</b>, with one point of contact who stays on call throughout your trip.</p></div>
 <div><h2>Why families choose us</h2><ul class="ticks">
 <li>45+ years of experience – established 1981</li><li>Rated 4.8 ★ on Google by our travellers</li><li>Personal service – one dedicated contact, available during your trip</li>
