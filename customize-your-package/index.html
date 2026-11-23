@@ -108,7 +108,7 @@ function render(o,days,ref){
  '<div class="idays">'+rows+'</div>'+
  '<div class="iinc"><div><h4>Package can include</h4><ul><li>'+esc(o.hotel)+' accommodation with breakfast</li><li>Private '+esc(o.car)+' for transfers and sightseeing</li><li>'+(travel.startsWith('Rail')?'Train tickets':'Flight tickets')+' on request</li><li>Visa and travel insurance assistance'+(intl?'':' (if needed)')+'</li><li>Pure veg / Jain meals on request</li></ul></div>'+
  '<div><h4>Next step</h4><p>This is a suggested plan. Our travel expert will call you to personalise it and share the best options for your dates.</p><p><b>📞 +91 98431 21212</b><br>✉️ enquiry@therealtoursandtravels.com<br>🌐 www.therealtoursandtravels.com<br>📸 @therealtoursandtravels</p></div></div>'+
- '<p class="ifoot">The Real Tours and Travels · 204, B10, Rachana Building, Govardhan Nagar, Lal Bahadur Shastri Marg, Mulund West, Mumbai 400080 · GSTIN 27AMUPK4723E1ZU · Sightseeing subject to weather, permits and local conditions.</p>';
+ '<p class="ifoot" style="margin-top:14px">GST as applicable: '+(intl?'5% GST on the package value + 2% TCS on overseas tour packages (adjustable against your income tax)':'5% GST on the tour package value')+'. Final price shared by our team.</p>'+'<p class="ifoot">The Real Tours and Travels · 204, B10, Rachana Building, Govardhan Nagar, Lal Bahadur Shastri Marg, Mulund West, Mumbai 400080 · GSTIN 27AMUPK4723E1ZU · Sightseeing subject to weather, permits and local conditions.</p>';
 }
 f.addEventListener('submit',async e=>{
  e.preventDefault();msg.className='vmsg';msg.textContent='';

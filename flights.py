@@ -85,7 +85,7 @@ def flight_widget(root):
 <div class="ftabs" role="tablist"><button type="button" class="ftab on" data-k="flight">✈️ Flights</button><button type="button" class="ftab" data-k="hotel">🏨 Hotels</button><button type="button" class="ftab" data-k="cruise">🛳️ Cruise</button></div>
 {flight}{hotel}{cruise}
 <datalist id="fapts">{opts}</datalist><datalist id="hcities">{hc}</datalist>
-<p class="fnote">Tell us what you need – we check all airlines, hotels and cruise lines and reply with the best options on WhatsApp or email. Bookings and tickets issued by The Real Tours and Travels.</p>
+<p class="fnote">Tell us what you need – we check all airlines, hotels and cruise lines and reply with the best options on WhatsApp or email. Bookings and tickets issued by The Real Tours and Travels.<br><span class="gstline">GST as applicable: airline &amp; hotel taxes as charged by the supplier (hotel rooms up to ₹7,500/night 5%, above 18%; economy air 5%, premium classes 18%) + 18% GST on our service fee. Overseas tour packages attract 2% TCS.</span></p>
 </div>
 <script>
 (function(){{
@@ -160,6 +160,7 @@ Object.entries(forms).forEach(([kind,f])=>f.addEventListener('submit',async e=>{
 </script>"""
 
 FLIGHT_CSS = """
+.gstline{display:block;margin-top:6px;font-size:12px;color:var(--muted)}
 .btabs{display:flex;gap:6px;margin:-4px 0 14px;border-bottom:1px solid var(--line)}
 .btab{border:0;background:none;font:600 16px 'Jost',sans-serif;color:var(--muted);padding:8px 16px 12px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
 .btab.on{color:var(--crimson);border-bottom-color:var(--red)}

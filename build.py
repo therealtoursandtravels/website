@@ -5,6 +5,7 @@ from articles import ARTICLES
 from visa import visa_page, passport_page, VISA_CSS
 from planner import planner_page, PLANNER_CSS
 from flights import flight_widget, FLIGHT_CSS
+from tools import gst_tool_page, TOOL_CSS
 
 SITE = "https://www.therealtoursandtravels.com"
 NAME = "The Real Tours and Travels"
@@ -311,7 +312,7 @@ def cta_band():
 
 def build():
     root = os.path.dirname(os.path.abspath(__file__))
-    open(os.path.join(root, "style.css"), "w").write(CSS + VISA_CSS + PLANNER_CSS + FLIGHT_CSS)
+    open(os.path.join(root, "style.css"), "w").write(CSS + VISA_CSS + PLANNER_CSS + FLIGHT_CSS + TOOL_CSS)
     imgs = set(os.listdir(os.path.join(root, "img")))
     # Home
     cards = "".join(f'<a class="card" href="{s["slug"]}/"><div class="ic">{s["icon"]}</div><h3>{s["h1"]}</h3><p>{s["desc"][:120].rsplit(" ",1)[0]}…</p><span class="more">Explore →</span></a>' for s in SERVICES)
@@ -456,11 +457,13 @@ def build():
 <h2>Cancellation by the customer</h2><ul class="ticks"><li>Cancellation requests must be sent in writing by email to enquiry@therealtoursandtravels.com or on WhatsApp at 98431 21212.</li><li>Cancellation charges depend on the airline, hotel and other suppliers' rules and on how close to the travel date you cancel. The applicable charges for your booking will be shared with you at the time of booking and on request.</li><li>Visa fees, service fees, insurance premiums and non-refundable tickets or hotel bookings are not refundable once processed.</li></ul>
 <h2>Refunds</h2><ul class="ticks"><li>Eligible refunds are processed after deducting applicable cancellation charges and once we receive the refund from the supplier.</li><li>Refunds for online payments are made to the original payment method. Once initiated, a refund usually reaches your account within 5–10 working days, depending on your bank.</li><li>Payments made by mistake or in excess of the confirmed amount will be refunded in full after verification.</li></ul>
 <h2>Cancellation or changes by us or suppliers</h2><p>If a service is cancelled by us or a supplier, we will offer an alternative or refund the amount received for that service, as per the supplier's policy.</p>""")
+    # Private GST quote tool (noindex, not in sitemap)
+    write("/tools/gst-quote/", page("/tools/gst-quote/", "GST Quote & Invoice Maker | The Real Tours and Travels", "Internal tool.", gst_tool_page(NAME, ADDR, GST, PHONE, EMAIL)).replace('<meta name="robots" content="index,follow,max-image-preview:large">','<meta name="robots" content="noindex,nofollow">'))
     # sitemap / robots / CNAME
     urls = ["/"] + [f"/{s['slug']}/" for s in SERVICES] + ["/blog/", "/visa/", "/passport/", "/flights-hotels/", "/customize-your-package/"] + [f"/blog/{a['slug']}/" for a in ARTICLES] + ["/contact/", "/terms/", "/privacy-policy/", "/cancellation-refund-policy/"]
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{SITE}{u}</loc><lastmod>{TODAY}</lastmod><priority>{'1.0' if u=='/' else '0.8'}</priority></url>\n" for u in urls) + "</urlset>\n"
     open(os.path.join(root, "sitemap.xml"), "w").write(sm)
-    open(os.path.join(root, "robots.txt"), "w").write(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
+    open(os.path.join(root, "robots.txt"), "w").write(f"User-agent: *\nAllow: /\nDisallow: /tools/\n\nSitemap: {SITE}/sitemap.xml\n")
     open(os.path.join(root, "CNAME"), "w").write("www.therealtoursandtravels.com\n")
     print("built", len(urls), "pages")
 

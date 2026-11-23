@@ -89,7 +89,7 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
         panels += f"""<div class="vpanel" data-c="{c}"{'' if i==0 else ' hidden'}>
 <div class="vhead"><div><h3>{f} {n}</h3><p class="meta">{how}</p></div>
 <div class="vprice"><span>Price</span><a class="btn gold" href="{wa}" target="_blank" rel="noopener">Request Price</a></div></div>
-<h4>Documents required</h4><ul class="ticks">{lis}</ul>
+<p class="meta" style="margin:8px 0 0">Price = government / embassy fee (no GST) + our service fee + 18% GST on the service fee.</p><h4>Documents required</h4><ul class="ticks">{lis}</ul>
 <p class="meta">{"Requirements are set by Passport Seva (Ministry of External Affairs) and can change. We confirm the final checklist for your case before you apply." if P else "Requirements can change and may differ for business, student or family visits. We confirm the final checklist for your case before you apply."}</p>
 <p><a class="btn outline" href="#upload" data-pick="{c}">Upload documents for {n}</a></p></div>"""
     opts = "".join(f'<option value="{n}">{n}</option>' for (_,_,n,_,_) in ITEMS) + ('' if P else '<option value="Other">Other country</option>')
@@ -148,7 +148,16 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
 <p id="vmsg" class="vmsg" role="status" aria-live="polite"></p>
 </form>
 <div class="paybox" id="pay"><span class="kicker" style="justify-content:center">Secure payment</span><h3 style="font-size:26px;margin:4px 0 8px">Pay {T["payfor"]} online</h3>
-<p class="lead" style="font-size:16px">Pay only the amount confirmed by our team. Enter your name, phone and reference / application details so we can match your payment. UPI, cards, net banking and wallets accepted.</p>
+<p class="lead" style="font-size:16px">Enter the fees confirmed by our team to see the GST and total, then pay securely. Add your name, phone and reference in the payment window so we can match your payment. UPI, cards, net banking and wallets accepted.</p>
+<div class="gcalc" id="gcalc">
+<div class="grow"><label>Government / embassy / VFS fee <small>(as confirmed by us – no GST)</small><span class="gin">₹<input type="number" min="0" step="1" inputmode="decimal" id="g_gov" placeholder="0"></span></label>
+<label>Our service fee <small>(as confirmed by us)</small><span class="gin">₹<input type="number" min="0" step="1" inputmode="decimal" id="g_fee" placeholder="0"></span></label></div>
+<label class="gst8">Your state <select id="g_state"><option value="in">Maharashtra</option><option value="out">Other state / UT</option></select></label>
+<table class="gtab"><tr><td>Government / embassy fee (pure agent, no GST)</td><td id="o_gov">₹0.00</td></tr>
+<tr><td>Service fee (SAC 9985)</td><td id="o_fee">₹0.00</td></tr>
+<tr id="r_c"><td>CGST @ 9%</td><td id="o_c">₹0.00</td></tr><tr id="r_s"><td>SGST @ 9%</td><td id="o_s">₹0.00</td></tr><tr id="r_i" hidden><td>IGST @ 18%</td><td id="o_i">₹0.00</td></tr>
+<tr class="gtot"><td>Total to pay</td><td id="o_t">₹0.00</td></tr></table>
+<p class="gnote">Enter the <b>total</b> shown above as the Booking Amount in the payment window. A GST tax invoice (GSTIN 27AMUPK4723E1ZU) will be issued for the service fee.</p></div>
 <form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_U3RKkNsxkSYwez" async></script></form>
 <p style="font-size:13px;color:var(--muted);margin:6px 0 0">🔒 Secured by Razorpay · By paying you agree to our <a href="../terms/">Terms</a> and <a href="../cancellation-refund-policy/">Cancellation &amp; Refund Policy</a>.</p></div>
 <p class="meta" style="text-align:center;margin-top:16px">Prefer WhatsApp or visiting us? Call/WhatsApp <a href="tel:{PHONE_RAW}">{PHONE}</a> or visit our Mulund West office, open daily 9 am – 10 pm.</p>
@@ -158,6 +167,11 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
 (function(){{
 const SB="{SB_URL}",KEY="{SB_KEY}";
 const notify=(s,t,r)=>{{try{{fetch('https://formsubmit.co/ajax/enquiry@therealtoursandtravels.com',{{method:'POST',headers:{{'Content-Type':'application/json',Accept:'application/json'}},body:JSON.stringify({{_subject:s,message:t,_replyto:r||'',_template:'table',_captcha:'false',source:location.href}})}}).catch(()=>{{}});}}catch(_){{}}}};
+(function(){{const $=i=>document.getElementById(i),inr=n=>'₹'+n.toLocaleString('en-IN',{{minimumFractionDigits:2,maximumFractionDigits:2}}),r2=n=>Math.round(n*100)/100;
+function calc(){{const g=Math.max(0,+$('g_gov').value||0),f=Math.max(0,+$('g_fee').value||0),inS=$('g_state').value==='in';const c=r2(f*.09),i=r2(f*.18);
+$('o_gov').textContent=inr(g);$('o_fee').textContent=inr(f);$('o_c').textContent=$('o_s').textContent=inr(c);$('o_i').textContent=inr(i);
+$('r_c').hidden=$('r_s').hidden=!inS;$('r_i').hidden=inS;$('o_t').textContent=inr(r2(g+f+(inS?2*c:i)));}}
+['g_gov','g_fee','g_state'].forEach(x=>$(x)&&$(x).addEventListener('input',calc));if($('g_gov'))calc();}})();
 const tabs=document.querySelectorAll('.vtab'),panels=document.querySelectorAll('.vpanel');
 function show(c){{tabs.forEach(t=>t.classList.toggle('on',t.dataset.c===c));panels.forEach(p=>p.hidden=p.dataset.c!==c);}}
 tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.c)));
@@ -199,6 +213,13 @@ f.addEventListener('submit',async e=>{{
 </script>"""
 
 VISA_CSS = """
+.gcalc{text-align:left;margin:16px 0 6px;display:grid;gap:12px}.grow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.gcalc label{display:grid;gap:6px;font-weight:500;font-size:14.5px;color:var(--wine)}.gcalc small{font-weight:400;color:var(--muted);font-size:12.5px}
+.gin{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:12px;padding:0 12px;background:#fff}.gin input{border:0;outline:0;font:500 17px 'Jost',sans-serif;padding:11px 0;width:100%;background:none}
+.gin:focus-within{border-color:var(--red);box-shadow:0 0 0 2px rgba(215,25,31,.15)}.gst8 select{font:400 15px 'Jost',sans-serif;padding:10px 12px;border:1px solid var(--line);border-radius:12px;max-width:260px}
+.gtab{width:100%;border-collapse:collapse;font-size:15px}.gtab td{padding:8px 4px;border-bottom:1px solid var(--line)}.gtab td:last-child{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.gtot td{font-weight:700;font-size:17px;color:var(--crimson);border-bottom:0;border-top:2px solid var(--wine)}.gnote{font-size:13px;color:var(--muted);margin:0}
+@media(max-width:600px){.grow{grid-template-columns:1fr}}
 #upload .paybox{margin:28px auto 0}
 .vtabs{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:26px}
 .vtab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 16px;font:500 15px 'Jost',sans-serif;color:var(--ink);cursor:pointer}
