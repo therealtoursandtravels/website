@@ -153,7 +153,7 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
     T = dict(
       crumb="Passport Services" if P else "Visa Services",
       kicker="🛂 Passport services" if P else "🛂 Visa services",
-      h1="Passport Services in Mulund, Mumbai" if P else "Visa Services in Mulund, Mumbai",
+      h1="Passport Services" if P else "Visa Services",
       intro=("New passport, renewal, minor, Tatkaal or lost passport – check the documents required, request the price, and upload your documents securely. We fill the forms and book your Passport Seva Kendra appointment." if P else
              "Check the documents required for your visa, request the price, and upload your documents securely – our visa team will review them and call you back."),
       k2="Choose your service" if P else "Visas & arrival cards",
@@ -182,8 +182,8 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
 {other_list}
 <div class="row">{T["type_row"]}
 <label>{T["date_label"]}<input name="travel_date" type="date"></label></div>
-<div class="row"><label>{T["trav_label"]}<input name="travellers" type="number" min="1" max="50" value="1"></label><label>Preferred Passport Seva Kendra<input name="psk" maxlength="60" list="psklist" placeholder="e.g. PSK Thane – or leave blank" autocomplete="off"></label></div>
-<datalist id="psklist"><option value="PSK Thane"><option value="PSK Lower Parel (Mumbai)"><option value="PSK Andheri (Mumbai)"><option value="PSK Malad (Mumbai)"><option value="Nearest Post Office PSK (POPSK)"><option value="Not sure – please suggest the nearest"></datalist>
+<div class="row"><label>{T["trav_label"]}<input name="travellers" type="number" min="1" max="50" value="1"></label><label>Preferred Passport Seva Kendra<input name="psk" maxlength="60" list="psklist" placeholder="e.g. nearest PSK – or leave blank" autocomplete="off"></label></div>
+<datalist id="psklist"><option value="Nearest Passport Seva Kendra (PSK)"><option value="Nearest Post Office PSK (POPSK)"><option value="Not sure – please suggest the nearest"></datalist>
 <div class="row"><label class="pexp" hidden>Current passport expiry date<input name="old_expiry" type="date"></label><label>Has your address changed since your last passport?<select name="addr_change"><option value="">Not applicable / first passport</option><option>No</option><option>Yes</option><option>Not sure</option></select></label></div>
 <div id="pchk" class="pchk" hidden></div>
 <label class="chk"><input type="checkbox" name="later"><span>I don't have my documents ready – <b>I'll send them later</b> (we'll call you with the checklist).</span></label>
@@ -281,13 +281,13 @@ f.addEventListener('submit',async e=>{{
 <p class="gnote">Enter the <b>total</b> shown above as the Booking Amount in the payment window<span id="g_hint"></span>. A GST tax invoice (our GSTIN 27AMUPK4723E1ZU) will be issued for the service fee<span id="g_to"></span>.</p></div>
 <form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_U3RKkNsxkSYwez" async></script></form>
 <p style="font-size:13px;color:var(--muted);margin:6px 0 0">🔒 Secured by Razorpay · By paying you agree to our <a href="../terms/">Terms</a> and <a href="../cancellation-refund-policy/">Cancellation &amp; Refund Policy</a>.</p></div>
-<p class="meta" style="text-align:center;margin-top:16px">Prefer WhatsApp or visiting us? Call/WhatsApp <a href="tel:{PHONE_RAW}">{PHONE}</a> or visit our Mulund West office, open daily 9 am – 10 pm.</p>
+<p class="meta" style="text-align:center;margin-top:16px">Prefer WhatsApp or visiting us? Call/WhatsApp <a href="tel:{PHONE_RAW}">{PHONE}</a> or visit our office, open daily 9 am – 10 pm.</p>
 </div></section>
 {cta_band()}
 <script>
 (function(){{
 const SB="{SB_URL}",KEY="{SB_KEY}";
-const notify=(s,t,r)=>{{try{{fetch('https://formsubmit.co/ajax/enquiry@therealtoursandtravels.com',{{method:'POST',headers:{{'Content-Type':'application/json',Accept:'application/json'}},body:JSON.stringify((()=>{{const o={{_subject:s,message:t,_replyto:r||'',_template:'table',_captcha:'false',source:location.href}};const m=(s.match(/(\\S+) – /)||[])[1]||'';const ref=/^[A-Z0-9-]{{6,}}$/.test(m)?m:'';if(r&&/@/.test(r)&&ref){{o.email=r;o._autoresponse='Thank you for contacting The Real Tours and Travels. We have received your request (reference '+ref+') and our team will get back to you shortly. Please quote this reference in any message to us. For anything urgent, call or WhatsApp +91 98431 21212. – The Real Tours and Travels, Mulund West, Mumbai · www.therealtoursandtravels.com';}}return o;}})())}}).catch(()=>{{}});}}catch(_){{}}}};
+const notify=(s,t,r)=>{{try{{fetch('https://formsubmit.co/ajax/enquiry@therealtoursandtravels.com',{{method:'POST',headers:{{'Content-Type':'application/json',Accept:'application/json'}},body:JSON.stringify((()=>{{const o={{_subject:s,message:t,_replyto:r||'',_template:'table',_captcha:'false',source:location.href}};const m=(s.match(/(\\S+) – /)||[])[1]||'';const ref=/^[A-Z0-9-]{{6,}}$/.test(m)?m:'';if(r&&/@/.test(r)&&ref){{o.email=r;o._autoresponse='Thank you for contacting The Real Tours and Travels. We have received your request (reference '+ref+') and our team will get back to you shortly. Please quote this reference in any message to us. For anything urgent, call or WhatsApp +91 98431 21212. – The Real Tours and Travels · www.therealtoursandtravels.com';}}return o;}})())}}).catch(()=>{{}});}}catch(_){{}}}};
 (function(){{const $=i=>document.getElementById(i),inr=n=>'₹'+n.toLocaleString('en-IN',{{minimumFractionDigits:2,maximumFractionDigits:2}}),r2=n=>Math.round(n*100)/100;
 function calc(){{const g=Math.max(0,+$('g_gov').value||0),f=Math.max(0,+$('g_fee').value||0),inS=$('g_state').value==='27';$('g_out').hidden=$('g_state').value!=='OUT';const c=r2(f*.09),i=r2(f*.18);
 $('o_gov').textContent=inr(g);$('o_fee').textContent=inr(f);$('o_c').textContent=$('o_s').textContent=inr(c);$('o_i').textContent=inr(i);
@@ -358,7 +358,7 @@ __OTHERLIST__
 <label>Return date<input name="return_date" type="date"></label></div>
 <div class="row"><label>Employment status<select name="employment"><option value="">Select…</option><option>Salaried</option><option>Self-employed / Business owner</option><option>Student</option><option>Retired</option><option>Homemaker</option><option>Other</option></select></label>
 <label id="empow" hidden>Your occupation<input name="employment_other" maxlength="60" placeholder="e.g. freelancer, farmer, NRI, between jobs"></label></div>
-<div id="apptwrap" class="appt" hidden><label>Your city or town <small>(for the visa-centre appointment)</small><input name="appt_city" maxlength="60" autocomplete="address-level2" placeholder="e.g. Mumbai, Thane, Nashik, Surat"></label>
+<div id="apptwrap" class="appt" hidden><label>Your city or town <small>(for the visa-centre appointment)</small><input name="appt_city" maxlength="60" autocomplete="address-level2" placeholder="e.g. Delhi, Ahmedabad, Bengaluru, Pune"></label>
 <p class="vnote" id="apptnote"></p></div>
 <div class="row"><fieldset class="yn"><legend>Ever been refused a visa for any country?</legend><div class="chips"><label><input type="radio" name="refused" value="No" checked>No</label><label><input type="radio" name="refused" value="Yes">Yes</label></div></fieldset>
 <fieldset class="yn"><legend>Visited the US, UK, Schengen, Canada or Australia in the last 5 years?</legend><div class="chips"><label><input type="radio" name="history" value="No" checked>No</label><label><input type="radio" name="history" value="Yes">Yes</label></div></fieldset></div>

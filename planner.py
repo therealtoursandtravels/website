@@ -92,7 +92,7 @@ def planner_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band, ADDR, GST):
 <small class="phint">Any city, state, region or country – in India or abroad. Going to more than one place? Add them in the order you'd like to travel, e.g. Paris → Rome → Barcelona.</small>
 <datalist id="psug">{sugg}</datalist>
 <div id="pnights" class="pnights" hidden><div class="pnhead"><b>Nights in each place</b><small>Change these and the number of days updates automatically.</small></div><div id="pnrows" class="pnrows"></div></div></div>
-<div class="row"><label>Departing from <small>(leave blank for Mumbai)</small><input name="origin" maxlength="60" list="porig" autocomplete="off" placeholder="Type any city – e.g. Pune, Ahmedabad, Dubai, London"></label>
+<div class="row"><label>Departing from <small>(your city)</small><input name="origin" maxlength="60" list="porig" autocomplete="off" placeholder="Type any city – e.g. Pune, Ahmedabad, Dubai, London"></label>
 <label>1) Number of days*<input name="days" type="number" min="2" max="30" value="6" required></label></div>
 <datalist id="porig">{origins}</datalist>
 <div class="row"><div class="pdate"><label id="dwrap">Start date<input name="start_date" type="date"></label>
@@ -136,7 +136,7 @@ def planner_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band, ADDR, GST):
 <script>
 (function(){{
 const SB="{SB_URL}",KEY="{SB_KEY}";
-const notify=(s,t,r)=>{{try{{fetch('https://formsubmit.co/ajax/enquiry@therealtoursandtravels.com',{{method:'POST',headers:{{'Content-Type':'application/json',Accept:'application/json'}},body:JSON.stringify((()=>{{const o={{_subject:s,message:t,_replyto:r||'',_template:'table',_captcha:'false',source:location.href}};const m=(s.match(/(\\S+) – /)||[])[1]||'';const ref=/^[A-Z0-9-]{{6,}}$/.test(m)?m:'';if(r&&/@/.test(r)&&ref){{o.email=r;o._autoresponse='Thank you for contacting The Real Tours and Travels. We have received your request (reference '+ref+') and our team will get back to you shortly. Please quote this reference in any message to us. For anything urgent, call or WhatsApp +91 98431 21212. – The Real Tours and Travels, Mulund West, Mumbai · www.therealtoursandtravels.com';}}return o;}})())}}).catch(()=>{{}});}}catch(_){{}}}};
+const notify=(s,t,r)=>{{try{{fetch('https://formsubmit.co/ajax/enquiry@therealtoursandtravels.com',{{method:'POST',headers:{{'Content-Type':'application/json',Accept:'application/json'}},body:JSON.stringify((()=>{{const o={{_subject:s,message:t,_replyto:r||'',_template:'table',_captcha:'false',source:location.href}};const m=(s.match(/(\\S+) – /)||[])[1]||'';const ref=/^[A-Z0-9-]{{6,}}$/.test(m)?m:'';if(r&&/@/.test(r)&&ref){{o.email=r;o._autoresponse='Thank you for contacting The Real Tours and Travels. We have received your request (reference '+ref+') and our team will get back to you shortly. Please quote this reference in any message to us. For anything urgent, call or WhatsApp +91 98431 21212. – The Real Tours and Travels · www.therealtoursandtravels.com';}}return o;}})())}}).catch(()=>{{}});}}catch(_){{}}}};
 const DEST={json.dumps(DEST, ensure_ascii=False)};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}})[c]);
 const f=document.getElementById('pform'),msg=document.getElementById('pmsg');
@@ -229,7 +229,7 @@ function render(o,days,ref){{
   return '<div class="iday"><div class="inum">Day '+(i+1)+'</div><div><h4>'+esc(d.t)+'<span>'+dt+'</span></h4><ul>'+d.a.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>'+(d.s?'<p class="istay">🏨 Overnight: '+esc(d.s)+' – '+hotelLine(o.hotel)+'</p>':'')+'</div></div>';}}).join('');
  const D=DEST[o.dest];const intl=(D&&D.intl)||o.scope==='International';
  const travel=o.mode==='Railway'&&D&&!D.rail&&!intl?'Flight (no rail connection)':(intl&&o.mode==='Railway'?'Flight (international)':o.mode);
- return '<div class="ihead"><img src="../img/logo.png" alt="The Real Tours and Travels" width="72" height="72"><div><b>The Real Tours and Travels</b><small>Crafting Journeys Since 1981 · Mulund West, Mumbai</small></div><span class="iref">Ref '+ref+'</span></div>'+
+ return '<div class="ihead"><img src="../img/logo.png" alt="The Real Tours and Travels" width="72" height="72"><div><b>The Real Tours and Travels</b><small>Crafting Journeys Since 1981 · www.therealtoursandtravels.com</small></div><span class="iref">Ref '+ref+'</span></div>'+
  '<h2 class="ititle">'+esc(o.destName)+' – '+(o.days-1)+' Nights / '+o.days+' Days</h2>'+
  '<div class="ifacts"><span>'+(o.scope==='International'?'🌍':'🇮🇳')+' '+o.scope+'</span><span>👥 '+o.adults+' Adult'+(o.adults>1?'s':'')+(o.children?' + '+o.children+' Child'+(o.children>1?'ren':''):'')+(o.infants?' + '+o.infants+' Infant'+(o.infants>1?'s':''):'')+'</span><span>🏨 '+esc(o.hotel)+'</span>'+'<span>🛫 From '+esc(o.origin)+'</span><span>🛏️ '+o.rooms+' Room'+(o.rooms>1?'s':'')+'</span>'+(D&&D.nocar||!o.car?'':'<span>🚗 '+esc(o.car)+'</span>')+'<span>'+(travel.startsWith('Rail')?'🚆':'✈️')+' '+esc(travel)+'</span>'+(start?'<span>📅 '+fmt(start)+'</span>':(o.month?'<span>📅 '+esc(o.monthTxt)+' (flexible)</span>':''))+(o.types.length?'<span>⭐ '+esc(o.types.join(', '))+'</span>':'')+(o.interests&&o.interests.length?'<span>❤️ '+esc(o.interests.join(', '))+'</span>':'')+'</div>'+
  '<div class="idays">'+rows+'</div>'+
@@ -248,7 +248,7 @@ function unpack(str){{try{{const k=JSON.parse(decodeURIComponent(escape(atob(str
  const days=int(k.d,2,30,6),mo=/^\\d{{4}}-\\d{{2}}$/.test(k.mo||'')?k.mo:'',st=/^\\d{{4}}-\\d{{2}}-\\d{{2}}$/.test(k.s||'')?k.s:'';
  const sc=PICK(k.sc,['Domestic','International'],'Domestic');
  const nights=Array.isArray(k.n)&&k.n.length===P.length?k.n.map(x=>int(x,1,29,1)):null;
- const o={{dest:P.length===1?match(P[0]):null,places:P,destName:P.join(' → '),days,adults:int(k.a,1,60,2),children:int(k.c,0,30,0),infants:int(k.i,0,20,0),scope:sc,hotel:PICK(k.h,['3 Star','4 Star','5 Star','Luxury / Boutique'],'4 Star'),car:sc==='International'?'':PICK(k.car,['SUV','Hatchback','Sedan','Tempo Traveller'],'SUV'),mode:PICK(k.m,['Flight','Railway'],'Flight'),start:st,origin:String(k.or||'Mumbai').slice(0,60),rooms:int(k.rm,1,30,1),childAges:[],nights,month:mo,monthTxt:mo?new Date(mo+'-01T00:00').toLocaleDateString('en-IN',{{month:'long',year:'numeric'}}):'',types:(Array.isArray(k.t)?k.t:[]).filter(x=>TT.includes(x)),interests:(Array.isArray(k.in)?k.in:[]).filter(x=>IN.includes(x)),budget:''}};
+ const o={{dest:P.length===1?match(P[0]):null,places:P,destName:P.join(' → '),days,adults:int(k.a,1,60,2),children:int(k.c,0,30,0),infants:int(k.i,0,20,0),scope:sc,hotel:PICK(k.h,['3 Star','4 Star','5 Star','Luxury / Boutique'],'4 Star'),car:sc==='International'?'':PICK(k.car,['SUV','Hatchback','Sedan','Tempo Traveller'],'SUV'),mode:PICK(k.m,['Flight','Railway'],'Flight'),start:st,origin:String(k.or||'your city').slice(0,60),rooms:int(k.rm,1,30,1),childAges:[],nights,month:mo,monthTxt:mo?new Date(mo+'-01T00:00').toLocaleDateString('en-IN',{{month:'long',year:'numeric'}}):'',types:(Array.isArray(k.t)?k.t:[]).filter(x=>TT.includes(x)),interests:(Array.isArray(k.in)?k.in:[]).filter(x=>IN.includes(x)),budget:''}};
  return {{o,ref:/^[A-Z0-9]{{8}}$/.test(k.r||'')?k.r:'SHARED'}};}}catch(_){{return null;}}}}
 document.getElementById('sharebtn').addEventListener('click',async()=>{{if(!lastPlan)return;const sm=document.getElementById('sharemsg');sm.className='vmsg';
  const url=location.origin+location.pathname+'#plan='+pack(lastPlan.o,lastPlan.ref);const title='Trip plan: '+lastPlan.o.destName+' – The Real Tours and Travels';
@@ -272,7 +272,7 @@ f.addEventListener('submit',async e=>{{
  if(!places.length){{msg.textContent='Please type at least one place you want to visit, then press Enter or + Add.';msg.classList.add('err');pin.focus();return;}}
  const nd=Math.min(30,Math.max(2,parseInt(d.get('days'))||6));
  if(places.length>nd-1){{msg.textContent=places.length+' places need at least '+(places.length+1)+' days (one night in each). Please add days or remove a place.';msg.classList.add('err');f.days.focus();return;}}
- const origin=(d.get('origin')||'').trim()||'Mumbai';
+ const origin=((d.get('origin')||'').trim()||'your city');
  const adults=Math.max(1,parseInt(d.get('adults'))||1),rooms=Math.max(1,parseInt(d.get('rooms'))||1);
  if(rooms>adults)return fail('Each room needs at least one adult – please check the number of rooms.',f.rooms);
  const cages=[...csel.querySelectorAll('select')].map(x=>x.value);

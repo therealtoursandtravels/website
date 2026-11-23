@@ -4,13 +4,13 @@ Rules: no prices anywhere; name written exactly "The Real Tours and Travels".
 
 ARTICLES = [
 {
-"slug": "best-december-holidays-from-mumbai",
+"slug": "best-december-family-holidays",
 "img": "gulmarg.jpg",
 "img_alt": "Snow-covered mountains in Kashmir in winter",
 "date": "2026-11-23",
-"title": "Best December Holiday Destinations from Mumbai for Families",
-"h1": "Best December Holidays from Mumbai: Where to Go This Winter",
-"desc": "Planning a December family holiday from Mumbai? Our pick of the best winter destinations in India and abroad – snow in Kashmir, Rajasthan forts, Kerala backwaters, Dubai and more.",
+"title": "Best December Holiday Destinations for Families from India",
+"h1": "Best December Family Holidays: Where to Go This Winter",
+"desc": "Planning a December family holiday? Our pick of the best winter destinations in India and abroad – snow in Kashmir, Rajasthan forts, Kerala backwaters, Dubai and more.",
 "intro": "December is the busiest travel month for families – schools close, the weather is pleasant almost everywhere and the festive mood is in the air. Here are the destinations we recommend most, from our 45+ years of planning winter holidays.",
 "body": """
 <h2>Snow holidays in India</h2>
@@ -25,11 +25,11 @@ ARTICLES = [
 <h3>Kerala</h3>
 <p>Munnar's tea gardens, a houseboat night in Alleppey and the beaches of Kovalam make a gentle, relaxing family trip. December weather in Kerala is comfortable and green after the monsoon.</p>
 <h3>Goa and the Andamans</h3>
-<p>For beaches, Goa is the quickest getaway from Mumbai, and the Andaman Islands (Havelock and Neil) offer clear water and calm beaches – great for a honeymoon or a family with older kids.</p>
+<p>For beaches, Goa is a quick and easy getaway, and the Andaman Islands (Havelock and Neil) offer clear water and calm beaches – great for a honeymoon or a family with older kids.</p>
 
-<h2>Short-haul international from Mumbai</h2>
+<h2>Short-haul international from India</h2>
 <ul class="ticks">
-<li><b>Dubai</b> – the best weather of the year, theme parks, desert safari and the Global Village season. Direct flights from Mumbai are short.</li>
+<li><b>Dubai</b> – the best weather of the year, theme parks, desert safari and the Global Village season. Direct flights from major Indian cities are short.</li>
 <li><b>Thailand</b> – Bangkok, Pattaya, Phuket and Krabi are in their dry season in December.</li>
 <li><b>Singapore and Malaysia</b> – excellent for families with young children; vegetarian food is easy to find.</li>
 <li><b>Vietnam</b> – Hanoi, Ha Long Bay and Da Nang are rising favourites for couples and groups.</li>
@@ -46,8 +46,8 @@ ARTICLES = [
 <p>Not sure where to go? Tell us your dates, who is travelling and what your family enjoys – we'll suggest the best options and plan everything for you.</p>
 """,
 "faqs": [
- ("Which place is best for snow in December from Mumbai?", "Kashmir (Gulmarg and Sonamarg) and Himachal (Manali, Solang Valley) are the most popular snow destinations in December. Snowfall varies each year, so we plan flexibly."),
- ("Which international destination is good in December for families?", "Dubai, Singapore, Thailand and Malaysia are popular December choices from Mumbai – short flights, pleasant weather and plenty for children to do."),
+ ("Which place is best for snow in December?", "Kashmir (Gulmarg and Sonamarg) and Himachal (Manali, Solang Valley) are the most popular snow destinations in December. Snowfall varies each year, so we plan flexibly."),
+ ("Which international destination is good in December for families?", "Dubai, Singapore, Thailand and Malaysia are popular December choices from India – short flights, pleasant weather and plenty for children to do."),
  ("When should I book a December holiday?", "As early as possible. December, Christmas and New Year are peak dates, so flights and good hotels fill up quickly."),
 ],
 "related": ["domestic-holiday-packages", "international-holiday-packages", "honeymoon-packages"],
@@ -59,7 +59,7 @@ ARTICLES = [
 "date": "2026-11-23",
 "title": "Jain Yatra Guide: Major Tirths and Travelling with Pure Jain Food",
 "h1": "Jain Yatra Guide: Major Tirths and How We Serve Pure Jain Food on Tour",
-"desc": "A guide to popular Jain tirth yatras from Mumbai – Palitana, Girnar, Sammed Shikharji, Ranakpur and more – and how The Real Tours and Travels arranges pure Jain food with our own Maharaj.",
+"desc": "A guide to popular Jain tirth yatras – Palitana, Girnar, Sammed Shikharji, Ranakpur and more – and how The Real Tours and Travels arranges pure Jain food with our own Maharaj.",
 "intro": "For many Jain families, a tirth yatra is the most meaningful journey of the year. The biggest worry is usually food – finding pure Jain meals on the road. That is why we travel with our own Maharaj. Here is a short guide to the most-loved yatras and how we plan them.",
 "body": """
 <h2>Popular Jain tirth yatras</h2>
@@ -93,7 +93,7 @@ ARTICLES = [
 """,
 "faqs": [
  ("Do you provide pure Jain food on yatra tours?", "Yes. Our own Maharaj travels with the group and cooks fresh Jain food without onion, garlic or root vegetables, with chauvihar-friendly timings."),
- ("Which Jain tirths can be covered in one trip from Mumbai?", "Palitana and Girnar are often combined in one Gujarat yatra. Ranakpur, Mount Abu and Nakoda make a good Rajasthan yatra. Sammed Shikharji is usually a dedicated trip."),
+ ("Which Jain tirths can be covered in one trip?", "Palitana and Girnar are often combined in one Gujarat yatra. Ranakpur, Mount Abu and Nakoda make a good Rajasthan yatra. Sammed Shikharji is usually a dedicated trip."),
  ("Can elderly family members do the Palitana climb?", "Yes, with planning. Doli services are available at the foothill, and we schedule rest days and early starts."),
 ],
 "related": ["jain-yatra-tours-with-maharaj", "yatra-tours", "group-tours"],
@@ -103,7 +103,7 @@ ARTICLES = [
 "img": "passport.jpg",
 "img_alt": "Open passport with visa and immigration stamps",
 "date": "2026-11-23",
-"title": "Passport & Visa Checklist for Indian Travellers (Mumbai)",
+"title": "Passport & Visa Checklist for Indian Travellers",
 "h1": "Passport and Visa Checklist for Indian Travellers",
 "desc": "A simple checklist for Indian travellers before an international trip – passport validity, renewal, common visa documents, and how The Real Tours and Travels helps with passport and visa services.",
 "intro": "Visa trouble is the most common reason international holidays get delayed. A little planning avoids most of it. Here is the checklist we go through with every family before they travel abroad.",
@@ -140,12 +140,12 @@ ARTICLES = [
 <li>Carry printouts of your visa, bookings and insurance as well as copies on your phone.</li>
 <li>Keep a photocopy of your passport separately from the original.</li>
 </ul>
-<p>Our passport and visa team in Mulund West handles documents, forms and appointments for you. Call or WhatsApp us on 98431 21212 to get started.</p>
+<p>Our passport and visa team handles documents, forms and appointments for you. Call or WhatsApp us on 98431 21212 to get started.</p>
 """,
 "faqs": [
  ("How long should my passport be valid to travel abroad?", "Most countries require your passport to be valid for at least six months beyond your return date, with blank pages for stamps."),
  ("How early should I apply for a Schengen or UK visa?", "Start two to three months before travel. Appointment slots fill up quickly before peak holiday seasons."),
- ("Do you help with passport renewal in Mumbai?", "Yes. We help with new passports and renewals – forms, documents and booking the Passport Seva Kendra appointment."),
+ ("Do you help with passport renewal?", "Yes. We help with new passports and renewals – forms, documents and booking the Passport Seva Kendra appointment."),
 ],
 "related": ["passport-visa-services", "international-holiday-packages", "travel-insurance"],
 },
@@ -156,7 +156,7 @@ ARTICLES = [
 "date": "2026-11-23",
 "title": "Why Travel Insurance Matters for Every Trip – A Simple Guide",
 "h1": "Why Travel Insurance Matters: A Simple Guide for Indian Travellers",
-"desc": "What travel insurance covers, when it is mandatory, and why families and senior citizens should never skip it. A plain-language guide from The Real Tours and Travels, Mulund.",
+"desc": "What travel insurance covers, when it is mandatory, and why families and senior citizens should never skip it. A plain-language guide from The Real Tours and Travels.",
 "intro": "Travel insurance is the one thing most travellers skip – until something goes wrong. A medical emergency abroad or a lost bag can turn a dream holiday into a stressful one. Here is what you should know, in simple words.",
 "body": """
 <h2>What does travel insurance usually cover?</h2>

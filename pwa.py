@@ -7,7 +7,7 @@ def manifest(NAME):
     return json.dumps({
         "name": NAME,
         "short_name": "Real Tours",
-        "description": "Holidays, flights, hotels, cruises, visas and passports – The Real Tours and Travels, Mulund West, Mumbai. Since 1981.",
+        "description": "Holidays, flights, hotels, cruises, visas and passports – The Real Tours and Travels. Serving travellers across India since 1981.",
         "id": "/",
         "start_url": "/?source=app",
         "scope": "/",

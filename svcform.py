@@ -16,7 +16,7 @@ JAIN_EXTRA = """<div class="sf-row">
 <label class="sf-chk1"><input type="checkbox" name="x_notify" value="Tell me about upcoming group yatras"> Tell me about upcoming <b>group yatras</b> with Maharaj</label>"""
 
 GROUP_EXTRA = """<div class="sf-row"><label>Type of group<select name="x_gtype" data-lbl="Group type"><option value="">Choose…</option><option>Extended family / friends</option><option>Housing society / community</option><option>Women-only</option><option>Senior citizens</option><option>School / college</option><option>Corporate</option><option>Other</option></select></label>
-<label>Departing from<input name="x_from" data-lbl="Departing from" maxlength="40" placeholder="e.g. Mumbai" autocomplete="off"></label></div>"""
+<label>Departing from<input name="x_from" data-lbl="Departing from" maxlength="40" placeholder="e.g. your city" autocomplete="off"></label></div>"""
 
 HONEY_EXTRA = """<div class="sf-row"><label>Wedding date (optional)<input name="x_wed" data-lbl="Wedding date" type="date"></label>
 <label>Style<select name="x_style" data-lbl="Style"><option value="">Any – please suggest</option><option>Beach &amp; islands</option><option>Mountains &amp; snow</option><option>City &amp; culture</option><option>Adventure</option><option>Luxury / private villa</option></select></label></div>"""
@@ -34,7 +34,7 @@ TRANSFER_EXTRA = """<div class="sf-row"><label>Type of trip<select name="x_type"
 <label>Flight number (for airport trips)<input name="x_flt" data-lbl="Flight" maxlength="12" placeholder="e.g. 6E 2131" autocomplete="off"></label></div>"""
 
 WEEKEND_EXTRA = """<div class="sf-row"><label>Stay<select name="x_stay" data-lbl="Stay"><option value="">Please suggest</option><option>Resort</option><option>Private villa / bungalow</option><option>Hotel</option></select></label>
-<label>Car from Mumbai?<select name="x_car" data-lbl="Car"><option value="">Yes – please arrange</option><option>No – we will drive</option></select></label></div>"""
+<label>Car from your city?<select name="x_car" data-lbl="Car"><option value="">Yes – please arrange</option><option>No – we will drive</option></select></label></div>"""
 
 SENIOR_EXTRA = """<div class="sf-row"><label>Number of senior citizens<input name="x_sen" data-lbl="Senior citizens" type="number" min="1" max="200"></label>
 <label>Wheelchair needed?<select name="x_wc" data-lbl="Wheelchair"><option value="">No</option><option>Yes – at airports</option><option>Yes – throughout the trip</option></select></label></div>
@@ -65,7 +65,7 @@ WOMEN_EXTRA = """<div class="sf-row"><label>How would you like to travel?<select
 <label class="sf-chk1"><input type="checkbox" name="x_tm" value="Woman tour manager requested"> Woman tour manager requested</label>"""
 
 TREK_EXTRA = """<div class="sf-row"><label>Experience level<select name="x_lvl" data-lbl="Experience"><option>First trek / beginner</option><option>Done 1–2 treks</option><option>Experienced trekker</option></select></label>
-<label>Type of adventure<select name="x_adv" data-lbl="Adventure"><option value="">Please suggest</option><option>Himalayan trek</option><option>Ladakh / Spiti road trip</option><option>Rafting / paragliding / camping</option><option>Bhutan / Nepal</option><option>Sahyadri trek near Mumbai</option></select></label></div>
+<label>Type of adventure<select name="x_adv" data-lbl="Adventure"><option value="">Please suggest</option><option>Himalayan trek</option><option>Ladakh / Spiti road trip</option><option>Rafting / paragliding / camping</option><option>Bhutan / Nepal</option><option>Sahyadri / weekend trek</option></select></label></div>
 <label class="sf-chk1"><input type="checkbox" name="x_gear" value="Needs rental trekking gear"> We'll need rental gear (jackets, poles, sleeping bags)</label>"""
 
 CFG = {
@@ -75,8 +75,8 @@ CFG = {
  "group-tours": ("Group tour", "Where would the group like to go?", "e.g. Rajasthan, Thailand – or suggest", GROUP_EXTRA),
  "honeymoon-packages": ("Honeymoon", "Where would you like to go?", "e.g. Maldives, Bali, Kashmir – or suggest", HONEY_EXTRA),
  "fit-mice-tours": ("FIT / MICE", "Destination or city", "e.g. Goa offsite, Dubai incentive trip", MICE_EXTRA),
- "airport-transfers-outstation-cabs": ("Airport transfer / cab", "Pick-up and drop (from → to)", "e.g. Mulund → Mumbai airport T2", TRANSFER_EXTRA),
- "weekend-getaways-from-mumbai": ("Weekend getaway", "Where would you like to go?", "e.g. Lonavala, Alibaug – or suggest", WEEKEND_EXTRA),
+ "airport-transfers-outstation-cabs": ("Airport transfer / cab", "Pick-up and drop (from → to)", "e.g. Home → Airport (Terminal 2)", TRANSFER_EXTRA),
+ "weekend-getaways": ("Weekend getaway", "Where would you like to go?", "e.g. a hill station or beach – or suggest", WEEKEND_EXTRA),
  "senior-citizen-tours": ("Senior citizen tour", "Where would you like to go?", "e.g. Kerala, Char Dham, Singapore – or suggest", SENIOR_EXTRA),
  "destination-weddings-family-functions": ("Wedding / family function", "Preferred destination", "e.g. Udaipur, Goa, Dubai – or suggest", WEDDING_EXTRA),
  "school-college-educational-tours": ("Educational tour", "Where would you like to go?", "e.g. Delhi–Agra, ISRO Bengaluru, Singapore", EDU_EXTRA),
@@ -111,7 +111,7 @@ def svc_form(slug, root="../"):
 <script>
 (function(){{
 const SB="{SB_URL}",KEY="{SB_KEY}";
-const notify=(s,t,r)=>{{try{{const o={{_subject:s,message:t,_replyto:r||'',_template:'table',_captcha:'false',source:location.href}};const m=(s.match(/(\\S+) – /)||[])[1]||'';if(r&&/@/.test(r)&&/^[A-Z0-9-]{{6,}}$/.test(m)){{o.email=r;o._autoresponse='Thank you for contacting The Real Tours and Travels. We have received your request (reference '+m+') and our team will get back to you shortly. Please quote this reference in any message to us. For anything urgent, call or WhatsApp +91 98431 21212. – The Real Tours and Travels, Mulund West, Mumbai · www.therealtoursandtravels.com';}}fetch('https://formsubmit.co/ajax/enquiry@therealtoursandtravels.com',{{method:'POST',headers:{{'Content-Type':'application/json',Accept:'application/json'}},body:JSON.stringify(o)}}).catch(()=>{{}});}}catch(_){{}}}};
+const notify=(s,t,r)=>{{try{{const o={{_subject:s,message:t,_replyto:r||'',_template:'table',_captcha:'false',source:location.href}};const m=(s.match(/(\\S+) – /)||[])[1]||'';if(r&&/@/.test(r)&&/^[A-Z0-9-]{{6,}}$/.test(m)){{o.email=r;o._autoresponse='Thank you for contacting The Real Tours and Travels. We have received your request (reference '+m+') and our team will get back to you shortly. Please quote this reference in any message to us. For anything urgent, call or WhatsApp +91 98431 21212. – The Real Tours and Travels · www.therealtoursandtravels.com';}}fetch('https://formsubmit.co/ajax/enquiry@therealtoursandtravels.com',{{method:'POST',headers:{{'Content-Type':'application/json',Accept:'application/json'}},body:JSON.stringify(o)}}).catch(()=>{{}});}}catch(_){{}}}};
 document.querySelectorAll('[data-yatra]').forEach(a=>a.addEventListener('click',()=>{{const f=document.querySelector('form.sform');if(!f)return;const cb=f.querySelector('input[name=x_notify]');if(cb)cb.checked=true;if(a.dataset.yatra)f.dest.value=a.dataset.yatra;}}));
 document.querySelectorAll('form.sform').forEach(f=>{{
  const m=f.querySelector('.sf-msg');const now=new Date(Date.now()+330*60000).toISOString();f.month.min=now.slice(0,7);
