@@ -335,7 +335,7 @@ def build():
     home = f"""
 <section class="hero"{hero_style}><div class="wrap"><div>
 <span class="kicker">Mumbai's family travel experts · Since 1981</span>
-<h1>Travel Agency in Mulund, Mumbai for Family Holidays, Tours &amp; Visas</h1>
+<h1>Travel Agency in Mulund, Mumbai for All Your Travel Needs</h1>
 <p>Domestic and international holiday packages, honeymoons, yatras, Jain tours with Maharaj, group tours, passport &amp; visa services and travel insurance – planned personally by The Real Tours and Travels.</p>
 <div class="btns"><a class="btn gold" href="customize-your-package/">✨ Customize your package</a><a class="btn ghost" href="{WA}" target="_blank" rel="noopener">💬 WhatsApp 98431 21212</a></div>
 <div class="trust"><div><b>45+ years</b>serving travellers since 1981</div><div><b>4.8 ★</b>rating on Google</div><div><b>10+</b>travel services under one roof</div></div>
