@@ -287,7 +287,7 @@ __OTHERLIST__
 <div class="row"><fieldset class="yn"><legend>Ever been refused a visa for any country?</legend><div class="chips"><label><input type="radio" name="refused" value="No" checked>No</label><label><input type="radio" name="refused" value="Yes">Yes</label></div></fieldset>
 <fieldset class="yn"><legend>Visited the US, UK, Schengen, Canada or Australia in the last 5 years?</legend><div class="chips"><label><input type="radio" name="history" value="No" checked>No</label><label><input type="radio" name="history" value="Yes">Yes</label></div></fieldset></div>
 <p id="refnote" class="vnote" hidden>Please mention the country and year of the refusal in the notes below – it helps us prepare a stronger application.</p>
-<div class="row"><label>Number of travellers<input name="travellers" type="number" min="1" max="10" value="1"></label><span class="vnote">For groups of more than 10, please WhatsApp us on 98431 21212.</span></div>
+<div class="row"><label>Number of travellers<input name="travellers" type="number" min="1" max="10" value="1"></label><span class="vnote">Applying for 10 or more people? See <a href="#vgroup">group visa applications</a> below.</span></div>
 <div id="vcheck" class="vcheck" hidden></div>
 <label class="chk"><input type="checkbox" name="later"><span>I'll send my documents later – just save my details for now</span></label>
 <p class="vnote famnote" id="famnote" hidden>👨‍👩‍👧‍👦 <b>Family or group trip?</b> Upload each person's passport and photo under their own name. Shared documents – bank statements, ITR, flight and hotel bookings – only need to be uploaded once, under the person paying for the trip. Scanned everyone into one file? Upload it under Traveller 1 and tick the box for the others.</p>
@@ -297,7 +297,8 @@ __OTHERLIST__
 <div class="hp" aria-hidden="true"><label>Leave this empty<input name="company_website" tabindex="-1" autocomplete="off"></label></div>
 <button class="btn gold" type="submit" id="vsubmit">Upload documents securely</button>
 <p id="vmsg" class="vmsg" role="status" aria-live="polite"></p>
-</form>"""
+</form>
+<div class="grp" id="vgroup"><div><b>👥 Group visa applications – 10 or more applicants</b><p>For tour groups, corporate delegations, conferences and pilgrimage groups, our visa desk manages the complete process – a consolidated document checklist, verification of every file, form filling and coordinated visa-centre appointments – with a dedicated coordinator for your group.</p></div><div class="grpbtn"><a class="btn gold" href="https://wa.me/919843121212?text=Hello%20The%20Real%20Tours%20and%20Travels%2C%20we%20would%20like%20assistance%20with%20a%20group%20visa%20application.%0ADestination%20country%3A%20%0ANumber%20of%20applicants%3A%20%0ATravel%20dates%3A%20%0AGroup%20type%20%28corporate%20/%20tour%20/%20pilgrimage%20/%20other%29%3A%20" target="_blank" rel="noopener">💬 WhatsApp our visa desk</a><a class="btn outline" href="tel:+919843121212">📞 +91 98431 21212</a><a class="btn outline" href="mailto:enquiry@therealtoursandtravels.com?subject=Group%20visa%20application">✉️ Email us</a></div></div>"""
 
 VISA_JS_NEW = r"""const f=document.getElementById('vform'),msg=document.getElementById('vmsg'),btn=document.getElementById('vsubmit');
 const DOCS=__DOCS__;

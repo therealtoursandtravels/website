@@ -50,8 +50,8 @@ CH = lambda i: "Child" + ("ren" if i != 1 else "")
 INF = lambda i: "Infant" + ("s" if i != 1 else "")
 RM = lambda i: "Room" + ("s" if i > 1 else "")
 
-CRUISE_LINES = ["Any cruise line", "Cordelia Cruises", "Royal Caribbean", "Costa Cruises", "MSC Cruises", "Norwegian Cruise Line", "Celebrity Cruises", "Princess Cruises", "Disney Cruise Line", "Resorts World Cruises", "Dream / Genting", "Viking (river cruises)"]
-PORTS = ["Mumbai", "Goa", "Kochi", "Chennai", "Singapore", "Dubai", "Abu Dhabi", "Miami / Florida", "Barcelona", "Rome (Civitavecchia)", "Southampton", "Sydney", "Other"]
+CRUISE_LINES = ["Any cruise line", "Cordelia Cruises", "Royal Caribbean", "Costa Cruises", "MSC Cruises", "Norwegian Cruise Line", "Celebrity Cruises", "Princess Cruises", "Disney Cruise Line", "Resorts World Cruises", "Viking (river cruises)", "Other – type below"]
+PORTS = ["Mumbai", "Goa", "Kochi", "Chennai", "Singapore", "Dubai", "Abu Dhabi", "Miami / Florida", "Barcelona", "Rome (Civitavecchia)", "Southampton", "Sydney", "Other – type below"]
 
 def flight_widget(root):
     opts = "".join(f'<option value="{c} ({k})">{n}</option>' for c,k,n in AIRPORTS)
@@ -76,18 +76,32 @@ def flight_widget(root):
     cruise = f"""<form class="fform" data-kind="cruise" novalidate hidden>
 <div class="fgrid fg-c">
 <label class="fcell">Cruise line<select name="line">{"".join(f"<option>{x}</option>" for x in CRUISE_LINES)}</select></label>
+<label class="fcell cr-oline" hidden>Which cruise line?<input name="line_other" maxlength="50" placeholder="e.g. Silversea, Oceania" autocomplete="off"></label>
+<label class="fcell">Route / destination<input name="route" maxlength="60" placeholder="e.g. Singapore–Penang, Mediterranean, Lakshadweep" autocomplete="off"></label>
 <label class="fcell">Departure port<select name="port">{"".join(f"<option>{x}</option>" for x in PORTS)}</select></label>
-<label class="fcell">Month of travel<input name="month" type="month" required></label>
+<label class="fcell cr-oport" hidden>Which port?<input name="port_other" maxlength="40" placeholder="e.g. Visakhapatnam, Venice" autocomplete="off"></label>
 <label class="fcell">Nights<select name="nights"><option value="2">2–3 nights</option><option value="4">4–5 nights</option><option value="6">6–7 nights</option><option value="8">8–10 nights</option><option value="11">11+ nights</option></select></label>
-<label class="fcell">Guests &amp; cabin<span class="fpax f3">{_sel("adults","Adults",range(1,21),AD)}{_sel("children","Children",range(0,11),CH)}<select name="cabin" aria-label="Cabin"><option>Interior</option><option>Ocean view</option><option>Balcony</option><option>Suite</option></select></span></label>
-</div>{_contact("Get Cruise Quote", root)}</form>"""
+</div>
+<div class="fgrid fg-c2">
+<div class="fcell">When<span class="crwhen"><label><input type="radio" name="when" value="date" checked> Exact sailing date</label><label><input type="radio" name="when" value="month"> Flexible – month</label></span></div>
+<label class="fcell cr-date">Sailing date<input name="sail" type="date"></label>
+<label class="fcell cr-month" hidden>Month of travel<input name="month" type="month"></label>
+<label class="fcell">Guests, cabins &amp; type<span class="fpax">{_sel("adults","Adults",range(1,21),AD)}{_sel("children","Children",range(0,11),CH)}{_sel("cabins","Cabins",range(1,11),lambda i: "Cabin" + ("s" if i > 1 else ""))}<select name="cabin" aria-label="Cabin type"><option>Interior</option><option>Ocean view</option><option>Balcony</option><option>Suite</option></select></span></label>
+</div>
+<div class="fages" hidden><span>Age of each child (on sailing date)</span><div class="fagesel"></div></div>
+<div class="cradd"><span>Also arrange for me:</span><label><input type="checkbox" name="addon" value="Flights to / from the port"> ✈️ Flights to the port</label><label><input type="checkbox" name="addon" value="Hotel before / after the cruise"> 🏨 Hotel before / after</label><label><input type="checkbox" name="addon" value="Visas for the ports of call"> 🛂 Visas</label><label><input type="checkbox" name="addon" value="Travel insurance"> 🛡️ Travel insurance</label></div>
+<p class="crpass">🛳️ <b>Sailing abroad?</b> Passports should be valid for at least 6 months after the cruise ends, and a visa may be needed for each country the ship stops in – we will check and arrange them for you.</p>
+{_contact("Get Cruise Quote", root)}</form>"""
     hc = "".join(f'<option value="{c}">' for c in ["Dubai","Singapore","Bangkok","Pattaya","Phuket","Bali","Maldives","Kuala Lumpur","London","Paris","Srinagar","Gulmarg","Manali","Shimla","Goa","Jaipur","Udaipur","Munnar","Alleppey","Darjeeling","Gangtok","Port Blair","Havelock","Leh","Lonavala","Mahabaleshwar","Mumbai"])
     return f"""
 <div class="fbar" id="flight-search">
 <div class="ftabs" role="tablist"><button type="button" class="ftab on" data-k="flight">✈️ Flights</button><button type="button" class="ftab" data-k="hotel">🏨 Hotels</button><button type="button" class="ftab" data-k="cruise">🛳️ Cruise</button></div>
 {flight}{hotel}{cruise}
 <datalist id="fapts">{opts}</datalist><datalist id="hcities">{hc}</datalist>
-<p class="fnote">Tell us what you need – we check all airlines, hotels and cruise lines and reply with the best options on WhatsApp or email. Bookings and tickets issued by The Real Tours and Travels.<br><span class="gstline">GST as applicable: airline &amp; hotel taxes as charged by the supplier (hotel rooms up to ₹7,500/night 5%, above 18%; economy air 5%, premium classes 18%) + 18% GST on our service fee. Overseas tour packages attract 2% TCS.</span></p>
+<div class="grp"><div><b>👥 Group bookings – 10 or more travellers</b><p>Travelling with a corporate team, wedding party, housing society, college or pilgrimage group? Our group desk arranges dedicated group fares, hotel room blocks and cruise cabin allocations, with one point of contact from enquiry to return.</p></div><div class="grpbtn"><a class="btn gold" href="https://wa.me/919843121212?text=Hello%20The%20Real%20Tours%20and%20Travels%2C%20we%20would%20like%20a%20quotation%20for%20a%20group%20booking.%0AService%20%28flights%20/%20hotel%20/%20cruise%29%3A%20%0AGroup%20size%3A%20%0AFrom%20/%20to%3A%20%0ATravel%20dates%3A%20" target="_blank" rel="noopener">💬 WhatsApp the group desk</a><a class="btn outline" href="tel:+919843121212">📞 +91 98431 21212</a><a class="btn outline" href="mailto:enquiry@therealtoursandtravels.com?subject=Group%20booking%20enquiry">✉️ Email us</a></div></div>
+<p class="fnote" data-for="flight">Tell us what you need – we check all airlines and reply with the best options on WhatsApp or email. Tickets issued by The Real Tours and Travels.<br><span class="gstline">GST as applicable: airline taxes as charged by the airline (economy 5%, premium classes 18%) + 18% GST on our service fee.</span></p>
+<p class="fnote" data-for="hotel" hidden>Tell us what you need – we check hotels, resorts and villas and reply with the best options on WhatsApp or email. Bookings made by The Real Tours and Travels.<br><span class="gstline">GST as applicable: hotel taxes as charged by the hotel (rooms up to ₹7,500/night 5%, above 18%) + 18% GST on our service fee.</span></p>
+<p class="fnote" data-for="cruise" hidden>Tell us what you need – we check all major cruise lines and reply with the best sailings on WhatsApp or email. Bookings made by The Real Tours and Travels.<br><span class="gstline">GST as applicable: taxes and port charges as charged by the cruise line + 18% GST on our service fee. Overseas tour packages attract 2% TCS.</span></p>
 </div>
 <script>
 (function(){{
@@ -97,7 +111,7 @@ const box=document.getElementById('flight-search');
 const forms={{}};box.querySelectorAll('form').forEach(x=>forms[x.dataset.kind]=x);
 const NOTE={{flight:'Preferred airline, timings, baggage…',hotel:'e.g. sea view, near beach, Jain food, early check-in',cruise:'e.g. dates flexible, senior citizens, Jain food'}};
 Object.entries(forms).forEach(([k,x])=>x.notes.placeholder=NOTE[k]);
-box.querySelectorAll('.ftab').forEach(t=>t.addEventListener('click',()=>{{box.querySelectorAll('.ftab').forEach(b=>b.classList.toggle('on',b===t));Object.entries(forms).forEach(([k,x])=>x.hidden=k!==t.dataset.k);}}));
+box.querySelectorAll('.ftab').forEach(t=>t.addEventListener('click',()=>{{box.querySelectorAll('.ftab').forEach(b=>b.classList.toggle('on',b===t));Object.entries(forms).forEach(([k,x])=>x.hidden=k!==t.dataset.k);box.querySelectorAll('.fnote[data-for]').forEach(n=>n.hidden=n.dataset.for!==t.dataset.k);}}));
 const HK={{flights:'flight',flight:'flight',hotels:'hotel',hotel:'hotel',cruise:'cruise'}};function fromHash(){{const k=HK[location.hash.slice(1)];box.querySelectorAll('.ftab').forEach(b=>b.hidden=!!k&&b.dataset.k!==k);if(!k)return;const t=box.querySelector('.ftab[data-k='+k+']');if(t){{t.click();const y=box.getBoundingClientRect().top+scrollY-(document.querySelector('header.site')?.offsetHeight||0)-12;scrollTo({{top:y,behavior:'smooth'}});}}}}if(location.hash)setTimeout(fromHash,250);addEventListener('hashchange',fromHash);
 const today=new Date(Date.now()+330*60000).toISOString().slice(0,10);
 const F=forms.flight,H=forms.hotel,C=forms.cruise;
@@ -115,6 +129,17 @@ const pl=(n,w,p)=>n+' '+(n==1?w:p);
 const agesBox=H.querySelector('.fages'),agesSel=H.querySelector('.fagesel');
 function drawAges(){{const n=+H.children.value,old=[...agesSel.querySelectorAll('select')].map(x=>x.value);let h='';for(let i=0;i<n;i++){{h+='<select name="child_age" aria-label="Age of child '+(i+1)+'"><option value="">Child '+(i+1)+' age</option>'+[...Array(18).keys()].map(a=>'<option value="'+a+'"'+(old[i]==String(a)?' selected':'')+'>'+(a?a+' yr'+(a>1?'s':''):'Under 1')+'</option>').join('')+'</select>';}}agesSel.innerHTML=h;agesBox.hidden=!n;}}
 H.children.addEventListener('change',drawAges);drawAges();
+// ---- cruise: Other line/port, exact date or month, child ages ----
+const crOL=C.querySelector('.cr-oline'),crOP=C.querySelector('.cr-oport');
+C.line.addEventListener('change',()=>{{crOL.hidden=!C.line.value.startsWith('Other');}});C.port.addEventListener('change',()=>{{crOP.hidden=!C.port.value.startsWith('Other');}});
+const crWhen=()=>C.querySelector('input[name=when]:checked').value;
+C.querySelectorAll('input[name=when]').forEach(r=>r.addEventListener('change',()=>{{C.querySelector('.cr-date').hidden=crWhen()!=='date';C.querySelector('.cr-month').hidden=crWhen()!=='month';}}));
+C.sail.min=today;
+const cAgesBox=C.querySelector('.fages'),cAgesSel=C.querySelector('.fagesel');
+function drawCAges(){{const n=+C.children.value,old=[...cAgesSel.querySelectorAll('select')].map(x=>x.value);let h='';const opts=[['u6','Under 6 months'],['6-11m','6–11 months']].concat([...Array(17).keys()].map(a=>[String(a+1),(a+1)+' yr'+(a?'s':'')]));
+ for(let i=0;i<n;i++){{h+='<select name="child_age" aria-label="Age of child '+(i+1)+'"><option value="">Child '+(i+1)+' age</option>'+opts.map(([v,t])=>'<option value="'+v+'"'+(old[i]===v?' selected':'')+'>'+t+'</option>').join('')+'</select>';}}
+ cAgesSel.innerHTML=h;cAgesBox.hidden=!n;}}
+C.children.addEventListener('change',drawCAges);drawCAges();
 Object.entries(forms).forEach(([kind,f])=>f.addEventListener('submit',async e=>{{
  e.preventDefault();const msg=f.querySelector('.fmsg');msg.className='fmsg vmsg';
  if(f.company_website.value){{msg.textContent='✅ Thank you – enquiry received.';msg.classList.add('ok');return;}} // spam trap: bots fill hidden field
@@ -145,12 +170,23 @@ Object.entries(forms).forEach(([kind,f])=>f.addEventListener('submit',async e=>{
   row={{id,kind:'hotel',destination:dest.slice(0,80),start_date:ci||null,end_date:co||null,nights,rooms,adults:ad,children:ch,category:f.cat.value,full_name:name,notes:[agesTxt,notes].filter(Boolean).join(' | ')||null}};
   lines=['🏨 Hotel quote request ('+ref+')','Where: '+dest,ci&&co?'Stay: '+fd(ci)+' → '+fd(co)+' ('+pl(nights,'night','nights')+')':'',pl(rooms,'Room','Rooms')+' · '+pl(ad,'Adult','Adults')+(ch?', '+pl(ch,'Child','Children'):'')+' · '+f.cat.value,agesTxt];
  }}else{{
-  const m=f.month.value,ad=+f.adults.value,ch=+f.children.value,nt=f.nights.options[f.nights.selectedIndex].text;
-  if(!m)err='Please choose your month of travel.';
+  const ad=+f.adults.value,ch=+f.children.value,cab=+f.cabins.value,nt=f.nights.options[f.nights.selectedIndex].text,w=crWhen();
+  const line=f.line.value.startsWith('Other')?f.line_other.value.trim():f.line.value,port=f.port.value.startsWith('Other')?f.port_other.value.trim():f.port.value,route=f.route.value.trim();
+  const sail=f.sail.value,m=f.month.value,ages=[...f.querySelectorAll('select[name=child_age]')].map(x=>x.value),addons=[...f.querySelectorAll('input[name=addon]:checked')].map(x=>x.value);
+  if(f.line.value.startsWith('Other')&&line.length<2)err='Please type the cruise line you have in mind.';
+  else if(f.port.value.startsWith('Other')&&port.length<2)err='Please type the departure port.';
+  else if(w==='date'&&!sail)err='Please choose your sailing date – or pick "Flexible – month".';
+  else if(w==='date'&&sail<today)err='The sailing date cannot be in the past.';
+  else if(w==='month'&&!m)err='Please choose your month of travel.';
+  else if(cab>ad)err='Each cabin needs at least one adult.';
+  else if(ages.some(a=>a===''))err='Please choose the age of each child – cruise lines price children by age.';
   const mon=m?new Date(m+'-01T00:00').toLocaleDateString('en-IN',{{month:'long',year:'numeric'}}):'';
+  const when=w==='date'?(sail?fd(sail):''):mon+' (flexible)';
+  const agesTxt=ch?'Child ages: '+ages.map(a=>a==='u6'?'under 6 months':a==='6-11m'?'6–11 months':a).join(', '):'';
   table='booking_enquiries';ref='CR-'+id.slice(0,6).toUpperCase();
-  row={{id,kind:'cruise',destination:('From '+f.port.value).slice(0,80),travel_month:mon||null,nights:+f.nights.value,adults:ad,children:ch,category:f.cabin.value,provider:f.line.value,full_name:name,notes}};
-  lines=['🛳️ Cruise quote request ('+ref+')','Cruise line: '+f.line.value,'Departure port: '+f.port.value,'Month: '+mon+' · '+nt,pl(ad,'Adult','Adults')+(ch?', '+pl(ch,'Child','Children'):'')+' · '+f.cabin.value+' cabin'];
+  row={{id,kind:'cruise',destination:(route?route+' – from '+port:'From '+port).slice(0,80),travel_month:(w==='date'?sail:mon)||null,nights:+f.nights.value,rooms:cab,adults:ad,children:ch,category:f.cabin.value,provider:line.slice(0,60),full_name:name,
+   notes:[agesTxt,addons.length?'Also arrange: '+addons.join(', '):'',notes].filter(Boolean).join(' | ').slice(0,1000)||null}};
+  lines=['🛳️ Cruise quote request ('+ref+')','Cruise line: '+line,route?'Route: '+route:'','Departure port: '+port,'When: '+when+' · '+nt,pl(ad,'Adult','Adults')+(ch?', '+pl(ch,'Child','Children'):'')+' · '+pl(cab,'cabin','cabins')+' · '+f.cabin.value,agesTxt,addons.length?'Also arrange: '+addons.join(', '):''];
  }}
  if(!err&&!isEmail&&!isPhone)err='Please enter a valid mobile number (outside India, start with your country code, e.g. +971…) or an email so we can send your quote.';
  if(err){{msg.textContent=err;msg.classList.add('err');return;}}
@@ -170,6 +206,12 @@ Object.entries(forms).forEach(([kind,f])=>f.addEventListener('submit',async e=>{
 </script>"""
 
 FLIGHT_CSS = """
+.grp{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;margin-top:14px;padding:16px 18px;border:1px solid var(--line);border-left:4px solid var(--red);border-radius:14px;background:var(--bg)}
+.grp>div:first-child{flex:1 1 360px}.grp b{color:var(--wine);font-size:16px}.grp p{margin:4px 0 0;font-size:14px;color:var(--ink)}
+.grpbtn{display:flex;flex-wrap:wrap;gap:8px}.grpbtn .btn{padding:9px 16px;font-size:14.5px;white-space:nowrap}
+.fgrid.fg-c,.fgrid.fg-c2{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))!important}.fgrid.fg-c2 .fcell:has(.fpax){grid-column:span 2}.crwhen label{white-space:nowrap}.crwhen{display:flex;flex-wrap:wrap;gap:6px 14px;text-transform:none;letter-spacing:0;font:500 14.5px 'Jost',sans-serif;color:var(--ink);padding:11px 0}.crwhen label{display:flex;gap:6px;align-items:center}.crwhen input{accent-color:var(--red)}
+.cradd{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-size:14.5px}.cradd>span{font-size:12.5px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}.cradd label{display:flex;gap:6px;align-items:center;cursor:pointer}.cradd input{accent-color:var(--red)}
+.crpass{margin:0;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:13.5px}.fcell[hidden]{display:none!important}
 .hp{position:absolute!important;left:-10000px!important;top:auto;width:1px;height:1px;overflow:hidden}
 .fpriv,.vpriv{margin:2px 0 0;font-size:12.5px;color:var(--muted)}.fpriv a,.vpriv a{color:var(--crimson)}
 .fages{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:12.5px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
