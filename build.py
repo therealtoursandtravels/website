@@ -6,6 +6,7 @@ from visa import visa_page, passport_page, VISA_CSS
 from planner import planner_page, PLANNER_CSS
 from flights import flight_widget, FLIGHT_CSS
 from tools import gst_tool_page, TOOL_CSS
+import pwa
 
 SITE = "https://www.therealtoursandtravels.com"
 NAME = "The Real Tours and Travels"
@@ -268,6 +269,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <meta property="og:url" content="{canonical}"><meta property="og:image" content="{og}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#ffffff">
+{pwa.HEAD}
 <link rel="icon" type="image/png" href="{root}favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
@@ -294,6 +296,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <p style="margin-top:14px">Serving Mulund, Thane, Bhandup, Nahur, Powai, Ghatkopar and all of Mumbai.</p></div>
 </div><div class="copy">© {datetime.date.today().year} The Real Tours and Travels, Mulund West, Mumbai · GSTIN {GST} · All rights reserved.<br><a href="{root}terms/">Terms &amp; Conditions</a> · <a href="{root}privacy-policy/">Privacy Policy</a> · <a href="{root}cancellation-refund-policy/">Cancellation &amp; Refund Policy</a></div></footer>
 <a class="float-wa" href="{WA}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">💬</a>
+{pwa.BODY}
 </body></html>"""
 
 def write(path, html):
@@ -312,7 +315,7 @@ def cta_band():
 
 def build():
     root = os.path.dirname(os.path.abspath(__file__))
-    open(os.path.join(root, "style.css"), "w").write(CSS + VISA_CSS + PLANNER_CSS + FLIGHT_CSS + TOOL_CSS)
+    open(os.path.join(root, "style.css"), "w").write(CSS + VISA_CSS + PLANNER_CSS + FLIGHT_CSS + TOOL_CSS + pwa.CSS)
     imgs = set(os.listdir(os.path.join(root, "img")))
     # Home
     cards = "".join(f'<a class="card" href="{s["slug"]}/"><div class="ic">{s["icon"]}</div><h3>{s["h1"]}</h3><p>{s["desc"][:120].rsplit(" ",1)[0]}…</p><span class="more">Explore →</span></a>' for s in SERVICES)
@@ -463,6 +466,10 @@ def build():
     urls = ["/"] + [f"/{s['slug']}/" for s in SERVICES] + ["/blog/", "/visa/", "/passport/", "/flights-hotels/", "/customize-your-package/"] + [f"/blog/{a['slug']}/" for a in ARTICLES] + ["/contact/", "/terms/", "/privacy-policy/", "/cancellation-refund-policy/"]
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{SITE}{u}</loc><lastmod>{TODAY}</lastmod><priority>{'1.0' if u=='/' else '0.8'}</priority></url>\n" for u in urls) + "</urlset>\n"
     open(os.path.join(root, "sitemap.xml"), "w").write(sm)
+    # Installable app (PWA)
+    open(os.path.join(root, "manifest.webmanifest"), "w").write(pwa.manifest(NAME))
+    open(os.path.join(root, "sw.js"), "w").write(pwa.service_worker(urls))
+    write("/offline/", page("/offline/", "Offline | The Real Tours and Travels", "You are offline.", pwa.offline_body(PHONE, PHONE_RAW, WA)).replace('<meta name="robots" content="index,follow,max-image-preview:large">','<meta name="robots" content="noindex">'))
     open(os.path.join(root, "robots.txt"), "w").write(f"User-agent: *\nAllow: /\nDisallow: /tools/\n\nSitemap: {SITE}/sitemap.xml\n")
     open(os.path.join(root, "CNAME"), "w").write("www.therealtoursandtravels.com\n")
     print("built", len(urls), "pages")

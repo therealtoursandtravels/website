@@ -10,6 +10,10 @@
 <meta property="og:url" content="https://www.therealtoursandtravels.com/domestic-holiday-packages/"><meta property="og:image" content="https://www.therealtoursandtravels.com/img/gulmarg.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#ffffff">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="Real Tours">
 <link rel="icon" type="image/png" href="../favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
@@ -52,4 +56,24 @@
 <p style="margin-top:14px">Serving Mulund, Thane, Bhandup, Nahur, Powai, Ghatkopar and all of Mumbai.</p></div>
 </div><div class="copy">© 2026 The Real Tours and Travels, Mulund West, Mumbai · GSTIN 27AMUPK4723E1ZU · All rights reserved.<br><a href="../terms/">Terms &amp; Conditions</a> · <a href="../privacy-policy/">Privacy Policy</a> · <a href="../cancellation-refund-policy/">Cancellation &amp; Refund Policy</a></div></footer>
 <a class="float-wa" href="https://wa.me/919843121212?text=Hi%20The%20Real%20Tours%20and%20Travels%2C%20I%27d%20like%20to%20plan%20a%20trip" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">💬</a>
+<button type="button" class="app-install" id="appInstall" hidden>📲 Install app</button>
+<div class="ios-tip" id="iosTip" hidden role="dialog" aria-label="Install on iPhone"><button type="button" class="ios-x" aria-label="Close">✕</button>
+<b>Install The Real Tours and Travels app</b><p>Tap <span class="ios-share">⬆︎</span> <b>Share</b> at the bottom of Safari, then <b>Add to Home Screen</b>.</p></div>
+<script>
+(function(){
+ if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+ const btn=document.getElementById('appInstall'),tip=document.getElementById('iosTip');
+ const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+ if(standalone){document.documentElement.classList.add('is-app');return;}
+ let dismissed=false;try{dismissed=localStorage.getItem('rtt_app_x')==='1';}catch(_){}
+ let ev=null;
+ addEventListener('beforeinstallprompt',e=>{e.preventDefault();ev=e;btn.hidden=false;});
+ btn.addEventListener('click',async()=>{if(ev){ev.prompt();await ev.userChoice;ev=null;btn.hidden=true;}else{tip.hidden=false;}});
+ const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)&&!/crios|fxios/i.test(navigator.userAgent);
+ if(ios){btn.hidden=false;}
+ tip.querySelector('.ios-x').addEventListener('click',()=>{tip.hidden=true;btn.hidden=true;try{localStorage.setItem('rtt_app_x','1');}catch(_){}});
+ if(dismissed&&ios)btn.hidden=true;
+ addEventListener('appinstalled',()=>{btn.hidden=true;});
+})();
+</script>
 </body></html>

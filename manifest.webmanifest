@@ -1,0 +1,83 @@
+{
+ "name": "The Real Tours and Travels",
+ "short_name": "Real Tours",
+ "description": "Holidays, flights, hotels, cruises, visas and passports – The Real Tours and Travels, Mulund West, Mumbai. Since 1981.",
+ "id": "/",
+ "start_url": "/?source=app",
+ "scope": "/",
+ "display": "standalone",
+ "orientation": "portrait",
+ "background_color": "#ffffff",
+ "theme_color": "#D7191F",
+ "lang": "en-IN",
+ "categories": [
+  "travel",
+  "lifestyle"
+ ],
+ "icons": [
+  {
+   "src": "/img/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "/img/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "/img/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ],
+ "shortcuts": [
+  {
+   "name": "Flights, Hotels & Cruise",
+   "short_name": "Book travel",
+   "url": "/flights-hotels/?source=app",
+   "icons": [
+    {
+     "src": "/img/icon-192.png",
+     "sizes": "192x192"
+    }
+   ]
+  },
+  {
+   "name": "Customize your package",
+   "short_name": "Plan a trip",
+   "url": "/customize-your-package/?source=app",
+   "icons": [
+    {
+     "src": "/img/icon-192.png",
+     "sizes": "192x192"
+    }
+   ]
+  },
+  {
+   "name": "Visa services",
+   "short_name": "Visa",
+   "url": "/visa/?source=app",
+   "icons": [
+    {
+     "src": "/img/icon-192.png",
+     "sizes": "192x192"
+    }
+   ]
+  },
+  {
+   "name": "Passport services",
+   "short_name": "Passport",
+   "url": "/passport/?source=app",
+   "icons": [
+    {
+     "src": "/img/icon-192.png",
+     "sizes": "192x192"
+    }
+   ]
+  }
+ ]
+}
