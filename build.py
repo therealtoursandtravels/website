@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Static site generator for The Real Tours and Travels (SEO site)."""
-import json, os, datetime
+import json, os, datetime, re
 from articles import ARTICLES
 from visa import visa_page, passport_page, VISA_CSS
 from planner import planner_page, PLANNER_CSS
@@ -327,6 +327,14 @@ def jain_extra(s):
 <div><h3>🎒 What to pack</h3><ul><li>Puja clothes and a small puja kit</li><li>Comfortable footwear that is easy to remove</li><li>Personal medicines and a copy of prescriptions</li><li>Light woollens for early mornings in winter</li><li>Original photo ID (Aadhaar / passport) for every traveller</li></ul></div>
 </div></div></section>'''
 
+SVC_PHOTO = {"domestic-holiday-packages":"kashmir","international-holiday-packages":"dubai","passport-visa-services":"passport","travel-insurance":"airport",
+ "yatra-tours":"yatra","group-tours":"group","honeymoon-packages":"honeymoon","fit-mice-tours":"mice","airport-transfers-outstation-cabs":"cab",
+ "weekend-getaways-from-mumbai":"weekend","senior-citizen-tours":"senior","destination-weddings-family-functions":"wedding",
+ "school-college-educational-tours":"heritage","police-clearance-certificate-pcc-document-services":"pcc","jain-yatra-tours-with-maharaj":"jain"}
+PAGE_PHOTO = {f"/{k}/": v for k, v in SVC_PHOTO.items()}
+PAGE_PHOTO.update({"/visa/":"passport","/passport/":"planning","/insurance/":"airport","/flights-hotels/":"maldives","/customize-your-package/":"swiss",
+ "/contact/":"mumbai","/about/":"mumbai","/blog/":"heritage"})
+
 def seo_title(t, limit=65):
     """Keep titles short enough for Google results: drop secondary parts before cutting."""
     if len(t) <= limit:
@@ -349,6 +357,11 @@ def seo_desc(d, limit=158):
 def page(path, title, desc, body, extra_ld=None, hero_img=None):
     title, desc = seo_title(title), seo_desc(desc)
     canonical = SITE + path
+    _ph = PAGE_PHOTO.get(path)
+    if _ph:
+        _root = "../" * path.strip("/").count("/") + "../"
+        body = re.sub(r'<section class="hero"(?: style="[^"]*")?>', f'<section class="hero home-hero photo-hero" style="--hero:url({_root}img/h-{_ph}.jpg)">', body, count=1)
+        hero_img = f"h-{_ph}.jpg"
     lds = [jsonld_org()] + (extra_ld or [])
     ld = "\n".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in lds)
     depth = path.strip("/").count("/") + (1 if path.strip("/") else 0)
@@ -432,8 +445,8 @@ def build():
     open(os.path.join(root, "style.css"), "w").write(css_all)
     imgs = set(os.listdir(os.path.join(root, "img")))
     # Home
-    cards = "".join(f'<a class="card" href="{s["slug"]}/"><div class="ic">{s["icon"]}</div><h3>{s["h1"]}</h3><p>{s["desc"][:120].rsplit(" ",1)[0]}…</p><span class="more">Explore →</span></a>' for s in SERVICES)
-    cards += '<a class="card" href="customize-your-package/"><div class="ic">✨</div><h3>Customized Packages – Plan Your Own Trip</h3><p>Type the places you want to visit, choose your dates and hotels, and get an instant day-by-day itinerary…</p><span class="more">Explore →</span></a>'
+    cards = "".join(f'<a class="card pcard" href="{s["slug"]}/"><img class="cimg" src="img/c-{SVC_PHOTO.get(s["slug"],"swiss")}.jpg" alt="{s["short"]} – The Real Tours and Travels" loading="lazy" width="640" height="420"><div class="ic">{s["icon"]}</div><h3>{s["h1"]}</h3><p>{s["desc"][:120].rsplit(" ",1)[0]}…</p><span class="more">Explore →</span></a>' for s in SERVICES)
+    cards += '<a class="card pcard" href="customize-your-package/"><img class="cimg" src="img/c-swiss.jpg" alt="Customized Packages – The Real Tours and Travels" loading="lazy" width="640" height="420"><div class="ic">✨</div><h3>Customized Packages – Plan Your Own Trip</h3><p>Type the places you want to visit, choose your dates and hotels, and get an instant day-by-day itinerary…</p><span class="more">Explore →</span></a>'
     revs = "".join(f'<div class="review"><div class="stars">★★★★★</div><p>“{t}”</p><b>— {n}</b></div>' for n, t in REVIEWS)
     hero = "hero-travel.jpg" if "hero-travel.jpg" in imgs else None
     RJ = fx.load_reviews()

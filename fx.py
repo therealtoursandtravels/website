@@ -98,6 +98,18 @@ CSS = """
 .hero.home-hero>.wrap{position:relative;z-index:1}
 .hero.home-hero .seal{box-shadow:0 20px 60px rgba(0,0,0,.25)}
 @media(max-width:900px){.hero.home-hero:before{background-position:72% top;background-size:auto 62%}.hero.home-hero:after{background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.15) 30%,rgba(255,255,255,.94) 46%,#fff 56%)}}
+/* inner pages: let the photo show instead of the big seal */
+.hero.photo-hero .seal{display:none}
+.hero.photo-hero:after{background:linear-gradient(90deg,rgba(255,255,255,.97) 0%,rgba(255,255,255,.9) 40%,rgba(255,255,255,.2) 72%,rgba(255,255,255,0) 100%)}
+@media(max-width:900px){.hero.home-hero.photo-hero:before{inset:0 0 auto 0;height:230px;background-size:cover;background-position:center}
+.hero.home-hero.photo-hero:after{background:linear-gradient(180deg,rgba(255,255,255,0) 0,rgba(255,255,255,0) 170px,#fff 232px)}
+.hero.photo-hero>.wrap{padding-top:230px!important}}
+/* photo service cards */
+.card.pcard{padding:0;overflow:hidden;display:flex;flex-direction:column}
+.card.pcard .cimg{width:100%;height:170px;object-fit:cover;display:block;transition:transform .6s ease}
+.card.pcard:hover .cimg{transform:scale(1.05)}
+.card.pcard .ic{margin:-26px 0 0 18px;position:relative;z-index:1;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.12)}
+.card.pcard h3,.card.pcard p,.card.pcard .more{margin-left:20px;margin-right:20px}.card.pcard .more{margin-bottom:20px}
 /* gallery */
 .gallery{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:200px;gap:14px;grid-auto-flow:dense}
 .gtile{position:relative;overflow:hidden;border-radius:18px;display:block;box-shadow:0 10px 26px rgba(0,0,0,.10)}
