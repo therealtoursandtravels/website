@@ -87,7 +87,7 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
         tabs = "".join(f'<button type="button" class="vtab{" on" if i==0 else ""}" data-c="{c}">{f} {n}</button>' for i,(c,f,n,_,_) in enumerate(ITEMS))
     else:
         # group the destinations by what Indian travellers need: nothing in advance / online / a visa
-        ITEMS = [it for g, _ in GROUPS for it in ITEMS if it[0] != "nepal" and ENTRY.get(it[0], ("visa",))[0] == g]
+        ITEMS = [it for g, _ in GROUPS for it in ITEMS if it[0] not in ("nepal", "qatar") and ENTRY.get(it[0], ("visa",))[0] == g]
         tabs = ""
         for g, gl in GROUPS:
             row = "".join(f'<button type="button" class="vtab" data-c="{c}">{f} {n}</button>' for (c, f, n, _, _) in ITEMS if ENTRY.get(c, ("visa",))[0] == g)
