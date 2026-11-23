@@ -37,7 +37,7 @@
 <link rel="icon" type="image/png" href="../favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css?v=14eead46">
+<link rel="stylesheet" href="../style.css?v=d17eeb29">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TravelAgency", "@id": "https://www.therealtoursandtravels.com/#agency", "name": "The Real Tours and Travels", "url": "https://www.therealtoursandtravels.com/", "logo": "https://www.therealtoursandtravels.com/img/logo-512.png", "image": "https://www.therealtoursandtravels.com/img/logo-512.png", "telephone": "+919843121212", "email": "enquiry@therealtoursandtravels.com", "foundingDate": "1981", "taxID": "27AMUPK4723E1ZU", "vatID": "27AMUPK4723E1ZU", "address": {"@type": "PostalAddress", "streetAddress": "204, B10, Rachana Building, Govardhan Nagar, Lal Bahadur Shastri Marg", "addressLocality": "Mulund West, Mumbai", "addressRegion": "Maharashtra", "postalCode": "400080", "addressCountry": "IN"}, "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], "opens": "09:00", "closes": "22:00"}], "areaServed": {"@type": "Country", "name": "India"}, "hasMap": "https://maps.google.com/maps?cid=6174258107225017089", "sameAs": ["https://www.instagram.com/therealtoursandtravels/", "https://www.facebook.com/657186054138837", "https://maps.google.com/maps?cid=6174258107225017089"], "makesOffer": [{"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Domestic Holiday Packages from Mumbai", "url": "https://www.therealtoursandtravels.com/domestic-holiday-packages/"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "International Holiday Packages from Mumbai", "url": "https://www.therealtoursandtravels.com/international-holiday-packages/"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Passport & Visa Services in Mulund, Mumbai", "url": "https://www.therealtoursandtravels.com/passport-visa-services/"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Travel Insurance for Every Trip", "url": "https://www.therealtoursandtravels.com/travel-insurance/"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Yatra & Pilgrimage Tour Packages from Mumbai", "url": "https://www.therealtoursandtravels.com/yatra-tours/"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Group Tours for Families, Friends & Societies", "url": "https://www.therealtoursandtravels.com/group-tours/"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Honeymoon Packages from Mumbai", "url": "https://www.therealtoursandtravels.com/honeymoon-packages/"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Customised Tours – Planned Around You", "url": "https://www.therealtoursandtravels.com/customised-tours/"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "FIT & MICE Tours – Corporate Travel and Events", "url": "https://www.therealtoursandtravels.com/fit-mice-tours/"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Jain Yatra Tours with Maharaj (Pure Jain Food)", "url": "https://www.therealtoursandtravels.com/jain-yatra-tours-with-maharaj/"}}]}</script>
 </head><body>
 
@@ -94,6 +94,8 @@
 <label>Mobile number*<input name="phone" required inputmode="tel" maxlength="20" autocomplete="tel" placeholder="10-digit mobile, or +country code"></label></div>
 <div class="row"><label>Email<input name="email" type="email" maxlength="160" autocomplete="email"></label>
 <label>Service*<select name="country" required><option value="Fresh Passport (Adult)">Fresh Passport (Adult)</option><option value="Passport Renewal / Re-issue">Passport Renewal / Re-issue</option><option value="Passport for Minors (below 18)">Passport for Minors (below 18)</option><option value="Tatkaal (Urgent) Passport">Tatkaal (Urgent) Passport</option><option value="Lost / Damaged Passport">Lost / Damaged Passport</option></select></label></div>
+
+
 <div class="row"><input type="hidden" name="visa_type" value="Passport">
 <label>Needed by (travel date, if any)<input name="travel_date" type="date"></label></div>
 <div class="row"><label>Number of applicants<input name="travellers" type="number" min="1" max="50" value="1"></label><span></span></div>
@@ -145,7 +147,17 @@ const tabs=document.querySelectorAll('.vtab'),panels=document.querySelectorAll('
 function show(c){tabs.forEach(t=>t.classList.toggle('on',t.dataset.c===c));panels.forEach(p=>p.hidden=p.dataset.c!==c);}
 tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.c)));
 const names={"fresh": "Fresh Passport (Adult)", "renewal": "Passport Renewal / Re-issue", "minor": "Passport for Minors (below 18)", "tatkaal": "Tatkaal (Urgent) Passport", "lost": "Lost / Damaged Passport"};
-document.querySelectorAll('[data-pick]').forEach(a=>a.addEventListener('click',()=>{const s=document.querySelector('select[name=country]');s.value=names[a.dataset.pick];}));
+const csel=document.querySelector('select[name=country]'),ocw=document.getElementById('ocwrap');
+const syncOther=()=>{if(ocw)ocw.hidden=csel.value!=='Other';};csel.addEventListener('change',syncOther);
+document.querySelectorAll('[data-pick]').forEach(a=>a.addEventListener('click',()=>{csel.value=names[a.dataset.pick];syncOther();}));
+const vo=document.getElementById('vo_country');
+if(vo){
+ const vmsg=document.getElementById('vo_msg');
+ document.getElementById('vo_wa').addEventListener('click',e=>{const c=vo.value.trim();vmsg.className='vmsg';vmsg.textContent='';
+  if(c.length<2){e.preventDefault();vmsg.textContent='Please type the country you are visiting.';vmsg.classList.add('err');vo.focus();return;}
+  e.currentTarget.href='https://wa.me/919843121212?text='+encodeURIComponent('Hi The Real Tours and Travels, please share the documents required and the price for a '+c+' visa. Travellers:  Travel date: ');});
+ document.getElementById('vo_up').addEventListener('click',()=>{csel.value='Other';syncOther();const c=vo.value.trim();if(c)f.other_country.value=c;});
+}
 const f=document.getElementById('vform'),msg=document.getElementById('vmsg'),btn=document.getElementById('vsubmit'),fl=document.getElementById('flist');
 f.files.addEventListener('change',()=>{fl.innerHTML=[...f.files.files].map(x=>'<span>📄 '+x.name.replace(/[<>&]/g,'')+' · '+(x.size/1048576).toFixed(1)+' MB</span>').join('');});
 function uuid(){return (crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return (c=='x'?r:(r&3|8)).toString(16);}));}
@@ -159,6 +171,8 @@ f.addEventListener('submit',async e=>{
  if(!files.length){msg.textContent='Please choose at least one document to upload.';msg.classList.add('err');return;}
  if(files.length>25){msg.textContent='Please upload up to 25 files at a time.';msg.classList.add('err');return;}
  const big=files.find(x=>x.size>10485760);if(big){msg.textContent=big.name+' is larger than 10 MB. Please upload a smaller scan.';msg.classList.add('err');return;}
+ let country=d.get('country');
+ if(country==='Other'){country=(d.get('other_country')||'').trim();if(country.length<2){msg.textContent='Please type the country you are visiting.';msg.classList.add('err');f.other_country.focus();return;}}
  if(!d.get('consent')){msg.textContent='Please tick the consent box.';msg.classList.add('err');return;}
  btn.disabled=true;const id=uuid(),paths=[];
  try{
@@ -169,11 +183,11 @@ f.addEventListener('submit',async e=>{
    if(!r.ok)throw new Error('upload '+r.status);
    paths.push(p);
   }
-  const row={id,full_name:d.get('full_name').trim(),phone,email:(d.get('email')||'').trim()||null,country:d.get('country'),visa_type:d.get('visa_type'),travel_date:d.get('travel_date')||null,travellers:parseInt(d.get('travellers'))||null,notes:(d.get('notes')||'').trim()||null,files:paths};
+  const row={id,full_name:d.get('full_name').trim(),phone,email:(d.get('email')||'').trim()||null,country:country.slice(0,80),visa_type:d.get('visa_type'),travel_date:d.get('travel_date')||null,travellers:parseInt(d.get('travellers'))||null,notes:(d.get('notes')||'').trim()||null,files:paths};
   const r2=await fetch(SB+'/rest/v1/visa_applications',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+(window.RTT_TOKEN||KEY),'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(row)});
   if(!r2.ok)throw new Error('save '+r2.status);
   notify('New passport documents '+id.slice(0,8).toUpperCase()+' – '+row.full_name,'Name: '+row.full_name+'\nPhone: '+row.phone+(row.email?'\nEmail: '+row.email:'')+'\nService: '+row.country+'\nType: '+row.visa_type+(row.travel_date?'\nTravel date: '+row.travel_date:'')+'\nApplicants: '+(row.travellers||1)+'\nFiles uploaded: '+paths.length+' (see Supabase → Storage → visa-documents → applications/'+id+')'+(row.notes?'\nNotes: '+row.notes:''),row.email||'');
-  f.reset();fl.innerHTML='';
+  f.reset();fl.innerHTML='';syncOther();
   msg.innerHTML='✅ Thank you! Your documents were uploaded securely (reference: <b>'+id.slice(0,8).toUpperCase()+'</b>). Our team will call you shortly. For faster service, <a href="https://wa.me/919843121212?text='+encodeURIComponent('Hi, I uploaded my documents on your website. Reference: '+id.slice(0,8).toUpperCase())+'" target="_blank" rel="noopener">WhatsApp us your reference</a>.';
   msg.classList.add('ok');
  }catch(err){msg.textContent='Sorry, the upload did not complete. Please try again, or WhatsApp your documents to 98431 21212.';msg.classList.add('err');}

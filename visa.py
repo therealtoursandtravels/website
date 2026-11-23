@@ -14,6 +14,11 @@ JOB = ["Salaried: salary slips (last 3 months) and leave/NOC letter from employe
        "Students: school or college ID and bonafide letter; retired: pension proof"]
 TRIP = ["Confirmed return flight booking", "Hotel bookings for the whole stay", "Day-wise travel itinerary"]
 
+OTHER_COUNTRIES = ["Japan","South Korea","China","Hong Kong","Taiwan","Philippines","Indonesia","Cambodia","Laos","Myanmar","Nepal","Bhutan","Sri Lanka","Bangladesh",
+ "Mauritius","Seychelles","Kenya","Tanzania","South Africa","Egypt","Morocco","Turkey","Azerbaijan","Georgia","Armenia","Uzbekistan","Kazakhstan","Kyrgyzstan",
+ "Jordan","Israel","Saudi Arabia","Qatar","Oman","Bahrain","Kuwait","Russia","Ireland","Canada","Mexico","Brazil","Argentina","Peru","Chile","New Zealand","Fiji",
+ "Iceland","Norway","Sweden","Finland","Denmark","Croatia","Greece","Portugal","Czech Republic","Hungary","Poland","Austria","Netherlands","Belgium"]
+
 COUNTRIES = [
  ("uae", "🇦🇪", "Dubai / UAE", "E-visa, usually processed online",
   ["Clear colour scan of passport front and back pages", "Recent passport-size photo with white background",
@@ -92,7 +97,19 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
 <p class="meta" style="margin:8px 0 0">Price = government / embassy fee (no GST) + our service fee + 18% GST on the service fee.</p><h4>Documents required</h4><ul class="ticks">{lis}</ul>
 <p class="meta">{"Requirements are set by Passport Seva (Ministry of External Affairs) and can change. We confirm the final checklist for your case before you apply." if P else "Requirements can change and may differ for business, student or family visits. We confirm the final checklist for your case before you apply."}</p>
 <p><a class="btn outline" href="#upload" data-pick="{c}">Upload documents for {n}</a></p></div>"""
-    opts = "".join(f'<option value="{n}">{n}</option>' for (_,_,n,_,_) in ITEMS) + ('' if P else '<option value="Other">Other country</option>')
+    opts = "".join(f'<option value="{n}">{n}</option>' for (_,_,n,_,_) in ITEMS) + ('' if P else '<option value="Other">Other country – type below</option>')
+    other_list = ""
+    if not P:
+        # Any destination not listed: customer types it, then requests the checklist/price or uploads documents.
+        tabs += '<button type="button" class="vtab" data-c="other">🌐 Other country</button>'
+        other_list = '<datalist id="vo_list">' + "".join(f'<option value="{c}"></option>' for c in OTHER_COUNTRIES) + '</datalist>'
+        panels += f"""<div class="vpanel" data-c="other" hidden>
+<div class="vhead"><div><h3>🌐 Other country</h3><p class="meta">Travelling somewhere not listed above? Type the country – our visa team will send you the exact documents, fee and processing time for it.</p></div></div>
+<div class="vother"><label>Which country are you visiting?<input id="vo_country" maxlength="60" list="vo_list" autocomplete="off" placeholder="e.g. Japan, Kenya, Bhutan, Brazil"></label>
+<a class="btn gold" id="vo_wa" href="https://wa.me/919843121212" target="_blank" rel="noopener">Request checklist &amp; price</a></div>
+<p id="vo_msg" class="vmsg" role="status" aria-live="polite"></p>
+<p class="meta" style="margin:8px 0 0">Price = government / embassy fee (no GST) + our service fee + 18% GST on the service fee. Requirements differ by country and visa type – we confirm the final checklist for your case before you apply.</p>
+<p><a class="btn outline" href="#upload" id="vo_up">Upload documents for this country</a></p></div>"""
     T = dict(
       crumb="Passport Services" if P else "Visa Services",
       kicker="🛂 Passport services" if P else "🛂 Visa services",
@@ -136,6 +153,8 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
 <label>Mobile number*<input name="phone" required inputmode="tel" maxlength="20" autocomplete="tel" placeholder="10-digit mobile, or +country code"></label></div>
 <div class="row"><label>Email<input name="email" type="email" maxlength="160" autocomplete="email"></label>
 <label>{T["sel_label"]}<select name="country" required>{opts}</select></label></div>
+{'' if P else '<label id="ocwrap" hidden>Which country?*<input name="other_country" maxlength="60" list="vo_list" autocomplete="off" placeholder="e.g. Japan, Kenya, Bhutan"></label>'}
+{other_list}
 <div class="row">{T["type_row"]}
 <label>{T["date_label"]}<input name="travel_date" type="date"></label></div>
 <div class="row"><label>{T["trav_label"]}<input name="travellers" type="number" min="1" max="50" value="1"></label><span></span></div>
@@ -186,7 +205,17 @@ const tabs=document.querySelectorAll('.vtab'),panels=document.querySelectorAll('
 function show(c){{tabs.forEach(t=>t.classList.toggle('on',t.dataset.c===c));panels.forEach(p=>p.hidden=p.dataset.c!==c);}}
 tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.c)));
 const names={json.dumps({c:n for (c,_,n,_,_) in ITEMS})};
-document.querySelectorAll('[data-pick]').forEach(a=>a.addEventListener('click',()=>{{const s=document.querySelector('select[name=country]');s.value=names[a.dataset.pick];}}));
+const csel=document.querySelector('select[name=country]'),ocw=document.getElementById('ocwrap');
+const syncOther=()=>{{if(ocw)ocw.hidden=csel.value!=='Other';}};csel.addEventListener('change',syncOther);
+document.querySelectorAll('[data-pick]').forEach(a=>a.addEventListener('click',()=>{{csel.value=names[a.dataset.pick];syncOther();}}));
+const vo=document.getElementById('vo_country');
+if(vo){{
+ const vmsg=document.getElementById('vo_msg');
+ document.getElementById('vo_wa').addEventListener('click',e=>{{const c=vo.value.trim();vmsg.className='vmsg';vmsg.textContent='';
+  if(c.length<2){{e.preventDefault();vmsg.textContent='Please type the country you are visiting.';vmsg.classList.add('err');vo.focus();return;}}
+  e.currentTarget.href='https://wa.me/919843121212?text='+encodeURIComponent('Hi The Real Tours and Travels, please share the documents required and the price for a '+c+' visa. Travellers:  Travel date: ');}});
+ document.getElementById('vo_up').addEventListener('click',()=>{{csel.value='Other';syncOther();const c=vo.value.trim();if(c)f.other_country.value=c;}});
+}}
 const f=document.getElementById('vform'),msg=document.getElementById('vmsg'),btn=document.getElementById('vsubmit'),fl=document.getElementById('flist');
 f.files.addEventListener('change',()=>{{fl.innerHTML=[...f.files.files].map(x=>'<span>📄 '+x.name.replace(/[<>&]/g,'')+' · '+(x.size/1048576).toFixed(1)+' MB</span>').join('');}});
 function uuid(){{return (crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{{const r=Math.random()*16|0;return (c=='x'?r:(r&3|8)).toString(16);}}));}}
@@ -200,6 +229,8 @@ f.addEventListener('submit',async e=>{{
  if(!files.length){{msg.textContent='Please choose at least one document to upload.';msg.classList.add('err');return;}}
  if(files.length>25){{msg.textContent='Please upload up to 25 files at a time.';msg.classList.add('err');return;}}
  const big=files.find(x=>x.size>10485760);if(big){{msg.textContent=big.name+' is larger than 10 MB. Please upload a smaller scan.';msg.classList.add('err');return;}}
+ let country=d.get('country');
+ if(country==='Other'){{country=(d.get('other_country')||'').trim();if(country.length<2){{msg.textContent='Please type the country you are visiting.';msg.classList.add('err');f.other_country.focus();return;}}}}
  if(!d.get('consent')){{msg.textContent='Please tick the consent box.';msg.classList.add('err');return;}}
  btn.disabled=true;const id=uuid(),paths=[];
  try{{
@@ -210,11 +241,11 @@ f.addEventListener('submit',async e=>{{
    if(!r.ok)throw new Error('upload '+r.status);
    paths.push(p);
   }}
-  const row={{id,full_name:d.get('full_name').trim(),phone,email:(d.get('email')||'').trim()||null,country:d.get('country'),visa_type:d.get('visa_type'),travel_date:d.get('travel_date')||null,travellers:parseInt(d.get('travellers'))||null,notes:(d.get('notes')||'').trim()||null,files:paths}};
+  const row={{id,full_name:d.get('full_name').trim(),phone,email:(d.get('email')||'').trim()||null,country:country.slice(0,80),visa_type:d.get('visa_type'),travel_date:d.get('travel_date')||null,travellers:parseInt(d.get('travellers'))||null,notes:(d.get('notes')||'').trim()||null,files:paths}};
   const r2=await fetch(SB+'/rest/v1/visa_applications',{{method:'POST',headers:{{apikey:KEY,Authorization:'Bearer '+(window.RTT_TOKEN||KEY),'Content-Type':'application/json',Prefer:'return=minimal'}},body:JSON.stringify(row)}});
   if(!r2.ok)throw new Error('save '+r2.status);
   notify('New {"passport" if P else "visa"} documents '+id.slice(0,8).toUpperCase()+' – '+row.full_name,'Name: '+row.full_name+'\\nPhone: '+row.phone+(row.email?'\\nEmail: '+row.email:'')+'\\n{"Service" if P else "Country"}: '+row.country+'\\nType: '+row.visa_type+(row.travel_date?'\\nTravel date: '+row.travel_date:'')+'\\nApplicants: '+(row.travellers||1)+'\\nFiles uploaded: '+paths.length+' (see Supabase → Storage → visa-documents → applications/'+id+')'+(row.notes?'\\nNotes: '+row.notes:''),row.email||'');
-  f.reset();fl.innerHTML='';
+  f.reset();fl.innerHTML='';syncOther();
   msg.innerHTML='✅ Thank you! Your documents were uploaded securely (reference: <b>'+id.slice(0,8).toUpperCase()+'</b>). Our team will call you shortly. For faster service, <a href="https://wa.me/919843121212?text='+encodeURIComponent('Hi, I uploaded my documents on your website. Reference: '+id.slice(0,8).toUpperCase())+'" target="_blank" rel="noopener">WhatsApp us your reference</a>.';
   msg.classList.add('ok');
  }}catch(err){{msg.textContent='Sorry, the upload did not complete. Please try again, or WhatsApp your documents to 98431 21212.';msg.classList.add('err');}}
@@ -234,6 +265,7 @@ VISA_CSS = """
 #upload .paybox{margin:28px auto 0}
 .gb2b{font-weight:400!important;color:var(--ink)!important}.gcalc .chk{display:flex!important;gap:8px;align-items:flex-start}.gcalc .chk input{width:auto;margin-top:3px}#g_gmsg{font-size:12.5px}
 .vtabs{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:26px}
+.vother{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-top:6px}.vother label{flex:1;min-width:220px;display:grid;gap:6px;font-weight:500}.vother input{font:inherit;padding:12px 14px;border:1px solid var(--line);border-radius:12px}.vother input:focus{outline:2px solid var(--red);border-color:var(--red)}
 .vtab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 16px;font:500 15px 'Jost',sans-serif;color:var(--ink);cursor:pointer}
 .vtab.on,.vtab:hover{border-color:var(--red);color:var(--red);background:#fdf0f0}
 .vbox{background:#fff;border:1px solid var(--line);border-radius:20px;padding:30px;box-shadow:0 16px 36px rgba(0,0,0,.05)}
