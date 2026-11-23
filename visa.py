@@ -152,12 +152,15 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
 <div class="gcalc" id="gcalc">
 <div class="grow"><label>Government / embassy / VFS fee <small>(as confirmed by us – no GST)</small><span class="gin">₹<input type="number" min="0" step="1" inputmode="decimal" id="g_gov" placeholder="0"></span></label>
 <label>Our service fee <small>(as confirmed by us)</small><span class="gin">₹<input type="number" min="0" step="1" inputmode="decimal" id="g_fee" placeholder="0"></span></label></div>
+<label class="chk gb2b"><input type="checkbox" id="g_b2b"><span>I need a <b>GST invoice</b> for my business (enter your GSTIN)</span></label>
+<div class="grow" id="g_bizrow" hidden><label>Client GSTIN<span class="gin"><input id="g_gstin" maxlength="15" placeholder="e.g. 27ABCDE1234F1Z5" style="text-transform:uppercase;letter-spacing:1px" autocomplete="off"></span><small id="g_gmsg"></small></label>
+<label>Company / business name<span class="gin"><input id="g_co" maxlength="120" placeholder="As per GST registration"></span></label></div>
 <label class="gst8">Your state <select id="g_state"><option value="in">Maharashtra</option><option value="out">Other state / UT</option></select></label>
 <table class="gtab"><tr><td>Government / embassy fee (pure agent, no GST)</td><td id="o_gov">₹0.00</td></tr>
 <tr><td>Service fee (SAC 9985)</td><td id="o_fee">₹0.00</td></tr>
 <tr id="r_c"><td>CGST @ 9%</td><td id="o_c">₹0.00</td></tr><tr id="r_s"><td>SGST @ 9%</td><td id="o_s">₹0.00</td></tr><tr id="r_i" hidden><td>IGST @ 18%</td><td id="o_i">₹0.00</td></tr>
 <tr class="gtot"><td>Total to pay</td><td id="o_t">₹0.00</td></tr></table>
-<p class="gnote">Enter the <b>total</b> shown above as the Booking Amount in the payment window. A GST tax invoice (GSTIN 27AMUPK4723E1ZU) will be issued for the service fee.</p></div>
+<p class="gnote">Enter the <b>total</b> shown above as the Booking Amount in the payment window<span id="g_hint"></span>. A GST tax invoice (our GSTIN 27AMUPK4723E1ZU) will be issued for the service fee<span id="g_to"></span>.</p></div>
 <form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_U3RKkNsxkSYwez" async></script></form>
 <p style="font-size:13px;color:var(--muted);margin:6px 0 0">🔒 Secured by Razorpay · By paying you agree to our <a href="../terms/">Terms</a> and <a href="../cancellation-refund-policy/">Cancellation &amp; Refund Policy</a>.</p></div>
 <p class="meta" style="text-align:center;margin-top:16px">Prefer WhatsApp or visiting us? Call/WhatsApp <a href="tel:{PHONE_RAW}">{PHONE}</a> or visit our Mulund West office, open daily 9 am – 10 pm.</p>
@@ -171,7 +174,13 @@ const notify=(s,t,r)=>{{try{{fetch('https://formsubmit.co/ajax/enquiry@therealto
 function calc(){{const g=Math.max(0,+$('g_gov').value||0),f=Math.max(0,+$('g_fee').value||0),inS=$('g_state').value==='in';const c=r2(f*.09),i=r2(f*.18);
 $('o_gov').textContent=inr(g);$('o_fee').textContent=inr(f);$('o_c').textContent=$('o_s').textContent=inr(c);$('o_i').textContent=inr(i);
 $('r_c').hidden=$('r_s').hidden=!inS;$('r_i').hidden=inS;$('o_t').textContent=inr(r2(g+f+(inS?2*c:i)));}}
-['g_gov','g_fee','g_state'].forEach(x=>$(x)&&$(x).addEventListener('input',calc));if($('g_gov'))calc();}})();
+const GST_RE=/^[0-3][0-9][A-Z]{{5}}[0-9]{{4}}[A-Z][1-9A-Z]Z[0-9A-Z]$/;
+function biz(){{if(!$('g_b2b'))return;const on=$('g_b2b').checked;$('g_bizrow').hidden=!on;const g=$('g_gstin').value.toUpperCase().replace(/\\s/g,'');$('g_gstin').value=g;
+ let ok=false;if(on&&g){{ok=GST_RE.test(g);$('g_gmsg').textContent=ok?'✓ Valid format · State code '+g.slice(0,2)+(g.slice(0,2)==='27'?' (Maharashtra – CGST + SGST)':' (other state – IGST)'):'Please check – GSTIN has 15 characters, e.g. 27ABCDE1234F1Z5';$('g_gmsg').style.color=ok?'#17703a':'var(--crimson)';if(ok){{$('g_state').value=g.slice(0,2)==='27'?'in':'out';$('g_state').disabled=true;}}}}
+ if(!ok){{$('g_state').disabled=false;if(!g)$('g_gmsg').textContent='';}}
+ $('g_hint').textContent=on&&ok?', and enter '+g+' in the “Client GSTIN” box (company name in “Tour or Booking Details”)':'';
+ $('g_to').textContent=on&&ok?' in the name of '+($('g_co').value.trim()||'your business')+', GSTIN '+g:'';calc();}}
+['g_gov','g_fee','g_state'].forEach(x=>$(x)&&$(x).addEventListener('input',calc));['g_b2b','g_gstin','g_co'].forEach(x=>$(x)&&$(x).addEventListener('input',biz));if($('g_b2b'))$('g_b2b').addEventListener('change',biz);if($('g_gov'))calc();}})();
 const tabs=document.querySelectorAll('.vtab'),panels=document.querySelectorAll('.vpanel');
 function show(c){{tabs.forEach(t=>t.classList.toggle('on',t.dataset.c===c));panels.forEach(p=>p.hidden=p.dataset.c!==c);}}
 tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.c)));
@@ -221,6 +230,7 @@ VISA_CSS = """
 .gtot td{font-weight:700;font-size:17px;color:var(--crimson);border-bottom:0;border-top:2px solid var(--wine)}.gnote{font-size:13px;color:var(--muted);margin:0}
 @media(max-width:600px){.grow{grid-template-columns:1fr}}
 #upload .paybox{margin:28px auto 0}
+.gb2b{font-weight:400!important;color:var(--ink)!important}.gcalc .chk{display:flex!important;gap:8px;align-items:flex-start}.gcalc .chk input{width:auto;margin-top:3px}#g_gmsg{font-size:12.5px}
 .vtabs{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:26px}
 .vtab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 16px;font:500 15px 'Jost',sans-serif;color:var(--ink);cursor:pointer}
 .vtab.on,.vtab:hover{border-color:var(--red);color:var(--red);background:#fdf0f0}

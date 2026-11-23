@@ -66,7 +66,9 @@ DEST = {
 }
 
 def planner_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band, ADDR, GST):
-    opts = "".join(f'<option value="{d}">{d}</option>' for d in DEST) + '<option value="Other">Other – type below</option>'
+    dom = "".join(f'<option value="{d}">{d}</option>' for d,v in DEST.items() if not v.get("intl")) + '<option value="Other">Other Indian destination – type below</option>'
+    intl = "".join(f'<option value="{d}">{d}</option>' for d,v in DEST.items() if v.get("intl")) + '<option value="Other">Other country – type below</option>'
+    opts = dom
     return f"""
 <section class="hero"><div class="wrap"><div><div class="crumbs"><a href="../">Home</a> › Customize Your Package</div>
 <span class="kicker">✨ Smart trip planner</span>
@@ -78,11 +80,13 @@ def planner_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band, ADDR, GST):
 <section class="alt" id="planner"><div class="wrap" style="max-width:860px">
 <div class="head"><span class="kicker">Customize your package</span><h2>Tell us about your trip</h2><p class="lead">Takes 30 seconds. We'll create your itinerary instantly.</p></div>
 <form id="pform" class="vform" novalidate>
-<div class="row"><label>Destination*<select name="destination" required>{opts}</select></label>
+<fieldset><legend>Where do you want to go?*</legend><div class="chips scope">
+<label><input type="radio" name="scope" value="Domestic" checked>🇮🇳 Domestic (India)</label><label><input type="radio" name="scope" value="International">🌍 International</label></div></fieldset>
+<div class="row"><label><span id="destlbl">Domestic destination*</span><select name="destination" required>{opts}</select></label>
 <label>Start date<input name="start_date" type="date"></label></div>
 <label id="otherwrap" hidden>Which destination?<input name="other" maxlength="60" placeholder="e.g. Coorg, Japan, Kenya"></label>
 <div class="row"><label>1) Number of days*<input name="days" type="number" min="2" max="21" value="6" required></label>
-<label>2) Number of passengers*<span class="pax"><span><small>Adults</small><input name="adults" type="number" min="1" max="60" value="2" required></span><span><small>Children</small><input name="children" type="number" min="0" max="30" value="0"></span></span></label></div>
+<label>2) Number of passengers*<span class="pax pax3"><span><small>Adults (12+ yrs)</small><input name="adults" type="number" min="1" max="60" value="2" required></span><span><small>Children (2–11 yrs)</small><input name="children" type="number" min="0" max="30" value="0"></span><span><small>Infants (under 2)</small><input name="infants" type="number" min="0" max="20" value="0"></span></span></label></div>
 <fieldset><legend>3) Hotel category*</legend><div class="chips">
 <label><input type="radio" name="hotel" value="3 Star" required>3 Star</label><label><input type="radio" name="hotel" value="4 Star" checked>4 Star</label><label><input type="radio" name="hotel" value="5 Star">5 Star</label><label><input type="radio" name="hotel" value="Luxury / Boutique">Luxury / Boutique</label></div></fieldset>
 <fieldset><legend>4) Car</legend><div class="chips">
@@ -111,6 +115,10 @@ const notify=(s,t,r)=>{{try{{fetch('https://formsubmit.co/ajax/enquiry@therealto
 const DEST={json.dumps(DEST, ensure_ascii=False)};
 const f=document.getElementById('pform'),msg=document.getElementById('pmsg');
 f.destination.addEventListener('change',()=>{{document.getElementById('otherwrap').hidden=f.destination.value!=='Other';}});
+const OPTS={{Domestic:{json.dumps(dom)},International:{json.dumps(intl)}}};
+const scope=()=>f.querySelector('input[name=scope]:checked').value;
+f.querySelectorAll('input[name=scope]').forEach(r=>r.addEventListener('change',()=>{{const sc=scope();f.destination.innerHTML=OPTS[sc];document.getElementById('destlbl').textContent=sc+' destination*';document.getElementById('otherwrap').hidden=true;
+ const rail=f.querySelector('input[name=mode][value=Railway]');rail.disabled=sc==='International';rail.closest('label').style.opacity=sc==='International'?.4:1;if(sc==='International')f.querySelector('input[name=mode][value=Flight]').checked=true;}}));
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}})[c]);
 function uuid(){{return crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{{const r=Math.random()*16|0;return (c=='x'?r:(r&3|8)).toString(16);}});}}
 function fmt(d){{return d.toLocaleDateString('en-IN',{{weekday:'short',day:'numeric',month:'short'}});}}
@@ -147,7 +155,7 @@ function render(o,days,ref){{
  const travel=o.mode==='Railway'&&D&&!D.rail&&!intl?'Flight (no rail connection)':(intl&&o.mode==='Railway'?'Flight (international)':o.mode);
  return '<div class="ihead"><img src="../img/logo.png" alt="The Real Tours and Travels" width="72" height="72"><div><b>The Real Tours and Travels</b><small>Crafting Journeys Since 1981 · Mulund West, Mumbai</small></div><span class="iref">Ref '+ref+'</span></div>'+
  '<h2 class="ititle">'+esc(o.destName)+' – '+(o.days-1)+' Nights / '+o.days+' Days</h2>'+
- '<div class="ifacts"><span>👥 '+o.adults+' Adult'+(o.adults>1?'s':'')+(o.children?' + '+o.children+' Child'+(o.children>1?'ren':''):'')+'</span><span>🏨 '+esc(o.hotel)+'</span>'+(D&&D.nocar?'':'<span>🚗 '+esc(o.car)+'</span>')+'<span>'+(travel.startsWith('Rail')?'🚆':'✈️')+' '+esc(travel)+'</span>'+(start?'<span>📅 '+fmt(start)+'</span>':'')+'</div>'+
+ '<div class="ifacts"><span>'+(o.scope==='International'?'🌍':'🇮🇳')+' '+o.scope+'</span><span>👥 '+o.adults+' Adult'+(o.adults>1?'s':'')+(o.children?' + '+o.children+' Child'+(o.children>1?'ren':''):'')+(o.infants?' + '+o.infants+' Infant'+(o.infants>1?'s':''):'')+'</span><span>🏨 '+esc(o.hotel)+'</span>'+(D&&D.nocar?'':'<span>🚗 '+esc(o.car)+'</span>')+'<span>'+(travel.startsWith('Rail')?'🚆':'✈️')+' '+esc(travel)+'</span>'+(start?'<span>📅 '+fmt(start)+'</span>':'')+'</div>'+
  '<div class="idays">'+rows+'</div>'+
  '<div class="iinc"><div><h4>Package can include</h4><ul><li>'+esc(o.hotel)+' accommodation with breakfast</li><li>Private '+esc(o.car)+' for transfers and sightseeing</li><li>'+(travel.startsWith('Rail')?'Train tickets':'Flight tickets')+' on request</li><li>Visa and travel insurance assistance'+(intl?'':' (if needed)')+'</li><li>Pure veg / Jain meals on request</li></ul></div>'+
  '<div><h4>Next step</h4><p>This is a suggested plan. Our travel expert will call you to personalise it and share the best options for your dates.</p><p><b>📞 {PHONE}</b><br>✉️ {EMAIL}<br>🌐 www.therealtoursandtravels.com<br>📸 @therealtoursandtravels</p></div></div>'+
@@ -161,15 +169,15 @@ f.addEventListener('submit',async e=>{{
  if(!isEmail&&!isPhone){{msg.textContent='Please enter a valid 10-digit mobile number or email address.';msg.classList.add('err');f.contact.focus();return;}}
  let dest=d.get('destination');const other=(d.get('other')||'').trim();
  if(dest==='Other'&&!other){{msg.textContent='Please type the destination you want to visit.';msg.classList.add('err');return;}}
- const o={{dest,destName:dest==='Other'?other:dest,days:Math.min(21,Math.max(2,parseInt(d.get('days'))||6)),adults:Math.max(1,parseInt(d.get('adults'))||1),children:Math.max(0,parseInt(d.get('children'))||0),hotel:d.get('hotel')||'4 Star',car:d.get('car')||'SUV',mode:d.get('mode')||'Flight',start:d.get('start_date')||''}};
+ const o={{dest,destName:dest==='Other'?other:dest,days:Math.min(21,Math.max(2,parseInt(d.get('days'))||6)),adults:Math.max(1,parseInt(d.get('adults'))||1),children:Math.max(0,parseInt(d.get('children'))||0),infants:Math.max(0,parseInt(d.get('infants'))||0),scope:scope(),hotel:d.get('hotel')||'4 Star',car:d.get('car')||'SUV',mode:d.get('mode')||'Flight',start:d.get('start_date')||''}};
  const btn=document.getElementById('psubmit');btn.disabled=true;msg.textContent='✨ Creating your itinerary…';
  const id=uuid(),ref=id.slice(0,8).toUpperCase();
- const row={{id,full_name:(d.get('full_name')||'').trim()||null,phone:isPhone?digits:null,email:isEmail?contact:null,destination:o.destName.slice(0,80),days:o.days,adults:o.adults,children:o.children,hotel_category:o.hotel,car_type:o.car,travel_mode:o.mode,start_date:o.start||null,notes:(d.get('notes')||'').trim()||null}};
+ const row={{id,full_name:(d.get('full_name')||'').trim()||null,phone:isPhone?digits:null,email:isEmail?contact:null,destination:o.destName.slice(0,80),days:o.days,adults:o.adults,children:o.children,infants:o.infants,trip_scope:o.scope,hotel_category:o.hotel,car_type:o.car,travel_mode:o.mode,start_date:o.start||null,notes:(d.get('notes')||'').trim()||null}};
  try{{const r=await fetch(SB+'/rest/v1/trip_requests',{{method:'POST',headers:{{apikey:KEY,Authorization:'Bearer '+(window.RTT_TOKEN||KEY),'Content-Type':'application/json',Prefer:'return=minimal'}},body:JSON.stringify(row)}});if(!r.ok)throw 0;}}
  catch(_){{btn.disabled=false;msg.textContent='Sorry, something went wrong. Please try again or WhatsApp us on 98431 21212.';msg.classList.add('err');return;}}
  const days=build(o);
  document.getElementById('itin').innerHTML=render(o,days,ref);
- const wa='Hi The Real Tours and Travels, I created an itinerary on your website (Ref '+ref+'): '+o.destName+', '+o.days+' days, '+o.adults+' adults'+(o.children?' + '+o.children+' children':'')+', '+o.hotel+', '+o.car+', '+o.mode+(o.start?', from '+o.start:'')+'. Please share the best price.';
+ const wa='Hi The Real Tours and Travels, I created an itinerary on your website (Ref '+ref+'): '+o.destName+', '+o.days+' days, '+o.adults+' adults'+(o.children?' + '+o.children+' children':'')+(o.infants?' + '+o.infants+' infants':'')+', '+o.scope+', '+o.hotel+', '+o.car+', '+o.mode+(o.start?', from '+o.start:'')+'. Please share the best price.';
  document.getElementById('wabtn').href='https://wa.me/919843121212?text='+encodeURIComponent(wa);
  notify('New itinerary request '+ref+' – '+(row.full_name||contact),wa.replace('Hi The Real Tours and Travels, I created an itinerary on your website ','')+(row.full_name?'\\nName: '+row.full_name:'')+'\\nContact: '+contact+(row.notes?'\\nNotes: '+row.notes:''),isEmail?contact:'');
  const res=document.getElementById('result');res.hidden=false;res.scrollIntoView({{behavior:'smooth'}});
@@ -179,6 +187,8 @@ f.addEventListener('submit',async e=>{{
 </script>"""
 
 PLANNER_CSS = """
+.pax.pax3{grid-template-columns:1fr 1fr 1fr}.chips.scope label{font-size:16px;padding:11px 20px}
+@media(max-width:520px){.pax.pax3{grid-template-columns:1fr 1fr 1fr;gap:6px}.pax.pax3 small{font-size:11px}}
 .vform [hidden],[hidden]{display:none!important}
 .vform fieldset{border:0;padding:0;margin:0;display:grid;gap:8px}.vform legend{font-weight:500;font-size:15px;color:var(--wine);margin-bottom:8px}
 .chips{display:flex;flex-wrap:wrap;gap:10px}.chips label{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:9px 16px;cursor:pointer;font-weight:500;background:#fff}
