@@ -164,6 +164,13 @@ if(vo){
   e.currentTarget.href='https://wa.me/919843121212?text='+encodeURIComponent('Hi The Real Tours and Travels, please share the documents required and the price for a '+c+' visa. Travellers:  Travel date: ');});
  document.getElementById('vo_up').addEventListener('click',()=>{csel.value='Other';const c=vo.value.trim();if(c)f.other_country.value=c;csel.dispatchEvent(new Event('change'));});
 }
+const voc=document.getElementById('voc_country');
+if(voc){
+ const m=document.getElementById('voc_msg');
+ document.getElementById('voc_wa').addEventListener('click',e=>{const c=voc.value.trim();m.className='vmsg';m.textContent='';
+  if(c.length<2){e.preventDefault();m.textContent='Please type the country you are visiting.';m.classList.add('err');voc.focus();return;}
+  e.currentTarget.href='https://wa.me/919843121212?text='+encodeURIComponent('Hi The Real Tours and Travels, please help me with the arrival card / travel permit for '+c+' and share the price. Travellers:  Travel date: ');});
+}
 const f=document.getElementById('vform'),msg=document.getElementById('vmsg'),btn=document.getElementById('vsubmit'),fl=document.getElementById('flist');
 f.files.addEventListener('change',()=>{fl.innerHTML=[...f.files.files].map(x=>'<span>📄 '+x.name.replace(/[<>&]/g,'')+' · '+(x.size/1048576).toFixed(1)+' MB</span>').join('');});
 function uuid(){return (crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return (c=='x'?r:(r&3|8)).toString(16);}));}

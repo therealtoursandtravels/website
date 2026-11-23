@@ -111,6 +111,13 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
     if not P:
         # Any destination not listed: customer types it, then requests the checklist/price or uploads documents.
         tabs = tabs.replace('</div></div>', '<button type="button" class="vtab" data-c="other">🌐 Other country</button></div></div>', 1)
+        tabs = tabs[:tabs.rfind('</div></div>')] + '<button type="button" class="vtab" data-c="othercard">🌐 Other country</button></div></div>'
+        panels += """<div class="vpanel" data-c="othercard" hidden>
+<div class="vhead"><div><h3>🌐 Other country – arrival card / travel permit</h3><p class="meta">Need an arrival card, travel permit or travel registration for a country not listed above? Type the country – we fill and submit it for you.</p></div></div>
+<div class="vother"><label>Which country are you visiting?<input id="voc_country" maxlength="60" autocomplete="off" placeholder="e.g. Japan, Taiwan, Cambodia"></label>
+<a class="btn gold" id="voc_wa" href="https://wa.me/919843121212" target="_blank" rel="noopener">Request Price</a></div>
+<p id="voc_msg" class="vmsg" role="status" aria-live="polite"></p>
+<p class="meta" style="margin:8px 0 0">Price = our service fee + 18% GST. We confirm exactly what is required for your trip before we apply.</p></div>"""
         panels += f"""<div class="vpanel" data-c="other" hidden>
 <div class="vhead"><div><h3>🌐 Other country</h3><p class="meta">Travelling somewhere not listed above? Type the country – our visa team will send you the exact documents, fee and processing time for it.</p></div></div>
 <div class="vother"><label>Which country are you visiting?<input id="vo_country" maxlength="60" autocomplete="off" placeholder="e.g. Kenya, Bhutan, Brazil, South Korea"></label>
@@ -265,6 +272,13 @@ if(vo){{
   if(c.length<2){{e.preventDefault();vmsg.textContent='Please type the country you are visiting.';vmsg.classList.add('err');vo.focus();return;}}
   e.currentTarget.href='https://wa.me/919843121212?text='+encodeURIComponent('Hi The Real Tours and Travels, please share the documents required and the price for a '+c+' visa. Travellers:  Travel date: ');}});
  document.getElementById('vo_up').addEventListener('click',()=>{{csel.value='Other';const c=vo.value.trim();if(c)f.other_country.value=c;csel.dispatchEvent(new Event('change'));}});
+}}
+const voc=document.getElementById('voc_country');
+if(voc){{
+ const m=document.getElementById('voc_msg');
+ document.getElementById('voc_wa').addEventListener('click',e=>{{const c=voc.value.trim();m.className='vmsg';m.textContent='';
+  if(c.length<2){{e.preventDefault();m.textContent='Please type the country you are visiting.';m.classList.add('err');voc.focus();return;}}
+  e.currentTarget.href='https://wa.me/919843121212?text='+encodeURIComponent('Hi The Real Tours and Travels, please help me with the arrival card / travel permit for '+c+' and share the price. Travellers:  Travel date: ');}});
 }}
 {form_js}
 }})();

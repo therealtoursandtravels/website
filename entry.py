@@ -103,4 +103,4 @@ ENTRY = {
  "canada": ("visa", "Visa required", None),
  "australia": ("visa", "Visa required", None),
 }
-GROUPS = [("visa", "🛂 Visas"), ("card", "📲 Digital Arrival Cards")]
+GROUPS = [("visa", "🛂 Visas"), ("card", "📲 Digital Arrival Cards / Travel Permits")]
