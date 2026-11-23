@@ -407,7 +407,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
     nav = "".join(f'<li><a href="{root}{s["slug"]}/">{s["short"]}</a></li>' for s in SERVICES) + f'<li><a href="{root}customize-your-package/">Customized Packages</a></li>'
     return f"""<!doctype html>
 <html lang="en-IN"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{title}</title>
 <meta name="description" content="{desc}">
 <link rel="canonical" href="{canonical}"><link rel="alternate" hreflang="en-IN" href="{canonical}"><link rel="alternate" hreflang="x-default" href="{canonical}">

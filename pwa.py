@@ -1,7 +1,7 @@
 """Installable app (PWA): manifest, service worker, install button and offline page."""
 import json
 
-VERSION = "rtt-v7"
+VERSION = "rtt-v8"
 
 def manifest(NAME):
     return json.dumps({
@@ -75,6 +75,7 @@ BODY = """<nav class="appbar" aria-label="App">
  const btn=document.getElementById('appInstall'),tip=document.getElementById('iosTip');
  const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
  if(standalone){document.documentElement.classList.add('is-app');
+  if(location.pathname!=='/'){const r=document.querySelector('header.site .hrow');if(r){const k=document.createElement('button');k.type='button';k.className='app-back';k.setAttribute('aria-label','Back');k.textContent='‹';k.onclick=()=>{if(history.length>1&&document.referrer.indexOf(location.host)>-1)history.back();else location.href='/';};r.prepend(k);}}
   const here=location.pathname;document.querySelectorAll('.appbar a').forEach(a=>{const h=new URL(a.href,location).pathname;if(h===here||(h!=='/'&&here.startsWith(h)))a.classList.add('on');});return;}
  let dismissed=false;try{dismissed=localStorage.getItem('rtt_app_x')==='1';}catch(_){}
  let ev=null;
@@ -107,5 +108,13 @@ html.is-app .appbar{display:grid;grid-template-columns:repeat(6,1fr);position:fi
 html.is-app body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
 html.is-app .hero .seal{display:none}html.is-app .hero .wrap{padding-top:22px!important;padding-bottom:30px!important}html.is-app .fsec{margin-top:0}
 @media(max-width:700px){.float-wa{bottom:16px;right:12px;width:50px;height:50px;font-size:22px}main .btns{padding-right:0}}
+
+/* iPhone fixes */
+@supports(-webkit-touch-callout:none){input,select,textarea{font-size:16px!important}}
+html.is-app header.site{padding-top:env(safe-area-inset-top)}
+html.is-app header.site .wrap,html.is-app main,html.is-app footer{padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right))}
+html.is-app{-webkit-tap-highlight-color:transparent}html.is-app body{overscroll-behavior-y:none;-webkit-text-size-adjust:100%}
+html.is-app .appbar{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+.app-back{display:none}html.is-app .app-back{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;margin-right:6px;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--red);font-size:28px;line-height:1;padding:0 0 3px;cursor:pointer;flex:none}
 @media print{.app-install,.ios-tip{display:none!important}}
 """
