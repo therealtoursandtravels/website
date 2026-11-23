@@ -323,6 +323,8 @@ html.is-app .acct-link{display:none}
 .card.pcard:hover .cimg{transform:scale(1.05)}
 .card.pcard .ic{margin:-26px 0 0 18px;position:relative;z-index:1;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.12)}
 .card.pcard h3,.card.pcard p,.card.pcard .more{margin-left:20px;margin-right:20px}.card.pcard .more{margin-bottom:20px}
+/* areas we serve */
+.areas{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}.areas a{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 16px;text-decoration:none;color:var(--crimson);font-weight:500;font-size:14.5px}.areas a:hover{border-color:var(--red)}
 /* gallery */
 .gallery{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:200px;gap:14px;grid-auto-flow:dense}
 .gtile{position:relative;overflow:hidden;border-radius:18px;display:block;box-shadow:0 10px 26px rgba(0,0,0,.10)}

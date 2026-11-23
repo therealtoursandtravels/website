@@ -303,7 +303,8 @@ def jsonld_org():
       "image":SITE+"/img/logo-512.png","telephone":PHONE_RAW,"email":EMAIL,"foundingDate":"1981","taxID":GST,"vatID":GST,
       "address":{"@type":"PostalAddress","streetAddress":"204, B10, Rachana Building, Govardhan Nagar, Lal Bahadur Shastri Marg","addressLocality":"Mulund West, Mumbai","addressRegion":"Maharashtra","postalCode":"400080","addressCountry":"IN"},
       "openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"09:00","closes":"22:00"}],
-      "areaServed":[{"@type":"Country","name":"India"},{"@type":"Place","name":"Worldwide"}],
+      "areaServed":[{"@type":"City","name":n} for n in ["Mulund","Bhandup","Nahur","Thane","Vikhroli","Ghatkopar","Powai","Kanjurmarg","Navi Mumbai","Mumbai"]]+[{"@type":"Country","name":"India"},{"@type":"Place","name":"Worldwide"}],
+      "slogan":"Crafting Journeys Since 1981","alternateName":["Real Tours and Travels","The Real Tours & Travels","Real Tours Mulund"],
       "priceRange":"₹₹","currenciesAccepted":"INR","paymentAccepted":"Cash, UPI, Credit Card, Debit Card, Net Banking",
       "knowsLanguage":["en","hi","gu","mr"],
       "hasMap":MAPS,"sameAs":[IG,FB,MAPS],
@@ -363,6 +364,11 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
         body = re.sub(r'<section class="hero"(?: style="[^"]*")?>', f'<section class="hero home-hero photo-hero" style="--hero:url({_root}img/h-{_ph}.jpg)">', body, count=1)
         hero_img = f"h-{_ph}.jpg"
     lds = [jsonld_org()] + (extra_ld or [])
+    if path == "/":
+        lds.append({"@context":"https://schema.org","@type":"WebSite","@id":SITE+"/#website","name":NAME,"alternateName":["Real Tours and Travels","The Real Tours & Travels"],"url":SITE+"/","publisher":{"@id":SITE+"/#agency"},"inLanguage":"en-IN"})
+    elif not any(isinstance(x, dict) and x.get("@type") == "BreadcrumbList" for x in lds):
+        _name = title.split(" | ")[0].split(" – ")[0]
+        lds.append({"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":SITE+"/"},{"@type":"ListItem","position":2,"name":_name,"item":SITE+path}]})
     ld = "\n".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in lds)
     depth = path.strip("/").count("/") + (1 if path.strip("/") else 0)
     root = "../" * depth if depth else ""
@@ -373,7 +379,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title}</title>
 <meta name="description" content="{desc}">
-<link rel="canonical" href="{canonical}">
+<link rel="canonical" href="{canonical}"><link rel="alternate" hreflang="en-IN" href="{canonical}"><link rel="alternate" hreflang="x-default" href="{canonical}">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta property="og:type" content="website"><meta property="og:site_name" content="{NAME}">
 <meta property="og:title" content="{title}"><meta property="og:description" content="{desc}">
@@ -421,7 +427,19 @@ addEventListener('scroll',()=>{{if(!q)q=requestAnimationFrame(chk);}},{{passive:
 {fx.JS}
 </body></html>"""
 
+_IMG_SRC = re.compile(r'((?:src|href)="[^"]*img/[^"]+)\.jpg"')
+_IMG_URL = re.compile(r'(url\([^)]*img/[^)]+)\.jpg\)')
+def webpify(html):
+    head, sep, rest = html.partition("</head>")
+    if not sep:
+        return html
+    head = head.replace('href="img/hero-travel.jpg" fetchpriority', 'href="img/hero-travel.webp" type="image/webp" fetchpriority')
+    rest = _IMG_SRC.sub(lambda m: m.group(1) + '.webp"' if os.path.exists(os.path.join(os.path.dirname(__file__), "img", m.group(1).split("img/")[-1] + ".webp")) else m.group(0), rest)
+    rest = _IMG_URL.sub(lambda m: m.group(1) + '.webp)', rest)
+    return head + sep + rest
+
 def write(path, html):
+    html = webpify(html)
     fp = os.path.join(os.path.dirname(__file__), path.strip("/"), "index.html") if path != "/" else os.path.join(os.path.dirname(__file__), "index.html")
     os.makedirs(os.path.dirname(fp), exist_ok=True)
     open(fp, "w").write(html)
@@ -472,7 +490,10 @@ def build():
 <ul class="ticks"><li>Personal service – one point of contact, on call during your trip</li><li>Family-friendly hotels and comfortable pacing for kids and seniors</li><li>Visas, travel insurance, flights and hotels handled in one place</li><li>Pure vegetarian and Jain food arrangements, including tours with our own Maharaj</li><li>Transparent planning – no hidden surprises</li></ul></div>
 {side_html}</div></section>
 {fx.reviews_carousel(MAPS, REVIEW)}
-<section class="alt faq"><div class="wrap" style="max-width:860px"><div class="head"><span class="kicker">Good to know</span><h2>Frequently asked questions</h2></div>
+<section class="alt"><div class="wrap" style="max-width:960px"><div class="head"><span class="kicker">Near you</span><h2>Travel agent in Mulund serving Mumbai, Thane and beyond</h2>
+<p class="lead">Visit our office in Mulund West, or plan everything on call and WhatsApp. We look after travellers from Mulund, Bhandup, Nahur, Kanjurmarg, Vikhroli, Ghatkopar, Powai, Thane and Navi Mumbai – and clients across India and abroad, including NRIs.</p></div>
+<div class="areas"><a href="flights-hotels/#flights">Flight tickets</a><a href="visa/">Visa agent in Mulund</a><a href="passport/">Passport services</a><a href="international-holiday-packages/">International tour packages</a><a href="domestic-holiday-packages/">Domestic tour packages</a><a href="honeymoon-packages/">Honeymoon packages</a><a href="jain-yatra-tours-with-maharaj/">Jain yatra with Maharaj</a><a href="yatra-tours/">Char Dham &amp; yatra tours</a><a href="travel-insurance/">Travel insurance</a><a href="airport-transfers-outstation-cabs/">Airport cabs</a><a href="weekend-getaways-from-mumbai/">Weekend getaways</a><a href="group-tours/">Group tours</a></div></div></section>
+<section class="faq"><div class="wrap" style="max-width:860px"><div class="head"><span class="kicker">Good to know</span><h2>Frequently asked questions</h2></div>
 <details><summary>Where is The Real Tours and Travels located?</summary><p>We are at 204, B10, Rachana Building, Govardhan Nagar, LBS Marg, Mulund West, Mumbai 400080, open every day from 9 am to 10 pm.</p></details>
 <details><summary>Do you plan both domestic and international holidays?</summary><p>Yes – from Kashmir, Kerala and Manali to Dubai, Thailand, Bali and Europe, with flights, hotels, visas and insurance.</p></details>
 <details><summary>Do you offer Jain food on tours?</summary><p>Yes. We arrange Jain and vegetarian food, and run Jain yatra tours with our own Maharaj cooking pure Jain food.</p></details>
@@ -626,7 +647,10 @@ def build():
     write("/tools/gst-quote/", page("/tools/gst-quote/", "GST Quote & Invoice Maker | The Real Tours and Travels", "Internal tool.", gst_tool_page(NAME, ADDR, GST, PHONE, EMAIL)).replace('<meta name="robots" content="index,follow,max-image-preview:large">','<meta name="robots" content="noindex,nofollow">'))
     # sitemap / robots / CNAME
     urls = ["/"] + [f"/{s['slug']}/" for s in SERVICES] + ["/blog/", "/visa/", "/passport/", "/insurance/", "/about/", "/flights-hotels/", "/customize-your-package/"] + [f"/blog/{a['slug']}/" for a in ARTICLES] + ["/contact/", "/terms/", "/privacy-policy/", "/cancellation-refund-policy/"]
-    sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"  <url><loc>{SITE}{u}</loc><lastmod>{TODAY}</lastmod><priority>{'1.0' if u=='/' else '0.8'}</priority></url>\n" for u in urls) + "</urlset>\n"
+    def _img(u):
+        k = "hero-travel.jpg" if u == "/" else (f"h-{PAGE_PHOTO[u]}.jpg" if u in PAGE_PHOTO else None)
+        return f"<image:image><image:loc>{SITE}/img/{k}</image:loc></image:image>" if k else ""
+    sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n' + "".join(f"  <url><loc>{SITE}{u}</loc><lastmod>{TODAY}</lastmod><priority>{'1.0' if u=='/' else '0.8'}</priority>{_img(u)}</url>\n" for u in urls) + "</urlset>\n"
     open(os.path.join(root, "sitemap.xml"), "w").write(sm)
     # Installable app (PWA)
     open(os.path.join(root, "manifest.webmanifest"), "w").write(pwa.manifest(NAME))
