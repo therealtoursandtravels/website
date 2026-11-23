@@ -115,7 +115,7 @@ footer ul{list-style:none;padding:0;margin:0}footer li{margin:7px 0}
 .gin{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:12px;padding:0 12px;background:#fff}.gin input{border:0;outline:0;font:500 17px 'Jost',sans-serif;padding:11px 0;width:100%;background:none}
 .gin:focus-within{border-color:var(--red);box-shadow:0 0 0 2px rgba(215,25,31,.15)}.gst8 select{font:400 15px 'Jost',sans-serif;padding:10px 12px;border:1px solid var(--line);border-radius:12px;max-width:260px}
 .gtab{width:100%;border-collapse:collapse;font-size:15px}.gtab td{padding:8px 4px;border-bottom:1px solid var(--line)}.gtab td:last-child{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-.gtot td{font-weight:700;font-size:17px;color:var(--crimson);border-bottom:0;border-top:2px solid var(--wine)}.gnote{font-size:13px;color:var(--muted);margin:0}
+.gtot td{font-weight:700;font-size:17px;color:var(--crimson);border-bottom:0;border-top:2px solid var(--wine)}.gnote{font-size:13px;color:var(--muted);margin:0}.gout{margin:0;background:#fff4e5;border:1px solid #f2c48b;color:#7a4300;border-radius:12px;padding:10px 14px;font-size:14px}
 @media(max-width:600px){.grow{grid-template-columns:1fr}}
 #upload .paybox{margin:28px auto 0}
 .gb2b{font-weight:400!important;color:var(--ink)!important}.gcalc .chk{display:flex!important;gap:8px;align-items:flex-start}.gcalc .chk input{width:auto;margin-top:3px}#g_gmsg{font-size:12.5px}

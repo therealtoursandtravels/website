@@ -14,6 +14,15 @@ JOB = ["Salaried: salary slips (last 3 months) and leave/NOC letter from employe
        "Students: school or college ID and bonafide letter; retired: pension proof"]
 TRIP = ["Confirmed return flight booking", "Hotel bookings for the whole stay", "Day-wise travel itinerary"]
 
+GST_STATES = [("01","Jammu and Kashmir"),("02","Himachal Pradesh"),("03","Punjab"),("04","Chandigarh"),("05","Uttarakhand"),("06","Haryana"),
+ ("07","Delhi"),("08","Rajasthan"),("09","Uttar Pradesh"),("10","Bihar"),("11","Sikkim"),("12","Arunachal Pradesh"),("13","Nagaland"),("14","Manipur"),
+ ("15","Mizoram"),("16","Tripura"),("17","Meghalaya"),("18","Assam"),("19","West Bengal"),("20","Jharkhand"),("21","Odisha"),("22","Chhattisgarh"),
+ ("23","Madhya Pradesh"),("24","Gujarat"),("26","Dadra and Nagar Haveli and Daman and Diu"),("27","Maharashtra"),("29","Karnataka"),("30","Goa"),
+ ("31","Lakshadweep"),("32","Kerala"),("33","Tamil Nadu"),("34","Puducherry"),("35","Andaman and Nicobar Islands"),("36","Telangana"),
+ ("37","Andhra Pradesh"),("38","Ladakh")]
+GST_STATE_OPTS = ('<option value="27">Maharashtra</option>' + "".join(f'<option value="{c}">{n}</option>' for c, n in sorted(GST_STATES, key=lambda x: x[1]) if c != "27")
+                  + '<option value="OUT">Outside India (NRI / foreign client)</option>')
+
 COUNTRIES = [
  ("uae", "🇦🇪", "Dubai / UAE", "E-visa, usually processed online",
   ["Clear colour scan of passport front and back pages", "Recent passport-size photo with white background",
@@ -209,7 +218,8 @@ f.addEventListener('submit',async e=>{{
 <label class="chk gb2b"><input type="checkbox" id="g_b2b"><span>I need a <b>GST invoice</b> for my business (enter your GSTIN)</span></label>
 <div class="grow" id="g_bizrow" hidden><label>Client GSTIN<span class="gin"><input id="g_gstin" maxlength="15" placeholder="e.g. 27ABCDE1234F1Z5" style="text-transform:uppercase;letter-spacing:1px" autocomplete="off"></span><small id="g_gmsg"></small></label>
 <label>Company / business name<span class="gin"><input id="g_co" maxlength="120" placeholder="As per GST registration"></span></label></div>
-<label class="gst8">Your state <select id="g_state"><option value="in">Maharashtra</option><option value="out">Other state / UT</option></select></label>
+<label class="gst8">Your state / UT <select id="g_state">{GST_STATE_OPTS}</select></label>
+<p class="gout" id="g_out" hidden>🌍 <b>Clients outside India:</b> GST on our service fee can be different when you live abroad. The total below is an estimate – our team will confirm the exact amount before you pay, so please message us first.</p>
 <table class="gtab"><tr><td>Government / embassy fee (pure agent, no GST)</td><td id="o_gov">₹0.00</td></tr>
 <tr><td>Service fee (SAC 9985)</td><td id="o_fee">₹0.00</td></tr>
 <tr id="r_c"><td>CGST @ 9%</td><td id="o_c">₹0.00</td></tr><tr id="r_s"><td>SGST @ 9%</td><td id="o_s">₹0.00</td></tr><tr id="r_i" hidden><td>IGST @ 18%</td><td id="o_i">₹0.00</td></tr>
@@ -225,16 +235,16 @@ f.addEventListener('submit',async e=>{{
 const SB="{SB_URL}",KEY="{SB_KEY}";
 const notify=(s,t,r)=>{{try{{fetch('https://formsubmit.co/ajax/enquiry@therealtoursandtravels.com',{{method:'POST',headers:{{'Content-Type':'application/json',Accept:'application/json'}},body:JSON.stringify({{_subject:s,message:t,_replyto:r||'',_template:'table',_captcha:'false',source:location.href}})}}).catch(()=>{{}});}}catch(_){{}}}};
 (function(){{const $=i=>document.getElementById(i),inr=n=>'₹'+n.toLocaleString('en-IN',{{minimumFractionDigits:2,maximumFractionDigits:2}}),r2=n=>Math.round(n*100)/100;
-function calc(){{const g=Math.max(0,+$('g_gov').value||0),f=Math.max(0,+$('g_fee').value||0),inS=$('g_state').value==='in';const c=r2(f*.09),i=r2(f*.18);
+function calc(){{const g=Math.max(0,+$('g_gov').value||0),f=Math.max(0,+$('g_fee').value||0),inS=$('g_state').value==='27';$('g_out').hidden=$('g_state').value!=='OUT';const c=r2(f*.09),i=r2(f*.18);
 $('o_gov').textContent=inr(g);$('o_fee').textContent=inr(f);$('o_c').textContent=$('o_s').textContent=inr(c);$('o_i').textContent=inr(i);
 $('r_c').hidden=$('r_s').hidden=!inS;$('r_i').hidden=inS;$('o_t').textContent=inr(r2(g+f+(inS?2*c:i)));}}
 const GST_RE=/^[0-3][0-9][A-Z]{{5}}[0-9]{{4}}[A-Z][1-9A-Z]Z[0-9A-Z]$/;
-function biz(){{if(!$('g_b2b'))return;const on=$('g_b2b').checked;$('g_bizrow').hidden=!on;const g=$('g_gstin').value.toUpperCase().replace(/\\s/g,'');$('g_gstin').value=g;
- let ok=false;if(on&&g){{ok=GST_RE.test(g);$('g_gmsg').textContent=ok?'✓ Valid format · State code '+g.slice(0,2)+(g.slice(0,2)==='27'?' (Maharashtra – CGST + SGST)':' (other state – IGST)'):'Please check – GSTIN has 15 characters, e.g. 27ABCDE1234F1Z5';$('g_gmsg').style.color=ok?'#17703a':'var(--crimson)';if(ok){{$('g_state').value=g.slice(0,2)==='27'?'in':'out';$('g_state').disabled=true;}}}}
+function biz(){{if(!$('g_b2b')){{calc();return;}}const on=$('g_b2b').checked;$('g_bizrow').hidden=!on;const g=$('g_gstin').value.toUpperCase().replace(/\\s/g,'');$('g_gstin').value=g;
+ let ok=false;if(on&&g){{ok=GST_RE.test(g);$('g_gmsg').textContent=ok?'✓ Valid format · State code '+g.slice(0,2)+(g.slice(0,2)==='27'?' (Maharashtra – CGST + SGST)':' (outside Maharashtra – IGST)'):'Please check – GSTIN has 15 characters, e.g. 27ABCDE1234F1Z5';$('g_gmsg').style.color=ok?'#17703a':'var(--crimson)';if(ok){{const sc={{'25':'26','28':'37'}}[g.slice(0,2)]||g.slice(0,2);if($('g_state').querySelector('option[value="'+sc+'"]')){{$('g_state').value=sc;$('g_state').disabled=true;}}}}}}
  if(!ok){{$('g_state').disabled=false;if(!g)$('g_gmsg').textContent='';}}
- $('g_hint').textContent=on&&ok?', and enter '+g+' in the “Client GSTIN” box (company name in “Tour or Booking Details”)':'';
+ const stN=$('g_state').options[$('g_state').selectedIndex].text;$('g_hint').textContent=on&&ok?', and enter '+g+' in the “Client GSTIN” box (company name in “Tour or Booking Details”)':($('g_state').value==='OUT'?' – please mention the country you live in under “Tour or Booking Details”, and pay only after our team confirms the amount':' – please also mention your state (“'+stN+'”) in “Tour or Booking Details” so we can show it on your invoice');
  $('g_to').textContent=on&&ok?' in the name of '+($('g_co').value.trim()||'your business')+', GSTIN '+g:'';calc();}}
-['g_gov','g_fee','g_state'].forEach(x=>$(x)&&$(x).addEventListener('input',calc));['g_b2b','g_gstin','g_co'].forEach(x=>$(x)&&$(x).addEventListener('input',biz));if($('g_b2b'))$('g_b2b').addEventListener('change',biz);if($('g_gov'))calc();}})();
+['g_gov','g_fee'].forEach(x=>$(x)&&$(x).addEventListener('input',calc));if($('g_state'))$('g_state').addEventListener('change',biz);['g_b2b','g_gstin','g_co'].forEach(x=>$(x)&&$(x).addEventListener('input',biz));if($('g_b2b'))$('g_b2b').addEventListener('change',biz);if($('g_gov'))biz();}})();
 const tabs=document.querySelectorAll('.vtab'),panels=document.querySelectorAll('.vpanel');
 function show(c){{tabs.forEach(t=>t.classList.toggle('on',t.dataset.c===c));panels.forEach(p=>p.hidden=p.dataset.c!==c);}}
 tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.c)));
@@ -419,7 +429,7 @@ VISA_CSS = """
 .gin{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:12px;padding:0 12px;background:#fff}.gin input{border:0;outline:0;font:500 17px 'Jost',sans-serif;padding:11px 0;width:100%;background:none}
 .gin:focus-within{border-color:var(--red);box-shadow:0 0 0 2px rgba(215,25,31,.15)}.gst8 select{font:400 15px 'Jost',sans-serif;padding:10px 12px;border:1px solid var(--line);border-radius:12px;max-width:260px}
 .gtab{width:100%;border-collapse:collapse;font-size:15px}.gtab td{padding:8px 4px;border-bottom:1px solid var(--line)}.gtab td:last-child{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-.gtot td{font-weight:700;font-size:17px;color:var(--crimson);border-bottom:0;border-top:2px solid var(--wine)}.gnote{font-size:13px;color:var(--muted);margin:0}
+.gtot td{font-weight:700;font-size:17px;color:var(--crimson);border-bottom:0;border-top:2px solid var(--wine)}.gnote{font-size:13px;color:var(--muted);margin:0}.gout{margin:0;background:#fff4e5;border:1px solid #f2c48b;color:#7a4300;border-radius:12px;padding:10px 14px;font-size:14px}
 @media(max-width:600px){.grow{grid-template-columns:1fr}}
 #upload .paybox{margin:28px auto 0}
 .gb2b{font-weight:400!important;color:var(--ink)!important}.gcalc .chk{display:flex!important;gap:8px;align-items:flex-start}.gcalc .chk input{width:auto;margin-top:3px}#g_gmsg{font-size:12.5px}
