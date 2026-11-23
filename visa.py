@@ -14,11 +14,6 @@ JOB = ["Salaried: salary slips (last 3 months) and leave/NOC letter from employe
        "Students: school or college ID and bonafide letter; retired: pension proof"]
 TRIP = ["Confirmed return flight booking", "Hotel bookings for the whole stay", "Day-wise travel itinerary"]
 
-OTHER_COUNTRIES = ["South Korea","China","Hong Kong","Taiwan","Philippines","Indonesia","Cambodia","Laos","Myanmar","Nepal","Bhutan","Sri Lanka","Bangladesh",
- "Mauritius","Seychelles","Kenya","Tanzania","South Africa","Egypt","Morocco","Turkey","Azerbaijan","Georgia","Armenia","Uzbekistan","Kazakhstan","Kyrgyzstan",
- "Jordan","Israel","Saudi Arabia","Qatar","Oman","Bahrain","Kuwait","Russia","Ireland","Canada","Mexico","Brazil","Argentina","Peru","Chile","New Zealand","Fiji",
- "Iceland","Norway","Sweden","Finland","Denmark","Croatia","Greece","Portugal","Czech Republic","Hungary","Poland","Austria","Netherlands","Belgium"]
-
 COUNTRIES = [
  ("uae", "🇦🇪", "Dubai / UAE", "E-visa, usually processed online",
   ["Clear colour scan of passport front and back pages", "Recent passport-size photo with white background",
@@ -102,10 +97,9 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
     if not P:
         # Any destination not listed: customer types it, then requests the checklist/price or uploads documents.
         tabs += '<button type="button" class="vtab" data-c="other">🌐 Other country</button>'
-        other_list = '<datalist id="vo_list">' + "".join(f'<option value="{c}"></option>' for c in OTHER_COUNTRIES) + '</datalist>'
         panels += f"""<div class="vpanel" data-c="other" hidden>
 <div class="vhead"><div><h3>🌐 Other country</h3><p class="meta">Travelling somewhere not listed above? Type the country – our visa team will send you the exact documents, fee and processing time for it.</p></div></div>
-<div class="vother"><label>Which country are you visiting?<input id="vo_country" maxlength="60" list="vo_list" autocomplete="off" placeholder="e.g. Kenya, Bhutan, Brazil, South Korea"></label>
+<div class="vother"><label>Which country are you visiting?<input id="vo_country" maxlength="60" autocomplete="off" placeholder="e.g. Kenya, Bhutan, Brazil, South Korea"></label>
 <a class="btn gold" id="vo_wa" href="https://wa.me/919843121212" target="_blank" rel="noopener">Request checklist &amp; price</a></div>
 <p id="vo_msg" class="vmsg" role="status" aria-live="polite"></p>
 <p class="meta" style="margin:8px 0 0">Price = government / embassy fee (no GST) + our service fee + 18% GST on the service fee. Requirements differ by country and visa type – we confirm the final checklist for your case before you apply.</p>
@@ -138,7 +132,7 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
 <label>Mobile number*<input name="phone" required inputmode="tel" maxlength="20" autocomplete="tel" placeholder="10-digit mobile, or +country code"></label></div>
 <div class="row"><label>Email<input name="email" type="email" maxlength="160" autocomplete="email"></label>
 <label>{T["sel_label"]}<select name="country" required>{opts}</select></label></div>
-{'' if P else '<label id="ocwrap" hidden>Which country?*<input name="other_country" maxlength="60" list="vo_list" autocomplete="off" placeholder="e.g. Kenya, Bhutan, South Korea"></label>'}
+{'' if P else '<label id="ocwrap" hidden>Which country?*<input name="other_country" maxlength="60" autocomplete="off" placeholder="e.g. Kenya, Bhutan, South Korea"></label>'}
 {other_list}
 <div class="row">{T["type_row"]}
 <label>{T["date_label"]}<input name="travel_date" type="date"></label></div>
@@ -269,7 +263,7 @@ VISA_FORM_NEW = r"""<form id="vform" class="vform" novalidate>
 <label id="natwrap" hidden>Which nationality?*<input name="nationality_other" maxlength="40" autocomplete="off" placeholder="e.g. British, American, Canadian (OCI card holders too)"></label>
 <div class="row"><label>Country*<select name="country" required>__OPTS__</select></label>
 <label>Visa type<select name="visa_type"><option>Tourist</option><option>Business</option><option>Visiting family / friends</option><option>Student</option><option>Transit</option><option>Medical</option><option>Conference / Event</option><option>Work / Employment</option><option>Pilgrimage (e.g. Umrah)</option><option>Not sure – please advise</option></select></label></div>
-<label id="ocwrap" hidden>Which country?*<input name="other_country" maxlength="60" list="vo_list" autocomplete="off" placeholder="e.g. Kenya, Bhutan, South Korea"></label>
+<label id="ocwrap" hidden>Which country?*<input name="other_country" maxlength="60" autocomplete="off" placeholder="e.g. Kenya, Bhutan, South Korea"></label>
 __OTHERLIST__
 <div class="row"><label>Travel date<input name="travel_date" type="date"></label>
 <label>Return date<input name="return_date" type="date"></label></div>
