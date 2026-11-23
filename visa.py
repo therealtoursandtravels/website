@@ -251,14 +251,14 @@ tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.c)));
 const names={json.dumps({c:n for (c,_,n,_,_) in ITEMS})};
 const csel=document.querySelector('select[name=country]'),ocw=document.getElementById('ocwrap');
 const syncOther=()=>{{if(ocw)ocw.hidden=csel.value!=='Other';}};csel.addEventListener('change',syncOther);
-document.querySelectorAll('[data-pick]').forEach(a=>a.addEventListener('click',()=>{{csel.value=names[a.dataset.pick];syncOther();}}));
+document.querySelectorAll('[data-pick]').forEach(a=>a.addEventListener('click',()=>{{csel.value=names[a.dataset.pick];csel.dispatchEvent(new Event('change'));}}));
 const vo=document.getElementById('vo_country');
 if(vo){{
  const vmsg=document.getElementById('vo_msg');
  document.getElementById('vo_wa').addEventListener('click',e=>{{const c=vo.value.trim();vmsg.className='vmsg';vmsg.textContent='';
   if(c.length<2){{e.preventDefault();vmsg.textContent='Please type the country you are visiting.';vmsg.classList.add('err');vo.focus();return;}}
   e.currentTarget.href='https://wa.me/919843121212?text='+encodeURIComponent('Hi The Real Tours and Travels, please share the documents required and the price for a '+c+' visa. Travellers:  Travel date: ');}});
- document.getElementById('vo_up').addEventListener('click',()=>{{csel.value='Other';syncOther();const c=vo.value.trim();if(c)f.other_country.value=c;}});
+ document.getElementById('vo_up').addEventListener('click',()=>{{csel.value='Other';const c=vo.value.trim();if(c)f.other_country.value=c;csel.dispatchEvent(new Event('change'));}});
 }}
 {form_js}
 }})();

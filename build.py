@@ -219,7 +219,7 @@ footer ul{list-style:none;padding:0;margin:0}footer li{margin:7px 0}
 
 .copy{border-top:1px solid var(--line);text-align:center;padding:18px;font-size:13.5px;color:var(--muted)}
 .gst{display:inline-block;margin-top:6px;padding:4px 12px;border:1px solid var(--line);border-radius:999px;color:var(--ink);background:#fff;font-size:13px;letter-spacing:.5px}
-.float-wa{position:fixed;right:18px;bottom:18px;z-index:60;background:#25D366;color:#fff;width:60px;height:60px;border-radius:50%;display:grid;place-items:center;box-shadow:0 8px 22px rgba(0,0,0,.3);text-decoration:none;font-size:28px}
+.float-wa{transition:opacity .2s;position:fixed;right:18px;bottom:18px;z-index:60;background:#25D366;color:#fff;width:60px;height:60px;border-radius:50%;display:grid;place-items:center;box-shadow:0 8px 22px rgba(0,0,0,.3);text-decoration:none;font-size:28px}
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px}
 .info{background:var(--bg);border:1px solid var(--line);border-radius:18px;padding:32px}
 .info p{margin:0 0 14px}
@@ -233,6 +233,7 @@ footer ul{list-style:none;padding:0;margin:0}footer li{margin:7px 0}
 .btns{flex-direction:column}.btns .btn{justify-content:center;width:100%}
 .trust{gap:18px 28px;margin-top:28px}.trust b{font-size:24px}
 .head{margin-bottom:30px}.card{padding:24px 20px}.emblem{padding:34px 22px}.emblem img{width:150px}
+.float-wa.tuck{opacity:0;pointer-events:none}
 .map{min-height:300px}footer .wrap{gap:28px;padding:44px 18px 28px}.float-wa{width:54px;height:54px;right:14px;bottom:14px;font-size:25px}
 .faq summary{font-size:16px}.review{padding:22px}}
 @media(max-width:380px){.seal{width:170px;height:170px}.brand small{display:none}}
@@ -299,6 +300,11 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <p style="margin-top:14px">Serving travellers across India.</p></div>
  </div><div class="topbar"><div class="wrap"><span>📍 Mulund West, Mumbai · Open daily 9 am – 10 pm</span><span><a href="tel:{PHONE_RAW}">📞 {PHONE}</a> · <a href="mailto:{EMAIL}">✉️ {EMAIL}</a></span></div></div><div class="copy">© {datetime.date.today().year} The Real Tours and Travels, Mulund West, Mumbai · GSTIN {GST} · All rights reserved.<br><a href="{root}terms/">Terms &amp; Conditions</a> · <a href="{root}privacy-policy/">Privacy Policy</a> · <a href="{root}cancellation-refund-policy/">Cancellation &amp; Refund Policy</a></div></footer>
 <a class="float-wa" href="{WA}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">💬</a>
+<script>(function(){{const w=document.querySelector('.float-wa');if(!w)return;let q=0;
+function chk(){{q=0;w.style.pointerEvents='none';const r=w.getBoundingClientRect(),m=r.left+r.width/2,c=r.top+r.height/2;
+const hit=[.15,.5,.85].flatMap(fx=>[.15,.5,.85].map(fy=>[r.left+r.width*fx,r.top+r.height*fy])).some(([x,y])=>{{const e=document.elementFromPoint(x,y);return e&&e!==w&&e.closest('a,button,input,select,textarea,label,summary');}});
+w.style.pointerEvents='';w.classList.toggle('tuck',hit);}} /* hide the WhatsApp bubble while it would cover a button or form field */
+addEventListener('scroll',()=>{{if(!q)q=requestAnimationFrame(chk);}},{{passive:true}});addEventListener('resize',chk);addEventListener('load',chk);chk();}})();</script>
 {pwa.BODY}
 </body></html>"""
 
