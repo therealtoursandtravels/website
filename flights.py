@@ -98,7 +98,7 @@ const forms={{}};box.querySelectorAll('form').forEach(x=>forms[x.dataset.kind]=x
 const NOTE={{flight:'Preferred airline, timings, baggage…',hotel:'e.g. sea view, near beach, Jain food, early check-in',cruise:'e.g. dates flexible, senior citizens, Jain food'}};
 Object.entries(forms).forEach(([k,x])=>x.notes.placeholder=NOTE[k]);
 box.querySelectorAll('.ftab').forEach(t=>t.addEventListener('click',()=>{{box.querySelectorAll('.ftab').forEach(b=>b.classList.toggle('on',b===t));Object.entries(forms).forEach(([k,x])=>x.hidden=k!==t.dataset.k);}}));
-const HK={{flights:'flight',flight:'flight',hotels:'hotel',hotel:'hotel',cruise:'cruise'}};function fromHash(){{const k=HK[location.hash.slice(1)];if(!k)return;const t=box.querySelector('.ftab[data-k='+k+']');if(t){{t.click();const y=box.getBoundingClientRect().top+scrollY-(document.querySelector('header.site')?.offsetHeight||0)-12;scrollTo({{top:y,behavior:'smooth'}});}}}}if(location.hash)setTimeout(fromHash,250);addEventListener('hashchange',fromHash);
+const HK={{flights:'flight',flight:'flight',hotels:'hotel',hotel:'hotel',cruise:'cruise'}};function fromHash(){{const k=HK[location.hash.slice(1)];box.querySelectorAll('.ftab').forEach(b=>b.hidden=!!k&&b.dataset.k!==k);if(!k)return;const t=box.querySelector('.ftab[data-k='+k+']');if(t){{t.click();const y=box.getBoundingClientRect().top+scrollY-(document.querySelector('header.site')?.offsetHeight||0)-12;scrollTo({{top:y,behavior:'smooth'}});}}}}if(location.hash)setTimeout(fromHash,250);addEventListener('hashchange',fromHash);
 const today=new Date(Date.now()+330*60000).toISOString().slice(0,10);
 const F=forms.flight,H=forms.hotel,C=forms.cruise;
 F.depart.min=F.ret.min=H['in'].min=H.out.min=today;C.month.min=today.slice(0,7);
@@ -180,7 +180,7 @@ FLIGHT_CSS = """
 .btab.on{color:var(--crimson);border-bottom-color:var(--red)}
 .hgrid{display:grid;grid-template-columns:1.6fr 1fr 1fr 2fr 1.1fr;gap:10px;align-items:end}.hpax{grid-template-columns:repeat(3,1fr)}
 .fbar{background:#fff;border:1px solid var(--line);border-radius:22px;padding:22px 24px;box-shadow:0 22px 50px rgba(0,0,0,.08);border-top:5px solid var(--red)}
-.ftabs{display:flex;gap:6px;margin-bottom:14px;border-bottom:1px solid var(--line)}.ftab{border:0;background:none;padding:10px 16px;font:600 15.5px 'Jost',sans-serif;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}.ftab.on{color:var(--red);border-bottom-color:var(--red)}
+.ftabs{display:flex;gap:6px;margin-bottom:14px;border-bottom:1px solid var(--line)}.ftab{border:0;background:none;padding:10px 16px;font:600 15.5px 'Jost',sans-serif;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}.ftab.on{color:var(--red);border-bottom-color:var(--red)}.ftab[hidden]{display:none}
 .fform[hidden]{display:none!important}.fgrid.fg-h{grid-template-columns:1.6fr 1fr 1fr 1.8fr 1fr}.fgrid.fg-c{grid-template-columns:1.2fr 1.2fr 1.1fr 1fr 1.6fr}.fpax.f3{grid-template-columns:repeat(3,1fr)}
 .ftop{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}.ftop b{font-family:'Playfair Display',serif;font-size:21px;color:var(--wine)}
 .ftrip{display:flex;gap:8px;flex-wrap:wrap}.ftrip label{border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:14px;cursor:pointer;display:flex;gap:6px;align-items:center}
