@@ -1,7 +1,7 @@
 """Customer accounts (Supabase Auth): login/sign-up page, profile, my enquiries, and site-wide form prefill."""
 from visa import SB_URL, SB_KEY
 
-SBJS = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"
+SBJS = "/js/supabase.js"
 STORE_KEY = "sb-byvytpxqqgjschknqpms-auth-token"
 
 # Loaded on every page: only pulls in the login library when the visitor is (or may be) logged in.
@@ -30,10 +30,10 @@ def account_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band):
 <section style="padding:44px 0 70px"><div class="wrap" style="max-width:980px" id="acct">
 <div class="crumbs"><a href="../">Home</a> › My Account</div>
 
-<div id="a_loading" class="meta">Loading…</div>
+<div id="a_loading" class="meta" hidden>Loading…</div>
 
 <!-- Logged out -->
-<div id="a_out" hidden>
+<div id="a_out">
 <div class="acct-grid">
 <div class="acct-card">
 <div class="atabs"><button type="button" class="atab on" data-t="login">Log in</button><button type="button" class="atab" data-t="signup">Create account</button></div>
@@ -42,7 +42,7 @@ def account_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band):
 <label>Password<input name="password" type="password" required autocomplete="current-password" minlength="6"></label>
 <button class="btn gold" type="submit">Log in</button>
 <button class="linkbtn" type="button" id="forgot">Forgot password?</button>
-<p class="vmsg" role="status"></p></form>
+<p class="vmsg" role="status"></p><div class="aswitch">New here? <button type="button" class="btn outline" data-go="signup">✨ Create a free account</button></div></form>
 <form id="f_signup" class="vform anoborder" novalidate hidden>
 <label>Full name*<input name="full_name" required maxlength="120" autocomplete="name"></label>
 <div class="row"><label>Mobile number*<input name="phone" required inputmode="tel" maxlength="15" autocomplete="tel" placeholder="10-digit mobile"></label>
@@ -53,7 +53,7 @@ def account_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band):
 <label class="chk"><input type="checkbox" name="consent_email" checked><span>Send me travel offers and updates by <b>email</b></span></label>
 <label class="chk"><input type="checkbox" name="agree" required><span>I agree to the <a href="../terms/">Terms</a> and <a href="../privacy-policy/">Privacy Policy</a>.</span></label>
 <button class="btn gold" type="submit">Create my account</button>
-<p class="vmsg" role="status"></p></form>
+<p class="vmsg" role="status"></p><div class="aswitch">Already registered? <button type="button" class="linkbtn" data-go="login">Log in here</button></div></form>
 </div>
 <div class="acct-why"><h2>Why create an account?</h2><ul class="ticks">
 <li>Your details are filled in automatically when you book flights, hotels, cruises, visas, insurance or packages</li>
@@ -97,6 +97,7 @@ const msg=(f,t,cls)=>{{const m=f.querySelector('.vmsg');m.className='vmsg'+(cls?
 const notify=(s,t,r)=>{{try{{fetch('https://formsubmit.co/ajax/enquiry@therealtoursandtravels.com',{{method:'POST',headers:{{'Content-Type':'application/json',Accept:'application/json'}},body:JSON.stringify({{_subject:s,message:t,_replyto:r||'',_template:'table',_captcha:'false'}})}}).catch(()=>{{}});}}catch(_){{}}}};
 window.rttClient().then(async c=>{{
  document.querySelectorAll('.atab').forEach(b=>b.addEventListener('click',()=>{{document.querySelectorAll('.atab').forEach(x=>x.classList.toggle('on',x===b));show('#f_login',b.dataset.t==='login');show('#f_signup',b.dataset.t==='signup');}}));
+ document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{{document.querySelector('.atab[data-t='+b.dataset.go+']').click();scrollTo({{top:0,behavior:'smooth'}});}}));
  if(location.hash==='#signup')document.querySelector('.atab[data-t=signup]').click();
  let recovering=/type=recovery/.test(location.hash);
  c.auth.onAuthStateChange((ev)=>{{if(ev==='PASSWORD_RECOVERY'){{recovering=true;render();}}}});
@@ -150,7 +151,7 @@ window.rttClient().then(async c=>{{
   const {{error}}=await c.auth.updateUser({{password:f.password.value}});if(error)return msg(f,'Could not update password. Please request a new link.','err');recovering=false;history.replaceState(null,'','./');render();}});
  $('#logout').addEventListener('click',async()=>{{await c.auth.signOut();location.replace('./');}});
  render();
-}}).catch(()=>{{$('#a_loading').textContent='Could not load login. Please check your internet connection and refresh.';}});
+}}).catch(()=>{{$('#a_loading').hidden=false;$('#a_loading').textContent='Could not load login. Please check your internet connection and refresh.';}});
 }})();
 </script>"""
 
@@ -171,5 +172,5 @@ ul.enq{list-style:none;padding:0;margin:0}ul.enq li{padding:12px 0;border-bottom
 @media(max-width:560px){header.site .brand b{white-space:normal;font-size:15.5px}header.site .brand{gap:8px}}
 @media(max-width:800px){.acct-grid{grid-template-columns:1fr}.acct-card{padding:18px}}
 @media(max-width:420px){.acct-link{font-size:0;padding:7px 10px}.acct-link:before{content:'👤';font-size:18px}}
-html.is-app .acct-link{display:none}
+html.is-app .acct-link{font-size:0;padding:7px 10px}html.is-app .acct-link:before{content:'👤';font-size:18px}.aswitch{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line);color:var(--muted);display:flex;flex-wrap:wrap;align-items:center;gap:10px}.atab{font-size:17px}
 """

@@ -292,7 +292,7 @@ ul.enq{list-style:none;padding:0;margin:0}ul.enq li{padding:12px 0;border-bottom
 @media(max-width:560px){header.site .brand b{white-space:normal;font-size:15.5px}header.site .brand{gap:8px}}
 @media(max-width:800px){.acct-grid{grid-template-columns:1fr}.acct-card{padding:18px}}
 @media(max-width:420px){.acct-link{font-size:0;padding:7px 10px}.acct-link:before{content:'👤';font-size:18px}}
-html.is-app .acct-link{display:none}
+html.is-app .acct-link{font-size:0;padding:7px 10px}html.is-app .acct-link:before{content:'👤';font-size:18px}.aswitch{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line);color:var(--muted);display:flex;flex-wrap:wrap;align-items:center;gap:10px}.atab{font-size:17px}
 
 .sform{display:grid;gap:12px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;border-top:5px solid var(--red)}
 .sform label{display:grid;gap:5px;font-size:13px;font-weight:600;color:var(--muted)}

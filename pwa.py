@@ -1,7 +1,7 @@
 """Installable app (PWA): manifest, service worker, install button and offline page."""
 import json
 
-VERSION = "rtt-v9"
+VERSION = "rtt-v10"
 
 def manifest(NAME):
     return json.dumps({
@@ -65,7 +65,7 @@ HEAD = """<script>if(matchMedia('(display-mode: standalone)').matches||navigator
 
 # Install button + iPhone instructions + service-worker registration
 BODY = """<nav class="appbar" aria-label="App">
-<a href="/"><span>🏠</span>Home</a><a href="/flights-hotels/#flights"><span>✈️</span>Book</a><a href="/customize-your-package/"><span>✨</span>Plan</a><a href="/visa/"><span>🛂</span>Visa</a><a href="/account/"><span>👤</span>Me</a><a href="https://wa.me/919843121212" target="_blank" rel="noopener"><span>💬</span>Chat</a></nav>
+<a href="/"><span>🏠</span>Home</a><a href="/flights-hotels/#flights"><span>✈️</span>Book</a><a href="/customize-your-package/"><span>✨</span>Plan</a><a href="/visa/"><span>🛂</span>Visa</a><a href="/account/"><span>👤</span>Login</a><a href="https://wa.me/919843121212" target="_blank" rel="noopener"><span>💬</span>Chat</a></nav>
 <button type="button" class="app-install" id="appInstall" hidden>📲 Install app</button>
 <div class="ios-tip" id="iosTip" hidden role="dialog" aria-label="Install on iPhone"><button type="button" class="ios-x" aria-label="Close">✕</button>
 <b>Install The Real Tours and Travels app</b><ol class="ios-steps" id="iosSteps"><li>Tap <b>•••</b> at the bottom-right of Safari, then tap <span class="ios-share">⬆︎</span> <b>Share</b>. (Older iPhones: tap the <span class="ios-share">⬆︎</span> Share button in the bottom bar.)</li><li>Scroll down and tap <b>Add to Home Screen</b>.</li><li>Keep <b>Open as Web App</b> switched on if you see it, then tap <b>Add</b>.</li></ol><p class="ios-inapp" id="iosInapp" hidden>You are inside the Instagram / Facebook / WhatsApp browser. Tap <b>•••</b> and choose <b>Open in Safari</b> (or Open in browser) first, then follow the steps.</p></div>
