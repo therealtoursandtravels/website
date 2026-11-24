@@ -105,9 +105,31 @@ def wa_free(n, card):
     import urllib.parse as U
     return "https://wa.me/919843121212?text=" + U.quote(f"Hi The Real Tours and Travels, I am travelling to {n}. Please help me with the entry requirements" + (f" and the {card}" if card else "") + ".\nTravellers: \nTravel date: ")
 
+def load_rates():
+    import json, os
+    try:
+        return json.load(open(os.path.join(os.path.dirname(__file__), "rates.json")))
+    except Exception:
+        return {"passport": {}, "visa": {}}
+
+def inr(v):
+    return "₹" + f"{int(v):,}".replace(",", ",") if v is not None else ""
+
+def price_box(rate, wa, label):
+    g = (rate or {}).get("govt_fee"); sc = (rate or {}).get("service_charge"); gn = (rate or {}).get("govt_note")
+    if g is None and sc is None:
+        return f'<div class="vprice"><span>Price</span><a class="btn gold" href="{wa}" target="_blank" rel="noopener">Request Price</a></div>'
+    rows = ""
+    if g is not None:
+        rows += f'<div class="vrow"><span>{label}</span><b>{inr(g)}</b></div>' + (f'<small>{gn}</small>' if gn else "")
+    rows += (f'<div class="vrow"><span>Our service charge</span><b>{inr(sc)} <em>+ 18% GST</em></b></div>' if sc is not None
+             else '<div class="vrow"><span>Our service charge</span><b class="ask">on request</b></div>')
+    return f'<div class="vprice vrates"><div class="vrt">{rows}</div><a class="btn gold" href="{wa}" target="_blank" rel="noopener">Apply / Enquire</a></div>'
+
 def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
     P = mode == "passport"
     ITEMS = PASSPORT if P else COUNTRIES
+    RATES = load_rates().get("passport" if P else "visa", {})
     if P:
         tabs = "".join(f'<button type="button" class="vtab{" on" if i==0 else ""}" data-c="{c}">{f} {n}</button>' for i,(c,f,n,_,_) in enumerate(ITEMS))
     else:
@@ -127,7 +149,7 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
         wa = "https://wa.me/919843121212?text=" + ("Hi%20The%20Real%20Tours%20and%20Travels%2C%20please%20share%20the%20price%20for%20" + n.replace(" ","%20").replace("/","%2F").replace("(","").replace(")","") + ("." if P else "%20visa.%20Travellers%3A%20%20Travel%20date%3A%20"))
         panels += f"""<div class="vpanel" data-c="{c}"{'' if i==0 else ' hidden'}>
 <div class="vhead"><div><h3>{f} {n}</h3>{badges}{f'<p class="meta">{how}</p>' if P else ''}{f'<p class="vwhen">⏱️ <b>When to apply:</b> {WHEN[c]}.</p>' if (not P and c in WHEN) else ''}{f'<p class="vwhen">⏱️ <b>When to apply:</b> {CARD_WHEN[c]}.</p>' if (not P and c in CARD_WHEN) else ''}{f'<p class="vwhen">⚡ <b>Express visa:</b> {EXPRESS[c]}.</p>' if (not P and c in EXPRESS) else ''}{f'<p class="vwhen">🖐️ <b>Biometrics:</b> {BIOMETRICS[c]}.</p>' if (not P and c in BIOMETRICS) else ''}</div>
-<div class="vprice"><span>Price</span><a class="btn gold" href="{wa_free(n, card) if free else wa}" target="_blank" rel="noopener">Request Price</a></div></div>
+{price_box(RATES.get(c), wa_free(n, card) if free else wa, "Government fee" if P else "Embassy / visa fee")}</div>
 <p class="meta" style="margin:8px 0 0">{"Price = our service fee + 18% GST." if free else "Price = government / embassy fee (no GST) + our service fee + 18% GST on the service fee."}</p><h4>Documents required</h4><ul class="ticks">{lis}</ul>
 {"" if P or free or not card else f'<p class="meta">📲 The {card} is also required before you land.</p>'}<p class="meta">{"Requirements are set by Passport Seva (Ministry of External Affairs) and can change. We confirm the final checklist for your case before you apply." if P else "Rules for Indian passport holders – last checked November 2026 and reviewed every week. Requirements can change and may differ for business, student or family visits; we confirm the final checklist for your case before you travel."}</p>
 {'<p class="meta">🛡️ Schengen visas need travel insurance with at least €30,000 medical cover. <a href="../insurance/?cover=schengen#ins-form">Get a Schengen insurance quote →</a></p>' if c=="schengen" and not P else ""}{"" if free else f'<p><a class="btn outline" href="#upload" data-pick="{c}">Upload documents for {n}</a></p>'}</div>"""
@@ -158,7 +180,7 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
              "Check the documents required for your visa, request the price, and upload your documents securely – our visa team will review them and call you back."),
       k2="Choose your service" if P else "Visas & arrival cards",
       h2="Documents required by service" if P else "Visas & Digital Arrival Cards",
-      lead2=("Select a service to see the checklist. Tap <b>Request Price</b> to get the government fee and our service charge on WhatsApp." if P else
+      lead2=("Select a service to see the checklist and the current government fee (as revised by the Ministry of External Affairs from 1 July 2026). Tap <b>Apply / Enquire</b> to start on WhatsApp." if P else
              "Pick a country to see the documents required, when to apply and whether biometrics are needed, then tap <b>Request Price</b>. Need a <b>multiple-entry</b> or <b>express</b> visa? Choose it in the form below. Suggested times allow for weekends and public holidays in India and the destination country – apply earlier around festivals and peak season."),
       h3="Upload your passport documents" if P else "Upload your visa documents",
       team="passport team" if P else "visa team",
@@ -560,6 +582,7 @@ VISA_CSS = """
 .vhead h3{margin:0;font-size:26px;color:var(--wine)}.vhead .meta{margin:4px 0 0}
 .vprice{display:flex;align-items:center;gap:14px;background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:10px 12px 10px 18px}
 .vprice span{font-weight:600;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-size:13px}
+.vrates{flex-direction:column;align-items:stretch;gap:10px;min-width:280px}.vrt .vrow{display:flex;justify-content:space-between;gap:14px;align-items:baseline}.vrt .vrow span{font-size:12px}.vrt .vrow b{font-size:19px;color:var(--ink,#222)}.vrt .vrow b em{font-style:normal;font-weight:500;font-size:13px;color:var(--muted)}.vrt .vrow b.ask{font-size:14px;font-weight:600;color:var(--muted)}.vrt small{display:block;color:var(--muted);font-size:12.5px;margin:-2px 0 6px}
 .vbox h4{font-family:'Playfair Display',serif;font-size:20px;color:var(--crimson);margin:18px 0 6px}
 .vform{background:#fff;border:1px solid var(--line);border-radius:20px;padding:30px;display:grid;gap:16px}
 .vform .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}

@@ -140,6 +140,7 @@ footer ul{list-style:none;padding:0;margin:0}footer li{margin:7px 0}
 .vhead h3{margin:0;font-size:26px;color:var(--wine)}.vhead .meta{margin:4px 0 0}
 .vprice{display:flex;align-items:center;gap:14px;background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:10px 12px 10px 18px}
 .vprice span{font-weight:600;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-size:13px}
+.vrates{flex-direction:column;align-items:stretch;gap:10px;min-width:280px}.vrt .vrow{display:flex;justify-content:space-between;gap:14px;align-items:baseline}.vrt .vrow span{font-size:12px}.vrt .vrow b{font-size:19px;color:var(--ink,#222)}.vrt .vrow b em{font-style:normal;font-weight:500;font-size:13px;color:var(--muted)}.vrt .vrow b.ask{font-size:14px;font-weight:600;color:var(--muted)}.vrt small{display:block;color:var(--muted);font-size:12.5px;margin:-2px 0 6px}
 .vbox h4{font-family:'Playfair Display',serif;font-size:20px;color:var(--crimson);margin:18px 0 6px}
 .vform{background:#fff;border:1px solid var(--line);border-radius:20px;padding:30px;display:grid;gap:16px}
 .vform .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
