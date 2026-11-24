@@ -375,7 +375,7 @@ f.addEventListener('submit',async e=>{{
 <p class="gnote">Enter the <b>total</b> shown above as the Booking Amount in the payment window<span id="g_hint"></span>. A GST tax invoice (our GSTIN 27AMUPK4723E1ZU) will be issued for the service fee<span id="g_to"></span>.</p></div>
 <form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_U3RKkNsxkSYwez" async></script></form>
 <p style="font-size:13px;color:var(--muted);margin:6px 0 0">🔒 Secured by Razorpay · By paying you agree to our <a href="../terms/">Terms</a> and <a href="../cancellation-refund-policy/">Cancellation &amp; Refund Policy</a>.</p></div>
-<p class="meta" style="text-align:center;margin-top:16px">Prefer WhatsApp or visiting us? Call/WhatsApp <a href="tel:{PHONE_RAW}">{PHONE}</a> or visit our office, open daily 9 am – 10 pm.</p>
+<p class="meta" style="text-align:center;margin-top:16px">Prefer WhatsApp or visiting us? Call/WhatsApp <a href="tel:{PHONE_RAW}">{PHONE}</a> or visit our office.</p>
 </div></section>
 {cta_band()}
 {"" if P else VISA_PAY_JS}

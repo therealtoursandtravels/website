@@ -370,7 +370,7 @@ def jsonld_org():
       "name":NAME,"url":SITE+"/","logo":SITE+"/img/logo-512.png",
       "image":SITE+"/img/logo-512.png","telephone":PHONE_RAW,"email":EMAILS["info"],"foundingDate":"1981","taxID":GST,"vatID":GST,
       "address":{"@type":"PostalAddress","streetAddress":"204, B10, Rachana Building, Govardhan Nagar, Lal Bahadur Shastri Marg","addressLocality":"Mulund West, Mumbai","addressRegion":"Maharashtra","postalCode":"400080","addressCountry":"IN"},
-      "openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"09:00","closes":"22:00"}],
+      "openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"00:00","closes":"23:59"}],
       "areaServed":[{"@type":"Country","name":"India"},{"@type":"Place","name":"Worldwide"}],
       "slogan":"Crafting Journeys Since 1981","alternateName":["Real Tours and Travels","The Real Tours & Travels","The Real Tours and Travels India"],
       "priceRange":"₹₹","currenciesAccepted":"INR","paymentAccepted":"Cash, UPI, Credit Card, Debit Card, Net Banking",
@@ -489,9 +489,9 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <p class="fsoh">Our profiles in social media</p>
 <div class="fsq"><a href="{FB}" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="currentColor"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v2H8v4h2v8h4v-8h3l1-4h-4V8.5a.5.5 0 0 1 .5-.5z"/></svg></a><a href="{IG}" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a><a href="https://wa.me/{PHONE_RAW.replace('+','')}" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.8-1.4a.5.5 0 0 0 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.7a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.2-.2-.5-.3z"/></svg></a><a href="https://www.youtube.com/@therealtoursandtravels" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="currentColor"><path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-4.8 31 31 0 0 0-.5-4.8zM9.8 15.1V8.9l5.4 3.1z"/></svg></a></div></div>
 <div><h4>Our Services</h4><ul>{nav}</ul></div>
-<div><h4>Visit Us</h4><ul><li>Open every day, 9 am – 10 pm</li><li><a href="{MAPS}" target="_blank" rel="noopener">Get directions on Google Maps</a></li><li><a href="{REVIEW}" target="_blank" rel="noopener">⭐ Review us on Google</a></li><li><a href="{root}flights-hotels/">✈️ Flights, hotels &amp; cruise</a></li><li><a href="{root}customize-your-package/">✨ Customized Packages</a></li><li><a href="{root}visa/">Visa documents &amp; upload</a></li><li><a href="{root}passport/">Passport services</a></li><li><a href="{root}insurance/">Travel insurance quote</a></li><li><a href="{root}blog/">Travel guides &amp; tips</a></li><li><a href="{root}account/">👤 My account / Login</a></li><li><a href="{root}about/">About us</a></li><li><a href="{root}contact/">Contact us</a></li></ul>
+<div><h4>Visit Us</h4><ul><li><a href="{MAPS}" target="_blank" rel="noopener">Get directions on Google Maps</a></li><li><a href="{REVIEW}" target="_blank" rel="noopener">⭐ Review us on Google</a></li><li><a href="{root}flights-hotels/">✈️ Flights, hotels &amp; cruise</a></li><li><a href="{root}customize-your-package/">✨ Customized Packages</a></li><li><a href="{root}visa/">Visa documents &amp; upload</a></li><li><a href="{root}passport/">Passport services</a></li><li><a href="{root}insurance/">Travel insurance quote</a></li><li><a href="{root}blog/">Travel guides &amp; tips</a></li><li><a href="{root}account/">👤 My account / Login</a></li><li><a href="{root}about/">About us</a></li><li><a href="{root}contact/">Contact us</a></li></ul>
 </div>
- </div><div class="topbar"><div class="wrap"><span>📍 Serving travellers across India &amp; abroad · Open daily 9 am – 10 pm</span><span><a href="tel:{PHONE_RAW}">📞 {PHONE}</a> · <a href="mailto:{SE}">✉️ {SE}</a></span></div></div><div class="copy">© {datetime.date.today().year} The Real Tours and Travels · GSTIN {GST} · All rights reserved.<br><a href="{root}terms/">Terms &amp; Conditions</a> · <a href="{root}privacy-policy/">Privacy Policy</a> · <a href="{root}cancellation-refund-policy/">Cancellation &amp; Refund Policy</a></div></footer>
+ </div><div class="topbar"><div class="wrap"><span>📍 Serving travellers across India &amp; abroad</span><span><a href="tel:{PHONE_RAW}">📞 {PHONE}</a> · <a href="mailto:{SE}">✉️ {SE}</a></span></div></div><div class="copy">© {datetime.date.today().year} The Real Tours and Travels · GSTIN {GST} · All rights reserved.<br><a href="{root}terms/">Terms &amp; Conditions</a> · <a href="{root}privacy-policy/">Privacy Policy</a> · <a href="{root}cancellation-refund-policy/">Cancellation &amp; Refund Policy</a></div></footer>
 <a class="float-wa" href="{WA}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">💬</a>
 <script>(function(){{const w=document.querySelector('.float-wa');if(!w)return;let q=0;
 function chk(){{q=0;w.style.pointerEvents='none';const r=w.getBoundingClientRect(),m=r.left+r.width/2,c=r.top+r.height/2;
@@ -570,14 +570,14 @@ def build():
 <p class="lead">Plan everything on call, WhatsApp or email from anywhere – we look after travellers in every part of India and clients abroad, including NRIs.</p></div>
 <div class="areas"><a href="flights-hotels/#flights">Flight tickets</a><a href="visa/">Visa services</a><a href="passport/">Passport services</a><a href="international-holiday-packages/">International tour packages</a><a href="domestic-holiday-packages/">Domestic tour packages</a><a href="honeymoon-packages/">Honeymoon packages</a><a href="jain-yatra-tours-with-maharaj/">Jain yatra with Maharaj</a><a href="yatra-tours/">Char Dham &amp; yatra tours</a><a href="travel-insurance/">Travel insurance</a><a href="airport-transfers-outstation-cabs/">Airport cabs</a><a href="weekend-getaways/">Weekend getaways</a><a href="group-tours/">Group tours</a></div></div></section>
 <section class="faq"><div class="wrap" style="max-width:860px"><div class="head"><span class="kicker">Good to know</span><h2>Frequently asked questions</h2></div>
-<details><summary>Where is The Real Tours and Travels located?</summary><p>We are at 204, B10, Rachana Building, Govardhan Nagar, LBS Marg, Mulund West, Mumbai 400080, open every day from 9 am to 10 pm.</p></details>
+<details><summary>Where is The Real Tours and Travels located?</summary><p>We are at 204, B10, Rachana Building, Govardhan Nagar, LBS Marg, Mulund West, Mumbai 400080.</p></details>
 <details><summary>Do you plan both domestic and international holidays?</summary><p>Yes – from Kashmir, Kerala and Manali to Dubai, Thailand, Bali and Europe, with flights, hotels, visas and insurance.</p></details>
 <details><summary>Do you offer Jain food on tours?</summary><p>Yes. We arrange Jain and vegetarian food, and run Jain yatra tours with our own Maharaj cooking pure Jain food.</p></details>
 <details><summary>How do I get a quote?</summary><p>Call or WhatsApp us on 98431 21212 or email {EMAIL} with your travel dates and number of travellers.</p></details>
 </div></section>
 {cta_band()}"""
     faq_home = {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-        {"@type":"Question","name":"Where is The Real Tours and Travels located?","acceptedAnswer":{"@type":"Answer","text":"204, B10, Rachana Building, Govardhan Nagar, LBS Marg, Mulund West, Mumbai 400080, open every day 9 am to 10 pm."}},
+        {"@type":"Question","name":"Where is The Real Tours and Travels located?","acceptedAnswer":{"@type":"Answer","text":"204, B10, Rachana Building, Govardhan Nagar, LBS Marg, Mulund West, Mumbai 400080."}},
         {"@type":"Question","name":"Do you offer Jain food on tours?","acceptedAnswer":{"@type":"Answer","text":"Yes. We arrange Jain and vegetarian food and run Jain yatra tours with our own Maharaj."}}]}
     write("/", page("/", "The Real Tours and Travels – Travel Agency in India Since 1981",
         "Trusted travel agency serving travellers across India since 1981. Domestic & international holiday packages, honeymoons, yatras, Jain tours with Maharaj, group tours, visas and travel insurance. Call/WhatsApp 98431 21212.",
@@ -598,7 +598,7 @@ def build():
 <div class="btns">{'<a class="btn gold" href="#enquire">📝 Send an enquiry</a>' if s['slug'] in SVC_SLUGS else ''}{'<a class="btn gold" href="../visa/">📄 Visa documents &amp; upload</a><a class="btn outline" href="../passport/">🛂 Passport services</a>' if s['slug']=='passport-visa-services' else ('<a class="btn gold" href="../insurance/#ins-form">🛡️ Get insurance quotation</a>' if s['slug']=='travel-insurance' else '')}<a class="btn gold" href="{WA}" target="_blank" rel="noopener">💬 Get a free plan on WhatsApp</a><a class="btn ghost" href="tel:{PHONE_RAW}">📞 98431 21212</a></div>
 </div>{seal("../")}</div>{RIDGE}</section>
 <section><div class="wrap two"><div><h2>What we offer</h2><ul class="ticks">{pts}</ul></div>
-<div><h2>Why book with us</h2><p>{s['why']}</p><p>Wherever you are in India, we are open daily 9 am – 10 pm. Plan everything over call and WhatsApp.</p>
+<div><h2>Why book with us</h2><p>{s['why']}</p><p>Wherever you are in India, plan everything with us over call and WhatsApp.</p>
 <p><a class="btn red" href="{'#enquire' if s['slug'] in SVC_SLUGS else WA}"{'' if s['slug'] in SVC_SLUGS else ' target="_blank" rel="noopener"'}>Plan my trip</a></p></div></div></section>
 {jain_extra(s) if s['slug']=='jain-yatra-tours-with-maharaj' else ''}{svc_form(s['slug'])}
 {fx.reviews_carousel(MAPS, REVIEW)}
@@ -613,7 +613,7 @@ def build():
     # Contact
     contact = f"""
 <section class="hero"><div class="wrap"><div><div class="crumbs"><a href="../">Home</a> › Contact</div>
-<span class="kicker">Visit · Call · WhatsApp</span><h1>Contact The Real Tours and Travels</h1><p>Call, WhatsApp, email or visit our office – we're open every day from 9 am to 10 pm.</p></div>{seal("../")}</div>{RIDGE}</section>
+<span class="kicker">Visit · Call · WhatsApp</span><h1>Contact The Real Tours and Travels</h1><p>Call, WhatsApp, email or visit our office.</p></div>{seal("../")}</div>{RIDGE}</section>
 <section><div class="wrap contact-grid"><div class="info">
 <h2>Get in touch</h2>
 <p><b>Phone / WhatsApp:</b> <a href="tel:{PHONE_RAW}">{PHONE}</a></p>
@@ -626,7 +626,7 @@ def build():
 <div class="btns"><a class="btn gold" href="{WA}" target="_blank" rel="noopener">💬 WhatsApp us</a><a class="btn outline" href="{MAPS}" target="_blank" rel="noopener">📍 Directions</a></div></div>
 <iframe class="map" loading="lazy" title="Map to The Real Tours and Travels, Mulund West" src="https://www.google.com/maps?cid=6174258107225017089&output=embed"></iframe>
 </div></section>{cta_band()}"""
-    write("/contact/", page("/contact/", "Contact | The Real Tours and Travels", "Contact The Real Tours and Travels – serving travellers across India. Call/WhatsApp 98431 21212, email info@therealtoursandtravels.com. Open daily 9 am – 10 pm.", contact))
+    write("/contact/", page("/contact/", "Contact | The Real Tours and Travels", "Contact The Real Tours and Travels – serving travellers across India. Call/WhatsApp 98431 21212, email info@therealtoursandtravels.com.", contact))
     # 404
     open(os.path.join(root, "404.html"), "w").write(page("/404.html", "Page not found | The Real Tours and Travels", "Page not found.", f'<section><div class="wrap"><h1>Page not found</h1><p><a href="/">Go to the home page</a> or WhatsApp us on 98431 21212.</p></div></section>').replace('<meta name="robots" content="index,follow,max-image-preview:large">','<meta name="robots" content="noindex">'))
     # Blog
@@ -731,7 +731,7 @@ def build():
 <a class="card" href="../customize-your-package/"><div class="ic">✨</div><h3>Customized packages</h3><p>Your dates, your pace, your budget – an itinerary made for you.</p></a>
 <a class="card" href="../jain-yatra-tours-with-maharaj/"><div class="ic">🙏</div><h3>Jain yatra</h3><p>Tirth yatras with our own Maharaj and pure Jain food.</p></a>
 </div></div></section>
-<section><div class="wrap two"><div><h2>Visit us</h2><p>{'<br>'.join(ADDR)}</p><p>Open every day, 9 am – 10 pm</p><p>📞 <a href="tel:{PHONE_RAW}">{PHONE}</a><br>✉️ <a href="mailto:{EMAIL}">{EMAIL}</a><br>📸 <a href="{IG}" target="_blank" rel="noopener">@therealtoursandtravels</a></p>
+<section><div class="wrap two"><div><h2>Visit us</h2><p>{'<br>'.join(ADDR)}</p><p>📞 <a href="tel:{PHONE_RAW}">{PHONE}</a><br>✉️ <a href="mailto:{EMAIL}">{EMAIL}</a><br>📸 <a href="{IG}" target="_blank" rel="noopener">@therealtoursandtravels</a></p>
 <p><span class="gst">GSTIN: {GST}</span></p><div class="btns"><a class="btn gold" href="{WA}" target="_blank" rel="noopener">💬 WhatsApp us</a><a class="btn outline" href="{MAPS}" target="_blank" rel="noopener">📍 Directions</a></div></div>
 <div class="emblem"><img src="../img/logo.png" alt="The Real Tours and Travels emblem"><b>Crafting Journeys Since 1981</b><p>A family business trusted by generations of travellers in India and abroad.</p></div></div></section>{cta_band()}"""
     about_ld = {"@context":"https://schema.org","@type":"AboutPage","name":"About The Real Tours and Travels","url":SITE+"/about/","about":{"@id":SITE+"/#agency"}}
