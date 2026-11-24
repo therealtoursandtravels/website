@@ -62,9 +62,9 @@
     "singapore": {
       "name": "Singapore",
       "govt_fee": null,
-      "govt_note": "ICA processing fee (charged in INR at the current rate)",
+      "govt_note": "S$30 visa fee, charged in rupees by the Singapore mission",
       "service_charge": null,
-      "govt_fee_text": "S$30"
+      "govt_fee_text": "approx. ₹2,100"
     },
     "malaysia": {
       "name": "Malaysia",
@@ -81,23 +81,23 @@
     "schengen": {
       "name": "Europe (Schengen)",
       "govt_fee": null,
-      "govt_note": "Children 6–11: €45 · under 6: nil · plus visa application centre charges and travel insurance",
+      "govt_note": "Per adult · children 6–11: €45 (approx. ₹4,700) · under 6: nil · plus visa application centre charges and travel insurance",
       "service_charge": null,
-      "govt_fee_text": "€90 per adult"
+      "govt_fee_text": "€90 (approx. ₹9,400)"
     },
     "uk": {
       "name": "United Kingdom",
       "govt_fee": null,
       "govt_note": "Standard Visitor visa, up to 6 months · plus visa application centre charges",
       "service_charge": null,
-      "govt_fee_text": "£135"
+      "govt_fee_text": "£135 (approx. ₹16,800)"
     },
     "usa": {
       "name": "United States",
       "govt_fee": null,
       "govt_note": "B1/B2 visa application fee · any additional US government fees in force are extra",
       "service_charge": null,
-      "govt_fee_text": "US$185"
+      "govt_fee_text": "US$185 (approx. ₹17,400)"
     },
     "canada": {
       "name": "Canada",
@@ -110,7 +110,7 @@
       "govt_fee": null,
       "govt_note": "Visitor visa (subclass 600), applying from India · from 1 July 2026",
       "service_charge": null,
-      "govt_fee_text": "A$250"
+      "govt_fee_text": "A$250 (approx. ₹16,000)"
     },
     "japan": {
       "name": "Japan",
@@ -233,5 +233,6 @@
     "usa": "US State Dept MRV fee US$185",
     "australia": "Home Affairs subclass 600 charge from 1 July 2026",
     "singapore": "ICA S$30 processing fee"
-  }
+  },
+  "fx_note": "Rupee amounts are approximate at mid-November 2026 exchange rates (1 USD ≈ ₹94, 1 EUR ≈ ₹104, 1 GBP ≈ ₹124.5, 1 AUD ≈ ₹64); the embassy charges at its own rate on the day."
 }
