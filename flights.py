@@ -56,28 +56,28 @@ PORTS = ["Mumbai", "Goa", "Kochi", "Chennai", "Singapore", "Dubai", "Abu Dhabi",
 def flight_widget(root):
     opts = "".join(f'<option value="{c} ({k})">{n}</option>' for c,k,n in AIRPORTS)
     flight = f"""<form class="fform" data-kind="flight" novalidate>
-<div class="ftrip" role="radiogroup"><label><input type="radio" name="ftrip" value="One way" checked>One way</label><label><input type="radio" name="ftrip" value="Round trip">Round trip</label><label><input type="radio" name="ftrip" value="Multi-city">Multi-city</label></div>
-<div class="fgrid">
-<label class="fcell">From<input name="from" list="fapts" required placeholder="City or airport" autocomplete="off"></label>
+<div class="ftrip" role="radiogroup"><label><input type="radio" name="ftrip" value="One way" checked>One way</label><label><input type="radio" name="ftrip" value="Round trip">Round trip</label><label><input type="radio" name="ftrip" value="Multi-city">Multi-city</label><span class="ftripr">Domestic &amp; international flights</span></div>
+<div class="fgrid fmain">
+<label class="fcell">From<input name="from" list="fapts" required placeholder="From city" autocomplete="off"></label>
 <button type="button" class="fswap" aria-label="Swap from and to">⇄</button>
-<label class="fcell">To<input name="to" required maxlength="80" placeholder="Type the city, e.g. London" autocomplete="off"></label>
+<label class="fcell">To<input name="to" required maxlength="80" placeholder="To city" autocomplete="off"></label>
 <label class="fcell">Departure<input name="depart" type="date" required></label>
 <label class="fcell fret">Return<input name="ret" type="date"></label>
 <label class="fcell">Travellers &amp; class<span class="fpax">{_sel("adults","Adults",range(1,10),AD)}{_sel("children","Children",range(0,10),CH)}{_sel("infants","Infants",range(0,10),INF)}<select name="cabin" aria-label="Class"><option>Economy</option><option>Premium Economy</option><option>Business</option><option>First</option></select></span></label>
 </div><div class="flegs" hidden><span class="flh">Next flights in this trip</span><div class="flegrows"></div><button type="button" class="btn outline flegadd">➕ Add another flight</button></div><details class="fmore"><summary>➕ More options – airline, non-stop, meals &amp; special requests</summary><div class="fmoreg"><label class="fcell">Preferred airline<input name="airline" maxlength="60" placeholder="Any airline" autocomplete="off"></label><div class="cradd"><span>Preferences:</span><label><input type="checkbox" name="fpref" value="Non-stop flights only"> Non-stop only</label><label><input type="checkbox" name="fpref" value="Dates flexible (± 3 days)"> Dates flexible ± 3 days</label></div><div class="cradd"><span>Special requests:</span><label><input type="checkbox" name="fspec" value="Jain meal"> 🥗 Jain meal</label><label><input type="checkbox" name="fspec" value="Vegetarian meal"> 🥦 Veg meal</label><label><input type="checkbox" name="fspec" value="Wheelchair assistance"> ♿ Wheelchair</label><label><input type="checkbox" name="fspec" value="Extra baggage"> 🧳 Extra baggage</label><label><input type="checkbox" name="fspec" value="Senior citizen fare"> 👴 Senior citizen fare</label><label><input type="checkbox" name="fspec" value="Student fare"> 🎓 Student fare</label><label><input type="checkbox" name="fspec" value="Armed forces fare"> 🎖️ Armed forces fare</label></div></div></details>{_contact("Get Flight Quote", root)}</form>"""
     hotel = f"""<form class="fform" data-kind="hotel" novalidate hidden>
-<div class="fgrid fg-h">
-<label class="fcell">City, area or hotel name<input name="dest" required maxlength="80" placeholder="e.g. Dubai, Manali, Taj Lands End" list="hcities" autocomplete="off"></label>
+<div class="fgrid fg-h fmain">
+<label class="fcell">City, area or hotel name<input name="dest" required maxlength="80" placeholder="City or hotel" list="hcities" autocomplete="off"></label>
 <label class="fcell">Check-in<input name="in" type="date" required></label>
 <label class="fcell">Check-out<input name="out" type="date" required></label>
 <label class="fcell">Rooms &amp; guests<span class="fpax f3">{_sel("rooms","Rooms",range(1,11),RM)}{_sel("adults","Adults",range(1,21),AD)}{_sel("children","Children",range(0,11),CH)}</span></label>
 <label class="fcell">Hotel category<select name="cat"><option>Any</option><option>3 Star</option><option>4 Star</option><option>5 Star</option><option>Luxury / Resort</option><option>Villa / Homestay</option></select></label>
 </div><div class="fgrid fg-h2"><label class="fcell">Meal plan<select name="meal"><option>Room only</option><option selected>Breakfast included</option><option>Breakfast + dinner</option><option>All meals</option><option>All-inclusive</option></select></label><label class="fcell">Budget per room per night<select name="hbudget"><option value="">Any budget</option><option>Under ₹5,000</option><option>₹5,000 – ₹10,000</option><option>₹10,000 – ₹20,000</option><option>₹20,000 – ₹40,000</option><option>Above ₹40,000</option></select></label><label class="fcell">Preferred location<input name="hloc" maxlength="80" placeholder="e.g. near the beach, city centre, near the airport" autocomplete="off"></label><label class="fcell">Special occasion<select name="occ"><option value="">None</option><option>Birthday</option><option>Anniversary</option><option>Honeymoon</option><option>Family celebration</option></select></label></div><div class="flegs hlegs"><div class="flegrows"></div><button type="button" class="btn outline flegadd">➕ Add another city / hotel</button></div><div class="fages" hidden><span>Age of each child (at check-in)</span><div class="fagesel"></div></div>{_contact("Get Hotel Quote", root)}</form>"""
     cruise = f"""<form class="fform" data-kind="cruise" novalidate hidden>
-<div class="fgrid fg-c">
+<div class="fgrid fg-c fmain">
 <label class="fcell">Cruise line<select name="line">{"".join(f"<option>{x}</option>" for x in CRUISE_LINES)}</select></label>
 <label class="fcell cr-oline" hidden>Which cruise line?<input name="line_other" maxlength="50" placeholder="e.g. Silversea, Oceania" autocomplete="off"></label>
-<label class="fcell">Route / destination<input name="route" maxlength="60" placeholder="e.g. Singapore–Penang, Mediterranean, Lakshadweep" autocomplete="off"></label>
+<label class="fcell">Route / destination<input name="route" maxlength="60" placeholder="e.g. Singapore" autocomplete="off"></label>
 <label class="fcell">Departure port<select name="port">{"".join(f"<option>{x}</option>" for x in PORTS)}</select></label>
 <label class="fcell cr-oport" hidden>Which port?<input name="port_other" maxlength="40" placeholder="e.g. Visakhapatnam, Venice" autocomplete="off"></label>
 <label class="fcell">Nights<select name="nights"><option value="2">2–3 nights</option><option value="4">4–5 nights</option><option value="6">6–7 nights</option><option value="8">8–10 nights</option><option value="11">11+ nights</option></select></label>
@@ -97,14 +97,14 @@ def flight_widget(root):
     hc = "".join(f'<option value="{c}">' for c in ["Dubai","Singapore","Bangkok","Pattaya","Phuket","Bali","Maldives","Kuala Lumpur","London","Paris","Srinagar","Gulmarg","Manali","Shimla","Goa","Jaipur","Udaipur","Munnar","Alleppey","Darjeeling","Gangtok","Port Blair","Havelock","Leh","Lonavala","Mahabaleshwar","Mumbai"])
     return f"""
 <div class="fbar" id="flight-search">
-<div class="ftabs" role="tablist"><button type="button" class="ftab on" data-k="flight">✈️ Flights</button><button type="button" class="ftab" data-k="hotel">🏨 Hotels</button><button type="button" class="ftab" data-k="cruise">🛳️ Cruise</button></div>
+<div class="ftabs mtabs" role="tablist"><button type="button" class="ftab on" data-k="flight"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg><span>Flights</span></button><button type="button" class="ftab" data-k="hotel"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V7l9-4 9 4v14"/><path d="M9 21v-5h6v5"/><path d="M7 10h2M11 10h2M15 10h2M7 13h2M11 13h2M15 13h2"/></svg><span>Hotels</span></button><button type="button" class="ftab" data-k="cruise"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20c2 1.2 4 1.2 6 0s4-1.2 6 0 4 1.2 6 0"/><path d="M4 17 3 12h18l-2 5"/><path d="M6 12V8h12v4"/><path d="M10 8V5h4v3"/></svg><span>Cruise</span></button><a class="mtab" href="{root}customize-your-package/"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V11"/><path d="M12 11C9 7 5 7 3 9c3-.5 6 .5 9 2zM12 11c3-4 7-4 9-2-3-.5-6 .5-9 2zM12 11c-1-4-4-6-7-6 2 1 5 3 7 6zM12 11c1-4 4-6 7-6-2 1-5 3-7 6z"/><path d="M6 22h12"/></svg><span>Holiday Packages</span></a><a class="mtab" href="{root}yatra-tours/"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v3M8 9l4-4 4 4M6 9h12v3H6zM7 12v8M17 12v8M10 12v8M14 12v8M4 21h16"/></svg><span>Yatra Tours</span></a><a class="mtab" href="{root}visa/"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="10" r="3.2"/><path d="M8.8 10h6.4M12 6.8c-1.2 1.6-1.2 4.8 0 6.4M12 6.8c1.2 1.6 1.2 4.8 0 6.4M9 17h6"/></svg><span>Visa</span></a><a class="mtab" href="{root}passport/"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2.2"/><path d="M5.5 16c.6-1.6 2-2.4 3.5-2.4s2.9.8 3.5 2.4M14 10h4M14 13h3"/></svg><span>Passport</span></a><a class="mtab" href="{root}insurance/"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 9.3 8 11 4.6-1.7 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/></svg><span>Travel Insurance</span></a></div>
 {flight}{hotel}{cruise}
 <datalist id="fapts">{opts}</datalist><datalist id="hcities">{hc}</datalist>
-<div class="grp"><div><b>👥 Group bookings – 10 or more travellers</b><p>Travelling with a corporate team, wedding party, housing society, college or pilgrimage group? Our group desk arranges dedicated group fares, hotel room blocks and cruise cabin allocations, with one point of contact from enquiry to return.</p></div><div class="grpbtn"><a class="btn gold" href="https://wa.me/919843121212?text=Hello%20The%20Real%20Tours%20and%20Travels%2C%20we%20would%20like%20a%20quotation%20for%20a%20group%20booking.%0AService%20%28flights%20/%20hotel%20/%20cruise%29%3A%20%0AGroup%20size%3A%20%0AFrom%20/%20to%3A%20%0ATravel%20dates%3A%20" target="_blank" rel="noopener">💬 WhatsApp the group desk</a><a class="btn outline" href="tel:+919843121212">📞 +91 98431 21212</a><a class="btn outline" href="mailto:bookings@therealtoursandtravels.com?subject=Group%20booking%20enquiry">✉️ Email us</a></div></div>
 <p class="fnote" data-for="flight">Tell us what you need – we check all airlines and reply with the best options on WhatsApp or email. Tickets issued by The Real Tours and Travels. Email: <a href="mailto:bookings@therealtoursandtravels.com">bookings@therealtoursandtravels.com</a><br><span class="gstline">GST as applicable: airline taxes as charged by the airline (economy 5%, premium classes 18%) + 18% GST on our service fee.</span></p>
 <p class="fnote" data-for="hotel" hidden>Tell us what you need – we check hotels, resorts and villas and reply with the best options on WhatsApp or email. Bookings made by The Real Tours and Travels. Email: <a href="mailto:hotels@therealtoursandtravels.com">hotels@therealtoursandtravels.com</a><br><span class="gstline">GST as applicable: hotel taxes as charged by the hotel (rooms up to ₹7,500/night 5%, above 18%) + 18% GST on our service fee.</span></p>
 <p class="fnote" data-for="cruise" hidden>Tell us what you need – we check all major cruise lines and reply with the best sailings on WhatsApp or email. Bookings made by The Real Tours and Travels. Email: <a href="mailto:bookings@therealtoursandtravels.com">bookings@therealtoursandtravels.com</a><br><span class="gstline">GST as applicable: taxes and port charges as charged by the cruise line + 18% GST on our service fee. Overseas tour packages attract 2% TCS.</span></p>
 </div>
+<div class="grp"><div><b>👥 Group bookings – 10 or more travellers</b><p>Travelling with a corporate team, wedding party, housing society, college or pilgrimage group? Our group desk arranges dedicated group fares, hotel room blocks and cruise cabin allocations, with one point of contact from enquiry to return.</p></div><div class="grpbtn"><a class="btn gold" href="https://wa.me/919843121212?text=Hello%20The%20Real%20Tours%20and%20Travels%2C%20we%20would%20like%20a%20quotation%20for%20a%20group%20booking.%0AService%20%28flights%20/%20hotel%20/%20cruise%29%3A%20%0AGroup%20size%3A%20%0AFrom%20/%20to%3A%20%0ATravel%20dates%3A%20" target="_blank" rel="noopener">💬 WhatsApp the group desk</a><a class="btn outline" href="tel:+919843121212">📞 +91 98431 21212</a><a class="btn outline" href="mailto:bookings@therealtoursandtravels.com?subject=Group%20booking%20enquiry">✉️ Email us</a></div></div>
 <script>
 (function(){{
 const SB="{SB_URL}",KEY="{SB_KEY}";
@@ -234,6 +234,29 @@ Object.entries(forms).forEach(([kind,f])=>f.addEventListener('submit',async e=>{
  msg.innerHTML='✅ Enquiry received (Ref <b>'+ref+'</b>). Please press <b>Send</b> in WhatsApp so our team gets it instantly. If WhatsApp did not open: <a class="btn gold" style="margin-top:10px" href="'+wa+'" target="_blank" rel="noopener">💬 Send on WhatsApp</a>';
  msg.classList.add('ok');btn.disabled=false;
 }}));
+
+// ---- MMT-style display layer: big dates, airport names, traveller popovers ----
+(function(){{
+ const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],DAY=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+ box.querySelectorAll('.fmain input[type=date]').forEach(inp=>{{const c=inp.closest('.fcell');c.classList.add('fdate');
+  const v=document.createElement('span');v.className='fdv';inp.after(v);
+  const draw=()=>{{if(!inp.value){{v.innerHTML='<b class="fdph">Select date</b><small>'+(inp.name==='ret'?'Tap to add a return date':'&nbsp;')+'</small>';return;}}const d=new Date(inp.value+'T00:00');v.innerHTML='<b><big>'+d.getDate()+'</big> '+MON[d.getMonth()]+"'"+String(d.getFullYear()).slice(2)+'</b><small>'+DAY[d.getDay()]+'</small>';}};
+  inp.addEventListener('change',draw);inp.addEventListener('input',draw);draw();
+  c.addEventListener('click',()=>{{try{{inp.showPicker();}}catch(_){{inp.focus();}}}});}});
+ const AP={{}};document.querySelectorAll('#fapts option').forEach(o=>AP[o.value.toLowerCase()]=o.textContent);
+ box.querySelectorAll('.fmain input[name=from],.fmain input[name=to]').forEach(inp=>{{const sub=document.createElement('small');sub.className='fsub';inp.after(sub);
+  const draw=()=>{{const t=AP[inp.value.trim().toLowerCase()];sub.textContent=t||(inp.value?'':'City or airport');}};inp.addEventListener('input',draw);draw();}});
+ box.querySelector('.fswap').addEventListener('click',()=>box.querySelectorAll('.fmain input[name=from],.fmain input[name=to]').forEach(x=>x.dispatchEvent(new Event('input'))));
+ box.querySelectorAll('.fmain .fpax').forEach(px=>{{const c=px.closest('.fcell');c.classList.add('fpaxc');
+  const sum=document.createElement('span');sum.className='fsum';const pop=document.createElement('div');pop.className='fpop';pop.hidden=true;
+  px.before(sum);px.before(pop);pop.appendChild(px);const done=document.createElement('button');done.type='button';done.className='btn gold fdone';done.textContent='Done';pop.appendChild(done);
+  const sels=[...px.querySelectorAll('select')];
+  const draw=()=>{{const t=sels.map(x=>x.options[x.selectedIndex].text);const n=t[0].split(' ');sum.innerHTML='<b><big>'+n[0]+'</big> '+n.slice(1).join(' ')+'</b><small>'+t.slice(1).filter(x=>!/^0 /.test(x)).join(', ')+'</small>';}};
+  sels.forEach(x=>x.addEventListener('change',draw));draw();
+  c.addEventListener('click',e=>{{if(pop.contains(e.target)&&e.target!==done)return;e.preventDefault();if(e.target===done){{pop.hidden=true;return;}}box.querySelectorAll('.fpop').forEach(p=>{{if(p!==pop)p.hidden=true;}});pop.hidden=!pop.hidden;}});
+  document.addEventListener('click',e=>{{if(!c.contains(e.target))pop.hidden=true;}});
+  px.closest('form').addEventListener('reset',()=>setTimeout(draw,0));}});
+}})();
 }})();
 </script>"""
 
@@ -278,4 +301,44 @@ FLIGHT_CSS = """
 .fsec{margin-top:-60px;position:relative;z-index:3;padding-top:0}
 @media(max-width:1100px){.fgrid{grid-template-columns:1fr 36px 1fr 1fr 1fr}.fgrid .fcell:last-child{grid-column:1/-1}.fgrid.fg-h,.fgrid.fg-c{grid-template-columns:1fr 1fr}.fgrid.fg-h .fcell:first-child,.fgrid.fg-c .fcell:last-child{grid-column:1/-1}.hgrid{grid-template-columns:1fr 1fr}.hgrid .fcell:first-child,.hgrid .fcell:nth-child(4){grid-column:1/-1}.fgrid2{grid-template-columns:1fr 1fr}.fgrid2 .fcell:nth-child(3){grid-column:1/-1}.fgo{grid-column:1/-1}}
 @media(max-width:700px){.ftab{padding:10px 10px;font-size:14.5px}.fbar{padding:18px 16px}.fsec{margin-top:-30px}.fgrid,.fgrid.fg-h,.fgrid.fg-c{grid-template-columns:1fr 1fr}.fgrid .fcell{grid-column:auto!important}.fgrid .fswap{display:none}.fgrid .fpax,.fgrid .fcell:has(.fpax){grid-column:1/-1!important}.fgrid.fg-h .fcell:first-child{grid-column:1/-1!important}.fgrid2{grid-template-columns:1fr}.fgrid2 .fcell{grid-column:auto!important}.fpax{grid-template-columns:1fr 1fr}.fpax.f3{grid-template-columns:1fr 1fr 1fr}}
+
+/* ===== MMT-style look ===== */
+.fbar{position:relative;border:0;border-top:0;border-radius:16px;padding:70px 26px 54px;margin:54px 0 34px;box-shadow:0 6px 28px rgba(40,10,15,.14)}
+.mtabs{position:absolute;top:-46px;left:50%;transform:translateX(-50%);display:flex;gap:2px;background:#fff;border:0!important;border-radius:14px;padding:8px 10px 0;margin:0!important;box-shadow:0 4px 18px rgba(40,10,15,.14);max-width:calc(100% - 24px);overflow-x:auto;scrollbar-width:none}
+.mtabs::-webkit-scrollbar{display:none}
+.mtabs .ftab,.mtab{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:84px;padding:4px 8px 10px!important;border:0;border-bottom:3px solid transparent!important;background:none;color:#4a4a4a;font:500 13px/1.2 'Jost',sans-serif!important;text-decoration:none;cursor:pointer;text-align:center;white-space:normal;margin:0!important}
+.mtabs .ftab svg,.mtab svg{color:#6b6b6b}.mtabs .ftab span,.mtab span{max-width:84px}
+.mtabs .ftab.on{color:var(--red);font-weight:700!important;border-bottom-color:var(--red)!important}.mtabs .ftab.on svg{color:var(--red)}
+.mtab:hover,.mtabs .ftab:hover{color:var(--red)}.mtab:hover svg{color:var(--red)}
+.ftrip{gap:22px;align-items:center;margin-bottom:12px}.ftrip label{border:0!important;background:none!important;padding:0!important;font-weight:600;color:#333;font-size:14.5px}
+.ftrip label:has(input:checked){color:var(--ink);background:#f3f3f3!important;border-radius:999px;padding:4px 12px!important}
+.ftripr{margin-left:auto;font-size:14px;color:#555}
+.fmain{border:1px solid #e3e3e3;border-radius:12px;gap:0!important;align-items:stretch!important;margin-bottom:14px;position:relative}
+.fmain>.fcell{max-width:none;padding:12px 18px 14px;border-right:1px solid #e3e3e3;font:500 14px 'Jost',sans-serif;letter-spacing:0;text-transform:none;color:#555;gap:2px;align-content:start;cursor:pointer;position:relative;min-width:0}
+.fmain>.fcell:last-child{border-right:0}.fmain>.fcell:hover{background:#fbf6f6}
+.fmain>.fcell:first-child{border-radius:12px 0 0 12px}.fmain>.fcell:last-child{border-radius:0 12px 12px 0}
+.fmain .fcell input:not([type=date]),.fmain .fcell select{border:0!important;outline:0!important;padding:2px 0!important;background:transparent!important;font:700 26px/1.25 'Jost',sans-serif!important;color:#111;border-radius:0}
+.fmain .fcell input::placeholder{color:#b9b9b9;font-weight:600}
+.fmain .fcell select{font-size:20px!important;cursor:pointer}
+.fsub{display:block;font-size:13px;color:#777;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:17px}
+.fdate input[type=date]{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;border:0;padding:0}
+.fdv{display:grid;pointer-events:none}.fdv b{font:600 18px/1.2 'Jost',sans-serif;color:#111}.fdv b big{font-size:30px;font-weight:800}.fdv small{font-size:13px;color:#777}.fdph{font-size:22px!important;color:#b9b9b9!important;font-weight:600!important;padding:5px 0}
+.fsum{display:grid}.fsum b{font:600 18px/1.2 'Jost',sans-serif;color:#111}.fsum b big{font-size:30px;font-weight:800}.fsum small{font-size:13px;color:#777;min-height:17px}
+.fpop{position:absolute;top:calc(100% + 6px);right:0;z-index:20;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 40px rgba(0,0,0,.18);padding:14px;width:280px;display:grid;gap:10px;cursor:default}
+.fpop[hidden]{display:none}.fpop .fpax{display:grid!important;grid-template-columns:1fr!important;gap:8px}
+.fmain .fpop select{font:500 15.5px 'Jost',sans-serif!important;padding:10px 12px!important;border:1px solid var(--line)!important;border-radius:10px!important;width:100%}
+.fdone{justify-self:end;padding:8px 22px;font-size:14px}
+.fmain .fswap{align-self:center;justify-self:center;width:38px;height:38px;margin:0 -19px;z-index:2;position:relative;box-shadow:0 2px 8px rgba(0,0,0,.12);border:1px solid #e3e3e3}
+.fgrid.fmain{grid-template-columns:1.25fr 0 1.25fr 1fr 1fr 1.3fr}
+.fgrid.fg-h.fmain{grid-template-columns:1.6fr 1fr 1fr 1.3fr 1fr}
+.fgrid2{border-top:1px dashed #e3e3e3;padding-top:14px}
+.fgrid2 .fcell,.fgrid.fg-h2 .fcell,.fgrid.fg-c2 .fcell{text-transform:none;letter-spacing:0;font-size:13px}
+.fbar .fgo{position:absolute;left:50%;bottom:-27px;transform:translateX(-50%);height:54px;min-width:250px;padding:0 40px;border-radius:999px;font:700 20px 'Jost',sans-serif;letter-spacing:.6px;text-transform:uppercase;box-shadow:0 8px 22px rgba(155,58,63,.35);z-index:4}
+.fbar form{position:static}
+.fbar+.grp{margin-top:8px}
+@media(max-width:1100px){.fgrid.fmain,.fgrid.fg-h.fmain,.fgrid.fg-c.fmain{grid-template-columns:1fr 0 1fr!important}.fgrid.fg-h.fmain,.fgrid.fg-c.fmain{grid-template-columns:1fr 1fr!important}
+ .fmain>.fcell{border-bottom:1px solid #e3e3e3;border-radius:0!important}.fgrid.fmain>.fcell:nth-child(n+4){grid-column:auto}.fgrid.fmain>.fcell:last-child{grid-column:1/-1!important}}
+@media(max-width:700px){.fbar{padding:20px 14px 50px;margin-top:10px}.mtabs{position:static;transform:none;max-width:none;box-shadow:none;border-bottom:1px solid var(--line)!important;border-radius:0;padding:0;margin:0 -14px 14px!important}
+ .fgrid.fmain,.fgrid.fg-h.fmain,.fgrid.fg-c.fmain{grid-template-columns:1fr 1fr!important}.fmain .fswap{display:none}.fmain>.fcell:first-child,.fgrid.fmain>.fcell:nth-child(3){grid-column:1/-1!important}
+ .fmain .fcell input:not([type=date]){font-size:22px!important}.fdv b big,.fsum b big{font-size:24px}.ftripr{display:none}.fbar .fgo{min-width:0;width:calc(100% - 28px);padding:0 14px;font-size:15px;letter-spacing:.2px}.ftrip{gap:10px}.fpop{left:0;right:auto;width:min(280px,80vw)}}
 """
