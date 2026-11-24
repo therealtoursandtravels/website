@@ -526,7 +526,7 @@ def build():
     faq_home = {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
         {"@type":"Question","name":"Where is The Real Tours and Travels located?","acceptedAnswer":{"@type":"Answer","text":"204, B10, Rachana Building, Govardhan Nagar, LBS Marg, Mulund West, Mumbai 400080, open every day 9 am to 10 pm."}},
         {"@type":"Question","name":"Do you offer Jain food on tours?","acceptedAnswer":{"@type":"Answer","text":"Yes. We arrange Jain and vegetarian food and run Jain yatra tours with our own Maharaj."}}]}
-    write("/", page("/", "The Real Tours and Travels | Travel Agency Across India – Since 1981",
+    write("/", page("/", "Travel Agency Across India Since 1981 | The Real Tours and Travels",
         "Trusted travel agency serving travellers across India since 1981. Domestic & international holiday packages, honeymoons, yatras, Jain tours with Maharaj, group tours, visas and travel insurance. Call/WhatsApp 98431 21212.",
         home, [faq_home], hero))
     # Service pages
