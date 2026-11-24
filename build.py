@@ -272,6 +272,7 @@ nav.main a:hover{color:var(--red)}
 .hero{position:relative;color:var(--ink);overflow:hidden;background:radial-gradient(900px 500px at 85% 30%,rgba(215,25,31,.07),transparent 65%),#fff;border-bottom:1px solid var(--line)}
 .hero:before{content:"";position:absolute;inset:0;background:var(--hero,none) center/cover no-repeat;opacity:.12}
 .hero .wrap{position:relative;display:grid;grid-template-columns:1.25fr .75fr;gap:40px;align-items:center;padding:88px 22px 96px}
+.hero:has(.fhwrap){padding-top:0!important;padding-bottom:0!important}.hero .wrap.fhwrap{grid-template-columns:1fr;padding:34px 22px 90px!important}.fhwrap h1{font-size:clamp(26px,3.2vw,38px)!important;margin:6px 0 8px!important}.fhwrap p{margin:0!important;font-size:16px!important}
 .hero h1{font-size:clamp(34px,5vw,58px);margin:0 0 18px;color:var(--wine)}
 .hero p{font-size:19px;color:var(--muted);margin:0 0 30px;max-width:640px}
 .kicker{display:inline-flex;align-items:center;gap:10px;color:var(--red);font-size:14px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:18px}
@@ -639,7 +640,7 @@ def build():
         crumbs = {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":SITE+"/"},{"@type":"ListItem","position":2,"name":"Travel Guides","item":SITE+"/blog/"},{"@type":"ListItem","position":3,"name":a["h1"],"item":url}]}
         write(f"/blog/{a['slug']}/", page(f"/blog/{a['slug']}/", a["title"] + " | The Real Tours and Travels", a["desc"], body, [art_ld, faq_ld, crumbs], a["img"]))
     # Flights & hotels enquiry page
-    fh = f"""<section class="hero"><div class="wrap"><div><div class="crumbs"><a href="../">Home</a> › Flights, Hotels &amp; Cruise</div><span class="kicker">✈️ Flights · 🏨 Hotels · 🛳️ Cruise</span><h1>Flight Tickets, Hotels &amp; Cruise Bookings</h1><p>Search your flight or hotel and request a quote – our team checks all airlines and hotels and replies with the best options on WhatsApp or email. Domestic and international.</p></div>{seal("../")}</div></section>
+    fh = f"""<section class="hero"><div class="wrap fhwrap"><div><div class="crumbs"><a href="../">Home</a> › Flights, Hotels &amp; Cruise</div><h1>Flight Tickets, Hotels &amp; Cruise Bookings</h1><p>Search below and request a quote – our team replies with the best options on WhatsApp or email.</p></div></div></section>
 <section class="fsec"><div class="wrap">{flight_widget("../")}</div></section>
 <section><div class="wrap two"><div><h2>Why book with The Real Tours and Travels</h2><ul class="ticks"><li>We compare fares across airlines and hotels for you</li><li>Group bookings, family seats together and special meals arranged</li><li>Changes, cancellations and web check-in help – one call away</li><li>Visas and travel insurance in the same place</li></ul></div>
 <div><h2>How it works</h2><ul class="ticks"><li>1. Enter your trip details and tap <b>Get Quote</b></li><li>2. We reply with the best options on WhatsApp / email</li><li>3. Confirm and pay – your tickets and vouchers are issued by our team</li></ul></div></div></section>{cta_band()}"""
