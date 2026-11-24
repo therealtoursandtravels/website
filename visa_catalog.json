@@ -1,96 +1,892 @@
 {
- "_about": "Visa options shown in the 'Find your visa' search on /visa/. Edit 'price' (INR, per applicant, all-inclusive selling price) to publish a price; null shows 'Price on request'. 'code' links to the document checklist in visa.py. Keep wording client-safe (no e-visa / on-arrival / free wording).",
+ "_about": "Visa options shown in the 'Find your visa' search on /visa/. 'price' = visa price per applicant in INR (selling price); null shows 'Price on request'. service_charge is added per applicant (+18% GST). 'code' links to the document checklist in visa.py. Keep wording client-safe (no e-visa / on-arrival / free wording).",
  "updated": "2026-11-25",
  "countries": [
-  {"name":"United Arab Emirates (Dubai)","flag":"🇦🇪","code":"uae","jur":["All India"],"options":[
-   {"name":"Tourist visa – 30 days","entry":"Single","stay":"30 days","validity":"60 days","proc":"3 – 4 working days","type":"Delivered by email","price":null},
-   {"name":"Tourist visa – 60 days","entry":"Single","stay":"60 days","validity":"59 days","proc":"3 – 4 working days","type":"Delivered by email","price":null},
-   {"name":"Tourist visa – 30 days","entry":"Multiple","stay":"30 days","validity":"59 days","proc":"3 – 4 working days","type":"Delivered by email","price":null},
-   {"name":"Tourist visa – 60 days","entry":"Multiple","stay":"60 days","validity":"59 days","proc":"3 – 4 working days","type":"Delivered by email","price":null},
-   {"name":"Short visit – 14 days","entry":"Single","stay":"14 days","validity":"30 days","proc":"4 – 5 working days","type":"Delivered by email","price":null},
-   {"name":"5-year tourist visa","entry":"Multiple","stay":"Up to 180 days","validity":"5 years","proc":"20 – 25 working days","type":"Delivered by email","price":null},
-   {"name":"Transit visa – 48 hours (Emirates flights)","entry":"Single","stay":"48 hours","validity":"30 days","proc":"3 – 4 working days","type":"Delivered by email","price":null},
-   {"name":"Transit visa – 96 hours (Emirates flights)","entry":"Single","stay":"96 hours","validity":"30 days","proc":"3 – 4 working days","type":"Delivered by email","price":null},
-   {"name":"Visa extension – 30 days","entry":"Single","stay":"30 days","validity":"30 days","proc":"3 – 4 working days","type":"Delivered by email","price":null},
-   {"name":"OK to Board – IndiGo / Air India Express / Air Arabia / SpiceJet","entry":"—","stay":"As per ticket","validity":"—","proc":"1 – 2 working days","type":"Airline clearance","price":null}]},
-  {"name":"Singapore","flag":"🇸🇬","code":"singapore","jur":["Mumbai","New Delhi","Chennai"],"options":[
-   {"name":"Tourist visa","entry":"As per embassy","stay":"Up to 30 days","validity":"As decided by the embassy","proc":"3 – 5 working days","type":"Delivered by email","price":null}]},
-  {"name":"Vietnam","flag":"🇻🇳","code":"vietnam","jur":["All India"],"options":[
-   {"name":"Tourist visa – 30 days","entry":"Single","stay":"As per travel dates","validity":"30 days","proc":"3 – 4 working days","type":"Delivered by email","price":null},
-   {"name":"Tourist visa – 90 days","entry":"Multiple","stay":"As per travel dates","validity":"90 days","proc":"5 – 6 working days","type":"Delivered by email","price":null},
-   {"name":"Express visa – 30 days (3 working days)","entry":"Single","stay":"As per travel dates","validity":"30 days","proc":"3 working days","type":"Delivered by email","price":null},
-   {"name":"Express visa – 30 days (1 working day)","entry":"Single","stay":"As per travel dates","validity":"30 days","proc":"1 working day","type":"Delivered by email","price":null},
-   {"name":"Express visa – 30 days (4 working hours)","entry":"Single","stay":"As per travel dates","validity":"30 days","proc":"4 working hours","type":"Delivered by email","price":null},
-   {"name":"Express visa – 90 days (2 working days)","entry":"Multiple","stay":"As per travel dates","validity":"90 days","proc":"2 working days","type":"Delivered by email","price":null},
-   {"name":"Airport fast-track clearance","entry":"Single","stay":"As per travel dates","validity":"30 days","proc":"1 working day","type":"Travel service","price":null}]},
-  {"name":"Indonesia (Bali)","flag":"🇮🇩","code":"indonesia","jur":["All India"],"options":[
-   {"name":"Tourist visa – 30 days","entry":"Single","stay":"30 days","validity":"90 days","proc":"1 – 2 working days","type":"Delivered by email","price":null},
-   {"name":"Visitor visa – 60 days","entry":"Single","stay":"60 days","validity":"90 days","proc":"5 – 6 working days","type":"Delivered by email","price":null},
-   {"name":"Business visa – 60 days","entry":"Single","stay":"60 days","validity":"90 days","proc":"10 – 12 working days","type":"Delivered by email","price":null},
-   {"name":"Arrival card","entry":"Single","stay":"—","validity":"3 days","proc":"1 – 2 working days","type":"Arrival card","price":null}]},
-  {"name":"Thailand","flag":"🇹🇭","code":"thailand","jur":["All India"],"options":[
-   {"name":"Digital Arrival Card (TDAC)","entry":"Single","stay":"As per travel dates","validity":"As per travel dates","proc":"1 – 2 working days","type":"Arrival card","price":null}]},
-  {"name":"Malaysia","flag":"🇲🇾","code":"malaysia","jur":["All India"],"options":[
-   {"name":"Digital Arrival Card (MDAC)","entry":"Single","stay":"Up to 30 days","validity":"As per travel dates","proc":"Same / next working day","type":"Arrival card","price":null}]},
-  {"name":"Hong Kong","flag":"🇭🇰","code":"hongkong","jur":["All India"],"options":[
-   {"name":"Pre-arrival registration","entry":"Multiple","stay":"14 days","validity":"180 days","proc":"1 – 2 working days","type":"Travel permit","price":null}]},
-  {"name":"Philippines","flag":"🇵🇭","code":"philippines","jur":["Mumbai","All India"],"options":[
-   {"name":"Tourist visa","entry":"Single","stay":"Up to 30 days","validity":"90 days","proc":"10 – 12 working days","type":"Stamped in passport","price":null},
-   {"name":"Business visa","entry":"Single","stay":"30 days","validity":"90 days","proc":"10 – 12 working days","type":"Stamped in passport","price":null}]},
-  {"name":"Seychelles","flag":"🇸🇨","code":"seychelles","jur":["All India"],"options":[
-   {"name":"Travel authorisation – standard","entry":"Single","stay":"As per travel dates","validity":"As per travel dates","proc":"1 working day","type":"Travel permit","price":null},
-   {"name":"Travel authorisation – priority","entry":"Single","stay":"As per travel dates","validity":"As per travel dates","proc":"About 6 hours","type":"Travel permit","price":null}]},
-  {"name":"United Kingdom","flag":"🇬🇧","code":"uk","jur":["All India"],"options":[
-   {"name":"Visitor visa – 6 months (tourist / business / family)","entry":"Multiple","stay":"Up to 180 days per visit","validity":"6 months","proc":"15 – 20 working days","type":"Biometrics at visa centre","price":null},
-   {"name":"Long-term visitor visa – 2 years","entry":"Multiple","stay":"Up to 180 days per visit","validity":"2 years","proc":"15 – 20 working days","type":"Biometrics at visa centre","price":null},
-   {"name":"Long-term visitor visa – 5 years","entry":"Multiple","stay":"Up to 180 days per visit","validity":"5 years","proc":"15 – 20 working days","type":"Biometrics at visa centre","price":null},
-   {"name":"Long-term visitor visa – 10 years","entry":"Multiple","stay":"Up to 180 days per visit","validity":"10 years","proc":"15 – 20 working days","type":"Biometrics at visa centre","price":null}]},
-  {"name":"United States","flag":"🇺🇸","code":"usa","jur":["All India"],"options":[
-   {"name":"Visitor visa B1/B2 (tourist / business / family)","entry":"Multiple","stay":"Up to 180 days","validity":"Up to 10 years","proc":"Depends on interview date","type":"Interview + stamped in passport","price":null},
-   {"name":"Interview waiver (dropbox) renewal","entry":"Multiple","stay":"Up to 180 days","validity":"Up to 10 years","proc":"10 – 12 working days after submission","type":"Stamped in passport","price":null},
-   {"name":"Student visa (F1)","entry":"Multiple","stay":"Duration of course","validity":"As decided by the embassy","proc":"Depends on interview date","type":"Interview + stamped in passport","price":null}]},
-  {"name":"Canada","flag":"🇨🇦","code":"canada","jur":["All India"],"options":[
-   {"name":"Visitor visa (tourist / business / family)","entry":"Multiple","stay":"Up to 180 days per visit","validity":"Up to 10 years","proc":"2 – 3 months","type":"Biometrics + stamped in passport","price":null},
-   {"name":"Visitor visa – applicant with valid US visa","entry":"Multiple","stay":"Up to 180 days per visit","validity":"Up to 10 years","proc":"2 – 3 months","type":"Biometrics + stamped in passport","price":null},
-   {"name":"Visitor visa – biometrics already given","entry":"Multiple","stay":"Up to 180 days per visit","validity":"Up to 10 years","proc":"2 – 3 months","type":"Stamped in passport","price":null}]},
-  {"name":"Australia","flag":"🇦🇺","code":"australia","jur":["All India"],"options":[
-   {"name":"Visitor visa (subclass 600)","entry":"Multiple","stay":"As decided by the embassy","validity":"As decided by the embassy","proc":"About 60 days","type":"Delivered by email","price":null},
-   {"name":"Student visa (subclass 500)","entry":"Multiple","stay":"Duration of course","validity":"As decided by the embassy","proc":"About 50 days","type":"Delivered by email","price":null},
-   {"name":"Transit visa","entry":"Single","stay":"As per ticket","validity":"As per ticket","proc":"About 21 days","type":"Delivered by email","price":null}]},
-  {"name":"New Zealand","flag":"🇳🇿","code":"newzealand","jur":["All India"],"options":[
-   {"name":"Visitor visa – individual","entry":"Multiple","stay":"Up to 180 days","validity":"Up to 1 year","proc":"20 – 30 working days","type":"Delivered by email","price":null},
-   {"name":"Visitor visa – couple","entry":"Single","stay":"30 days","validity":"90 days","proc":"20 – 30 working days","type":"Delivered by email","price":null}]},
-  {"name":"Japan","flag":"🇯🇵","code":"japan","jur":["Mumbai","New Delhi"],"options":[
-   {"name":"Tourist visa","entry":"Single","stay":"Up to 30 days","validity":"90 days","proc":"10 – 11 working days","type":"Stamped in passport","price":null},
-   {"name":"Business visa","entry":"Single","stay":"Up to 30 days","validity":"90 days","proc":"10 – 11 working days","type":"Stamped in passport","price":null},
-   {"name":"Family visit visa","entry":"As per embassy","stay":"As decided by the embassy","validity":"As decided by the embassy","proc":"10 – 11 working days","type":"Stamped in passport","price":null}]},
-  {"name":"South Korea","flag":"🇰🇷","code":"southkorea","jur":["Mumbai","New Delhi"],"options":[
-   {"name":"Tourist visa","entry":"Single","stay":"Up to 90 days","validity":"180 days","proc":"14 – 15 working days","type":"Stamped in passport","price":null},
-   {"name":"Business visa","entry":"Single","stay":"Up to 90 days","validity":"180 days","proc":"14 – 15 working days","type":"Stamped in passport","price":null},
-   {"name":"Business visa – express","entry":"Single","stay":"Up to 90 days","validity":"180 days","proc":"3 – 4 working days","type":"Stamped in passport","price":null}]},
-  {"name":"Turkey","flag":"🇹🇷","code":"turkey","jur":["Mumbai","All India"],"options":[
-   {"name":"Tourist visa","entry":"Single","stay":"Up to 30 days","validity":"60 days","proc":"14 – 15 working days","type":"Stamped in passport","price":null},
-   {"name":"Tourist visa – express","entry":"Single","stay":"30 days","validity":"60 days","proc":"6 – 7 working days","type":"Stamped in passport","price":null},
-   {"name":"Business visa","entry":"Single","stay":"30 days","validity":"60 days","proc":"14 – 15 working days","type":"Stamped in passport","price":null},
-   {"name":"Business visa – express","entry":"Single","stay":"30 days","validity":"60 days","proc":"6 – 7 working days","type":"Stamped in passport","price":null}]},
-  {"name":"Georgia","flag":"🇬🇪","code":"georgia","jur":["All India"],"options":[
-   {"name":"Tourist visa","entry":"Multiple","stay":"30 days","validity":"120 days","proc":"8 – 10 working days","type":"Delivered by email","price":null}]},
-  {"name":"Azerbaijan","flag":"🇦🇿","code":"azerbaijan","jur":["All India"],"options":[
-   {"name":"Tourist visa – standard","entry":"Single","stay":"30 days","validity":"90 days","proc":"3 – 4 working days","type":"Delivered by email","price":null},
-   {"name":"Tourist visa – urgent","entry":"Single","stay":"30 days","validity":"90 days","proc":"1 working day","type":"Delivered by email","price":null}]},
-  {"name":"Oman","flag":"🇴🇲","code":"oman","jur":["All India"],"options":[
-   {"name":"Tourist visa – 10 days","entry":"Single","stay":"10 days","validity":"90 days","proc":"3 – 4 working days","type":"Delivered by email","price":null},
-   {"name":"Tourist visa – 30 days","entry":"Single","stay":"30 days","validity":"90 days","proc":"3 – 4 working days","type":"Delivered by email","price":null},
-   {"name":"Visa extension – 10 / 30 days","entry":"Single","stay":"10 or 30 days","validity":"10 or 30 days","proc":"1 – 3 working days","type":"Delivered by email","price":null},
-   {"name":"OK to Board – IndiGo / Air India Express","entry":"—","stay":"As per ticket","validity":"—","proc":"2 – 3 working days","type":"Airline clearance","price":null}]},
-  {"name":"Egypt","flag":"🇪🇬","code":"egypt","jur":["Mumbai","All India"],"options":[
-   {"name":"Tourist visa","entry":"Single","stay":"30 days","validity":"90 days","proc":"10 – 11 working days","type":"Stamped in passport","price":null},
-   {"name":"Business visa","entry":"Single","stay":"As per travel dates","validity":"90 days","proc":"10 – 12 working days","type":"Stamped in passport","price":null}]},
-  {"name":"Kenya","flag":"🇰🇪","code":"kenya","jur":["All India"],"options":[
-   {"name":"Electronic Travel Authorisation (tourist)","entry":"Single","stay":"Up to 90 days","validity":"90 days","proc":"3 – 4 working days","type":"Travel permit","price":null},
-   {"name":"Electronic Travel Authorisation (business / family visit)","entry":"Single","stay":"Up to 90 days","validity":"90 days","proc":"3 – 4 working days","type":"Travel permit","price":null},
-   {"name":"Business travel authorisation – 1 year","entry":"Multiple","stay":"365 days","validity":"365 days","proc":"3 – 4 working days","type":"Travel permit","price":null}]}
+  {
+   "name": "United Arab Emirates (Dubai)",
+   "flag": "🇦🇪",
+   "code": "uae",
+   "jur": [
+    "All India"
+   ],
+   "options": [
+    {
+     "name": "Tourist visa – 30 days",
+     "entry": "Single",
+     "stay": "30 days",
+     "validity": "60 days",
+     "proc": "3 – 4 working days",
+     "type": "Delivered by email",
+     "price": 7750
+    },
+    {
+     "name": "Tourist visa – 60 days",
+     "entry": "Single",
+     "stay": "60 days",
+     "validity": "59 days",
+     "proc": "3 – 4 working days",
+     "type": "Delivered by email",
+     "price": 11450
+    },
+    {
+     "name": "Tourist visa – 30 days",
+     "entry": "Multiple",
+     "stay": "30 days",
+     "validity": "59 days",
+     "proc": "3 – 4 working days",
+     "type": "Delivered by email",
+     "price": 13350
+    },
+    {
+     "name": "Tourist visa – 60 days",
+     "entry": "Multiple",
+     "stay": "60 days",
+     "validity": "59 days",
+     "proc": "3 – 4 working days",
+     "type": "Delivered by email",
+     "price": 18750
+    },
+    {
+     "name": "Short visit – 14 days",
+     "entry": "Single",
+     "stay": "14 days",
+     "validity": "30 days",
+     "proc": "4 – 5 working days",
+     "type": "Delivered by email",
+     "price": 6250
+    },
+    {
+     "name": "5-year tourist visa",
+     "entry": "Multiple",
+     "stay": "Up to 180 days",
+     "validity": "5 years",
+     "proc": "20 – 25 working days",
+     "type": "Delivered by email",
+     "price": 15350
+    },
+    {
+     "name": "Transit visa – 48 hours (Emirates flights)",
+     "entry": "Single",
+     "stay": "48 hours",
+     "validity": "30 days",
+     "proc": "3 – 4 working days",
+     "type": "Delivered by email",
+     "price": 2150
+    },
+    {
+     "name": "Transit visa – 96 hours (Emirates flights)",
+     "entry": "Single",
+     "stay": "96 hours",
+     "validity": "30 days",
+     "proc": "3 – 4 working days",
+     "type": "Delivered by email",
+     "price": 5150
+    },
+    {
+     "name": "Visa extension – 30 days",
+     "entry": "Single",
+     "stay": "30 days",
+     "validity": "30 days",
+     "proc": "3 – 4 working days",
+     "type": "Delivered by email",
+     "price": 25250
+    },
+    {
+     "name": "OK to Board – IndiGo / Air India Express / Air Arabia / SpiceJet",
+     "entry": "—",
+     "stay": "As per ticket",
+     "validity": "—",
+     "proc": "1 – 2 working days",
+     "type": "Airline clearance",
+     "price": 1300
+    }
+   ]
+  },
+  {
+   "name": "Singapore",
+   "flag": "🇸🇬",
+   "code": "singapore",
+   "jur": [
+    "Mumbai",
+    "New Delhi",
+    "Chennai"
+   ],
+   "options": [
+    {
+     "name": "Tourist visa",
+     "entry": "As per embassy",
+     "stay": "Up to 30 days",
+     "validity": "As decided by the embassy",
+     "proc": "3 – 5 working days",
+     "type": "Delivered by email",
+     "price": 4284
+    }
+   ]
+  },
+  {
+   "name": "Vietnam",
+   "flag": "🇻🇳",
+   "code": "vietnam",
+   "jur": [
+    "All India"
+   ],
+   "options": [
+    {
+     "name": "Tourist visa – 30 days",
+     "entry": "Single",
+     "stay": "As per travel dates",
+     "validity": "30 days",
+     "proc": "3 – 4 working days",
+     "type": "Delivered by email",
+     "price": 3400
+    },
+    {
+     "name": "Tourist visa – 90 days",
+     "entry": "Multiple",
+     "stay": "As per travel dates",
+     "validity": "90 days",
+     "proc": "5 – 6 working days",
+     "type": "Delivered by email",
+     "price": 6100
+    },
+    {
+     "name": "Express visa – 30 days (3 working days)",
+     "entry": "Single",
+     "stay": "As per travel dates",
+     "validity": "30 days",
+     "proc": "3 working days",
+     "type": "Delivered by email",
+     "price": 6150
+    },
+    {
+     "name": "Express visa – 30 days (1 working day)",
+     "entry": "Single",
+     "stay": "As per travel dates",
+     "validity": "30 days",
+     "proc": "1 working day",
+     "type": "Delivered by email",
+     "price": 7450
+    },
+    {
+     "name": "Express visa – 30 days (4 working hours)",
+     "entry": "Single",
+     "stay": "As per travel dates",
+     "validity": "30 days",
+     "proc": "4 working hours",
+     "type": "Delivered by email",
+     "price": 10150
+    },
+    {
+     "name": "Express visa – 90 days (2 working days)",
+     "entry": "Multiple",
+     "stay": "As per travel dates",
+     "validity": "90 days",
+     "proc": "2 working days",
+     "type": "Delivered by email",
+     "price": 9650
+    },
+    {
+     "name": "Airport fast-track clearance",
+     "entry": "Single",
+     "stay": "As per travel dates",
+     "validity": "30 days",
+     "proc": "1 working day",
+     "type": "Travel service",
+     "price": 3450
+    }
+   ]
+  },
+  {
+   "name": "Indonesia (Bali)",
+   "flag": "🇮🇩",
+   "code": "indonesia",
+   "jur": [
+    "All India"
+   ],
+   "options": [
+    {
+     "name": "Tourist visa – 30 days",
+     "entry": "Single",
+     "stay": "30 days",
+     "validity": "90 days",
+     "proc": "1 – 2 working days",
+     "type": "Delivered by email",
+     "price": 3950
+    },
+    {
+     "name": "Visitor visa – 60 days",
+     "entry": "Single",
+     "stay": "60 days",
+     "validity": "90 days",
+     "proc": "5 – 6 working days",
+     "type": "Delivered by email",
+     "price": 13150
+    },
+    {
+     "name": "Business visa – 60 days",
+     "entry": "Single",
+     "stay": "60 days",
+     "validity": "90 days",
+     "proc": "10 – 12 working days",
+     "type": "Delivered by email",
+     "price": 13150
+    },
+    {
+     "name": "Arrival card",
+     "entry": "Single",
+     "stay": "—",
+     "validity": "3 days",
+     "proc": "1 – 2 working days",
+     "type": "Arrival card",
+     "price": 750
+    }
+   ]
+  },
+  {
+   "name": "Thailand",
+   "flag": "🇹🇭",
+   "code": "thailand",
+   "jur": [
+    "All India"
+   ],
+   "options": [
+    {
+     "name": "Digital Arrival Card (TDAC)",
+     "entry": "Single",
+     "stay": "As per travel dates",
+     "validity": "As per travel dates",
+     "proc": "1 – 2 working days",
+     "type": "Arrival card",
+     "price": 850
+    }
+   ]
+  },
+  {
+   "name": "Malaysia",
+   "flag": "🇲🇾",
+   "code": "malaysia",
+   "jur": [
+    "All India"
+   ],
+   "options": [
+    {
+     "name": "Digital Arrival Card (MDAC)",
+     "entry": "Single",
+     "stay": "Up to 30 days",
+     "validity": "As per travel dates",
+     "proc": "Same / next working day",
+     "type": "Arrival card",
+     "price": 850
+    }
+   ]
+  },
+  {
+   "name": "Hong Kong",
+   "flag": "🇭🇰",
+   "code": "hongkong",
+   "jur": [
+    "All India"
+   ],
+   "options": [
+    {
+     "name": "Pre-arrival registration",
+     "entry": "Multiple",
+     "stay": "14 days",
+     "validity": "180 days",
+     "proc": "1 – 2 working days",
+     "type": "Travel permit",
+     "price": 1000
+    }
+   ]
+  },
+  {
+   "name": "Philippines",
+   "flag": "🇵🇭",
+   "code": "philippines",
+   "jur": [
+    "Mumbai",
+    "All India"
+   ],
+   "options": [
+    {
+     "name": "Tourist visa",
+     "entry": "Single",
+     "stay": "Up to 30 days",
+     "validity": "90 days",
+     "proc": "10 – 12 working days",
+     "type": "Stamped in passport",
+     "price": 5540
+    },
+    {
+     "name": "Business visa",
+     "entry": "Single",
+     "stay": "30 days",
+     "validity": "90 days",
+     "proc": "10 – 12 working days",
+     "type": "Stamped in passport",
+     "price": 5540
+    }
+   ]
+  },
+  {
+   "name": "Seychelles",
+   "flag": "🇸🇨",
+   "code": "seychelles",
+   "jur": [
+    "All India"
+   ],
+   "options": [
+    {
+     "name": "Travel authorisation – standard",
+     "entry": "Single",
+     "stay": "As per travel dates",
+     "validity": "As per travel dates",
+     "proc": "1 working day",
+     "type": "Travel permit",
+     "price": 2150
+    },
+    {
+     "name": "Travel authorisation – priority",
+     "entry": "Single",
+     "stay": "As per travel dates",
+     "validity": "As per travel dates",
+     "proc": "About 6 hours",
+     "type": "Travel permit",
+     "price": 4400
+    }
+   ]
+  },
+  {
+   "name": "United Kingdom",
+   "flag": "🇬🇧",
+   "code": "uk",
+   "jur": [
+    "All India"
+   ],
+   "options": [
+    {
+     "name": "Visitor visa – 6 months (tourist / business / family)",
+     "entry": "Multiple",
+     "stay": "Up to 180 days per visit",
+     "validity": "6 months",
+     "proc": "15 – 20 working days",
+     "type": "Biometrics at visa centre",
+     "price": 19900
+    },
+    {
+     "name": "Long-term visitor visa – 2 years",
+     "entry": "Multiple",
+     "stay": "Up to 180 days per visit",
+     "validity": "2 years",
+     "proc": "15 – 20 working days",
+     "type": "Biometrics at visa centre",
+     "price": 70500
+    },
+    {
+     "name": "Long-term visitor visa – 5 years",
+     "entry": "Multiple",
+     "stay": "Up to 180 days per visit",
+     "validity": "5 years",
+     "proc": "15 – 20 working days",
+     "type": "Biometrics at visa centre",
+     "price": 124480
+    },
+    {
+     "name": "Long-term visitor visa – 10 years",
+     "entry": "Multiple",
+     "stay": "Up to 180 days per visit",
+     "validity": "10 years",
+     "proc": "15 – 20 working days",
+     "type": "Biometrics at visa centre",
+     "price": 155075
+    }
+   ]
+  },
+  {
+   "name": "United States",
+   "flag": "🇺🇸",
+   "code": "usa",
+   "jur": [
+    "All India"
+   ],
+   "options": [
+    {
+     "name": "Visitor visa B1/B2 (tourist / business / family)",
+     "entry": "Multiple",
+     "stay": "Up to 180 days",
+     "validity": "Up to 10 years",
+     "proc": "Depends on interview date",
+     "type": "Interview + stamped in passport",
+     "price": 20200
+    },
+    {
+     "name": "Interview waiver (dropbox) renewal",
+     "entry": "Multiple",
+     "stay": "Up to 180 days",
+     "validity": "Up to 10 years",
+     "proc": "10 – 12 working days after submission",
+     "type": "Stamped in passport",
+     "price": 20200
+    },
+    {
+     "name": "Student visa (F1)",
+     "entry": "Multiple",
+     "stay": "Duration of course",
+     "validity": "As decided by the embassy",
+     "proc": "Depends on interview date",
+     "type": "Interview + stamped in passport",
+     "price": 20200
+    }
+   ]
+  },
+  {
+   "name": "Canada",
+   "flag": "🇨🇦",
+   "code": "canada",
+   "jur": [
+    "All India"
+   ],
+   "options": [
+    {
+     "name": "Visitor visa (tourist / business / family)",
+     "entry": "Multiple",
+     "stay": "Up to 180 days per visit",
+     "validity": "Up to 10 years",
+     "proc": "2 – 3 months",
+     "type": "Biometrics + stamped in passport",
+     "price": 15300
+    },
+    {
+     "name": "Visitor visa – applicant with valid US visa",
+     "entry": "Multiple",
+     "stay": "Up to 180 days per visit",
+     "validity": "Up to 10 years",
+     "proc": "2 – 3 months",
+     "type": "Biometrics + stamped in passport",
+     "price": 15300
+    },
+    {
+     "name": "Visitor visa – biometrics already given",
+     "entry": "Multiple",
+     "stay": "Up to 180 days per visit",
+     "validity": "Up to 10 years",
+     "proc": "2 – 3 months",
+     "type": "Stamped in passport",
+     "price": 9100
+    }
+   ]
+  },
+  {
+   "name": "Australia",
+   "flag": "🇦🇺",
+   "code": "australia",
+   "jur": [
+    "All India"
+   ],
+   "options": [
+    {
+     "name": "Visitor visa (subclass 600)",
+     "entry": "Multiple",
+     "stay": "As decided by the embassy",
+     "validity": "As decided by the embassy",
+     "proc": "About 60 days",
+     "type": "Delivered by email",
+     "price": 21400
+    },
+    {
+     "name": "Student visa (subclass 500)",
+     "entry": "Multiple",
+     "stay": "Duration of course",
+     "validity": "As decided by the embassy",
+     "proc": "About 50 days",
+     "type": "Delivered by email",
+     "price": 21400
+    },
+    {
+     "name": "Transit visa",
+     "entry": "Single",
+     "stay": "As per ticket",
+     "validity": "As per ticket",
+     "proc": "About 21 days",
+     "type": "Delivered by email",
+     "price": 1700
+    }
+   ]
+  },
+  {
+   "name": "New Zealand",
+   "flag": "🇳🇿",
+   "code": "newzealand",
+   "jur": [
+    "All India"
+   ],
+   "options": [
+    {
+     "name": "Visitor visa – individual",
+     "entry": "Multiple",
+     "stay": "Up to 180 days",
+     "validity": "Up to 1 year",
+     "proc": "20 – 30 working days",
+     "type": "Delivered by email",
+     "price": 27950
+    },
+    {
+     "name": "Visitor visa – couple",
+     "entry": "Single",
+     "stay": "30 days",
+     "validity": "90 days",
+     "proc": "20 – 30 working days",
+     "type": "Delivered by email",
+     "price": 34450
+    }
+   ]
+  },
+  {
+   "name": "Japan",
+   "flag": "🇯🇵",
+   "code": "japan",
+   "jur": [
+    "Mumbai",
+    "New Delhi"
+   ],
+   "options": [
+    {
+     "name": "Tourist visa",
+     "entry": "Single",
+     "stay": "Up to 30 days",
+     "validity": "90 days",
+     "proc": "10 – 11 working days",
+     "type": "Stamped in passport",
+     "price": 3000
+    },
+    {
+     "name": "Business visa",
+     "entry": "Single",
+     "stay": "Up to 30 days",
+     "validity": "90 days",
+     "proc": "10 – 11 working days",
+     "type": "Stamped in passport",
+     "price": 3000
+    },
+    {
+     "name": "Family visit visa",
+     "entry": "As per embassy",
+     "stay": "As decided by the embassy",
+     "validity": "As decided by the embassy",
+     "proc": "10 – 11 working days",
+     "type": "Stamped in passport",
+     "price": 3000
+    }
+   ]
+  },
+  {
+   "name": "South Korea",
+   "flag": "🇰🇷",
+   "code": "southkorea",
+   "jur": [
+    "Mumbai",
+    "New Delhi"
+   ],
+   "options": [
+    {
+     "name": "Tourist visa",
+     "entry": "Single",
+     "stay": "Up to 90 days",
+     "validity": "180 days",
+     "proc": "14 – 15 working days",
+     "type": "Stamped in passport",
+     "price": 5890
+    },
+    {
+     "name": "Business visa",
+     "entry": "Single",
+     "stay": "Up to 90 days",
+     "validity": "180 days",
+     "proc": "14 – 15 working days",
+     "type": "Stamped in passport",
+     "price": 5890
+    },
+    {
+     "name": "Business visa – express",
+     "entry": "Single",
+     "stay": "Up to 90 days",
+     "validity": "180 days",
+     "proc": "3 – 4 working days",
+     "type": "Stamped in passport",
+     "price": 8590
+    }
+   ]
+  },
+  {
+   "name": "Turkey",
+   "flag": "🇹🇷",
+   "code": "turkey",
+   "jur": [
+    "Mumbai",
+    "All India"
+   ],
+   "options": [
+    {
+     "name": "Tourist visa",
+     "entry": "Single",
+     "stay": "Up to 30 days",
+     "validity": "60 days",
+     "proc": "14 – 15 working days",
+     "type": "Stamped in passport",
+     "price": 21415
+    },
+    {
+     "name": "Tourist visa – express",
+     "entry": "Single",
+     "stay": "30 days",
+     "validity": "60 days",
+     "proc": "6 – 7 working days",
+     "type": "Stamped in passport",
+     "price": 28030
+    },
+    {
+     "name": "Business visa",
+     "entry": "Single",
+     "stay": "30 days",
+     "validity": "60 days",
+     "proc": "14 – 15 working days",
+     "type": "Stamped in passport",
+     "price": 21415
+    },
+    {
+     "name": "Business visa – express",
+     "entry": "Single",
+     "stay": "30 days",
+     "validity": "60 days",
+     "proc": "6 – 7 working days",
+     "type": "Stamped in passport",
+     "price": 28030
+    }
+   ]
+  },
+  {
+   "name": "Georgia",
+   "flag": "🇬🇪",
+   "code": "georgia",
+   "jur": [
+    "All India"
+   ],
+   "options": [
+    {
+     "name": "Tourist visa",
+     "entry": "Multiple",
+     "stay": "30 days",
+     "validity": "120 days",
+     "proc": "8 – 10 working days",
+     "type": "Delivered by email",
+     "price": 4850
+    }
+   ]
+  },
+  {
+   "name": "Azerbaijan",
+   "flag": "🇦🇿",
+   "code": "azerbaijan",
+   "jur": [
+    "All India"
+   ],
+   "options": [
+    {
+     "name": "Tourist visa – standard",
+     "entry": "Single",
+     "stay": "30 days",
+     "validity": "90 days",
+     "proc": "3 – 4 working days",
+     "type": "Delivered by email",
+     "price": 4000
+    },
+    {
+     "name": "Tourist visa – urgent",
+     "entry": "Single",
+     "stay": "30 days",
+     "validity": "90 days",
+     "proc": "1 working day",
+     "type": "Delivered by email",
+     "price": 8250
+    }
+   ]
+  },
+  {
+   "name": "Oman",
+   "flag": "🇴🇲",
+   "code": "oman",
+   "jur": [
+    "All India"
+   ],
+   "options": [
+    {
+     "name": "Tourist visa – 10 days",
+     "entry": "Single",
+     "stay": "10 days",
+     "validity": "90 days",
+     "proc": "3 – 4 working days",
+     "type": "Delivered by email",
+     "price": 2750
+    },
+    {
+     "name": "Tourist visa – 30 days",
+     "entry": "Single",
+     "stay": "30 days",
+     "validity": "90 days",
+     "proc": "3 – 4 working days",
+     "type": "Delivered by email",
+     "price": 6949
+    },
+    {
+     "name": "Visa extension – 10 / 30 days",
+     "entry": "Single",
+     "stay": "10 or 30 days",
+     "validity": "10 or 30 days",
+     "proc": "1 – 3 working days",
+     "type": "Delivered by email",
+     "price": 6950
+    },
+    {
+     "name": "OK to Board – IndiGo / Air India Express",
+     "entry": "—",
+     "stay": "As per ticket",
+     "validity": "—",
+     "proc": "2 – 3 working days",
+     "type": "Airline clearance",
+     "price": 1340
+    }
+   ]
+  },
+  {
+   "name": "Egypt",
+   "flag": "🇪🇬",
+   "code": "egypt",
+   "jur": [
+    "Mumbai",
+    "All India"
+   ],
+   "options": [
+    {
+     "name": "Tourist visa",
+     "entry": "Single",
+     "stay": "30 days",
+     "validity": "90 days",
+     "proc": "10 – 11 working days",
+     "type": "Stamped in passport",
+     "price": 9700
+    },
+    {
+     "name": "Business visa",
+     "entry": "Single",
+     "stay": "As per travel dates",
+     "validity": "90 days",
+     "proc": "10 – 12 working days",
+     "type": "Stamped in passport",
+     "price": 9700
+    }
+   ]
+  },
+  {
+   "name": "Kenya",
+   "flag": "🇰🇪",
+   "code": "kenya",
+   "jur": [
+    "All India"
+   ],
+   "options": [
+    {
+     "name": "Electronic Travel Authorisation (tourist)",
+     "entry": "Single",
+     "stay": "Up to 90 days",
+     "validity": "90 days",
+     "proc": "3 – 4 working days",
+     "type": "Travel permit",
+     "price": 9670
+    },
+    {
+     "name": "Electronic Travel Authorisation (business / family visit)",
+     "entry": "Single",
+     "stay": "Up to 90 days",
+     "validity": "90 days",
+     "proc": "3 – 4 working days",
+     "type": "Travel permit",
+     "price": 9670
+    },
+    {
+     "name": "Business travel authorisation – 1 year",
+     "entry": "Multiple",
+     "stay": "365 days",
+     "validity": "365 days",
+     "proc": "3 – 4 working days",
+     "type": "Travel permit",
+     "price": 35450
+    }
+   ]
+  }
  ],
- "schengen": {"code":"schengen","flag":"🇪🇺","countries":[["France","🇫🇷","All India","7 – 10 working days"],["Switzerland","🇨🇭","All India","12 – 15 working days"],["Italy","🇮🇹","Mumbai","15 – 20 working days"],["Germany","🇩🇪","All India","15 – 20 working days"],["Spain","🇪🇸","Mumbai","15 – 20 working days"],["Netherlands","🇳🇱","All India","15 – 20 working days"],["Greece","🇬🇷","All India","15 – 20 working days"]],
-  "options":["Tourist visa","Business visa","Family visit visa"]}
+ "schengen": {
+  "code": "schengen",
+  "flag": "🇪🇺",
+  "countries": [
+   [
+    "France",
+    "🇫🇷",
+    "All India",
+    "7 – 10 working days"
+   ],
+   [
+    "Switzerland",
+    "🇨🇭",
+    "All India",
+    "12 – 15 working days"
+   ],
+   [
+    "Italy",
+    "🇮🇹",
+    "Mumbai",
+    "15 – 20 working days"
+   ],
+   [
+    "Germany",
+    "🇩🇪",
+    "All India",
+    "15 – 20 working days"
+   ],
+   [
+    "Spain",
+    "🇪🇸",
+    "Mumbai",
+    "15 – 20 working days"
+   ],
+   [
+    "Netherlands",
+    "🇳🇱",
+    "All India",
+    "15 – 20 working days"
+   ],
+   [
+    "Greece",
+    "🇬🇷",
+    "All India",
+    "15 – 20 working days"
+   ]
+  ],
+  "options": [
+   "Tourist visa",
+   "Business visa",
+   "Family visit visa"
+  ],
+  "prices": {
+   "France": 4033,
+   "Switzerland": 4800,
+   "Italy": 2349,
+   "Germany": 3796,
+   "Spain": 3502,
+   "Netherlands": 3520,
+   "Greece": 1700
+  },
+  "fee_note": "Embassy visa fee (about €90) is paid separately"
+ },
+ "service_charge": 1000,
+ "service_gst_pct": 18
 }

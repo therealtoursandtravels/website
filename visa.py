@@ -138,12 +138,13 @@ def visa_finder(ITEMS):
         rows.append({"n": k["name"], "f": k["flag"], "c": k["code"], "j": k["jur"], "o": k["options"]})
     sg = cat["schengen"]
     for (n, f, jur, proc) in sg["countries"]:
+        sp = sg.get("prices", {}).get(n)
         rows.append({"n": n + " (Schengen)", "f": f, "c": "schengen", "j": [jur],
                      "o": [{"name": o, "entry": "Single / Multiple", "stay": "Up to 90 days in any 180 days", "validity": "As decided by the embassy",
-                            "proc": proc, "type": "Biometrics at visa centre", "price": None} for o in sg["options"]]})
+                            "proc": proc, "type": "Biometrics at visa centre", "price": sp, "note": sg.get("fee_note")} for o in sg["options"]]})
     rows.sort(key=lambda r: r["n"])
     opts = "".join(f'<option value="{i}">{r["f"]} {r["n"]}</option>' for i, r in enumerate(rows))
-    data = _j.dumps({"rows": rows, "docs": docs, "names": names}, ensure_ascii=False).replace("</", "<\\/")
+    data = _j.dumps({"sc": cat.get("service_charge"), "gst": cat.get("service_gst_pct", 18), "rows": rows, "docs": docs, "names": names}, ensure_ascii=False).replace("</", "<\\/")
     return f"""<section id="find" class="vfind-sec"><div class="wrap">
 <div class="head"><span class="kicker">Find your visa</span><h2>Check visa options &amp; prices</h2><p class="lead">Choose the country and your jurisdiction (where you apply from) to see every visa option – stay, validity, processing time and price per applicant.</p></div>
 <form class="vfind" id="vfind" onsubmit="return false">
@@ -167,16 +168,17 @@ $('vfind').addEventListener('submit',()=>{{msg.className='vmsg';msg.textContent=
  if(!j.value){{msg.textContent='Please select your jurisdiction.';msg.classList.add('err');j.focus();return;}}
  const dl=(D.docs[r.c]||[]).map(x=>'<li>'+x+'</li>').join('');
  out.innerHTML='<p class="vfcount">'+r.f+' <b>'+esc(r.n)+'</b> · '+esc(j.value)+' · '+r.o.length+' option'+(r.o.length>1?'s':'')+'</p>'+r.o.map((o,i)=>{{
-  const p=o.price?'<b class="vfp">'+inr(o.price)+'</b><small>per applicant</small>':'<b class="vfp vfp-r">Price on request</b><small>per applicant</small>';
+  const scg=D.sc?Math.round(D.sc*(1+D.gst/100)):0;
+  const p=o.price?'<div class="vcpl"><span>Visa price</span><b class="vfp">'+inr(o.price)+'</b><small>per applicant</small></div>'+(D.sc?'<div class="vcpl vcsc"><span>Service charge</span><b>'+inr(D.sc)+' + '+D.gst+'% GST</b><small>per applicant</small></div><div class="vcpl vctot"><span>Total</span><b>'+inr(o.price+scg)+'</b><small>per applicant, incl. GST</small></div>':'')+(o.note?'<p class="vcnote">'+esc(o.note)+'</p>':''):'<b class="vfp vfp-r">Price on request</b><small>per applicant</small>';
   return '<article class="vcard"><div class="vctop"><h3>'+esc(o.name)+'</h3><span class="vcent">'+esc(o.entry)+'</span></div>'+
   '<dl><div><dt>Stay period</dt><dd>'+esc(o.stay)+'</dd></div><div><dt>Visa validity</dt><dd>'+esc(o.validity)+'</dd></div><div><dt>Processing time</dt><dd>'+esc(o.proc)+'</dd></div><div><dt>Visa type</dt><dd>'+esc(o.type)+'</dd></div><div><dt>Jurisdiction</dt><dd>'+esc(j.value)+'</dd></div></dl>'+
-  '<div class="vcprice">'+p+'</div>'+
+  '<div class="vcprice'+(o.price?' vcp2':'')+'">'+p+'</div>'+
   '<details class="vcdocs"><summary>📄 Document checklist</summary><ul class="ticks">'+(dl||'<li>We share the exact checklist on WhatsApp.</li>')+'</ul></details>'+
   '<div class="vcbtn"><button type="button" class="btn outline" data-share="'+i+'">Share quote</button>'+(o.price?'':'<a class="btn ghost" target="_blank" rel="noopener" href="'+wa('Hi The Real Tours and Travels, please share the price for: '+r.n+' – '+o.name+' ('+o.entry+'), jurisdiction '+j.value+'. Travellers:  Travel date: ')+'">Get price</a>')+'<button type="button" class="btn gold" data-apply="'+i+'">Apply now</button></div></article>';}}).join('')+
-  '<p class="meta vfnote">Price per applicant includes the embassy / government fee and our service charge with GST, unless stated otherwise. Embassy fees and processing times are set by the embassy and can change – we confirm everything before you pay.</p>';
+  '<p class="meta vfnote">Visa price per applicant includes the embassy / government fee unless stated otherwise. Our service charge of ₹1,000 + 18% GST per applicant is shown separately. Embassy fees and processing times are set by the embassy and can change – we confirm everything before you pay.</p>';
  out.scrollIntoView({{behavior:'smooth',block:'start'}});
  out.querySelectorAll('[data-share]').forEach(b=>b.addEventListener('click',()=>{{const o=r.o[b.dataset.share];
-  const t=r.n+' – '+o.name+'\\nEntry: '+o.entry+'\\nStay: '+o.stay+'\\nValidity: '+o.validity+'\\nProcessing: '+o.proc+'\\nPrice: '+(o.price?inr(o.price)+' per applicant':'on request')+'\\n\\nThe Real Tours and Travels · Call/WhatsApp 98431 21212\\nwww.therealtoursandtravels.com/visa/';
+  const t=r.n+' – '+o.name+'\\nEntry: '+o.entry+'\\nStay: '+o.stay+'\\nValidity: '+o.validity+'\\nProcessing: '+o.proc+'\\nVisa price: '+(o.price?inr(o.price)+' per applicant'+(D.sc?'\\nService charge: '+inr(D.sc)+' + '+D.gst+'% GST per applicant\\nTotal: '+inr(o.price+Math.round(D.sc*(1+D.gst/100)))+' per applicant':'')+(o.note?' ('+o.note+')':''):'on request')+'\\n\\nThe Real Tours and Travels · Call/WhatsApp 98431 21212\\nwww.therealtoursandtravels.com/visa/';
   if(navigator.share)navigator.share({{title:'Visa quote',text:t}}).catch(()=>{{}});else window.open(wa(t),'_blank');}}));
  out.querySelectorAll('[data-apply]').forEach(b=>b.addEventListener('click',()=>{{const o=r.o[b.dataset.apply];
   const sel=document.querySelector('select[name=country]');const nm=D.names[r.c];
@@ -620,6 +622,7 @@ VISA_CSS = """
 .vcent{font-size:12px;padding:3px 10px;border-radius:999px;background:var(--bg);border:1px solid var(--line);white-space:nowrap}
 .vcard dl{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:8px 12px}.vcard dt{font-size:12px;color:var(--muted)}.vcard dd{margin:0;font-size:14px;font-weight:500}
 .vcprice{display:flex;align-items:baseline;gap:8px;border-top:1px dashed var(--line);padding-top:10px}.vfp{font-size:22px;color:var(--ink)}.vfp-r{font-size:17px;color:var(--wine)}.vcprice small{color:var(--muted)}
+.vcp2{flex-direction:column;align-items:stretch;gap:4px}.vcpl{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.vcpl span{flex:1 1 auto;font-size:13px;color:var(--muted)}.vcsc b{font-size:15px}.vctot{border-top:1px solid var(--line);padding-top:6px}.vctot b{font-size:20px;color:var(--wine)}.vcnote{margin:2px 0 0;font-size:13px;color:var(--muted)}
 .vcdocs summary{cursor:pointer;font-weight:500;color:var(--wine)}.vcdocs ul{margin:8px 0 0;font-size:14px}
 .vcbtn{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}.vcbtn .btn{padding:9px 14px;font-size:14px}
 .vrem .vtrk input{text-transform:none;min-width:160px}.rexp{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}.rexp input{min-width:150px}

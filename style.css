@@ -116,6 +116,7 @@ footer ul{list-style:none;padding:0;margin:0}footer li{margin:7px 0}
 .vcent{font-size:12px;padding:3px 10px;border-radius:999px;background:var(--bg);border:1px solid var(--line);white-space:nowrap}
 .vcard dl{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:8px 12px}.vcard dt{font-size:12px;color:var(--muted)}.vcard dd{margin:0;font-size:14px;font-weight:500}
 .vcprice{display:flex;align-items:baseline;gap:8px;border-top:1px dashed var(--line);padding-top:10px}.vfp{font-size:22px;color:var(--ink)}.vfp-r{font-size:17px;color:var(--wine)}.vcprice small{color:var(--muted)}
+.vcp2{flex-direction:column;align-items:stretch;gap:4px}.vcpl{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.vcpl span{flex:1 1 auto;font-size:13px;color:var(--muted)}.vcsc b{font-size:15px}.vctot{border-top:1px solid var(--line);padding-top:6px}.vctot b{font-size:20px;color:var(--wine)}.vcnote{margin:2px 0 0;font-size:13px;color:var(--muted)}
 .vcdocs summary{cursor:pointer;font-weight:500;color:var(--wine)}.vcdocs ul{margin:8px 0 0;font-size:14px}
 .vcbtn{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}.vcbtn .btn{padding:9px 14px;font-size:14px}
 .vrem .vtrk input{text-transform:none;min-width:160px}.rexp{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}.rexp input{min-width:150px}
