@@ -341,7 +341,7 @@ f.addEventListener('submit',async e=>{{
 <span class="kicker">{T["kicker"]}</span>
 <h1>{T["h1"]}</h1>
 <p>{T["intro"]}</p>
-<div class="btns"><a class="btn gold" href="{"#countries" if P else "#find"}">{"See documents required" if P else "Find your visa"}</a>{'<a class="btn ghost" href="#upload">Upload documents</a>' if P else ""}<a class="btn outline" href="#pay">💳 Pay online</a></div>
+{f'''<div class="btns"><a class="btn gold" href="{"#countries" if P else "#find"}">{"See documents required" if P else "Find your visa"}</a>{'<a class="btn ghost" href="#upload">Upload documents</a>' if P else ""}<a class="btn outline" href="#pay">💳 Pay online</a></div>''' if P else ""}
 </div>{seal("../")}</div></section>
 
 {"" if P else visa_finder(ITEMS)}
