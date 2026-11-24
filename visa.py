@@ -131,7 +131,7 @@ def visa_finder(ITEMS):
     """Country + jurisdiction search with visa-option cards (reads visa_catalog.json)."""
     import json as _j, os as _o
     cat = _j.load(open(_o.path.join(_o.path.dirname(__file__), "visa_catalog.json")))
-    docs = {c: clean_docs(d) for (c, _, _, _, d) in ITEMS}
+    docs = {c: ([f"⏱️ <b>When to apply:</b> {WHEN[c]}"] if c in WHEN else []) + clean_docs(d) for (c, _, _, _, d) in ITEMS}
     names = {c: n for (c, _, n, _, _) in ITEMS}
     rows = []
     for k in cat["countries"]:
@@ -142,6 +142,14 @@ def visa_finder(ITEMS):
         rows.append({"n": n + " (Schengen)", "f": f, "c": "schengen", "j": [jur],
                      "o": [{"name": o, "entry": "Single / Multiple", "stay": "Up to 90 days in any 180 days", "validity": "As decided by the embassy",
                             "proc": proc, "type": "Biometrics at visa centre", "price": sp, "note": sg.get("fee_note")} for o in sg["options"]]})
+    have = {r["c"] for r in rows}
+    for (c, f, n, _, _) in ITEMS:
+        if c in have or c in ("schengen", "nepal"):
+            continue
+        card = ENTRY.get(c, ("visa",))[0] == "card"
+        rows.append({"n": n, "f": f, "c": c, "j": ["All India"], "o": [{"name": "Arrival card / travel permit" if card else "Tourist visa",
+                     "entry": "Single", "stay": "As per travel dates", "validity": "As decided by the authorities", "proc": "Confirmed on enquiry",
+                     "type": "Arrival card" if card else "Visa", "price": None}]})
     rows.sort(key=lambda r: r["n"])
     opts = "".join(f'<option value="{i}">{r["f"]} {r["n"]}</option>' for i, r in enumerate(rows))
     data = _j.dumps({"sc": cat.get("service_charge"), "gst": cat.get("service_gst_pct", 18), "rows": rows, "docs": docs, "names": names}, ensure_ascii=False).replace("</", "<\\/")
@@ -163,7 +171,7 @@ c.addEventListener('change',()=>{{out.innerHTML='';msg.textContent='';const r=D.
  j.innerHTML=r?(r.j.length>1?'<option value="">Select jurisdiction</option>':'')+r.j.map(x=>'<option>'+esc(x)+'</option>').join(''):'<option value="">Select jurisdiction</option>';j.disabled=!r;}});
 function wa(t){{return 'https://wa.me/919843121212?text='+encodeURIComponent(t);}}
 $('vfind').addEventListener('submit',()=>{{msg.className='vmsg';msg.textContent='';
- if(c.value==='other'){{const t=document.querySelector('.vtab[data-c="other"]');if(t){{t.click();document.getElementById('countries').scrollIntoView({{behavior:'smooth'}});}}return;}}
+ if(c.value==='other'){{const sel=document.querySelector('select[name=country]');if(sel){{sel.value='Other';sel.dispatchEvent(new Event('change'));}}document.getElementById('upload').scrollIntoView({{behavior:'smooth'}});return;}}
  const r=D.rows[c.value];if(!r){{msg.textContent='Please select a country.';msg.classList.add('err');c.focus();return;}}
  if(!j.value){{msg.textContent='Please select your jurisdiction.';msg.classList.add('err');j.focus();return;}}
  const dl=(D.docs[r.c]||[]).map(x=>'<li>'+x+'</li>').join('');
@@ -337,10 +345,10 @@ f.addEventListener('submit',async e=>{{
 </div>{seal("../")}</div></section>
 
 {"" if P else visa_finder(ITEMS)}
-<section id="countries"><div class="wrap">
-<div class="head"><span class="kicker">{T["k2"]}</span><h2>{T["h2"]}</h2><p class="lead">{T["lead2"]}</p></div>
+<section id="countries"{"" if P else ' style="padding-top:0"'}><div class="wrap">
+{f"""<div class="head"><span class="kicker">{T["k2"]}</span><h2>{T["h2"]}</h2><p class="lead">{T["lead2"]}</p></div>
 <div class="vtabs" role="tablist">{tabs}</div>
-<div class="vbox">{panels}</div>
+<div class="vbox">{panels}</div>""" if P else ""}
 <div class="vtrack" id="track"><div><b>🔎 Already applied with us? Track your application</b><p>Enter the reference number from your confirmation – we reply on WhatsApp with the latest status.</p></div>
 <div class="vtrk"><input id="trk_ref" maxlength="20" placeholder="Reference, e.g. 3F9A1C2B" autocomplete="off" aria-label="Your reference number"><a class="btn gold" id="trk_go" href="https://wa.me/919843121212" target="_blank" rel="noopener">Track on WhatsApp</a></div>
 <p class="vmsg" id="trk_msg" role="status" aria-live="polite"></p></div>
