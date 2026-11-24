@@ -887,6 +887,6 @@
   },
   "fee_note": "Embassy visa fee (about €90) is paid separately"
  },
- "service_charge": 1000,
+ "service_charge": 250,
  "service_gst_pct": 18
 }
