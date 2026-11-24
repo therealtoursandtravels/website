@@ -116,12 +116,12 @@ def inr(v):
     return "₹" + f"{int(v):,}".replace(",", ",") if v is not None else ""
 
 def price_box(rate, wa, label):
-    g = (rate or {}).get("govt_fee"); sc = (rate or {}).get("service_charge"); gn = (rate or {}).get("govt_note")
-    if g is None and sc is None:
+    g = (rate or {}).get("govt_fee"); sc = (rate or {}).get("service_charge"); gn = (rate or {}).get("govt_note"); gt = (rate or {}).get("govt_fee_text")
+    if g is None and sc is None and not gt:
         return f'<div class="vprice"><span>Price</span><a class="btn gold" href="{wa}" target="_blank" rel="noopener">Request Price</a></div>'
     rows = ""
-    if g is not None:
-        rows += f'<div class="vrow"><span>{label}</span><b>{inr(g)}</b></div>' + (f'<small>{gn}</small>' if gn else "")
+    if g is not None or gt:
+        rows += f'<div class="vrow"><span>{label}</span><b>{inr(g) if g is not None else gt}</b></div>' + (f'<small>{gn}</small>' if gn else "")
     incl = (rate or {}).get("service_incl_gst"); per = (rate or {}).get("per") or "per form"
     rows += (f'<div class="vrow"><span>Our service charge</span><b>{inr(sc)} <em>{per} · {"incl. GST" if incl else "+ 18% GST"}</em></b></div>' if sc is not None
              else '<div class="vrow"><span>Our service charge</span><b class="ask">on request</b></div>')

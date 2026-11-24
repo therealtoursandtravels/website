@@ -62,8 +62,9 @@
     "singapore": {
       "name": "Singapore",
       "govt_fee": null,
-      "govt_note": null,
-      "service_charge": null
+      "govt_note": "ICA processing fee (charged in INR at the current rate)",
+      "service_charge": null,
+      "govt_fee_text": "S$30"
     },
     "malaysia": {
       "name": "Malaysia",
@@ -80,20 +81,23 @@
     "schengen": {
       "name": "Europe (Schengen)",
       "govt_fee": null,
-      "govt_note": null,
-      "service_charge": null
+      "govt_note": "Children 6–11: €45 · under 6: nil · plus visa application centre charges and travel insurance",
+      "service_charge": null,
+      "govt_fee_text": "€90 per adult"
     },
     "uk": {
       "name": "United Kingdom",
       "govt_fee": null,
-      "govt_note": null,
-      "service_charge": null
+      "govt_note": "Standard Visitor visa, up to 6 months · plus visa application centre charges",
+      "service_charge": null,
+      "govt_fee_text": "£135"
     },
     "usa": {
       "name": "United States",
       "govt_fee": null,
-      "govt_note": null,
-      "service_charge": null
+      "govt_note": "B1/B2 visa application fee · any additional US government fees in force are extra",
+      "service_charge": null,
+      "govt_fee_text": "US$185"
     },
     "canada": {
       "name": "Canada",
@@ -104,8 +108,9 @@
     "australia": {
       "name": "Australia",
       "govt_fee": null,
-      "govt_note": null,
-      "service_charge": null
+      "govt_note": "Visitor visa (subclass 600), applying from India · from 1 July 2026",
+      "service_charge": null,
+      "govt_fee_text": "A$250"
     },
     "japan": {
       "name": "Japan",
@@ -221,5 +226,12 @@
       "govt_note": null,
       "service_charge": null
     }
+  },
+  "visa_sources": {
+    "schengen": "EU Visa Code fee (€90 / €45) since 11 June 2024",
+    "uk": "GOV.UK Standard Visitor visa fee from 8 April 2026",
+    "usa": "US State Dept MRV fee US$185",
+    "australia": "Home Affairs subclass 600 charge from 1 July 2026",
+    "singapore": "ICA S$30 processing fee"
   }
 }
