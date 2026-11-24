@@ -17,7 +17,38 @@ SITE = "https://www.therealtoursandtravels.com"
 NAME = "The Real Tours and Travels"
 PHONE = "+91 98431 21212"
 PHONE_RAW = "+919843121212"
-EMAIL = "enquiry@therealtoursandtravels.com"
+EMAIL = "enquiry@therealtoursandtravels.com"   # quotes & enquiry forms
+_D = "@therealtoursandtravels.com"
+EMAILS = {  # department mailboxes
+    "info": "info"+_D, "enquiry": "enquiry"+_D, "bookings": "bookings"+_D, "hotels": "hotels"+_D,
+    "domestic": "domestic"+_D, "international": "international"+_D, "operations": "operations"+_D,
+    "refund": "refund"+_D, "transfers": "transfers"+_D,
+}
+DEPT_LABELS = [  # shown on the Contact page
+    ("info", "General information"), ("enquiry", "New enquiries & quotations"),
+    ("domestic", "Domestic tours, yatras & weekend getaways"), ("international", "International holidays"),
+    ("bookings", "Flight, cruise & booking confirmations"), ("hotels", "Hotel bookings"),
+    ("transfers", "Airport transfers & outstation cabs"), ("operations", "Visa, passport, PCC & travel insurance"),
+    ("refund", "Cancellations & refunds"),
+]
+_DOMESTIC = ("domestic-holiday-packages", "yatra-tours", "jain-yatra-tours-with-maharaj", "weekend-getaways",
+             "weekend-getaways-from-mumbai", "senior-citizen-tours", "women-only-group-tours",
+             "school-college-educational-tours", "wildlife-safari-tours", "adventure-trekking-tours")
+_OPS = ("visa", "passport", "passport-visa-services", "police-clearance-certificate-pcc-document-services",
+        "insurance", "travel-insurance")
+_ENQ = ("customize-your-package", "customised-tours", "group-tours", "honeymoon-packages", "fit-mice-tours",
+        "destination-weddings-family-functions")
+def dept_email(path):
+    """Mailbox shown in the header/footer of a page, by section."""
+    slug = path.strip("/").split("/")[0]
+    if slug in _DOMESTIC: return EMAILS["domestic"]
+    if slug == "international-holiday-packages": return EMAILS["international"]
+    if slug in _OPS: return EMAILS["operations"]
+    if slug == "flights-hotels": return EMAILS["bookings"]
+    if slug == "airport-transfers-outstation-cabs": return EMAILS["transfers"]
+    if slug == "cancellation-refund-policy": return EMAILS["refund"]
+    if slug in _ENQ: return EMAILS["enquiry"]
+    return EMAILS["info"]
 WA = "https://wa.me/919843121212?text=Hi%20The%20Real%20Tours%20and%20Travels%2C%20I%27d%20like%20to%20plan%20a%20trip"
 IG = "https://www.instagram.com/therealtoursandtravels/"
 FB = "https://www.facebook.com/657186054138837"
@@ -323,7 +354,7 @@ def jsonld_org():
     return {
       "@context":"https://schema.org","@type":"TravelAgency","@id":SITE+"/#agency",
       "name":NAME,"url":SITE+"/","logo":SITE+"/img/logo-512.png",
-      "image":SITE+"/img/logo-512.png","telephone":PHONE_RAW,"email":EMAIL,"foundingDate":"1981","taxID":GST,"vatID":GST,
+      "image":SITE+"/img/logo-512.png","telephone":PHONE_RAW,"email":EMAILS["info"],"foundingDate":"1981","taxID":GST,"vatID":GST,
       "address":{"@type":"PostalAddress","streetAddress":"204, B10, Rachana Building, Govardhan Nagar, Lal Bahadur Shastri Marg","addressLocality":"Mulund West, Mumbai","addressRegion":"Maharashtra","postalCode":"400080","addressCountry":"IN"},
       "openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"09:00","closes":"22:00"}],
       "areaServed":[{"@type":"Country","name":"India"},{"@type":"Place","name":"Worldwide"}],
@@ -381,6 +412,7 @@ def seo_desc(d, limit=158):
 
 def page(path, title, desc, body, extra_ld=None, hero_img=None):
     title, desc = seo_title(title), seo_desc(desc)
+    SE = dept_email(path)
     canonical = SITE + path
     _ph = PAGE_PHOTO.get(path)
     if _ph:
@@ -436,13 +468,13 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <p>{'<br>'.join(ADDR)}<br><span class="gst">GSTIN: {GST}</span></p>
 <ul class="fsoc">
 <li><a href="tel:{PHONE_RAW}" aria-label="Call {PHONE}"><span class="fic"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span>{PHONE}</a></li>
-<li><a href="mailto:{EMAIL}" aria-label="Email {EMAIL}"><span class="fic"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg></span>{EMAIL}</a></li></ul>
+<li><a href="mailto:{SE}" aria-label="Email {SE}"><span class="fic"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg></span>{SE}</a></li></ul>
 <p class="fsoh">Our profiles in social media</p>
 <div class="fsq"><a href="{FB}" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="currentColor"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v2H8v4h2v8h4v-8h3l1-4h-4V8.5a.5.5 0 0 1 .5-.5z"/></svg></a><a href="{IG}" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a><a href="https://wa.me/{PHONE_RAW.replace('+','')}" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.8-1.4a.5.5 0 0 0 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.7a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.2-.2-.5-.3z"/></svg></a><a href="https://www.youtube.com/@therealtoursandtravels" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="currentColor"><path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-4.8 31 31 0 0 0-.5-4.8zM9.8 15.1V8.9l5.4 3.1z"/></svg></a></div></div>
 <div><h4>Our Services</h4><ul>{nav}</ul></div>
 <div><h4>Visit Us</h4><ul><li>Open every day, 9 am – 10 pm</li><li><a href="{MAPS}" target="_blank" rel="noopener">Get directions on Google Maps</a></li><li><a href="{REVIEW}" target="_blank" rel="noopener">⭐ Review us on Google</a></li><li><a href="{root}flights-hotels/">✈️ Flights, hotels &amp; cruise</a></li><li><a href="{root}customize-your-package/">✨ Customized Packages</a></li><li><a href="{root}visa/">Visa documents &amp; upload</a></li><li><a href="{root}passport/">Passport services</a></li><li><a href="{root}insurance/">Travel insurance quote</a></li><li><a href="{root}blog/">Travel guides &amp; tips</a></li><li><a href="{root}account/">👤 My account / Login</a></li><li><a href="{root}about/">About us</a></li><li><a href="{root}contact/">Contact us</a></li></ul>
 </div>
- </div><div class="topbar"><div class="wrap"><span>📍 Serving travellers across India &amp; abroad · Open daily 9 am – 10 pm</span><span><a href="tel:{PHONE_RAW}">📞 {PHONE}</a> · <a href="mailto:{EMAIL}">✉️ {EMAIL}</a></span></div></div><div class="copy">© {datetime.date.today().year} The Real Tours and Travels · GSTIN {GST} · All rights reserved.<br><a href="{root}terms/">Terms &amp; Conditions</a> · <a href="{root}privacy-policy/">Privacy Policy</a> · <a href="{root}cancellation-refund-policy/">Cancellation &amp; Refund Policy</a></div></footer>
+ </div><div class="topbar"><div class="wrap"><span>📍 Serving travellers across India &amp; abroad · Open daily 9 am – 10 pm</span><span><a href="tel:{PHONE_RAW}">📞 {PHONE}</a> · <a href="mailto:{SE}">✉️ {SE}</a></span></div></div><div class="copy">© {datetime.date.today().year} The Real Tours and Travels · GSTIN {GST} · All rights reserved.<br><a href="{root}terms/">Terms &amp; Conditions</a> · <a href="{root}privacy-policy/">Privacy Policy</a> · <a href="{root}cancellation-refund-policy/">Cancellation &amp; Refund Policy</a></div></footer>
 <a class="float-wa" href="{WA}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">💬</a>
 <script>(function(){{const w=document.querySelector('.float-wa');if(!w)return;let q=0;
 function chk(){{q=0;w.style.pointerEvents='none';const r=w.getBoundingClientRect(),m=r.left+r.width/2,c=r.top+r.height/2;
@@ -568,7 +600,8 @@ def build():
 <section><div class="wrap contact-grid"><div class="info">
 <h2>Get in touch</h2>
 <p><b>Phone / WhatsApp:</b> <a href="tel:{PHONE_RAW}">{PHONE}</a></p>
-<p><b>Email:</b> <a href="mailto:{EMAIL}">{EMAIL}</a></p>
+<p><b>Email:</b> <a href="mailto:{EMAILS['info']}">{EMAILS['info']}</a></p>
+<p><b>Email the right team:</b></p><ul class="ticks depts">{''.join(f'<li>{lbl}: <a href="mailto:{EMAILS[k]}">{EMAILS[k]}</a></li>' for k, lbl in DEPT_LABELS)}</ul>
 <p><b>Address:</b><br>{'<br>'.join(ADDR)}</p>
 <p><b>Hours:</b> Monday – Sunday, 9:00 am – 10:00 pm</p>
 <p><b>GSTIN:</b> {GST}</p>
@@ -576,7 +609,7 @@ def build():
 <div class="btns"><a class="btn gold" href="{WA}" target="_blank" rel="noopener">💬 WhatsApp us</a><a class="btn outline" href="{MAPS}" target="_blank" rel="noopener">📍 Directions</a></div></div>
 <iframe class="map" loading="lazy" title="Map to The Real Tours and Travels, Mulund West" src="https://www.google.com/maps?cid=6174258107225017089&output=embed"></iframe>
 </div></section>{cta_band()}"""
-    write("/contact/", page("/contact/", "Contact | The Real Tours and Travels", "Contact The Real Tours and Travels – serving travellers across India. Call/WhatsApp 98431 21212, email enquiry@therealtoursandtravels.com. Open daily 9 am – 10 pm.", contact))
+    write("/contact/", page("/contact/", "Contact | The Real Tours and Travels", "Contact The Real Tours and Travels – serving travellers across India. Call/WhatsApp 98431 21212, email info@therealtoursandtravels.com. Open daily 9 am – 10 pm.", contact))
     # 404
     open(os.path.join(root, "404.html"), "w").write(page("/404.html", "Page not found | The Real Tours and Travels", "Page not found.", f'<section><div class="wrap"><h1>Page not found</h1><p><a href="/">Go to the home page</a> or WhatsApp us on 98431 21212.</p></div></section>').replace('<meta name="robots" content="index,follow,max-image-preview:large">','<meta name="robots" content="noindex">'))
     # Blog
@@ -614,7 +647,7 @@ def build():
     # Customized Packages
     write("/customize-your-package/", page("/customize-your-package/", "Customized Holiday Packages – Instant Itinerary | The Real Tours and Travels", "Customized holiday packages from anywhere in India to any destination in India or abroad – one place or a multi-city tour. Choose days, travellers, hotel, car and flight or train and get an instant day-by-day itinerary.", planner_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band, ADDR, GST), None, "gulmarg.jpg"))
     # Visa section
-    write("/visa/", page("/visa/", "Visa Services – Documents Required & Upload | The Real Tours and Travels", "Visa services for Dubai, Thailand, Singapore, Europe (Schengen), UK, USA, Canada, Australia, Japan and more. See documents required, request the price and upload documents securely.", visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band), None, "passport.jpg"))
+    write("/visa/", page("/visa/", "Visa Services – Documents Required & Upload | The Real Tours and Travels", "Visa services for Dubai, Thailand, Singapore, Europe (Schengen), UK, USA, Canada, Australia, Japan and more. See documents required, request the price and upload documents securely.", visa_page(PHONE, PHONE_RAW, EMAILS["operations"], seal, cta_band), None, "passport.jpg"))
     write("/account/", page("/account/", "My Account – Login or Sign up | The Real Tours and Travels", "Log in or create your free The Real Tours and Travels account to save your details and see your enquiries.", account.account_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band)).replace('<meta name="robots" content="index,follow,max-image-preview:large">','<meta name="robots" content="noindex">'))
     # About us
     about = f"""<section class="hero"><div class="wrap"><div><div class="crumbs"><a href="../">Home</a> › About Us</div>
@@ -685,11 +718,11 @@ def build():
 <div class="emblem"><img src="../img/logo.png" alt="The Real Tours and Travels emblem"><b>Crafting Journeys Since 1981</b><p>A family business trusted by generations of travellers in India and abroad.</p></div></div></section>{cta_band()}"""
     about_ld = {"@context":"https://schema.org","@type":"AboutPage","name":"About The Real Tours and Travels","url":SITE+"/about/","about":{"@id":SITE+"/#agency"}}
     write("/about/", page("/about/", "About Us | The Real Tours and Travels – Since 1981", "The story of The Real Tours and Travels – founded in 1981 by Mr. Deepak Devji Kotak and led today by Mr. Pratik Deepak Kotak. 45 years of trust in holidays, flights, hotels, cruises, visas, passports, insurance and Jain yatras.", about, [about_ld]))
-    write("/insurance/", page("/insurance/", "Travel Insurance Quotation – International & Domestic | The Real Tours and Travels", "Get a travel insurance quotation for international, Schengen visa, USA, domestic, senior citizen, student and annual multi-trip plans from The Real Tours and Travels.", insurance_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band), None, "flight.jpg"))
-    write("/passport/", page("/passport/", "Passport Services – New, Renewal, Tatkaal | The Real Tours and Travels", "Passport services – fresh passport, renewal, minor, Tatkaal and lost passport. See documents required, request the price and upload documents securely.", passport_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band), None, "passport.jpg"))
+    write("/insurance/", page("/insurance/", "Travel Insurance Quotation – International & Domestic | The Real Tours and Travels", "Get a travel insurance quotation for international, Schengen visa, USA, domestic, senior citizen, student and annual multi-trip plans from The Real Tours and Travels.", insurance_page(PHONE, PHONE_RAW, EMAILS["operations"], seal, cta_band), None, "flight.jpg"))
+    write("/passport/", page("/passport/", "Passport Services – New, Renewal, Tatkaal | The Real Tours and Travels", "Passport services – fresh passport, renewal, minor, Tatkaal and lost passport. See documents required, request the price and upload documents securely.", passport_page(PHONE, PHONE_RAW, EMAILS["operations"], seal, cta_band), None, "passport.jpg"))
     def legal(slug, title, html):
         body = f"""<section style="padding-top:44px"><div class="wrap"><div class="article"><div class="crumbs"><a href="../">Home</a> › {title}</div><h1 style="font-size:clamp(30px,4.4vw,44px);color:var(--wine)">{title}</h1><p class="meta">Last updated: {datetime.date.today().strftime("%-d %B %Y")}</p>{html}
-<h2>Contact us</h2><p>The Real Tours and Travels<br>{'<br>'.join(ADDR)}<br>Phone/WhatsApp: {PHONE}<br>Email: <a href="mailto:{EMAIL}">{EMAIL}</a><br>GSTIN: {GST}</p></div></div></section>"""
+<h2>Contact us</h2><p>The Real Tours and Travels<br>{'<br>'.join(ADDR)}<br>Phone/WhatsApp: {PHONE}<br>Email: <a href="mailto:{dept_email('/'+slug+'/')}">{dept_email('/'+slug+'/')}</a><br>GSTIN: {GST}</p></div></div></section>"""
         write(f"/{slug}/", page(f"/{slug}/", f"{title} | The Real Tours and Travels", f"{title} of The Real Tours and Travels.", body))
     legal("terms", "Terms & Conditions", """
 <p>These terms apply to all bookings and payments made with The Real Tours and Travels ("we", "us"), a travel agency in India. By making a booking or payment you agree to these terms.</p>
@@ -708,7 +741,7 @@ def build():
 <h2>Your choices</h2><p>You may ask us to access, correct or delete your personal information by contacting us using the details below.</p>""")
     legal("cancellation-refund-policy", "Cancellation & Refund Policy", """
 <p>This policy explains how cancellations and refunds work for bookings and payments made with The Real Tours and Travels.</p>
-<h2>Cancellation by the customer</h2><ul class="ticks"><li>Cancellation requests must be sent in writing by email to enquiry@therealtoursandtravels.com only.</li><li>Cancellation charges depend on the airline, hotel and other suppliers' rules and on how close to the travel date you cancel. The applicable charges for your booking will be shared with you at the time of booking and on request.</li><li>Visa fees, service fees, insurance premiums and non-refundable tickets or hotel bookings are not refundable once processed.</li></ul>
+<h2>Cancellation by the customer</h2><ul class="ticks"><li>Cancellation requests must be sent in writing by email to <a href="mailto:refund@therealtoursandtravels.com">refund@therealtoursandtravels.com</a> only.</li><li>Cancellation charges depend on the airline, hotel and other suppliers' rules and on how close to the travel date you cancel. The applicable charges for your booking will be shared with you at the time of booking and on request.</li><li>Visa fees, service fees, insurance premiums and non-refundable tickets or hotel bookings are not refundable once processed.</li></ul>
 <h2>Refunds</h2><ul class="ticks"><li>Eligible refunds are processed after deducting applicable cancellation charges and once we receive the refund from the supplier.</li><li>Refunds for online payments are made to the original payment method. Once initiated, a refund usually reaches your account within 5–10 working days, depending on your bank.</li><li>Payments made by mistake or in excess of the confirmed amount will be refunded in full after verification.</li></ul>
 <h2>Cancellation or changes by us or suppliers</h2><p>If a service is cancelled by us or a supplier, we will offer an alternative or refund the amount received for that service, as per the supplier's policy.</p>""")
     # Private GST quote tool (noindex, not in sitemap)
