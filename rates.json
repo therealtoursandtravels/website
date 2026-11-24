@@ -1,37 +1,49 @@
 {
-  "_about": "Rate table for visa & passport charges. Website (and any bot) reads this file. Amounts in INR. Leave a value null to show 'Request Price'. govt_fee = government/embassy fee (no GST); service_charge = The Real Tours and Travels fee (+18% GST).",
+  "_about": "Rate table for visa & passport charges. Website (and any bot) reads this file. Amounts in INR. Leave a value null to show 'Request Price'. govt_fee = government/embassy fee (no GST); service_charge = The Real Tours and Travels fee; service_incl_gst true = amount already includes 18% GST, otherwise GST is added.",
   "updated": "2026-11-25",
   "passport_source": "Passport Seva fee structure revised by MEA w.e.f. 1 July 2026",
   "passport": {
     "fresh": {
       "govt_fee": 2500,
       "govt_note": "36 pages · ₹3,500 for 60 pages",
-      "service_charge": 1000
+      "service_charge": 1000,
+      "service_incl_gst": true,
+      "per": "per form"
     },
     "renewal": {
       "govt_fee": 2500,
       "govt_note": "36 pages · ₹3,500 for 60 pages",
-      "service_charge": 1000
+      "service_charge": 1000,
+      "service_incl_gst": true,
+      "per": "per form"
     },
     "minor": {
       "govt_fee": 1750,
       "govt_note": "36 pages",
-      "service_charge": 1000
+      "service_charge": 1000,
+      "service_incl_gst": true,
+      "per": "per form"
     },
     "minorsingle": {
       "govt_fee": 1750,
       "govt_note": "36 pages",
-      "service_charge": 1000
+      "service_charge": 1000,
+      "service_incl_gst": true,
+      "per": "per form"
     },
     "tatkaal": {
       "govt_fee": 5000,
       "govt_note": "36 pages · ₹6,000 for 60 pages · minors ₹4,250",
-      "service_charge": 1250
+      "service_charge": 1250,
+      "service_incl_gst": true,
+      "per": "per form"
     },
     "lost": {
       "govt_fee": 5000,
       "govt_note": "36 pages · ₹6,000 for 60 pages · Tatkaal ₹7,500 / ₹8,500 · minors ₹4,250 (Tatkaal ₹6,750)",
-      "service_charge": 1500
+      "service_charge": 1500,
+      "service_incl_gst": true,
+      "per": "per form"
     }
   },
   "visa": {
