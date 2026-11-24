@@ -104,6 +104,20 @@ footer ul{list-style:none;padding:0;margin:0}footer li{margin:7px 0}
 @media(max-width:380px){.seal{width:170px;height:170px}.brand small{display:none}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
 
+.vfind{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 10px 30px rgba(60,20,25,.06)}
+.vfind label{display:grid;gap:6px;margin:0}.vfind label span{font-size:13px;color:var(--muted);letter-spacing:.3px}
+.vfind select{font:500 16px 'Jost',sans-serif;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);width:100%}
+.vfind .btn{height:48px;white-space:nowrap}
+@media(max-width:720px){.vfind{grid-template-columns:1fr}}
+.vcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;margin-top:18px}
+.vfcount,.vfnote{grid-column:1/-1;margin:4px 0}
+.vcard{background:#fff;border:1px solid var(--line);border-top:3px solid var(--wine);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.vctop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.vctop h3{margin:0;font-size:18px;color:var(--wine);font-family:'Playfair Display',serif}
+.vcent{font-size:12px;padding:3px 10px;border-radius:999px;background:var(--bg);border:1px solid var(--line);white-space:nowrap}
+.vcard dl{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:8px 12px}.vcard dt{font-size:12px;color:var(--muted)}.vcard dd{margin:0;font-size:14px;font-weight:500}
+.vcprice{display:flex;align-items:baseline;gap:8px;border-top:1px dashed var(--line);padding-top:10px}.vfp{font-size:22px;color:var(--ink)}.vfp-r{font-size:17px;color:var(--wine)}.vcprice small{color:var(--muted)}
+.vcdocs summary{cursor:pointer;font-weight:500;color:var(--wine)}.vcdocs ul{margin:8px 0 0;font-size:14px}
+.vcbtn{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}.vcbtn .btn{padding:9px 14px;font-size:14px}
 .vrem .vtrk input{text-transform:none;min-width:160px}.rexp{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}.rexp input{min-width:150px}
 .vwhen{margin:6px 0 0;font-size:14px;color:var(--ink)}
 .vtrack{margin-top:22px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:var(--bg)}
