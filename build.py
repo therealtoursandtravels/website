@@ -291,6 +291,7 @@ ul.ticks li:before{content:"✓";position:absolute;left:4px;top:9px;color:var(--
 .faq details[open]{border-color:var(--red)}
 .crumbs{font-size:14px;color:var(--muted);margin-bottom:16px}.crumbs a{color:var(--red)}
 footer{background:var(--bg);color:var(--muted);font-size:15px;border-top:1px solid var(--line)}
+.fsoc{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:6px}.fsoc li{margin:0!important;padding:0!important}.fsoc a{display:inline-flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none}.fsoc a:hover{color:var(--red)}.fic{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:#fff;display:inline-flex;align-items:center;justify-content:center;color:var(--wine);flex:none;transition:.2s}.fsoc a:hover .fic{background:var(--wine);color:#fff;border-color:var(--wine)}
 footer .wrap{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;padding:64px 22px 36px}
 footer a{color:var(--ink);text-decoration:none}footer a:hover{color:var(--red)}footer h4{font-family:'Playfair Display',serif;color:var(--wine);font-size:20px;margin:0 0 14px}
 footer ul{list-style:none;padding:0;margin:0}footer li{margin:7px 0}
@@ -431,10 +432,13 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 </main>
 <footer><div class="wrap">
 <div><a class="brand" href="{root or './'}" ><img src="{root}img/logo.png" alt="" width="52" height="52"><span><b>The Real Tours and Travels</b><small>Crafting Journeys Since 1981</small></span></a>
-<p>Trusted travel agency since 1981 for family holidays, international tours, visas, yatras and Jain tours since 1981.</p>
+<p>Trusted travel agency since 1981 for family holidays, international tours, visas, yatras and Jain tours.</p>
 <p>{'<br>'.join(ADDR)}<br><span class="gst">GSTIN: {GST}</span></p>
-<p><a href="tel:{PHONE_RAW}">📞 {PHONE}</a><br><a href="mailto:{EMAIL}">✉️ {EMAIL}</a><br>
-<a href="{IG}" target="_blank" rel="noopener">📸 @therealtoursandtravels</a> · <a href="{FB}" target="_blank" rel="noopener">Facebook</a></p></div>
+<ul class="fsoc">
+<li><a href="tel:{PHONE_RAW}" aria-label="Call {PHONE}"><span class="fic"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span>{PHONE}</a></li>
+<li><a href="mailto:{EMAIL}" aria-label="Email {EMAIL}"><span class="fic"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg></span>{EMAIL}</a></li>
+<li><a href="{IG}" target="_blank" rel="noopener" aria-label="Instagram"><span class="fic"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></span>@therealtoursandtravels</a></li>
+<li><a href="{FB}" target="_blank" rel="noopener" aria-label="Facebook"><span class="fic"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="currentColor"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v2H8v4h2v8h4v-8h3l1-4h-4V8.5a.5.5 0 0 1 .5-.5z"/></svg></span>Facebook</a></li></ul></div>
 <div><h4>Our Services</h4><ul>{nav}</ul></div>
 <div><h4>Visit Us</h4><ul><li>Open every day, 9 am – 10 pm</li><li><a href="{MAPS}" target="_blank" rel="noopener">Get directions on Google Maps</a></li><li><a href="{REVIEW}" target="_blank" rel="noopener">⭐ Review us on Google</a></li><li><a href="{root}flights-hotels/">✈️ Flights, hotels &amp; cruise</a></li><li><a href="{root}customize-your-package/">✨ Customized Packages</a></li><li><a href="{root}visa/">Visa documents &amp; upload</a></li><li><a href="{root}passport/">Passport services</a></li><li><a href="{root}insurance/">Travel insurance quote</a></li><li><a href="{root}blog/">Travel guides &amp; tips</a></li><li><a href="{root}account/">👤 My account / Login</a></li><li><a href="{root}about/">About us</a></li><li><a href="{root}contact/">Contact us</a></li></ul>
 </div>
