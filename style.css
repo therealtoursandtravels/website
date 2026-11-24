@@ -104,6 +104,11 @@ footer ul{list-style:none;padding:0;margin:0}footer li{margin:7px 0}
 @media(max-width:380px){.seal{width:170px;height:170px}.brand small{display:none}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
 
+.vmode>.grow:first-child,.vmode .gst8,.vmode .gtab,.vmode #g_out{display:none!important}
+.ptot{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:14px 0;text-align:left;display:grid;gap:10px}
+.ptl{margin:0;font-size:15px}.ptamt{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;border-top:1px dashed var(--line);padding-top:10px}.ptamt span{font-size:14px;color:var(--muted)}.ptamt b{font-size:30px;color:var(--wine)}.ptamt small{color:var(--muted)}
+.ptman{display:grid;gap:6px;font-weight:500;font-size:14.5px;color:var(--wine)}.ptman input{font:500 16px 'Jost',sans-serif;padding:10px 12px;border:1px solid var(--line);border-radius:12px;max-width:260px}
+.ptnote{margin:0;font-size:13.5px;color:var(--muted)}.vqline{margin:6px 0 0;font-size:14.5px;color:var(--wine)}.vqline:empty{display:none}
 .vfind{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 10px 30px rgba(60,20,25,.06)}
 .vfind label{display:grid;gap:6px;margin:0}.vfind label span{font-size:13px;color:var(--muted);letter-spacing:.3px}
 .vfind select{font:500 16px 'Jost',sans-serif;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);width:100%}

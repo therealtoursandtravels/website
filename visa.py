@@ -155,7 +155,7 @@ def visa_finder(ITEMS):
 <div class="vcards" id="vf_out"></div>
 </div></section>
 <script>
-(function(){{const D={data};const $=i=>document.getElementById(i),c=$('vf_c'),j=$('vf_j'),out=$('vf_out'),msg=$('vf_msg');
+(function(){{const D=window.VFD={data};const $=i=>document.getElementById(i),c=$('vf_c'),j=$('vf_j'),out=$('vf_out'),msg=$('vf_msg');
 const esc=s=>String(s).replace(/[&<>"]/g,m=>({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}})[m]);
 const inr=n=>'₹'+Number(n).toLocaleString('en-IN');
 c.addEventListener('change',()=>{{out.innerHTML='';msg.textContent='';const r=D.rows[c.value];
@@ -182,7 +182,7 @@ $('vfind').addEventListener('submit',()=>{{msg.className='vmsg';msg.textContent=
   if(navigator.share)navigator.share({{title:'Visa quote',text:t}}).catch(()=>{{}});else window.open(wa(t),'_blank');}}));
  out.querySelectorAll('[data-apply]').forEach(b=>b.addEventListener('click',()=>{{const o=r.o[b.dataset.apply];
   const sel=document.querySelector('select[name=country]');const nm=D.names[r.c];
-  if(sel&&nm){{sel.value=nm;sel.dispatchEvent(new Event('change'));}}
+  if(window.rttQuote)window.rttQuote.set(+c.value,+b.dataset.apply);else if(sel&&nm){{sel.value=nm;sel.dispatchEvent(new Event('change'));}}
   const vt=document.querySelector('select[name=visa_type]');if(vt){{const m=/business/i.test(o.name)?'Business':/family/i.test(o.name)?'Visiting family / friends':/student/i.test(o.name)?'Student':/transit/i.test(o.name)?'Transit':'Tourist';[...vt.options].forEach(x=>{{if(x.text===m)vt.value=x.value;}});}}
   const nt=document.querySelector('#vform textarea[name=notes]');if(nt&&!nt.value)nt.value='Visa option: '+r.n+' – '+o.name+' ('+o.entry+'), jurisdiction '+j.value;
   document.getElementById('upload').scrollIntoView({{behavior:'smooth'}});}}));
@@ -351,8 +351,8 @@ f.addEventListener('submit',async e=>{{
 <div class="head"><span class="kicker">Secure upload</span><h2>{T["h3"]}</h2><p class="lead">Upload clear scans or photos (PDF, JPG or PNG, up to 10 MB each). Your documents are stored privately and seen only by our {T["team"]}.</p></div>
 {form_html}
 <div class="paybox" id="pay"><span class="kicker" style="justify-content:center">Secure payment</span><h3 style="font-size:26px;margin:4px 0 8px">Pay {T["payfor"]} online</h3>
-<p class="lead" style="font-size:16px">Enter the fees confirmed by our team to see the GST and total, then pay securely. Add your name, phone and reference in the payment window so we can match your payment. UPI, cards, net banking and wallets accepted.</p>
-<div class="gcalc" id="gcalc">
+{"" if P else VISA_PTOT}<p class="lead" style="font-size:16px"{"" if P else " hidden"}>Enter the fees confirmed by our team to see the GST and total, then pay securely. Add your name, phone and reference in the payment window so we can match your payment. UPI, cards, net banking and wallets accepted.</p>
+<div class="gcalc{"" if P else " vmode"}" id="gcalc">
 <div class="grow"><label>Government / embassy fee <small>(as confirmed by us – no GST)</small><span class="gin">₹<input type="number" min="0" step="1" inputmode="decimal" id="g_gov" placeholder="0"></span></label>
 <label>Our service fee <small>(as confirmed by us)</small><span class="gin">₹<input type="number" min="0" step="1" inputmode="decimal" id="g_fee" placeholder="0"></span></label></div>
 <label class="chk gb2b"><input type="checkbox" id="g_b2b"><span>I need a <b>GST invoice</b> for my business (enter your GSTIN)</span></label>
@@ -370,6 +370,7 @@ f.addEventListener('submit',async e=>{{
 <p class="meta" style="text-align:center;margin-top:16px">Prefer WhatsApp or visiting us? Call/WhatsApp <a href="tel:{PHONE_RAW}">{PHONE}</a> or visit our office, open daily 9 am – 10 pm.</p>
 </div></section>
 {cta_band()}
+{"" if P else VISA_PAY_JS}
 <script>
 (function(){{
 const SB="{SB_URL}",KEY="{SB_KEY}";
@@ -437,6 +438,7 @@ VISA_FORM_NEW = r"""<form id="vform" class="vform" novalidate>
 <label id="natwrap" hidden>Which nationality?*<input name="nationality_other" maxlength="40" autocomplete="off" placeholder="e.g. British, American, Canadian (OCI card holders too)"></label>
 <div class="row"><label>Country*<select name="country" required>__OPTS__</select></label>
 <label>Visa type<select name="visa_type"><option>Tourist</option><option>Business</option><option>Visiting family / friends</option><option>Student</option><option>Transit</option><option>Medical</option><option>Conference / Event</option><option>Work / Employment</option><option>Pilgrimage (e.g. Umrah)</option><option>Not sure – please advise</option></select></label></div>
+<div id="voptw" hidden><label>Visa option*<select name="visa_option" id="vopt"></select></label><p class="vqline" id="vqline"></p></div>
 <div class="row"><label>Entries needed<select name="entries"><option>Single entry</option><option>Multiple entry</option></select></label><label>Processing<select name="speed"><option>Standard</option><option>Express (where available)</option></select></label><span class="vnote">Multiple-entry visas are issued at the embassy's discretion and often depend on your travel history – we advise what you can apply for.</span></div>
 <label id="ocwrap" hidden>Which country?*<input name="other_country" maxlength="60" autocomplete="off" placeholder="e.g. Kenya, Bhutan, South Korea"></label>
 __OTHERLIST__
@@ -595,6 +597,7 @@ f.addEventListener('submit',async e=>{
   const r2=await fetch(SB+'/rest/v1/visa_applications',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+(window.RTT_TOKEN||KEY),'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(row)});
   if(!r2.ok)throw new Error('save '+r2.status);
   notify('New visa '+(later?'enquiry (documents to follow) ':'documents ')+ref+' – '+row.full_name,'Name: '+row.full_name+'\nPhone: '+row.phone+(row.email?'\nEmail: '+row.email:'')+'\nCountry: '+row.country+'\nVisa type: '+row.visa_type+(trav?'\nTravel date: '+trav:'')+'\nTravellers: '+T.length+'\n'+det.join('\n')+(un?'\nNotes: '+un:'')+'\nFiles uploaded: '+paths.length+(paths.length?' (stored privately in Supabase › Storage › visa-documents/applications/'+id+')':''),row.email||'');
+  if(window.rttQuote)window.rttQuote.lock(ref);
   f.reset();tlist.innerHTML='';drawTravellers();syncOther();drawCheck();syncAppt();empow.hidden=true;natw.hidden=true;document.getElementById('refnote').hidden=true;
   const wa='https://wa.me/919843121212?text='+encodeURIComponent((later?'Hi, I saved my visa details on your website and will send my documents. Reference: ':'Hi, I uploaded my visa documents on your website. Reference: ')+ref);
   msg.innerHTML=later?'✅ Thank you! Your details are saved (reference: <b>'+ref+'</b>). Send your documents any time – <a href="'+wa+'" target="_blank" rel="noopener">WhatsApp them to us with this reference</a>, or upload them here.':'✅ Thank you! Your documents were uploaded securely (reference: <b>'+ref+'</b>). Our team will call you shortly. For faster service, <a href="'+wa+'" target="_blank" rel="noopener">WhatsApp us your reference</a>.';
@@ -609,7 +612,46 @@ PREMIND = """<form class="vtrack vrem" id="premind" novalidate><div><b>⏰ Passp
 <div class="hp" aria-hidden="true"><label>Leave this empty<input name="company_website" tabindex="-1" autocomplete="off"></label></div>
 <p class="vmsg" role="status" aria-live="polite"></p></form>"""
 
+VISA_PTOT = """<div class="ptot" id="ptot"><p class="ptl" id="pt_what">Choose your visa option above (or in the upload form) to see the amount to pay.</p>
+<div class="ptamt" id="pt_amt_w" hidden><span>Total to pay</span><b id="pt_amt">₹0</b><small>including GST</small></div>
+<label class="ptman" id="pt_man" hidden>Amount confirmed by our team (₹, including GST)<input type="number" min="0" step="1" inputmode="decimal" id="pt_in" placeholder="0"></label>
+<p class="ptnote">Pay securely below – UPI, cards, net banking and wallets. Enter the <b>total</b> as the amount in the payment window, with your name, phone and reference number.</p></div>"""
+
+VISA_PAY_JS = r"""<script>
+window.addEventListener('load',function(){
+const D=window.VFD,f=document.getElementById('vform');if(!D||!f)return;
+const csel=f.querySelector('select[name=country]'),vs=document.getElementById('vopt'),vw=document.getElementById('voptw'),ql=document.getElementById('vqline');
+const SCG=D.sc?Math.round(D.sc*(1+D.gst/100)):0,inr=n=>'₹'+Number(n).toLocaleString('en-IN');
+const byName={};Object.entries(D.names).forEach(([c,n])=>byName[n]=c);
+let locked=null;
+function fill(){const code=byName[csel.value],keep=vs.value;vs.innerHTML='';
+ const rs=D.rows.map((r,i)=>[r,i]).filter(([r])=>r.c===code);
+ if(!rs.length){vw.hidden=true;upd();return;}
+ vs.innerHTML='<option value="">Select visa option</option>'+rs.map(([r,i])=>r.o.map((o,k)=>'<option value="'+i+':'+k+'">'+(rs.length>1?r.n.replace(' (Schengen)','')+' – ':'')+o.name+(o.entry&&o.entry!=='—'?' ('+o.entry+')':'')+(o.price?' – '+inr(o.price+SCG):'')+'</option>').join('')).join('');
+ vw.hidden=false;if([...vs.options].some(x=>x.value===keep))vs.value=keep;upd();}
+function pick(){const v=vs.value;if(!v||vw.hidden)return null;const [i,k]=v.split(':').map(Number);return {r:D.rows[i],o:D.rows[i].o[k]};}
+const $=i=>document.getElementById(i);
+function show(q){const what=$('pt_what'),aw=$('pt_amt_w'),man=$('pt_man');
+ if(q&&q.total){what.innerHTML='<b>'+q.label+'</b><br>'+q.n+' applicant'+(q.n>1?'s':'')+' × '+inr(q.each)+(q.ref?' · Reference <b>'+q.ref+'</b>':'');$('pt_amt').textContent=inr(q.total);aw.hidden=false;man.hidden=true;}
+ else{what.innerHTML=q&&q.ref?'Reference <b>'+q.ref+'</b> – our team will confirm your total on WhatsApp. Enter it below to pay.':'Choose your visa option above (or in the upload form) to see the amount to pay. For other countries our team confirms the amount on WhatsApp.';aw.hidden=!(+$('pt_in').value);man.hidden=false;$('pt_amt').textContent=inr(+$('pt_in').value||0);}}
+function upd(){if(locked)return;const p=pick(),n=Math.max(1,parseInt(f.travellers.value)||1);
+ if(p&&p.o.price){const each=p.o.price+SCG;ql.innerHTML='💳 <b>'+inr(each)+'</b> per applicant incl. GST · <b>'+inr(each*n)+'</b> for '+n+' applicant'+(n>1?'s':'');show({label:p.r.n+' – '+p.o.name+(p.o.note?' <small>('+p.o.note+')</small>':''),n,each,total:each*n});}
+ else{ql.textContent=p?'Price confirmed by our team on WhatsApp.':'';show(null);}}
+$('pt_in').addEventListener('input',()=>{if(!locked||!locked.total)show(locked);});
+csel.addEventListener('change',fill);vs.addEventListener('change',upd);f.travellers.addEventListener('input',upd);
+window.rttQuote={set(i,k){const r=D.rows[i];if(!r)return;csel.value=D.names[r.c];csel.dispatchEvent(new Event('change'));vs.value=i+':'+k;upd();},
+ lock(ref){const p=pick(),n=Math.max(1,parseInt(f.travellers.value)||1);locked=p&&p.o.price?{label:p.r.n+' – '+p.o.name+(p.o.note?' <small>('+p.o.note+')</small>':''),n,each:p.o.price+SCG,total:(p.o.price+SCG)*n,ref}:{ref};show(locked);
+  setTimeout(()=>{const m=document.getElementById('vmsg');if(m)m.insertAdjacentHTML('beforeend',' <br><b>Next step:</b> <a href="#pay">pay '+(locked.total?inr(locked.total):'online')+' securely below →</a>');document.getElementById('pay').scrollIntoView({behavior:'smooth'});},50);}};
+f.addEventListener('input',()=>{if(locked&&document.activeElement&&f.contains(document.activeElement)){locked=null;}});
+fill();});
+</script>"""
+
 VISA_CSS = """
+.vmode>.grow:first-child,.vmode .gst8,.vmode .gtab,.vmode #g_out{display:none!important}
+.ptot{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:14px 0;text-align:left;display:grid;gap:10px}
+.ptl{margin:0;font-size:15px}.ptamt{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;border-top:1px dashed var(--line);padding-top:10px}.ptamt span{font-size:14px;color:var(--muted)}.ptamt b{font-size:30px;color:var(--wine)}.ptamt small{color:var(--muted)}
+.ptman{display:grid;gap:6px;font-weight:500;font-size:14.5px;color:var(--wine)}.ptman input{font:500 16px 'Jost',sans-serif;padding:10px 12px;border:1px solid var(--line);border-radius:12px;max-width:260px}
+.ptnote{margin:0;font-size:13.5px;color:var(--muted)}.vqline{margin:6px 0 0;font-size:14.5px;color:var(--wine)}.vqline:empty{display:none}
 .vfind{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 10px 30px rgba(60,20,25,.06)}
 .vfind label{display:grid;gap:6px;margin:0}.vfind label span{font-size:13px;color:var(--muted);letter-spacing:.3px}
 .vfind select{font:500 16px 'Jost',sans-serif;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);width:100%}
