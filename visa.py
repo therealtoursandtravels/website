@@ -163,7 +163,7 @@ def visa_finder(ITEMS):
 <div class="vcards" id="vf_out"></div>
 </div></section>
 <script>
-(function(){{const D=window.VFD={data};const $=i=>document.getElementById(i),c=$('vf_c'),j=$('vf_j'),out=$('vf_out'),msg=$('vf_msg');
+(function(){{const D=window.VFD={data};const showUp=()=>{{const u=document.getElementById('upload');if(u&&u.hidden)u.hidden=false;}};window.rttShowUpload=showUp;if(/^#(upload|pay|vgroup)/.test(location.hash))setTimeout(()=>{{showUp();const t=document.querySelector(location.hash);if(t)t.scrollIntoView();}},50);document.addEventListener('click',e=>{{const l=e.target.closest('a[href^="#upload"],a[href^="#pay"],a[href^="#vgroup"]');if(l)showUp();}},true);const $=i=>document.getElementById(i),c=$('vf_c'),j=$('vf_j'),out=$('vf_out'),msg=$('vf_msg');
 const esc=s=>String(s).replace(/[&<>"]/g,m=>({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}})[m]);
 const inr=n=>'₹'+Number(n).toLocaleString('en-IN');
 c.addEventListener('change',()=>{{out.innerHTML='';msg.textContent='';const r=D.rows[c.value];
@@ -171,7 +171,7 @@ c.addEventListener('change',()=>{{out.innerHTML='';msg.textContent='';const r=D.
  j.innerHTML=r?(r.j.length>1?'<option value="">Select jurisdiction</option>':'')+r.j.map(x=>'<option>'+esc(x)+'</option>').join(''):'<option value="">Select jurisdiction</option>';j.disabled=!r;}});
 function wa(t){{return 'https://wa.me/919843121212?text='+encodeURIComponent(t);}}
 $('vfind').addEventListener('submit',()=>{{msg.className='vmsg';msg.textContent='';
- if(c.value==='other'){{const sel=document.querySelector('select[name=country]');if(sel){{sel.value='Other';sel.dispatchEvent(new Event('change'));}}document.getElementById('upload').scrollIntoView({{behavior:'smooth'}});return;}}
+ if(c.value==='other'){{showUp();const sel=document.querySelector('select[name=country]');if(sel){{sel.value='Other';sel.dispatchEvent(new Event('change'));}}document.getElementById('upload').scrollIntoView({{behavior:'smooth'}});return;}}
  const r=D.rows[c.value];if(!r){{msg.textContent='Please select a country.';msg.classList.add('err');c.focus();return;}}
  if(!j.value){{msg.textContent='Please select your jurisdiction.';msg.classList.add('err');j.focus();return;}}
  const dl=(D.docs[r.c]||[]).map(x=>'<li>'+x+'</li>').join('');
@@ -190,7 +190,7 @@ $('vfind').addEventListener('submit',()=>{{msg.className='vmsg';msg.textContent=
   if(navigator.share)navigator.share({{title:'Visa quote',text:t}}).catch(()=>{{}});else window.open(wa(t),'_blank');}}));
  out.querySelectorAll('[data-apply]').forEach(b=>b.addEventListener('click',()=>{{const o=r.o[b.dataset.apply];
   const sel=document.querySelector('select[name=country]');const nm=D.names[r.c];
-  if(window.rttQuote)window.rttQuote.set(+c.value,+b.dataset.apply);else if(sel&&nm){{sel.value=nm;sel.dispatchEvent(new Event('change'));}}
+  showUp();  if(window.rttQuote)window.rttQuote.set(+c.value,+b.dataset.apply);else if(sel&&nm){{sel.value=nm;sel.dispatchEvent(new Event('change'));}}
   const vt=document.querySelector('select[name=visa_type]');if(vt){{const m=/business/i.test(o.name)?'Business':/family/i.test(o.name)?'Visiting family / friends':/student/i.test(o.name)?'Student':/transit/i.test(o.name)?'Transit':'Tourist';[...vt.options].forEach(x=>{{if(x.text===m)vt.value=x.value;}});}}
   const nt=document.querySelector('#vform textarea[name=notes]');if(nt&&!nt.value)nt.value='Visa option: '+r.n+' – '+o.name+' ('+o.entry+'), jurisdiction '+j.value;
   document.getElementById('upload').scrollIntoView({{behavior:'smooth'}});}}));
@@ -341,7 +341,7 @@ f.addEventListener('submit',async e=>{{
 <span class="kicker">{T["kicker"]}</span>
 <h1>{T["h1"]}</h1>
 <p>{T["intro"]}</p>
-<div class="btns"><a class="btn gold" href="{"#countries" if P else "#find"}">{"See documents required" if P else "Find your visa"}</a><a class="btn ghost" href="#upload">Upload documents</a><a class="btn outline" href="#pay">💳 Pay online</a></div>
+<div class="btns"><a class="btn gold" href="{"#countries" if P else "#find"}">{"See documents required" if P else "Find your visa"}</a>{'<a class="btn ghost" href="#upload">Upload documents</a>' if P else ""}<a class="btn outline" href="#pay">💳 Pay online</a></div>
 </div>{seal("../")}</div></section>
 
 {"" if P else visa_finder(ITEMS)}
@@ -355,7 +355,7 @@ f.addEventListener('submit',async e=>{{
 {PREMIND if P else ""}
 </div></section>
 
-<section class="alt" id="upload"><div class="wrap" style="max-width:820px">
+<section class="alt" id="upload"{"" if P else " hidden"}><div class="wrap" style="max-width:820px">
 <div class="head"><span class="kicker">Secure upload</span><h2>{T["h3"]}</h2><p class="lead">Upload clear scans or photos (PDF, JPG or PNG, up to 10 MB each). Your documents are stored privately and seen only by our {T["team"]}.</p></div>
 {form_html}
 <div class="paybox" id="pay"><span class="kicker" style="justify-content:center">Secure payment</span><h3 style="font-size:26px;margin:4px 0 8px">Pay {T["payfor"]} online</h3>
