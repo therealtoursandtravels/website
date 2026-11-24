@@ -122,7 +122,7 @@ def price_box(rate, wa, label):
     rows = ""
     if g is not None:
         rows += f'<div class="vrow"><span>{label}</span><b>{inr(g)}</b></div>' + (f'<small>{gn}</small>' if gn else "")
-    rows += (f'<div class="vrow"><span>Our service charge</span><b>{inr(sc)} <em>+ 18% GST</em></b></div>' if sc is not None
+    rows += (f'<div class="vrow"><span>Our service charge</span><b>{inr(sc)} <em>per form + 18% GST</em></b></div>' if sc is not None
              else '<div class="vrow"><span>Our service charge</span><b class="ask">on request</b></div>')
     return f'<div class="vprice vrates"><div class="vrt">{rows}</div><a class="btn gold" href="{wa}" target="_blank" rel="noopener">Apply / Enquire</a></div>'
 
