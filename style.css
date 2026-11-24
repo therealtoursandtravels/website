@@ -295,6 +295,21 @@ footer ul{list-style:none;padding:0;margin:0}footer li{margin:7px 0}
  .fgrid.fmain,.fgrid.fg-h.fmain,.fgrid.fg-c.fmain{grid-template-columns:1fr 1fr!important}.fmain .fswap{display:none}.fmain>.fcell:first-child,.fgrid.fmain>.fcell:nth-child(3){grid-column:1/-1!important}
  .fmain .fcell input:not([type=date]){font-size:22px!important}.fdv b big,.fsum b big{font-size:24px}.ftripr{display:none}.fbar .fgo{min-width:0;width:calc(100% - 28px);padding:0 14px;font-size:15px;letter-spacing:.2px}.ftrip{gap:10px}.fpop{left:0;right:auto;width:min(280px,80vw)}}
 
+/* ===== own style (not a copy): separate field cards, button inside the box ===== */
+.fmain{border:0!important;gap:10px!important}
+.fmain>.fcell{border:1px solid var(--line)!important;border-radius:14px!important;background:var(--bg);padding:12px 16px!important;font-size:12px!important;letter-spacing:.5px!important;text-transform:uppercase!important;color:var(--muted)}
+.fmain>.fcell:hover,.fmain>.fcell:focus-within{border-color:var(--wine)!important;background:#fff}
+.fmain .fcell input:not([type=date]),.fmain .fcell select{font:600 20px/1.3 'Jost',sans-serif!important;text-transform:none;letter-spacing:0}
+.fdv b,.fsum b{font:600 20px/1.3 'Jost',sans-serif!important}.fdv b big,.fsum b big{font-size:20px!important;font-weight:600!important}
+.fdv,.fsum,.fsub,.fpop{text-transform:none;letter-spacing:0}
+.fmain .fswap{margin:0!important;box-shadow:none!important}
+.fgrid.fmain{grid-template-columns:1.25fr 36px 1.25fr 1fr 1fr 1.3fr}
+.fbar{padding-bottom:24px!important}
+.fbar .fgo{position:static!important;transform:none!important;height:48px!important;min-width:0!important;padding:0 26px!important;border-radius:12px!important;font:600 16px 'Jost',sans-serif!important;letter-spacing:0!important;text-transform:none!important;box-shadow:none!important}
+.fbar+.grp{margin-top:0!important}
+@media(max-width:1100px){.fgrid.fmain{grid-template-columns:1fr 36px 1fr!important}}
+@media(max-width:700px){.fgrid.fmain{grid-template-columns:1fr 1fr!important}.fbar .fgo{width:100%}}
+
 .qt-form{display:grid;gap:14px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px}
 .qrow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .qt-form label{display:grid;gap:5px;font-size:13px;font-weight:600;color:var(--wine)}
