@@ -15,17 +15,6 @@ def insurance_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band):
 <div class="btns"><a class="btn gold" href="#ins-form">Get quotation</a><a class="btn ghost" href="tel:{PHONE_RAW}">📞 {PHONE}</a></div>
 </div>{seal("../")}</div></section>
 
-<section><div class="wrap">
-<div class="head"><span class="kicker">What it covers</span><h2>Why travel insurance matters</h2><p class="lead">Cover depends on the plan and insurer – we explain every plan before you buy.</p></div>
-<div class="grid">
-<div class="card"><div class="ic">🏥</div><h3>Medical emergencies</h3><p>Hospitalisation and treatment abroad, emergency evacuation and repatriation.</p></div>
-<div class="card"><div class="ic">✈️</div><h3>Trip cancellation &amp; delay</h3><p>Cancellation or cutting short for covered reasons, flight delays and missed connections.</p></div>
-<div class="card"><div class="ic">🧳</div><h3>Baggage &amp; passport</h3><p>Lost or delayed checked baggage and loss of passport while travelling.</p></div>
-<div class="card"><div class="ic">🇪🇺</div><h3>Visa-ready plans</h3><p>Schengen-compliant plans with minimum €30,000 medical cover for the whole stay, and plans for USA, UK and other visas.</p></div>
-<div class="card"><div class="ic">👵</div><h3>Senior citizens</h3><p>Plans for travellers above 60 and 70 years – pre-existing conditions must be declared.</p></div>
-<div class="card"><div class="ic">🎓</div><h3>Students &amp; frequent flyers</h3><p>Long-stay student plans and annual multi-trip plans for business travellers.</p></div>
-</div></div></section>
-
 <section class="alt" id="ins-form"><div class="wrap" style="max-width:860px">
 <div class="head"><span class="kicker">Free quotation</span><h2>Get your travel insurance quotation</h2><p class="lead">Takes a minute. We compare plans and reply on WhatsApp or email.</p></div>
 <form id="iform" class="vform" novalidate>
@@ -51,6 +40,17 @@ def insurance_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band):
 <p class="vpriv">🔒 We use your details only to prepare your quotation – never shared or sold. <a href="../privacy-policy/">Privacy Policy</a></p>
 <p class="meta" style="margin:0">Premiums include GST as charged by the insurer. Policies are issued by the insurance company; terms, exclusions and claim decisions are as per the policy wording.</p>
 </form></div></section>
+<section><div class="wrap">
+<div class="head"><span class="kicker">What it covers</span><h2>Why travel insurance matters</h2><p class="lead">Cover depends on the plan and insurer – we explain every plan before you buy.</p></div>
+<div class="grid">
+<div class="card"><div class="ic">🏥</div><h3>Medical emergencies</h3><p>Hospitalisation and treatment abroad, emergency evacuation and repatriation.</p></div>
+<div class="card"><div class="ic">✈️</div><h3>Trip cancellation &amp; delay</h3><p>Cancellation or cutting short for covered reasons, flight delays and missed connections.</p></div>
+<div class="card"><div class="ic">🧳</div><h3>Baggage &amp; passport</h3><p>Lost or delayed checked baggage and loss of passport while travelling.</p></div>
+<div class="card"><div class="ic">🇪🇺</div><h3>Visa-ready plans</h3><p>Schengen-compliant plans with minimum €30,000 medical cover for the whole stay, and plans for USA, UK and other visas.</p></div>
+<div class="card"><div class="ic">👵</div><h3>Senior citizens</h3><p>Plans for travellers above 60 and 70 years – pre-existing conditions must be declared.</p></div>
+<div class="card"><div class="ic">🎓</div><h3>Students &amp; frequent flyers</h3><p>Long-stay student plans and annual multi-trip plans for business travellers.</p></div>
+</div></div></section>
+
 <section id="claims"><div class="wrap" style="max-width:960px">
 <div class="head"><span class="kicker">Claim help</span><h2>Something went wrong on your trip? Here's what to do</h2><p class="lead">If you bought your policy through us, we help you with the claim from start to finish.</p></div>
 <div class="yexp">
