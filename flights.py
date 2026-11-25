@@ -28,6 +28,28 @@ AIRPORTS = [
  ("New York","JFK","John F. Kennedy Intl"),("Newark","EWR","Newark Liberty Intl"),("Chicago","ORD","O'Hare Intl"),
  ("San Francisco","SFO","San Francisco Intl"),("Toronto","YYZ","Pearson Intl"),("Vancouver","YVR","Vancouver Intl"),
  ("Nairobi","NBO","Jomo Kenyatta Intl"),("Johannesburg","JNB","O. R. Tambo Intl"),("Mauritius","MRU","Sir Seewoosagur Ramgoolam Intl"),
+ ("Agartala","IXA","Maharaja Bir Bikram"),("Imphal","IMF","Bir Tikendrajit Intl"),("Dibrugarh","DIB","Dibrugarh"),("Silchar","IXS","Silchar"),
+ ("Tirupati","TIR","Tirupati"),("Vijayawada","VGA","Vijayawada"),("Rajahmundry","RJA","Rajahmundry"),("Belagavi","IXG","Belagavi"),("Hubballi","HBX","Hubballi"),
+ ("Kannur","CNN","Kannur Intl"),("Tiruchirappalli","TRZ","Tiruchirappalli Intl"),("Kolhapur","KLH","Kolhapur"),("Shirdi","SAG","Shirdi"),("Jabalpur","JLR","Jabalpur"),
+ ("Gwalior","GWL","Rajmata Vijaya Raje Scindia"),("Prayagraj","IXD","Prayagraj"),("Gorakhpur","GOP","Gorakhpur"),("Darbhanga","DBR","Darbhanga"),
+ ("Kullu Manali","KUU","Bhuntar"),("Dharamshala","DHM","Kangra Gaggal"),("Jaisalmer","JSA","Jaisalmer"),("Bikaner","BKB","Nal"),("Jamnagar","JGA","Jamnagar"),
+ ("Bhuj","BHJ","Bhuj"),("Porbandar","PBD","Porbandar"),("Diu","DIU","Diu"),("Mysuru","MYQ","Mysuru"),("Puducherry","PNY","Puducherry"),("Thoothukudi","TCR","Tuticorin"),
+ ("Agatti (Lakshadweep)","AGX","Agatti"),
+ ("Ras Al Khaimah","RKT","Ras Al Khaimah Intl"),("Dammam","DMM","King Fahd Intl"),("Medina","MED","Prince Mohammad bin Abdulaziz"),("Salalah","SLL","Salalah"),
+ ("Amman","AMM","Queen Alia Intl"),("Tel Aviv","TLV","Ben Gurion"),("Cairo","CAI","Cairo Intl"),("Baku","GYD","Heydar Aliyev Intl"),("Almaty","ALA","Almaty Intl"),
+ ("Tashkent","TAS","Islam Karimov Tashkent Intl"),("Tbilisi","TBS","Tbilisi Intl"),("Yerevan","EVN","Zvartnots Intl"),("Dhaka","DAC","Hazrat Shahjalal Intl"),
+ ("Paro","PBH","Paro Intl"),("Yangon","RGN","Yangon Intl"),("Krabi","KBV","Krabi Intl"),("Chiang Mai","CNX","Chiang Mai Intl"),("Bangkok (Don Mueang)","DMK","Don Mueang Intl"),
+ ("Penang","PEN","Penang Intl"),("Langkawi","LGK","Langkawi Intl"),("Jakarta","CGK","Soekarno-Hatta Intl"),("Manila","MNL","Ninoy Aquino Intl"),("Taipei","TPE","Taoyuan Intl"),
+ ("Shanghai","PVG","Pudong Intl"),("Beijing","PEK","Capital Intl"),("Guangzhou","CAN","Baiyun Intl"),("Osaka","KIX","Kansai Intl"),("Perth","PER","Perth"),
+ ("Brisbane","BNE","Brisbane"),("Gold Coast","OOL","Gold Coast"),("Cairns","CNS","Cairns"),("Christchurch","CHC","Christchurch"),("Queenstown","ZQN","Queenstown"),
+ ("Seychelles","SEZ","Seychelles Intl"),("Zanzibar","ZNZ","Abeid Amani Karume Intl"),("Dar es Salaam","DAR","Julius Nyerere Intl"),("Mombasa","MBA","Moi Intl"),
+ ("Cape Town","CPT","Cape Town Intl"),("London (Gatwick)","LGW","Gatwick"),("Manchester","MAN","Manchester"),("Edinburgh","EDI","Edinburgh"),("Birmingham","BHX","Birmingham"),
+ ("Dublin","DUB","Dublin"),("Munich","MUC","Munich"),("Geneva","GVA","Geneva"),("Milan","MXP","Malpensa"),("Venice","VCE","Marco Polo"),("Barcelona","BCN","El Prat"),
+ ("Madrid","MAD","Barajas"),("Lisbon","LIS","Humberto Delgado"),("Athens","ATH","Athens Intl"),("Prague","PRG","Vaclav Havel"),("Budapest","BUD","Ferenc Liszt Intl"),
+ ("Brussels","BRU","Brussels"),("Copenhagen","CPH","Kastrup"),("Stockholm","ARN","Arlanda"),("Helsinki","HEL","Helsinki-Vantaa"),("Oslo","OSL","Gardermoen"),
+ ("Los Angeles","LAX","Los Angeles Intl"),("Washington DC","IAD","Dulles Intl"),("Boston","BOS","Logan Intl"),("Dallas","DFW","Dallas Fort Worth Intl"),
+ ("Houston","IAH","George Bush Intercontinental"),("Atlanta","ATL","Hartsfield-Jackson Atlanta Intl"),("Seattle","SEA","Seattle-Tacoma Intl"),
+ ("Montreal","YUL","Montreal-Trudeau Intl"),("Calgary","YYC","Calgary Intl"),
 ]
 
 HOTEL_CITIES = ["Mumbai","Delhi","Goa","Jaipur","Udaipur","Jodhpur","Jaisalmer","Srinagar","Gulmarg","Pahalgam","Manali","Shimla","Dharamshala","Rishikesh","Mussoorie","Nainital","Leh","Munnar","Alleppey","Kochi","Thekkady","Kovalam","Ooty","Coorg","Mysuru","Port Blair","Havelock Island","Darjeeling","Gangtok","Varanasi","Ayodhya","Palitana","Shirdi","Mahabaleshwar","Lonavala","Dubai","Abu Dhabi","Singapore","Bangkok","Pattaya","Phuket","Krabi","Bali","Kuala Lumpur","Maldives","Hanoi","Da Nang","Paris","London","Zurich","Interlaken","Lucerne","Istanbul","Baku","Tokyo","Sydney","New York"]
@@ -54,6 +76,41 @@ CRUISE_LINES = ["Any cruise line", "Cordelia Cruises", "Royal Caribbean", "Costa
 PORTS = ["Mumbai", "Goa", "Kochi", "Chennai", "Singapore", "Dubai", "Abu Dhabi", "Miami / Florida", "Barcelona", "Rome (Civitavecchia)", "Southampton", "Sydney", "Other – type below"]
 
 FSEARCH_JS = r"""
+// ---- airport picker: type a city, airport name or 3-letter code ----
+(function(){
+const box=document.getElementById('flight-search');if(!box)return;
+const AP=[...document.querySelectorAll('#fapts option')].map(o=>{const m=o.value.match(/^(.*) \(([A-Z]{3})\)$/);return m?{v:o.value,city:m[1],code:m[2],name:o.textContent}:null;}).filter(Boolean);
+const norm=t=>(t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function find(q){q=norm(q).replace(/\s*\([a-z]{3}\)\s*$/,'');if(!q)return AP.slice(0,8);
+ const out=[];for(const a of AP){const c=a.code.toLowerCase(),ci=norm(a.city),n=norm(a.name);let s=-1;
+  if(c===q)s=0;else if(ci.startsWith(q))s=1;else if(q.length<=3&&c.startsWith(q))s=2;else if(ci.split(/[\s(]+/).some(w=>w.startsWith(q)))s=3;else if(n.includes(q))s=4;else if(ci.includes(q))s=5;
+  if(s>=0)out.push([s,a]);}
+ out.sort((x,y)=>x[0]-y[0]);const r=out.slice(0,8).map(x=>x[1]);
+ if(/^[a-z]{3}$/.test(q)&&!r.length)r.push({v:q.toUpperCase(),city:'Airport code '+q.toUpperCase(),code:q.toUpperCase(),name:'Search this airport code',raw:1});
+ return r;}
+const isAp=t=>t&&t.matches&&t.matches('form[data-kind=flight] input[name=from],form[data-kind=flight] input[name=to],form[data-kind=flight] input[data-l=from],form[data-kind=flight] input[data-l=to]');
+let dd=null,cur=null,idx=-1,items=[];
+function close(){if(dd){dd.remove();}dd=null;cur=null;idx=-1;items=[];}
+function hl(i){idx=i;if(!dd)return;[...dd.children].forEach((b,j)=>b.classList.toggle('on',j===i));const b=dd.children[i];if(b)b.scrollIntoView({block:'nearest'});}
+function pick(inp,a){inp.value=a.v;inp.dispatchEvent(new Event('input',{bubbles:true}));inp.dispatchEvent(new Event('change',{bubbles:true}));close();}
+function open(inp){const list=find(inp.value);if(dd&&cur!==inp)close();if(!list.length){close();return;}
+ if(!dd){dd=document.createElement('div');dd.className='fac';dd.setAttribute('role','listbox');dd.addEventListener('mousedown',e=>e.preventDefault());(inp.closest('.fcell')||inp.parentNode).appendChild(dd);}
+ cur=inp;items=list;
+ dd.innerHTML=list.map(a=>'<button type="button" role="option" tabindex="-1"><span class="facm"><b>'+esc(a.city)+'</b><small>'+esc(a.name)+'</small></span><span class="facc">'+esc(a.code)+'</span></button>').join('');
+ [...dd.children].forEach((b,j)=>b.addEventListener('click',()=>pick(inp,items[j])));hl(norm(inp.value)?0:-1);}
+// on leaving the field, turn "bom" or "mumbai" into "Mumbai (BOM)"
+function settle(inp){const q=norm(inp.value);if(!q||/\([a-z]{3}\)$/.test(q))return;const a=AP.find(x=>x.code.toLowerCase()===q)||AP.find(x=>norm(x.city)===q);if(a&&a.v!==inp.value){inp.value=a.v;inp.dispatchEvent(new Event('input',{bubbles:true}));inp.dispatchEvent(new Event('change',{bubbles:true}));}}
+box.addEventListener('input',e=>{if(isAp(e.target)&&e.isTrusted)open(e.target);});
+box.addEventListener('focusin',e=>{if(isAp(e.target)){open(e.target);try{e.target.select();}catch(_){}}});
+box.addEventListener('focusout',e=>{if(isAp(e.target)){const t=e.target;setTimeout(()=>{if(document.activeElement!==t){if(cur===t)close();settle(t);}},120);}});
+box.addEventListener('keydown',e=>{if(!isAp(e.target)||!dd||cur!==e.target)return;
+ if(e.key==='ArrowDown'){e.preventDefault();hl(Math.min(items.length-1,idx+1));}
+ else if(e.key==='ArrowUp'){e.preventDefault();hl(Math.max(0,idx-1));}
+ else if(e.key==='Enter'||e.key==='Tab'){if(idx>=0&&items[idx]){if(e.key==='Enter')e.preventDefault();pick(e.target,items[idx]);}}
+ else if(e.key==='Escape'){close();}});
+document.addEventListener('click',e=>{if(dd&&!dd.contains(e.target)&&e.target!==cur)close();});
+})();
 (function(){
 const F=document.querySelector('#flight-search form[data-kind=flight]');if(!F)return;
 const SB='__SB__',KEY='__KEY__';
@@ -126,9 +183,9 @@ def flight_widget(root):
     flight = f"""<form class="fform" data-kind="flight" novalidate>
 <div class="ftrip" role="radiogroup"><label><input type="radio" name="ftrip" value="One way" checked>One way</label><label><input type="radio" name="ftrip" value="Round trip">Round trip</label><label><input type="radio" name="ftrip" value="Multi-city">Multi-city</label><span class="ftripr">Domestic &amp; international flights</span></div>
 <div class="fgrid fmain">
-<label class="fcell">From<input name="from" list="fapts" required placeholder="From city" autocomplete="off"></label>
+<label class="fcell">From<input name="from" required placeholder="City or airport code" autocomplete="off"></label>
 <button type="button" class="fswap" aria-label="Swap from and to">⇄</button>
-<label class="fcell">To<input name="to" required maxlength="80" placeholder="To city" autocomplete="off"></label>
+<label class="fcell">To<input name="to" required maxlength="80" placeholder="City or airport code" autocomplete="off"></label>
 <label class="fcell">Departure<input name="depart" type="date" required></label>
 <label class="fcell fret">Return<input name="ret" type="date"></label>
 <label class="fcell">Travellers &amp; class<span class="fpax">{_sel("adults","Adults",range(1,10),AD)}{_sel("children","Children",range(0,10),CH)}{_sel("infants","Infants",range(0,10),INF)}<select name="cabin" aria-label="Class"><option>Economy</option><option>Premium Economy</option><option>Business</option><option>First</option></select></span></label>
@@ -192,7 +249,7 @@ F.querySelectorAll('input[name=ftrip]').forEach(r=>r.addEventListener('change',s
 // ---- multi-city legs (flights) and extra stays (hotels) ----
 const FL=F.querySelector('.flegs'),FLR=FL.querySelector('.flegrows');
 function addLeg(){{const n=FLR.children.length;if(n>=4)return;const prev=n?FLR.lastElementChild.querySelector('[data-l=to]').value:F.to.value;const d=document.createElement('div');d.className='fleg';
- d.innerHTML='<label class="fcell">From<input data-l="from" maxlength="80" list="fapts" autocomplete="off"></label><label class="fcell">To<input data-l="to" maxlength="80" placeholder="Type the city" autocomplete="off"></label><label class="fcell">Date<input data-l="date" type="date"></label><button type="button" class="flegx" aria-label="Remove this flight">✕</button>';
+ d.innerHTML='<label class="fcell">From<input data-l="from" maxlength="80" placeholder="City or code" autocomplete="off"></label><label class="fcell">To<input data-l="to" maxlength="80" placeholder="Type the city" autocomplete="off"></label><label class="fcell">Date<input data-l="date" type="date"></label><button type="button" class="flegx" aria-label="Remove this flight">✕</button>';
  FLR.appendChild(d);const lf=d.querySelector('[data-l=from]');lf.value=prev||'';if(!n)lf.dataset.auto='1';d.querySelector('[data-l=date]').min=today;d.querySelector('.flegx').onclick=()=>{{d.remove();legBtn();}};legBtn();}}
 function legBtn(){{FL.querySelector('.flegadd').hidden=FLR.children.length>=4;}}
 FL.querySelector('.flegadd').addEventListener('click',addLeg);
@@ -444,4 +501,12 @@ FLIGHT_CSS = """
 .fopk{position:absolute;right:14px;top:50%;transform:translateY(-50%);border:1px solid var(--wine);color:var(--wine);border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600}.fo.on .fopk{background:var(--wine);color:#fff}
 .fsel{margin-top:12px;background:#fff;border:1px solid var(--wine);border-radius:12px;padding:12px 14px}.fsel p{margin:6px 0;font-size:14px;line-height:1.6}.fselg{border-top:0!important;padding-top:4px!important}
 @media(max-width:700px){.fo{padding:12px}.fob{grid-template-columns:1fr auto 1fr;gap:6px}.foa,.fobag{grid-column:1/-1}.fod{order:0}.fopk{position:static;transform:none;display:inline-block;margin-top:10px}}
+
+/* ===== airport picker ===== */
+.fbar form[data-kind=flight] .fcell{position:relative}
+.fac{position:absolute;left:-1px;right:-1px;top:calc(100% + 4px);z-index:60;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 28px rgba(0,0,0,.12);max-height:340px;overflow:auto;padding:4px;min-width:260px;text-transform:none;letter-spacing:0}
+.fac button{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;background:none;border:0;border-radius:8px;padding:8px 10px;cursor:pointer;font:inherit;color:var(--ink)}
+.fac button:hover,.fac button.on{background:#f3f3f3}
+.facm{min-width:0}.facm b{display:block;font:600 15px 'Jost',sans-serif}.facm small{display:block;color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.facc{flex:none;font:600 13px 'Jost',sans-serif;border:1px solid var(--line);border-radius:6px;padding:2px 7px;color:var(--ink)}
 """
