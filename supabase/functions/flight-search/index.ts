@@ -53,23 +53,26 @@ function iso(local: string): string {
   return `${m[1]}T${m[2]}:00${off}`;
 }
 
-async function adbWindow(from: string, a: string, b: string): Promise<any[]> {
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+async function adbWindow(from: string, a: string, b: string, tries = 4): Promise<any[]> {
   const path = `/flights/airports/iata/${from}/${a}/${b}?direction=Departure&withLeg=true&withCancelled=false&withCodeshared=false&withCargo=false&withPrivate=false&withLocation=false`;
   const r = ADB_KEY
     ? await fetch(`https://${ADB_HOST}${path}`, { headers: { "X-RapidAPI-Key": ADB_KEY, "X-RapidAPI-Host": ADB_HOST, Accept: "application/json" } })
     : await fetch(`${ADB_AM_BASE}${path}`, { headers: { "x-api-market-key": ADB_AM_KEY, Accept: "application/json" } });
   if (r.status === 204) return [];
+  if (r.status === 429 && tries > 1) { await r.body?.cancel(); await sleep(1500); return adbWindow(from, a, b, tries - 1); }
   if (!r.ok) throw new Error(`ADB ${r.status} ${(await r.text()).slice(0, 300)}`);
   const j = await r.json();
   return j?.departures ?? [];
 }
 
 async function adbBound(from: string, to: string, date: string) {
-  // the timetable endpoint allows up to 12 hours per call -> two calls cover the day
-  const [am, pm] = await Promise.all([
-    adbWindow(from, `${date}T00:00`, `${date}T11:59`),
-    adbWindow(from, `${date}T12:00`, `${date}T23:59`),
-  ]);
+  // the timetable endpoint allows up to 12 hours per call -> two calls cover the day.
+  // Calls run one after another: lower plans allow only about 1 request per second.
+  const am = await adbWindow(from, `${date}T00:00`, `${date}T11:59`);
+  await sleep(1100);
+  const pm = await adbWindow(from, `${date}T12:00`, `${date}T23:59`);
   const seen = new Set<string>();
   const out: any[] = [];
   for (const f of [...am, ...pm]) {
@@ -99,7 +102,9 @@ async function adbBound(from: string, to: string, date: string) {
 
 async function adbSearch(from: string, to: string, depart: string, ret: string) {
   const wrap = (b: any) => ({ id: b.flights[0].number + b.flights[0].departs, bounds: [b] });
-  const [out1, back] = await Promise.all([adbBound(from, to, depart), ret ? adbBound(to, from, ret) : Promise.resolve([])]);
+  const out1 = await adbBound(from, to, depart);
+  let back: any[] = [];
+  if (ret) { await sleep(1100); back = await adbBound(to, from, ret); }
   const legs = [out1.slice(0, 120).map(wrap)];
   if (ret) legs.push(back.slice(0, 120).map(wrap));
   return legs;
@@ -133,7 +138,7 @@ Deno.serve(async (req) => {
     } catch (e) {
       console.error("aerodatabox", String(e));
       const busy = String(e).includes("429");
-      return new Response(JSON.stringify({ error: busy ? "busy" : "upstream" }), { status: busy ? 429 : 502, headers: h });
+      return new Response(JSON.stringify({ error: busy ? "busy" : "upstream", detail: String(e).slice(0, 200) }), { status: busy ? 429 : 502, headers: h });
     }
   }
 
@@ -196,7 +201,6 @@ Deno.serve(async (req) => {
     if (!bounds.length || bounds.some((b: any) => !b.flights.length)) continue;
     const key = bounds.map((b: any) => b.flights.map((f: any) => f.number + f.departs).join("+")).join("|");
     if (seen.has(key)) {
-      // keep the most generous baggage text seen for this combination
       continue;
     }
     seen.add(key);
