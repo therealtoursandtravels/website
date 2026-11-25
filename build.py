@@ -95,7 +95,7 @@ SERVICES = [
   h1="Travel Insurance for Every Trip",
   desc="Overseas and domestic travel insurance for families, seniors and students – medical cover, trip cancellation, lost baggage and Schengen-compliant policies. Arranged by The Real Tours and Travels.",
   intro="A medical emergency or lost baggage abroad can be expensive and stressful. The right travel insurance protects your family and your holiday. We help you choose a suitable policy and issue it quickly.",
-  points=["Overseas medical and hospitalisation cover","Trip cancellation, delay and missed connection","Loss of baggage and passport","Senior citizen and family floater policies","Schengen-compliant policies for visa applications","Student and multi-trip annual policies"],
+  points=["Overseas medical and hospitalisation cover","Trip cancellation, delay and missed connection","Loss of baggage and passport","Senior citizen and family floater policies","0% GST on individual and family travel insurance","24 x 7 claim assistance","Schengen-compliant policies for visa applications","Student and multi-trip annual policies"],
   why="We explain what is and isn't covered in simple language, so you can choose with confidence.",
   faqs=[("Is travel insurance compulsory?","It is mandatory for Schengen visas and some other countries, and strongly recommended for every international trip."),
         ("Can senior citizens get travel insurance?","Yes, there are policies designed for senior travellers. We will help you find suitable cover."),
@@ -270,6 +270,7 @@ nav.main a{color:var(--wine);text-decoration:none;font-weight:500;font-size:15px
 .hact{display:flex;align-items:center;gap:10px}.hcta{background:linear-gradient(135deg,var(--red),var(--crimson));color:#fff;text-decoration:none;font-weight:600;padding:10px 20px;border-radius:999px;box-shadow:0 6px 16px rgba(142,14,22,.25);white-space:nowrap}
 nav.main a:hover{color:var(--red)}
 .menu-btn{display:none;background:none;border:0;font-size:28px;color:var(--crimson);width:44px;height:44px}
+.gst0{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:7px 14px;border-radius:999px;background:#eef7f0;border:1px solid #cfe7d6;color:#1f6b3a;font-size:14.5px}.gst0 b{color:#1f6b3a}.inshl{display:flex;flex-wrap:wrap;gap:12px;margin:4px 0 14px}.inshl>div{display:grid;justify-items:center;min-width:170px;padding:10px 18px;background:#fff;border:1.5px solid var(--crimson);border-radius:12px;box-shadow:0 6px 16px rgba(60,20,25,.08)}.inshl b{font-size:20px;color:var(--crimson);line-height:1.2}.inshl span{font-size:14.5px;color:var(--ink)}.fhwrap.cpt p.gst0{display:inline-flex!important;-webkit-line-clamp:unset;margin:0 0 10px!important}
 .deptpick{display:grid;gap:8px;margin:14px 0 18px;max-width:460px}.deptpick select{font:500 15.5px 'Jost',sans-serif;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}.deptout{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px}.deptout[hidden]{display:none}.deptout span{font-size:13px;color:var(--muted);width:100%}.deptout a{font-weight:600;color:var(--crimson);word-break:break-all;flex:1}.deptout .btn{padding:6px 14px;font-size:13.5px}
 /* ===== icon tab navigation: one line on every page ===== */
 @view-transition{navigation:auto}

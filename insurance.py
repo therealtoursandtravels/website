@@ -11,6 +11,7 @@ def insurance_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band):
 <section class="hero"><div class="wrap"><div><div class="crumbs"><a href="../">Home</a> › Travel Insurance</div>
 <span class="kicker">🛡️ Travel insurance</span>
 <h1>Travel Insurance – Get a Quotation</h1>
+<div class="inshl"><div><b>0% GST</b><span>for travel insurance</span></div><div><b>24 x 7</b><span>Claim assistance</span></div></div>
 <p>Medical emergencies, trip cancellation, lost baggage and flight delays – protect your family before you travel. Tell us about your trip and we'll send you the best plans from leading insurers.</p>
 <div class="btns"><a class="btn gold" href="#ins-form">Get quotation</a><a class="btn ghost" href="tel:{PHONE_RAW}">📞 {PHONE}</a></div>
 </div>{seal("../")}</div></section>
@@ -38,7 +39,7 @@ def insurance_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band):
 <button class="btn gold" type="submit" id="isubmit">🛡️ Get Quotation on WhatsApp</button>
 <p id="imsg" class="vmsg" role="status" aria-live="polite"></p>
 <p class="vpriv">🔒 We use your details only to prepare your quotation – never shared or sold. <a href="../privacy-policy/">Privacy Policy</a></p>
-<p class="meta" style="margin:0">Premiums include GST as charged by the insurer. Policies are issued by the insurance company; terms, exclusions and claim decisions are as per the policy wording.</p>
+<p class="gst0">✅ <b>0% GST</b> on individual &amp; family travel insurance – you pay only the premium.</p><p class="meta" style="margin:0"> Policies are issued by the insurance company; terms, exclusions and claim decisions are as per the policy wording.</p>
 </form></div></section>
 <section><div class="wrap">
 <div class="head"><span class="kicker">What it covers</span><h2>Why travel insurance matters</h2><p class="lead">Cover depends on the plan and insurer – we explain every plan before you buy.</p></div>
