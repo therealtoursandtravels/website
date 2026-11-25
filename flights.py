@@ -226,8 +226,10 @@ def flight_widget(root):
 <label class="fcell">To<input name="to" required maxlength="80" placeholder="City or airport code" autocomplete="off"></label>
 <label class="fcell">Departure<input name="depart" type="date" required></label>
 <label class="fcell fret">Return<input name="ret" type="date"></label>
-<label class="fcell">Travellers &amp; class<span class="fpax">{_sel("adults","Adults",range(1,10),AD)}{_sel("children","Children",range(0,10),CH)}{_sel("infants","Infants",range(0,10),INF)}<select name="cabin" aria-label="Class"><option>Economy</option><option>Premium Economy</option><option>Business</option><option>First</option></select></span></label>
-</div><div class="flegs" hidden><span class="flh">Next flights in this trip</span><div class="flegrows"></div><button type="button" class="btn outline flegadd">➕ Add another flight</button></div><details class="fmore"><summary>➕ More options – airline, non-stop, meals &amp; special requests</summary><div class="fmoreg"><label class="fcell">Preferred airline<input name="airline" maxlength="60" placeholder="Any airline" autocomplete="off"></label><div class="cradd"><span>Preferences:</span><label><input type="checkbox" name="fpref" value="Non-stop flights only"> Non-stop only</label><label><input type="checkbox" name="fpref" value="Dates flexible (± 3 days)"> Dates flexible ± 3 days</label></div><div class="cradd"><span>Special requests:</span><label><input type="checkbox" name="fspec" value="Jain meal"> 🥗 Jain meal</label><label><input type="checkbox" name="fspec" value="Vegetarian meal"> 🥦 Veg meal</label><label><input type="checkbox" name="fspec" value="Wheelchair assistance"> ♿ Wheelchair</label><label><input type="checkbox" name="fspec" value="Extra baggage"> 🧳 Extra baggage</label><label><input type="checkbox" name="fspec" value="Senior citizen fare"> 👴 Senior citizen fare</label><label><input type="checkbox" name="fspec" value="Student fare"> 🎓 Student fare</label><label><input type="checkbox" name="fspec" value="Armed forces fare"> 🎖️ Armed forces fare</label></div></div></details><div class="fsr"{"" if FSEARCH_ON else " hidden"}><button type="button" class="btn outline fshow">🔍 Search</button><span class="fsrh">See the flights on your date, pick one and add baggage – we send the best fare with your quote.</span></div><div class="fres" hidden></div>{_contact("Get Flight Quote", root)}</form>"""
+<label class="fcell">Travellers<span class="fpax">{_sel("adults","Adults",range(1,10),AD)}{_sel("children","Children",range(0,10),CH)}{_sel("infants","Infants",range(0,10),INF)}</span></label>
+<label class="fcell fcab">Cabin class<select name="cabin" aria-label="Cabin class"><option>Economy</option><option>Premium Economy</option><option>Business</option><option>First</option></select><small class="fsub">Tap to change</small></label>
+</div>
+<div class="ffare" role="radiogroup" aria-label="Special fare"><span class="ffh">Select a<br>special fare</span><label><input type="radio" name="ffare" value="" checked><b>Regular</b><small>Standard fares</small></label><label><input type="radio" name="ffare" value="Student fare"><b>Student</b><small>Valid student ID</small></label><label><input type="radio" name="ffare" value="Armed forces fare"><b>Armed Forces</b><small>Serving &amp; retired</small></label><label><input type="radio" name="ffare" value="Senior citizen fare"><b>Senior Citizen</b><small>Age 60 and above</small></label><label><input type="radio" name="ffare" value="Doctors &amp; nurses fare"><b>Doctors &amp; Nurses</b><small>Valid ID required</small></label></div><div class="flegs" hidden><span class="flh">Next flights in this trip</span><div class="flegrows"></div><button type="button" class="btn outline flegadd">➕ Add another flight</button></div><details class="fmore"><summary>➕ More options – airline, non-stop, meals &amp; special requests</summary><div class="fmoreg"><label class="fcell">Preferred airline<input name="airline" maxlength="60" placeholder="Any airline" autocomplete="off"></label><div class="cradd"><span>Preferences:</span><label><input type="checkbox" name="fpref" value="Non-stop flights only"> Non-stop only</label><label><input type="checkbox" name="fpref" value="Dates flexible (± 3 days)"> Dates flexible ± 3 days</label></div><div class="cradd"><span>Special requests:</span><label><input type="checkbox" name="fspec" value="Jain meal"> 🥗 Jain meal</label><label><input type="checkbox" name="fspec" value="Vegetarian meal"> 🥦 Veg meal</label><label><input type="checkbox" name="fspec" value="Wheelchair assistance"> ♿ Wheelchair</label><label><input type="checkbox" name="fspec" value="Extra baggage"> 🧳 Extra baggage</label></div></div></details><div class="fsr"{"" if FSEARCH_ON else " hidden"}><button type="button" class="btn outline fshow">🔍 Search</button><span class="fsrh">See the flights on your date, pick one and add baggage – we send the best fare with your quote.</span></div><div class="fres" hidden></div>{_contact("Get Flight Quote", root)}</form>"""
     hotel = f"""<form class="fform" data-kind="hotel" novalidate hidden>
 <div class="fgrid fg-h fmain">
 <label class="fcell">City, area or hotel name<input name="dest" required maxlength="80" placeholder="City or hotel" list="hcities" autocomplete="off"></label>
@@ -341,7 +343,7 @@ Object.entries(forms).forEach(([kind,f])=>f.addEventListener('submit',async e=>{
   if(!err&&t==='Multi-city'&&!legs.length)err='Please add the next flight of your multi-city trip (or choose One way).';
   if(!err)legs.forEach((l,i)=>{{if(err)return;const pd=i?legs[i-1].date:f.depart.value;if(l.from.length<2||l.to.length<2)err='Please enter From and To for flight '+(i+2)+'.';else if(!l.date)err='Please choose the date of flight '+(i+2)+'.';else if(pd&&l.date<pd)err='Flight '+(i+2)+' cannot be before the previous flight.';}});
   const legTxt=legs.map((l,i)=>'Flight '+(i+2)+': '+l.from+' → '+l.to+(l.date?' on '+fd(l.date):'')).join('; ');
-  const prefs=[...f.querySelectorAll('input[name=fpref]:checked')].map(x=>x.value),spec=[...f.querySelectorAll('input[name=fspec]:checked')].map(x=>x.value),air=f.airline.value.trim();
+  const prefs=[...f.querySelectorAll('input[name=fpref]:checked')].map(x=>x.value),spec=[...f.querySelectorAll('input[name=fspec]:checked')].map(x=>x.value),air=f.airline.value.trim();{{const sf=f.querySelector('input[name=ffare]:checked');if(sf&&sf.value)spec.unshift(sf.value+' (ID to be shown at check-in)');}}
   const extra=[legTxt,prefs.length?'Preferences: '+prefs.join(', '):'',spec.length?'Special requests: '+spec.join(', '):''].filter(Boolean);
   table='flight_enquiries';ref='FL-'+id.slice(0,6).toUpperCase();
   row={{id,trip_type:t,airline_pref:air?air.slice(0,60):null,from_city:from.slice(0,80),to_city:to.slice(0,80),depart_date:f.depart.value||null,return_date:t==='Round trip'?f.ret.value:null,adults:ad,children:ch,infants:inf,cabin:f.cabin.value,full_name:name,notes:[...extra,notes].filter(Boolean).join(' | ').slice(0,1000)||null}};
@@ -408,8 +410,8 @@ Object.entries(forms).forEach(([kind,f])=>f.addEventListener('submit',async e=>{
   inp.addEventListener('change',draw);inp.addEventListener('input',draw);draw();
   c.addEventListener('click',()=>{{try{{inp.showPicker();}}catch(_){{inp.focus();}}}});}});
  const AP={{}};document.querySelectorAll('#fapts option').forEach(o=>AP[o.value.toLowerCase()]=o.textContent);
- box.querySelectorAll('.fmain input[name=from],.fmain input[name=to]').forEach(inp=>{{const sub=document.createElement('small');sub.className='fsub';inp.after(sub);
-  const draw=()=>{{const t=AP[inp.value.trim().toLowerCase()];sub.textContent=t||(inp.value?'':'City or airport');}};inp.addEventListener('input',draw);draw();}});
+ box.querySelectorAll('.fmain input[name=from],.fmain input[name=to]').forEach(inp=>{{const c=inp.closest('.fcell');const sub=document.createElement('small');sub.className='fsub';inp.after(sub);const big=document.createElement('span');big.className='fcity';inp.before(big);
+  const draw=()=>{{const v=inp.value.trim(),t=AP[v.toLowerCase()],m=v.match(/^(.*) \\(([A-Z]{{3}})\\)$/);if(t&&m){{big.textContent=m[1];sub.textContent=m[2]+', '+t;c.classList.add('hascity');}}else{{big.textContent='';sub.textContent=t||(v?'':'City or airport');c.classList.remove('hascity');}}}};inp.addEventListener('input',draw);inp.addEventListener('change',draw);draw();}});
  box.querySelector('.fswap').addEventListener('click',()=>box.querySelectorAll('.fmain input[name=from],.fmain input[name=to]').forEach(x=>x.dispatchEvent(new Event('input'))));
  box.querySelectorAll('.fmain .fpax').forEach(px=>{{const c=px.closest('.fcell');c.classList.add('fpaxc');
   const sum=document.createElement('span');sum.className='fsum';const pop=document.createElement('div');pop.className='fpop';pop.hidden=true;
@@ -580,4 +582,49 @@ FLIGHT_CSS = """
 .fac button:hover,.fac button.on{background:#f3f3f3}
 .facm{min-width:0}.facm b{display:block;font:600 15px 'Jost',sans-serif}.facm small{display:block;color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .facc{flex:none;font:600 13px 'Jost',sans-serif;border:1px solid var(--line);border-radius:6px;padding:2px 7px;color:var(--ink)}
+
+/* ===== flight search bar: one connected bar (own colours) ===== */
+.fbar form[data-kind=flight] .fgrid.fmain{display:grid;grid-template-columns:1.35fr 1.35fr 1fr 1fr 1fr 1fr!important;gap:0!important;border:1px solid #dcdcdc!important;border-radius:16px;background:#fff;position:relative}
+.fbar form[data-kind=flight] .fmain>.fcell{border:0!important;border-right:1px solid #e6e6e6!important;border-radius:0!important;background:#fff;padding:14px 18px!important;min-height:112px;cursor:pointer;transition:background .15s}
+.fbar form[data-kind=flight] .fmain>.fcell:first-of-type{border-radius:15px 0 0 15px!important}
+.fbar form[data-kind=flight] .fmain>.fcell:last-of-type{border-right:0!important;border-radius:0 15px 15px 0!important}
+.fbar form[data-kind=flight] .fmain>.fcell:hover{background:#fafafa}
+.fbar form[data-kind=flight] .fmain>.fcell:focus-within,.fbar form[data-kind=flight] .fmain>.fcell.fpaxc:has(.fpop:not([hidden])){background:#fbf1f1!important}
+.fbar form[data-kind=flight] .fmain .fswap{position:absolute;left:calc(1.35 / 6.7 * 100%);top:50%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:#fff;border:1px solid #dcdcdc;z-index:5;margin:0!important;grid-column:auto}
+.fbar form[data-kind=flight] .fmain .fswap{grid-row:1}
+.fbar form[data-kind=flight] .fmain>.fcell:nth-of-type(n+3)::after{content:'';width:6px;height:6px;border-right:1.8px solid var(--red);border-bottom:1.8px solid var(--red);transform:rotate(45deg);position:absolute;top:17px;right:18px}
+.fbar form[data-kind=flight] .fmain>.fcell{position:relative}
+.fcity{display:none}
+.fbar form[data-kind=flight] .fcell.hascity:not(:focus-within) .fcity{display:block;font:700 28px/1.15 'Jost',sans-serif;color:#111;text-transform:none;letter-spacing:0;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fbar form[data-kind=flight] .fcell.hascity:not(:focus-within) input{position:absolute!important;opacity:0;pointer-events:none;height:0}
+.fbar form[data-kind=flight] .fmain .fdv b big,.fbar form[data-kind=flight] .fmain .fsum b big{font-size:28px!important;font-weight:700!important}
+.fbar form[data-kind=flight] .fmain .fdv b,.fbar form[data-kind=flight] .fmain .fsum b{font-size:18px!important}
+.fbar form[data-kind=flight] .fcab select{appearance:none;-webkit-appearance:none;border:0;background:transparent;font:700 20px/1.2 'Jost',sans-serif;color:#111;padding:2px 0;margin-top:4px;width:100%;cursor:pointer;text-transform:none;letter-spacing:0}
+.fbar form[data-kind=flight] .fmain .fsub{font-size:12.5px}
+.ffare{display:flex;align-items:stretch;gap:10px;margin:14px 0 4px;flex-wrap:wrap}
+.ffh{font:600 14px/1.25 'Jost',sans-serif;color:#222;align-self:center;margin-right:4px}
+.ffare label{position:relative;display:grid;align-content:center;border:1px solid #dcdcdc;border-radius:10px;padding:7px 14px;cursor:pointer;background:#fff;min-width:118px;transition:border-color .15s,background .15s}
+.ffare label input{position:absolute;opacity:0;pointer-events:none}
+.ffare label b{font:600 14px 'Jost',sans-serif;color:#222}.ffare label small{font-size:12px;color:var(--muted)}
+.ffare label:hover{border-color:#bdbdbd}.ffare label:has(input:checked){border-color:var(--red);background:#fbf1f1}.ffare label:has(input:focus-visible){outline:2px solid var(--red);outline-offset:2px}
+@media(max-width:1100px){.fbar form[data-kind=flight] .fgrid.fmain{grid-template-columns:1fr 1fr!important}
+ .fbar form[data-kind=flight] .fmain>.fcell{border-right:0!important;border-bottom:1px solid #e6e6e6!important;border-radius:0!important;min-height:0}
+ .fbar form[data-kind=flight] .fmain>.fcell:nth-of-type(odd){border-right:1px solid #e6e6e6!important}
+ .fbar form[data-kind=flight] .fmain>.fcell:first-of-type{border-radius:15px 0 0 0!important}.fbar form[data-kind=flight] .fmain>.fcell:nth-of-type(2){border-radius:0 15px 0 0!important}
+ .fbar form[data-kind=flight] .fmain>.fcell:nth-last-of-type(-n+2){border-bottom:0!important}
+ .fbar form[data-kind=flight] .fmain .fswap{left:50%;top:56px}
+ .fbar form[data-kind=flight] .fcell.hascity:not(:focus-within) .fcity{font-size:24px}}
+@media(max-width:700px){.ffh{width:100%}.ffare{gap:8px}.ffare label{min-width:0;flex:1 1 calc(50% - 8px)}
+ .fbar form[data-kind=flight] .fmain .fdv b big,.fbar form[data-kind=flight] .fmain .fsum b big{font-size:24px!important}}
+
+@media(max-width:1100px){.fbar form[data-kind=flight] .fgrid.fmain>.fcell{grid-column:auto!important}}
+@media(max-width:700px){.fbar form[data-kind=flight] .fgrid.fmain>.fcell:nth-of-type(-n+2){grid-column:1/-1!important;border-right:0!important}
+ .fbar form[data-kind=flight] .fmain>.fcell:first-of-type{border-radius:15px 15px 0 0!important}.fbar form[data-kind=flight] .fmain>.fcell:nth-of-type(2){border-radius:0!important}
+ .fbar form[data-kind=flight] .fmain>.fcell:nth-of-type(3),.fbar form[data-kind=flight] .fmain>.fcell:nth-of-type(5){border-right:1px solid #e6e6e6!important}
+ .fbar form[data-kind=flight] .fmain>.fcell:nth-of-type(4),.fbar form[data-kind=flight] .fmain>.fcell:nth-of-type(6){border-right:0!important}
+ .fbar form[data-kind=flight] .fmain>.fcell:nth-of-type(5){border-radius:0 0 0 15px!important}.fbar form[data-kind=flight] .fmain>.fcell:nth-of-type(6){border-radius:0 0 15px 0!important}
+ .fbar form[data-kind=flight] .fmain .fswap{display:flex!important;align-items:center;justify-content:center;left:auto;right:16px;top:98px;transform:rotate(90deg)}
+ .fbar form[data-kind=flight] .fmain>.fcell{padding:12px 16px!important}.fbar form[data-kind=flight] .fcab select{font-size:18px}}
+
+@media(min-width:1101px){.fbar form[data-kind=flight] .fmain>.fcell:nth-of-type(2){padding-left:32px!important}}
 """
