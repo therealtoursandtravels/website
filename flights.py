@@ -53,6 +53,63 @@ RM = lambda i: "Room" + ("s" if i > 1 else "")
 CRUISE_LINES = ["Any cruise line", "Cordelia Cruises", "Royal Caribbean", "Costa Cruises", "MSC Cruises", "Norwegian Cruise Line", "Celebrity Cruises", "Princess Cruises", "Disney Cruise Line", "Resorts World Cruises", "Viking (river cruises)", "Other – type below"]
 PORTS = ["Mumbai", "Goa", "Kochi", "Chennai", "Singapore", "Dubai", "Abu Dhabi", "Miami / Florida", "Barcelona", "Rome (Civitavecchia)", "Southampton", "Sydney", "Other – type below"]
 
+FSEARCH_JS = r"""
+(function(){
+const F=document.querySelector('#flight-search form[data-kind=flight]');if(!F)return;
+const SB='__SB__',KEY='__KEY__';
+const AL={AI:'Air India',IX:'Air India Express','6E':'IndiGo',SG:'SpiceJet',QP:'Akasa Air',UK:'Vistara',I5:'AIX Connect','9I':'Alliance Air',S5:'Star Air',EK:'Emirates',EY:'Etihad Airways',QR:'Qatar Airways',FZ:'flydubai',G9:'Air Arabia',WY:'Oman Air',GF:'Gulf Air',KU:'Kuwait Airways',SV:'Saudia',XY:'flynas',J9:'Jazeera Airways',SQ:'Singapore Airlines',TR:'Scoot',TG:'Thai Airways',FD:'Thai AirAsia',AK:'AirAsia',D7:'AirAsia X',MH:'Malaysia Airlines',OD:'Batik Air',VN:'Vietnam Airlines',VJ:'VietJet Air',GA:'Garuda Indonesia',CX:'Cathay Pacific',UL:'SriLankan Airlines',KB:'Druk Air',RA:'Nepal Airlines',BG:'Biman',MU:'China Eastern',CA:'Air China',CZ:'China Southern',JL:'Japan Airlines',NH:'ANA',KE:'Korean Air',OZ:'Asiana',QF:'Qantas',VA:'Virgin Australia',NZ:'Air New Zealand',BA:'British Airways',VS:'Virgin Atlantic',LH:'Lufthansa',LX:'SWISS',OS:'Austrian',AF:'Air France',KL:'KLM',AZ:'ITA Airways',IB:'Iberia',TK:'Turkish Airlines',PC:'Pegasus',SU:'Aeroflot',AA:'American Airlines',UA:'United Airlines',DL:'Delta',AC:'Air Canada',ET:'Ethiopian Airlines',KQ:'Kenya Airways',MS:'EgyptAir',SA:'South African Airways',MK:'Air Mauritius',HY:'Uzbekistan Airways',KC:'Air Astana',J2:'Azerbaijan Airlines',LO:'LOT',SK:'SAS',AY:'Finnair',EI:'Aer Lingus',TP:'TAP Portugal'};
+const an=c=>AL[c]||c;
+const box=F.querySelector('.fres'),btn=F.querySelector('.fshow');
+let opts=[],sel=null;
+const code=v=>{v=(v||'').trim();const m=v.match(/\(([A-Za-z]{3})\)\s*$/);if(m)return m[1].toUpperCase();if(/^[A-Za-z]{3}$/.test(v))return v.toUpperCase();const o=[...document.querySelectorAll('#fapts option')].find(o=>o.textContent.toLowerCase()===v.toLowerCase()||o.value.toLowerCase().startsWith(v.toLowerCase()+' ('));return o?(o.value.match(/\(([A-Z]{3})\)/)||[])[1]:'';};
+const tm=s=>s.slice(11,16);
+const dd=s=>{const d=new Date(s.slice(0,10)+'T00:00');return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'});};
+const plus=(a,b)=>{const n=Math.round((new Date(b.slice(0,10))-new Date(a.slice(0,10)))/864e5);return n>0?'<sup>+'+n+'</sup>':'';};
+const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const CAB={'Economy':'ECONOMY','Premium Economy':'PREMIUM_ECONOMY','Business':'BUSINESS','First':'FIRST'};
+function boundHtml(b,label){const f0=b.flights[0],fl=b.flights[b.flights.length-1];const als=[...new Set(b.flights.map(x=>x.airline))];
+ return '<div class="fob">'+(label?'<span class="fobl">'+label+'</span>':'')+'<div class="foa"><b>'+esc(als.map(an).join(' + '))+'</b><small>'+esc(b.flights.map(x=>x.number).join(', '))+'</small></div>'+
+ '<div class="fot"><b>'+tm(f0.departs)+'</b><small>'+esc(f0.from)+'</small></div><div class="fod"><small>'+esc(b.total)+'</small><i></i><small>'+(b.stops?b.stops+' stop'+(b.stops>1?'s':'')+' · '+esc(b.via.join(', ')):'Non-stop')+'</small></div><div class="fot"><b>'+tm(fl.arrives)+plus(f0.departs,fl.arrives)+'</b><small>'+esc(fl.to)+'</small></div>'+
+ '<div class="fobag">🧳 '+esc(b.baggage||'Check-in baggage: we will confirm')+'<br><span>👜 Cabin bag as per airline</span></div></div>';}
+function summary(o){return o.bounds.map((b,i)=>{const f0=b.flights[0],fl=b.flights[b.flights.length-1];return (o.bounds.length>1?(i?'Return':'Onward')+': ':'')+[...new Set(b.flights.map(x=>an(x.airline)))].join(' + ')+' '+b.flights.map(x=>x.number).join(', ')+' · '+f0.from+' '+dd(f0.departs)+' '+tm(f0.departs)+' → '+fl.to+' '+tm(fl.arrives)+(dd(fl.arrives)!==dd(f0.departs)?' ('+dd(fl.arrives)+')':'')+' · '+(b.stops?b.stops+' stop'+(b.stops>1?'s':'')+' via '+b.via.join(', '):'non-stop')+' · '+b.total+(b.baggage?' · Included: '+b.baggage:'');});}
+const BAGS=['No extra baggage','+5 kg per person','+10 kg per person','+15 kg per person','+20 kg per person','+25 kg per person','+30 kg per person','1 extra bag (23 kg) per person'];
+function draw(filter){
+ const list=opts.filter(o=>!filter||filter==='all'||(filter==='nonstop'?o.bounds.every(b=>!b.stops):filter==='morning'?+tm(o.bounds[0].flights[0].departs).slice(0,2)<12:filter==='afternoon'?(h=>h>=12&&h<18)(+tm(o.bounds[0].flights[0].departs).slice(0,2)):+tm(o.bounds[0].flights[0].departs).slice(0,2)>=18));
+ const airlines=[...new Set(opts.map(o=>o.bounds[0].flights[0].airline))];
+ box.innerHTML='<div class="frh"><b>'+opts.length+' flight option'+(opts.length>1?'s':'')+' found</b><span class="frf">'+[['all','All'],['nonstop','Non-stop'],['morning','Before 12 pm'],['afternoon','12–6 pm'],['evening','After 6 pm']].map(([k,t])=>'<button type="button" data-f="'+k+'" class="'+((filter||'all')===k?'on':'')+'">'+t+'</button>').join('')+'</span></div>'+
+ '<p class="frn">Airlines: '+esc(airlines.map(an).join(', '))+'. Fares are not shown – select a flight and press <b>Get Flight Quote</b>; we reply with the best fare.</p>'+
+ '<div class="frl">'+(list.length?list.map(o=>{const i=opts.indexOf(o);return '<label class="fo'+(sel===i?' on':'')+'"><input type="radio" name="fpick" value="'+i+'"'+(sel===i?' checked':'')+'>'+o.bounds.map((b,j)=>boundHtml(b,o.bounds.length>1?(j?'Return':'Onward'):'')).join('')+'<span class="fopk">'+(sel===i?'✓ Selected':'Select')+'</span></label>';}).join(''):'<p class="frn">No flights match this filter.</p>')+'</div>'+
+ (sel!=null?'<div class="fsel"><b>✓ Your selected flight</b><p>'+summary(opts[sel]).map(esc).join('<br>')+'</p><div class="fgrid2 fselg"><label class="fcell">Extra check-in baggage<select class="fxbag">'+BAGS.map(b=>'<option>'+b+'</option>').join('')+'</select></label><label class="fcell">Seat preference<select class="fxseat"><option>No preference</option><option>Window</option><option>Aisle</option><option>Seats together (family)</option><option>Extra legroom</option></select></label><label class="fcell">Meal<select class="fxmeal"><option>As per airline</option><option>Jain meal</option><option>Vegetarian meal</option><option>Non-vegetarian meal</option><option>Child meal</option><option>Diabetic meal</option></select></label></div><p class="frn">Now add your name and mobile below and press <b>Get Flight Quote</b>.</p></div>':'');
+ box.querySelectorAll('.frf button').forEach(b=>b.onclick=()=>draw(b.dataset.f));
+ box.querySelectorAll('input[name=fpick]').forEach(r=>r.onchange=()=>{sel=+r.value;draw(filter);const s=box.querySelector('.fsel');if(s)s.scrollIntoView({behavior:'smooth',block:'center'});});
+}
+window.RTT_FSEL=()=>{if(sel==null||!opts[sel])return null;const g=c=>{const x=box.querySelector(c);return x?x.value:'';};const out=summary(opts[sel]);const xb=g('.fxbag'),st=g('.fxseat'),ml=g('.fxmeal');if(xb&&xb!==BAGS[0])out.push('Extra baggage: '+xb);if(st&&st!=='No preference')out.push('Seat: '+st);if(ml&&ml!=='As per airline')out.push('Meal: '+ml);return out;};
+function reset(){if(opts.length||sel!=null){opts=[];sel=null;box.hidden=true;box.innerHTML='';}}
+['from','to','depart','ret','adults','children','infants','cabin'].forEach(n=>F[n]&&F[n].addEventListener('change',reset));
+F.querySelectorAll('input[name=ftrip]').forEach(r=>r.addEventListener('change',reset));
+btn.addEventListener('click',async()=>{
+ const t=F.querySelector('input[name=ftrip]:checked').value,msg=F.querySelector('.fmsg');msg.className='fmsg vmsg';msg.textContent='';
+ const show=e=>{box.hidden=false;box.innerHTML='<p class="frn ferr">'+e+'</p>';};
+ if(t==='Multi-city')return show('For multi-city trips, fill in all your flights and press <b>Get Flight Quote</b> – we will send the best routing and fare.');
+ const fr=code(F.from.value),to=code(F.to.value);
+ if(!fr||!to)return show('Please choose the From and To cities from the list (e.g. Mumbai (BOM)) to see flights.');
+ if(fr===to)return show('From and To cannot be the same.');
+ if(!F.depart.value)return show('Please choose your departure date.');
+ if(t==='Round trip'&&!F.ret.value)return show('Please choose your return date.');
+ if(t==='Round trip'&&F.ret.value<F.depart.value)return show('Return date must be after the departure date.');
+ if(+F.infants.value>+F.adults.value)return show('Each infant must travel with an adult.');
+ btn.disabled=true;box.hidden=false;box.innerHTML='<p class="frn">⏳ Checking flights with all airlines… this can take up to 20 seconds.</p>';
+ try{const r=await fetch(SB+'/functions/v1/flight-search',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+KEY,'Content-Type':'application/json'},body:JSON.stringify({from:fr,to,depart:F.depart.value,ret:t==='Round trip'?F.ret.value:'',adults:+F.adults.value,children:+F.children.value,infants:+F.infants.value,cabin:CAB[F.cabin.value]||'ECONOMY',nonstop:!!F.querySelector('input[name=fpref][value="Non-stop flights only"]:checked')})});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok)throw j.error||r.status;
+  opts=j.options||[];sel=null;
+  if(!opts.length)show('We could not load flights for this date online. Just press <b>Get Flight Quote</b> – our team will check all airlines and send you the options.');else draw('all');
+ }catch(e){show('Live flight list is not available right now. Just press <b>Get Flight Quote</b> – our team will check all airlines and send you the options.');}
+ btn.disabled=false;
+});
+})();
+"""
+
 def flight_widget(root):
     opts = "".join(f'<option value="{c} ({k})">{n}</option>' for c,k,n in AIRPORTS)
     flight = f"""<form class="fform" data-kind="flight" novalidate>
@@ -64,7 +121,7 @@ def flight_widget(root):
 <label class="fcell">Departure<input name="depart" type="date" required></label>
 <label class="fcell fret">Return<input name="ret" type="date"></label>
 <label class="fcell">Travellers &amp; class<span class="fpax">{_sel("adults","Adults",range(1,10),AD)}{_sel("children","Children",range(0,10),CH)}{_sel("infants","Infants",range(0,10),INF)}<select name="cabin" aria-label="Class"><option>Economy</option><option>Premium Economy</option><option>Business</option><option>First</option></select></span></label>
-</div><div class="flegs" hidden><span class="flh">Next flights in this trip</span><div class="flegrows"></div><button type="button" class="btn outline flegadd">➕ Add another flight</button></div><details class="fmore"><summary>➕ More options – airline, non-stop, meals &amp; special requests</summary><div class="fmoreg"><label class="fcell">Preferred airline<input name="airline" maxlength="60" placeholder="Any airline" autocomplete="off"></label><div class="cradd"><span>Preferences:</span><label><input type="checkbox" name="fpref" value="Non-stop flights only"> Non-stop only</label><label><input type="checkbox" name="fpref" value="Dates flexible (± 3 days)"> Dates flexible ± 3 days</label></div><div class="cradd"><span>Special requests:</span><label><input type="checkbox" name="fspec" value="Jain meal"> 🥗 Jain meal</label><label><input type="checkbox" name="fspec" value="Vegetarian meal"> 🥦 Veg meal</label><label><input type="checkbox" name="fspec" value="Wheelchair assistance"> ♿ Wheelchair</label><label><input type="checkbox" name="fspec" value="Extra baggage"> 🧳 Extra baggage</label><label><input type="checkbox" name="fspec" value="Senior citizen fare"> 👴 Senior citizen fare</label><label><input type="checkbox" name="fspec" value="Student fare"> 🎓 Student fare</label><label><input type="checkbox" name="fspec" value="Armed forces fare"> 🎖️ Armed forces fare</label></div></div></details>{_contact("Get Flight Quote", root)}</form>"""
+</div><div class="flegs" hidden><span class="flh">Next flights in this trip</span><div class="flegrows"></div><button type="button" class="btn outline flegadd">➕ Add another flight</button></div><details class="fmore"><summary>➕ More options – airline, non-stop, meals &amp; special requests</summary><div class="fmoreg"><label class="fcell">Preferred airline<input name="airline" maxlength="60" placeholder="Any airline" autocomplete="off"></label><div class="cradd"><span>Preferences:</span><label><input type="checkbox" name="fpref" value="Non-stop flights only"> Non-stop only</label><label><input type="checkbox" name="fpref" value="Dates flexible (± 3 days)"> Dates flexible ± 3 days</label></div><div class="cradd"><span>Special requests:</span><label><input type="checkbox" name="fspec" value="Jain meal"> 🥗 Jain meal</label><label><input type="checkbox" name="fspec" value="Vegetarian meal"> 🥦 Veg meal</label><label><input type="checkbox" name="fspec" value="Wheelchair assistance"> ♿ Wheelchair</label><label><input type="checkbox" name="fspec" value="Extra baggage"> 🧳 Extra baggage</label><label><input type="checkbox" name="fspec" value="Senior citizen fare"> 👴 Senior citizen fare</label><label><input type="checkbox" name="fspec" value="Student fare"> 🎓 Student fare</label><label><input type="checkbox" name="fspec" value="Armed forces fare"> 🎖️ Armed forces fare</label></div></div></details><div class="fsr"><button type="button" class="btn outline fshow">🔍 Show flights for this date</button><span class="fsrh">See the flights on your date, pick one and add baggage – we send the best fare with your quote.</span></div><div class="fres" hidden></div>{_contact("Get Flight Quote", root)}</form>"""
     hotel = f"""<form class="fform" data-kind="hotel" novalidate hidden>
 <div class="fgrid fg-h fmain">
 <label class="fcell">City, area or hotel name<input name="dest" required maxlength="80" placeholder="City or hotel" list="hcities" autocomplete="off"></label>
@@ -183,6 +240,7 @@ Object.entries(forms).forEach(([kind,f])=>f.addEventListener('submit',async e=>{
   table='flight_enquiries';ref='FL-'+id.slice(0,6).toUpperCase();
   row={{id,trip_type:t,airline_pref:air?air.slice(0,60):null,from_city:from.slice(0,80),to_city:to.slice(0,80),depart_date:f.depart.value||null,return_date:t==='Round trip'?f.ret.value:null,adults:ad,children:ch,infants:inf,cabin:f.cabin.value,full_name:name,notes:[...extra,notes].filter(Boolean).join(' | ').slice(0,1000)||null}};
   lines=['✈️ Flight quote request ('+ref+')',t+': '+from+' → '+to,'Depart: '+(f.depart.value?fd(f.depart.value):''),row.return_date?'Return: '+fd(row.return_date):'',pl(ad,'Adult','Adults')+(ch?', '+pl(ch,'Child','Children'):'')+(inf?', '+pl(inf,'Infant','Infants'):'')+' · '+f.cabin.value].concat(legs.map((l,i)=>'Flight '+(i+2)+': '+l.from+' → '+l.to+' · '+fd(l.date)),air?['Preferred airline: '+air]:[],prefs.length?['Preferences: '+prefs.join(', ')]:[],spec.length?['Special requests: '+spec.join(', ')]:[]);
+  const fsel=window.RTT_FSEL&&window.RTT_FSEL();if(fsel&&fsel.length){{lines.push('— Selected flight —',...fsel);row.notes=[fsel.join(' | '),row.notes].filter(Boolean).join(' | ').slice(0,1000);}}
  }}else if(kind==='hotel'){{
   const dest=f.dest.value.trim(),ci=f['in'].value,co=f.out.value,rooms=+f.rooms.value,ad=+f.adults.value,ch=+f.children.value;
   if(dest.length<2)err='Please enter the city, area or hotel name.';
@@ -258,7 +316,7 @@ Object.entries(forms).forEach(([kind,f])=>f.addEventListener('submit',async e=>{
   px.closest('form').addEventListener('reset',()=>setTimeout(draw,0));}});
 }})();
 }})();
-</script>"""
+</script><script>"""+FSEARCH_JS.replace("__SB__",SB_URL).replace("__KEY__",SB_KEY)+"""</script>"""
 
 FLIGHT_CSS = """
 .grp{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;margin-top:14px;padding:16px 18px;border:1px solid var(--line);border-left:4px solid var(--red);border-radius:14px;background:var(--bg)}
@@ -356,4 +414,22 @@ FLIGHT_CSS = """
 .fbar+.grp{margin-top:0!important}
 @media(max-width:1100px){.fgrid.fmain{grid-template-columns:1fr 36px 1fr!important}}
 @media(max-width:700px){.fgrid.fmain{grid-template-columns:1fr 1fr!important}.fbar .fgo{width:100%}}
+
+/* ===== flight list (schedules only, no fares) ===== */
+.fsr{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin:14px 0 4px}.fsr .fshow{font-weight:600}.fsrh{color:var(--muted);font-size:14px}
+.fres{margin:10px 0 14px;border:1px solid var(--line);border-radius:14px;padding:14px;background:#fafafa}
+.frh{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px}.frf{display:flex;flex-wrap:wrap;gap:6px}
+.frf button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;font:500 13px 'Jost',sans-serif;cursor:pointer;color:inherit}.frf button.on{border-color:var(--wine);color:var(--wine);background:#fbf3f4}
+.frn{color:var(--muted);font-size:14px;margin:8px 0}.frn.ferr{color:inherit}
+.frl{display:grid;gap:10px;max-height:560px;overflow:auto;padding-right:4px}
+.fo{position:relative;display:block;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 110px 12px 14px;cursor:pointer}
+.fo:hover{border-color:#c9a5a8}.fo.on{border-color:var(--wine);box-shadow:0 0 0 1px var(--wine)}.fo input{position:absolute;opacity:0;pointer-events:none}
+.fob{display:grid;grid-template-columns:1.4fr .7fr 1fr .7fr 1.3fr;align-items:center;gap:10px}.fob+.fob{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.fobl{grid-column:1/-1;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.foa b,.fot b{display:block;font:600 16px 'Jost',sans-serif}.foa small,.fot small,.fod small{display:block;color:var(--muted);font-size:12.5px}.fot b sup{color:var(--wine);font-size:11px;margin-left:2px}
+.fod{text-align:center}.fod i{display:block;height:1px;background:#cfcfcf;margin:4px 0}
+.fobag{font-size:12.5px;line-height:1.5}.fobag span{color:var(--muted)}
+.fopk{position:absolute;right:14px;top:50%;transform:translateY(-50%);border:1px solid var(--wine);color:var(--wine);border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600}.fo.on .fopk{background:var(--wine);color:#fff}
+.fsel{margin-top:12px;background:#fff;border:1px solid var(--wine);border-radius:12px;padding:12px 14px}.fsel p{margin:6px 0;font-size:14px;line-height:1.6}.fselg{border-top:0!important;padding-top:4px!important}
+@media(max-width:700px){.fo{padding:12px}.fob{grid-template-columns:1fr auto 1fr;gap:6px}.foa,.fobag{grid-column:1/-1}.fod{order:0}.fopk{position:static;transform:none;display:inline-block;margin-top:10px}}
 """
