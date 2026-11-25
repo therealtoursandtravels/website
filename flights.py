@@ -118,7 +118,7 @@ const AL={AI:'Air India',IX:'Air India Express','6E':'IndiGo',SG:'SpiceJet',QP:'
 const an=c=>AL[c]||c;
 const box=F.querySelector('.fres'),btn=F.querySelector('.fshow'),bar=btn.closest('.fsr');
 if(bar.hidden){fetch(SB+'/functions/v1/flight-search',{headers:{apikey:KEY,Authorization:'Bearer '+KEY}}).then(r=>r.ok?r.json():{}).then(j=>{if(j.ready)bar.hidden=false;}).catch(()=>{});}
-let legs=[],sel=[],flt=[],src='';
+let legs=[],sel=[],src='';
 const BAGS=['No extra baggage','+5 kg per person','+10 kg per person','+15 kg per person','+20 kg per person','+25 kg per person','+30 kg per person','1 extra bag (23 kg) per person'];
 const code=v=>{v=(v||'').trim();const m=v.match(/\(([A-Za-z]{3})\)\s*$/);if(m)return m[1].toUpperCase();if(/^[A-Za-z]{3}$/.test(v))return v.toUpperCase();const o=[...document.querySelectorAll('#fapts option')].find(o=>o.textContent.toLowerCase()===v.toLowerCase()||o.value.toLowerCase().startsWith(v.toLowerCase()+' ('));return o?(o.value.match(/\(([A-Z]{3})\)/)||[])[1]:'';};
 const tm=s=>s.slice(11,16);
@@ -126,6 +126,7 @@ const hr=s=>+s.slice(11,13);
 const dd=s=>{const d=new Date(s.slice(0,10)+'T00:00');return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'});};
 const plus=(a,b)=>{const n=Math.round((new Date(b.slice(0,10))-new Date(a.slice(0,10)))/864e5);return n>0?'<sup>+'+n+'</sup>':'';};
 const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pl=(n,w,p)=>n+' '+(n==1?w:p);
 const CAB={'Economy':'ECONOMY','Premium Economy':'PREMIUM_ECONOMY','Business':'BUSINESS','First':'FIRST'};
 const nm=f=>AL[f.airline]||f.airline_name||f.airline;
 const bagTxt=b=>b.baggage||(src==='timetable'?'Baggage allowance confirmed in your quote':'Check-in baggage: we will confirm');
@@ -134,27 +135,64 @@ function boundHtml(b,label){const f0=b.flights[0],fl=b.flights[b.flights.length-
  '<div class="fot"><b>'+tm(f0.departs)+'</b><small>'+esc(f0.from)+(f0.from_terminal?' · T'+esc(f0.from_terminal):'')+'</small></div><div class="fod"><small>'+esc(b.total||'&nbsp;')+'</small><i></i><small>'+(b.stops?b.stops+' stop'+(b.stops>1?'s':'')+' · '+esc(b.via.join(', ')):'Non-stop')+'</small></div><div class="fot"><b>'+tm(fl.arrives)+plus(f0.departs,fl.arrives)+'</b><small>'+esc(fl.to)+(fl.to_terminal?' · T'+esc(fl.to_terminal):'')+'</small></div>'+
  '<div class="fobag">🧳 '+esc(bagTxt(b))+'<br><span>👜 Cabin bag as per airline</span></div></div>';}
 function summary(o,label){return o.bounds.map((b,i)=>{const f0=b.flights[0],fl=b.flights[b.flights.length-1];return (label||(o.bounds.length>1?(i?'Return':'Onward'):''))+(label||o.bounds.length>1?': ':'')+[...new Set(b.flights.map(nm))].join(' + ')+' '+b.flights.map(x=>x.number).join(', ')+' · '+f0.from+' '+dd(f0.departs)+' '+tm(f0.departs)+' → '+fl.to+' '+tm(fl.arrives)+(dd(fl.arrives)!==dd(f0.departs)?' ('+dd(fl.arrives)+')':'')+' · '+(b.stops?b.stops+' stop'+(b.stops>1?'s':'')+' via '+b.via.join(', '):'non-stop')+(b.total?' · '+b.total:'')+(b.baggage?' · Included: '+b.baggage:'');});}
-const FL=[['all','All'],['nonstop','Non-stop'],['morning','Before 12 pm'],['afternoon','12–6 pm'],['evening','After 6 pm']];
-const pass=(o,f)=>{const h=hr(o.bounds[0].flights[0].departs);return !f||f==='all'||(f==='nonstop'?o.bounds.every(b=>!b.stops):f==='morning'?h<12:f==='afternoon'?h>=12&&h<18:h>=18);};
+const FL=[['early','🌅','Early morning','Before 6 am',h=>h<6],['morning','☀️','Morning','6 am – 12 pm',h=>h>=6&&h<12],['afternoon','🌤️','Afternoon','12 pm – 6 pm',h=>h>=12&&h<18],['night','🌙','Evening & night','After 6 pm',h=>h>=18]];
+const SORTS=[['dep','Earliest departure'],['late','Latest departure'],['dur','Shortest duration'],['arr','Earliest arrival']];
+let st=[];// per leg: {t:Set, a:Set, sort, n}
+const dep0=o=>o.bounds[0].flights[0].departs,arrL=o=>{const b=o.bounds[0];return b.flights[b.flights.length-1].arrives;};
+const mins=o=>o.bounds.reduce((s,b)=>s+(b.total_min||0),0);
+const pass=(o,s)=>{const h=hr(dep0(o));if(s.t.size&&!FL.some(f=>s.t.has(f[0])&&f[4](h)))return false;if(s.a.size&&!s.a.has(o.bounds[0].flights[0].airline))return false;return true;};
+const srt=(a,b,k)=>k==='late'?dep0(b).localeCompare(dep0(a)):k==='dur'?(mins(a)-mins(b))||dep0(a).localeCompare(dep0(b)):k==='arr'?arrL(a).localeCompare(arrL(b)):dep0(a).localeCompare(dep0(b));
 function legLabel(i){return legs.length>1?(i?'Return flight':'Onward flight'):'';}
+const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],MONS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const longd=s=>{const d=new Date(s.slice(0,10)+'T00:00');return DAYS[d.getDay()]+', '+d.getDate()+' '+MONS[d.getMonth()];};
+function logo(c,name){return '<span class="flogo"><em>'+esc(c)+'</em><img src="https://pics.avs.io/96/96/'+encodeURIComponent(c)+'.png" alt="" loading="lazy" onerror="this.remove()"></span>';}
+function card(o,i,k){const b=o.bounds[0],f0=b.flights[0],fl=b.flights[b.flights.length-1],name=[...new Set(b.flights.map(nm))].join(' + '),on=sel[i]===k;
+ const leg=x=>{const a=x.flights[0],z=x.flights[x.flights.length-1];return '<div class="fotimes"><div class="fot"><b>'+tm(a.departs)+'</b><small>'+esc(a.from)+(a.from_terminal?' · T'+esc(a.from_terminal):'')+'</small></div><div class="fod"><small>'+esc(x.total||'')+'</small><span class="fline"><i></i><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z" transform="rotate(90 12 12)"/></svg></span><small class="'+(x.stops?'fstop':'fns')+'">'+(x.stops?x.stops+' stop'+(x.stops>1?'s':'')+' · '+esc(x.via.join(', ')):'Non-stop')+'</small></div><div class="fot r"><b>'+tm(z.arrives)+plus(a.departs,z.arrives)+'</b><small>'+esc(z.to)+(z.to_terminal?' · T'+esc(z.to_terminal):'')+'</small></div></div>';};
+ return '<label class="fo'+(on?' on':'')+'"><input type="radio" name="fpick'+i+'" value="'+k+'"'+(on?' checked':'')+'>'+
+  '<div class="foal">'+logo(f0.airline,name)+'<div><b>'+esc(name)+'</b><small>'+esc(b.flights.map(x=>x.number).join(' · '))+(f0.aircraft?' · '+esc(f0.aircraft):'')+'</small></div></div>'+
+  '<div class="fomid">'+o.bounds.map((x,j)=>(o.bounds.length>1?'<span class="fobl">'+(j?'Return':'Onward')+'</span>':'')+leg(x)).join('')+'</div>'+
+  '<div class="foact"><span class="fopk">'+(on?'✓ Selected':'Select')+'</span></div>'+
+  (b.baggage?'<div class="fofoot"><span>🧳 Included: '+esc(b.baggage)+'</span><span>👜 Cabin bag as per airline</span></div>':'<div class="fofoot fofs"></div>')+'</label>';}
 function draw(){
- const allSel=legs.every((_,i)=>sel[i]!=null);
- box.innerHTML=legs.map((opts,i)=>{const f=flt[i]||'all',list=opts.filter(o=>pass(o,f));const airlines=[...new Set(opts.map(o=>nm(o.bounds[0].flights[0])))];
-  return '<div class="frleg" data-l="'+i+'"><div class="frh"><b>'+(legLabel(i)?legLabel(i)+' – ':'')+opts.length+' option'+(opts.length!==1?'s':'')+'</b><span class="frf">'+FL.filter(x=>src!=='timetable'||x[0]!=='nonstop').map(([k,t])=>'<button type="button" data-f="'+k+'" class="'+(f===k?'on':'')+'">'+t+'</button>').join('')+'</span></div>'+
-  (opts.length?'<p class="frn">Airlines: '+esc(airlines.join(', '))+'.</p><div class="frl">'+(list.length?list.map(o=>{const k=opts.indexOf(o);return '<label class="fo'+(sel[i]===k?' on':'')+'"><input type="radio" name="fpick'+i+'" value="'+k+'"'+(sel[i]===k?' checked':'')+'>'+o.bounds.map((b,j)=>boundHtml(b,o.bounds.length>1?(j?'Return':'Onward'):'')).join('')+'<span class="fopk">'+(sel[i]===k?'✓ Selected':'Select')+'</span></label>';}).join(''):'<p class="frn">No flights match this filter.</p>')+'</div>':'<p class="frn">No direct flights found for this date – we will check connecting flights for you in your quote.</p>')+'</div>';}).join('')+
- '<p class="frn">'+(src==='timetable'?'Showing direct (non-stop) flights. Need a connecting flight? Just mention it in Notes. ':'')+'Fares are not shown – select your flight'+(legs.length>1?'s':'')+' and press <b>Get Flight Quote</b>; we reply with the best fare.</p>'+
- (sel.some(x=>x!=null)?'<div class="fsel"><b>✓ Your selected flight'+(legs.length>1?'s':'')+'</b><p>'+legs.map((o,i)=>sel[i]!=null?summary(o[sel[i]],legLabel(i)).map(esc).join('<br>'):'').filter(Boolean).join('<br>')+'</p>'+(allSel?'':'<p class="frn">Please also select your '+(sel[0]==null?'onward':'return')+' flight.</p>')+'<div class="fgrid2 fselg"><label class="fcell">Extra check-in baggage<select class="fxbag">'+BAGS.map(b=>'<option>'+b+'</option>').join('')+'</select></label><label class="fcell">Seat preference<select class="fxseat"><option>No preference</option><option>Window</option><option>Aisle</option><option>Seats together (family)</option><option>Extra legroom</option></select></label><label class="fcell">Meal<select class="fxmeal"><option>As per airline</option><option>Jain meal</option><option>Vegetarian meal</option><option>Non-vegetarian meal</option><option>Child meal</option><option>Diabetic meal</option></select></label></div><p class="frn">Now add your name and mobile below and press <b>Get Flight Quote</b>.</p></div>':'');
- box.querySelectorAll('.frleg').forEach(L=>{const i=+L.dataset.l;L.querySelectorAll('.frf button').forEach(b=>b.onclick=()=>{flt[i]=b.dataset.f;keep(draw);});
-  L.querySelectorAll('input[type=radio]').forEach(r=>r.onchange=()=>{sel[i]=+r.value;keep(draw);const s=box.querySelector('.fsel');if(s&&legs.every((_,j)=>sel[j]!=null))s.scrollIntoView({behavior:'smooth',block:'center'});});});
+ const allSel=legs.every((_,i)=>sel[i]!=null),pax=+F.adults.value+ +F.children.value+ +F.infants.value;
+ const fr=code(F.from.value),to=code(F.to.value);
+ let h='<div class="frtop"><div class="frroute"><span><b>'+esc(fr)+'</b><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M4 12h15m-5-5 5 5-5 5"/></svg><b>'+esc(to)+'</b>'+(legs.length>1?'<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M4 12h15m-5-5 5 5-5 5"/></svg><b>'+esc(fr)+'</b>':'')+'</span><small>'+longd(F.depart.value)+(legs.length>1&&F.ret.value?' – '+longd(F.ret.value):'')+' · '+pl(pax,'Traveller','Travellers')+' · '+esc(F.cabin.value)+'</small></div><button type="button" class="frmod">✎ Modify search</button></div>'+
+ '<div class="frinfo"><span>ℹ️</span><p><b>Fares are not shown online.</b> Pick your flight'+(legs.length>1?'s':'')+' and we will send you the best fare on WhatsApp / email.'+(src==='timetable'?' Showing direct flights – need a connecting flight? Mention it in Notes. Baggage allowance is confirmed with your quote.':'')+'</p></div>';
+ h+=legs.map((opts,i)=>{const s=st[i];const list=opts.filter(o=>pass(o,s)).sort((a,b)=>srt(a,b,s.sort));const shown=list.slice(0,s.n);
+  const acount={};opts.forEach(o=>{const c=o.bounds[0].flights[0].airline;acount[c]=(acount[c]||0)+1;});
+  const anames={};opts.forEach(o=>{const f=o.bounds[0].flights[0];anames[f.airline]=nm(f);});
+  return '<div class="frleg" data-l="'+i+'">'+(legLabel(i)?'<div class="frlh"><span class="frstep">'+(i+1)+'</span><b>'+legLabel(i)+'</b><small>'+esc(i?to+' → '+fr:fr+' → '+to)+' · '+longd(i?F.ret.value:F.depart.value)+'</small>'+(sel[i]!=null?'<em>✓ Selected</em>':'')+'</div>':'')+
+  (opts.length?'<div class="frbar"><div class="frtime">'+FL.map(f=>{const c=opts.filter(o=>f[4](hr(dep0(o)))).length;return '<button type="button" data-t="'+f[0]+'" class="'+(s.t.has(f[0])?'on':'')+'"'+(c?'':' disabled')+'><span>'+f[1]+'</span><b>'+f[2]+'</b><small>'+f[3]+'</small></button>';}).join('')+'</div>'+
+   '<div class="fral"><span class="fralh">Airlines</span>'+Object.keys(acount).sort((a,b)=>acount[b]-acount[a]).map(c=>'<button type="button" data-a="'+esc(c)+'" class="'+(s.a.has(c)?'on':'')+'">'+logo(c,anames[c])+esc(anames[c])+' <small>'+acount[c]+'</small></button>').join('')+'</div>'+
+   '<div class="frsort"><span><b>'+list.length+'</b> flight'+(list.length!==1?'s':'')+(list.length!==opts.length?' of '+opts.length:'')+'</span><label>Sort by <select data-s>'+SORTS.map(([k,t])=>'<option value="'+k+'"'+(s.sort===k?' selected':'')+'>'+t+'</option>').join('')+'</select></label>'+(s.t.size||s.a.size?'<button type="button" class="frclr">Clear filters</button>':'')+'</div></div>'+
+   '<div class="frl">'+(shown.length?shown.map(o=>card(o,i,opts.indexOf(o))).join(''):'<p class="frempty">No flights match these filters. <button type="button" class="frclr">Clear filters</button></p>')+'</div>'+
+   (list.length>shown.length?'<button type="button" class="frmore">Show '+Math.min(10,list.length-shown.length)+' more flights <small>('+(list.length-shown.length)+' left)</small></button>':'')
+  :'<p class="frempty">No direct flights found for this date. Press <b>Get Flight Quote</b> – we will check connecting flights for you.</p>')+'</div>';}).join('');
+ if(sel.some(x=>x!=null))h+='<div class="fsel"><div class="fselh"><span class="frstep">✓</span><div><b>Your selected flight'+(legs.length>1?'s':'')+'</b><small>Add baggage and preferences, then send your quote request</small></div></div>'+
+  legs.map((o,i)=>sel[i]!=null?'<div class="fselc">'+summary(o[sel[i]],legLabel(i)).map(esc).join('<br>')+'</div>':'').join('')+
+  (allSel?'':'<p class="frwarn">Please also select your '+(sel[0]==null?'onward':'return')+' flight above.</p>')+
+  '<div class="fselg"><label>🧳 Extra check-in baggage<select class="fxbag">'+BAGS.map(b=>'<option>'+b+'</option>').join('')+'</select></label><label>💺 Seat preference<select class="fxseat"><option>No preference</option><option>Window</option><option>Aisle</option><option>Seats together (family)</option><option>Extra legroom</option></select></label><label>🍽️ Meal<select class="fxmeal"><option>As per airline</option><option>Jain meal</option><option>Vegetarian meal</option><option>Non-vegetarian meal</option><option>Child meal</option><option>Diabetic meal</option></select></label></div>'+
+  '<button type="button" class="btn gold frgo">Continue – enter your contact details ↓</button></div>';
+ box.innerHTML=h;
+ box.querySelector('.frmod').onclick=()=>{const y=F.getBoundingClientRect().top+scrollY-(document.querySelector('header.site')?.offsetHeight||0)-12;scrollTo({top:y,behavior:'smooth'});};
+ box.querySelectorAll('.frleg').forEach(L=>{const i=+L.dataset.l,s=st[i];
+  L.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{s.t.has(b.dataset.t)?s.t.delete(b.dataset.t):s.t.add(b.dataset.t);s.n=10;keep(draw);});
+  L.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{s.a.has(b.dataset.a)?s.a.delete(b.dataset.a):s.a.add(b.dataset.a);s.n=10;keep(draw);});
+  const so=L.querySelector('[data-s]');if(so)so.onchange=()=>{s.sort=so.value;keep(draw);};
+  L.querySelectorAll('.frclr').forEach(b=>b.onclick=()=>{s.t.clear();s.a.clear();s.n=10;keep(draw);});
+  const mo=L.querySelector('.frmore');if(mo)mo.onclick=()=>{s.n+=10;keep(draw);};
+  L.querySelectorAll('input[type=radio]').forEach(r=>r.onchange=()=>{sel[i]=+r.value;keep(draw);
+   const next=legs.findIndex((_,j)=>sel[j]==null);const tgt=next>=0?box.querySelector('.frleg[data-l="'+next+'"]'):box.querySelector('.fsel');if(tgt)tgt.scrollIntoView({behavior:'smooth',block:'start'});});});
+ const go=box.querySelector('.frgo');if(go)go.onclick=()=>{const c=F.querySelector('.fgrid2:not(.fselg)')||F.contact;c.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>{(F.name.value?F.contact:F.name).focus({preventScroll:true});},450);};
 }
 function keep(fn){const g=c=>{const x=box.querySelector(c);return x?x.value:null;};const v=[g('.fxbag'),g('.fxseat'),g('.fxmeal')];fn();[['.fxbag',v[0]],['.fxseat',v[1]],['.fxmeal',v[2]]].forEach(([c,x])=>{const e=box.querySelector(c);if(e&&x)e.value=x;});}
 window.RTT_FSEL=()=>{if(!legs.length||!sel.some(x=>x!=null))return null;const g=c=>{const x=box.querySelector(c);return x?x.value:'';};const out=[];legs.forEach((o,i)=>{if(sel[i]!=null)out.push(...summary(o[sel[i]],legLabel(i)));});const xb=g('.fxbag'),st=g('.fxseat'),ml=g('.fxmeal');if(xb&&xb!==BAGS[0])out.push('Extra baggage: '+xb);if(st&&st!=='No preference')out.push('Seat: '+st);if(ml&&ml!=='As per airline')out.push('Meal: '+ml);return out;};
-function reset(){if(legs.length){legs=[];sel=[];flt=[];box.hidden=true;box.innerHTML='';}}
+function reset(){if(legs.length){legs=[];sel=[];st=[];box.hidden=true;box.innerHTML='';}}
 ['from','to','depart','ret','adults','children','infants','cabin'].forEach(n=>F[n]&&F[n].addEventListener('change',reset));
 F.querySelectorAll('input[name=ftrip]').forEach(r=>r.addEventListener('change',reset));
 btn.addEventListener('click',async()=>{
  const t=F.querySelector('input[name=ftrip]:checked').value,msg=F.querySelector('.fmsg');msg.className='fmsg vmsg';msg.textContent='';
- const show=e=>{box.hidden=false;box.innerHTML='<p class="frn ferr">'+e+'</p>';};
+ const show=e=>{box.hidden=false;box.innerHTML='<div class="frinfo"><span>ℹ️</span><p>'+e+'</p></div>';};
  if(t==='Multi-city')return show('For multi-city trips, fill in all your flights and press <b>Get Flight Quote</b> – we will send the best routing and fare.');
  const fr=code(F.from.value),to=code(F.to.value);
  if(!fr||!to)return show('Please choose the From and To cities from the list (e.g. Mumbai (BOM)) to see flights.');
@@ -163,11 +201,11 @@ btn.addEventListener('click',async()=>{
  if(t==='Round trip'&&!F.ret.value)return show('Please choose your return date.');
  if(t==='Round trip'&&F.ret.value<F.depart.value)return show('Return date must be after the departure date.');
  if(+F.infants.value>+F.adults.value)return show('Each infant must travel with an adult.');
- btn.disabled=true;box.hidden=false;box.innerHTML='<p class="frn">⏳ Checking flights with all airlines… this can take up to 20 seconds.</p>';
+ btn.disabled=true;box.hidden=false;box.innerHTML='<div class="frload"><div class="frlt"><span class="frspin"></span><b>Finding flights '+esc(fr)+' → '+esc(to)+'</b><small>Checking all airlines – this takes a few seconds</small></div>'+'<div class="fsk"><i></i><i></i><i></i></div>'.repeat(3)+'</div>';box.scrollIntoView({behavior:'smooth',block:'start'});
  try{const r=await fetch(SB+'/functions/v1/flight-search',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+KEY,'Content-Type':'application/json'},body:JSON.stringify({from:fr,to,depart:F.depart.value,ret:t==='Round trip'?F.ret.value:'',adults:+F.adults.value,children:+F.children.value,infants:+F.infants.value,cabin:CAB[F.cabin.value]||'ECONOMY',nonstop:!!F.querySelector('input[name=fpref][value="Non-stop flights only"]:checked')})});
   const j=await r.json().catch(()=>({}));
   if(!r.ok)throw j.error||r.status;
-  src=j.source||'';legs=j.legs||[];sel=legs.map(()=>null);flt=legs.map(()=>'all');
+  src=j.source||'';legs=j.legs||[];sel=legs.map(()=>null);st=legs.map(()=>({t:new Set(),a:new Set(),sort:'dep',n:10}));
   if(!legs.length||legs.every(l=>!l.length))show('We could not load flights for this date online. Just press <b>Get Flight Quote</b> – our team will check all airlines and send you the options.');else draw();
  }catch(e){show('Live flight list is not available right now. Just press <b>Get Flight Quote</b> – our team will check all airlines and send you the options.');}
  btn.disabled=false;
@@ -483,25 +521,58 @@ FLIGHT_CSS = """
 @media(max-width:1100px){.fgrid.fmain{grid-template-columns:1fr 36px 1fr!important}}
 @media(max-width:700px){.fgrid.fmain{grid-template-columns:1fr 1fr!important}.fbar .fgo{width:100%}}
 
-/* ===== flight list (schedules only, no fares) ===== */
-.frleg+.frleg{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+/* ===== flight results (schedules only, no fares) ===== */
 .fsr[hidden]{display:none}.fsr{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin:14px 0 4px}.fsr .fshow{font-weight:600}.fsrh{color:var(--muted);font-size:14px}
-.fres{margin:10px 0 14px;border:1px solid var(--line);border-radius:14px;padding:14px;background:#fafafa}
-.frh{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px}.frf{display:flex;flex-wrap:wrap;gap:6px}
-.frf button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;font:500 13px 'Jost',sans-serif;cursor:pointer;color:inherit}.frf button.on{border-color:var(--wine);color:var(--wine);background:#fbf3f4}
-.frn{color:var(--muted);font-size:14px;margin:8px 0}.frn.ferr{color:inherit}
-.frl{display:grid;gap:10px;max-height:560px;overflow:auto;padding-right:4px}
-.fo{position:relative;display:block;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 110px 12px 14px;cursor:pointer}
-.fo:hover{border-color:#c9a5a8}.fo.on{border-color:var(--wine);box-shadow:0 0 0 1px var(--wine)}.fo input{position:absolute;opacity:0;pointer-events:none}
-.fob{display:grid;grid-template-columns:1.4fr .7fr 1fr .7fr 1.3fr;align-items:center;gap:10px}.fob+.fob{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
-.fobl{grid-column:1/-1;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
-.foa b,.fot b{display:block;font:600 16px 'Jost',sans-serif}.foa small,.fot small,.fod small{display:block;color:var(--muted);font-size:12.5px}.fot b sup{color:var(--wine);font-size:11px;margin-left:2px}
-.fod{text-align:center}.fod i{display:block;height:1px;background:#cfcfcf;margin:4px 0}
-.fobag{font-size:12.5px;line-height:1.5}.fobag span{color:var(--muted)}
-.fopk{position:absolute;right:14px;top:50%;transform:translateY(-50%);border:1px solid var(--wine);color:var(--wine);border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600}.fo.on .fopk{background:var(--wine);color:#fff}
-.fsel{margin-top:12px;background:#fff;border:1px solid var(--wine);border-radius:12px;padding:12px 14px}.fsel p{margin:6px 0;font-size:14px;line-height:1.6}.fselg{border-top:0!important;padding-top:4px!important}
-@media(max-width:700px){.fo{padding:12px}.fob{grid-template-columns:1fr auto 1fr;gap:6px}.foa,.fobag{grid-column:1/-1}.fod{order:0}.fopk{position:static;transform:none;display:inline-block;margin-top:10px}}
-
+.fres{margin:14px 0 18px;scroll-margin-top:90px}
+.frtop{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 18px}
+.frroute span{display:flex;align-items:center;gap:8px;font:600 22px 'Jost',sans-serif;color:var(--ink)}.frroute svg{color:var(--muted)}.frroute small{display:block;color:var(--muted);font-size:14px;margin-top:2px}
+.frmod{background:none;border:1px solid var(--line);border-radius:999px;padding:8px 16px;font:500 14px 'Jost',sans-serif;color:var(--ink);cursor:pointer}.frmod:hover{border-color:var(--ink)}
+.frinfo{display:flex;gap:10px;align-items:flex-start;background:#f6f7f8;border-radius:12px;padding:10px 14px;margin:10px 0 4px;font-size:14px;color:#444}.frinfo p{margin:0;line-height:1.55}.frinfo span{flex:none}
+.frleg{margin-top:16px}.frleg+.frleg{margin-top:26px;padding-top:20px;border-top:1px solid var(--line)}
+.frlh{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}.frlh b{font:600 18px 'Jost',sans-serif}.frlh small{color:var(--muted);font-size:14px}.frlh em{font-style:normal;font-size:13px;font-weight:600;color:#2e7d5b;background:#eaf5ef;border-radius:999px;padding:3px 10px}
+.frstep{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--ink);color:#fff;font:600 14px 'Jost',sans-serif;flex:none}
+.frbar{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;display:grid;gap:12px}
+.frtime{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.frtime button{border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 6px;cursor:pointer;text-align:center;font:inherit;color:var(--ink);transition:border-color .15s,background .15s}
+.frtime button span{display:block;font-size:18px;line-height:1.2}.frtime button b{display:block;font:600 13.5px 'Jost',sans-serif}.frtime button small{display:block;color:var(--muted);font-size:11.5px}
+.frtime button:hover:not(:disabled){border-color:#bdbdbd}.frtime button.on{border-color:var(--red);background:#fdf3f3}.frtime button:disabled{opacity:.4;cursor:default}
+.fral{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;align-items:center;scrollbar-width:thin}.fralh{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);flex:none;margin-right:2px}
+.fral button{flex:none;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 12px 4px 4px;font:500 13.5px 'Jost',sans-serif;color:var(--ink);cursor:pointer;white-space:nowrap}
+.fral button small{color:var(--muted);font-size:12px}.fral button.on{border-color:var(--red);background:#fdf3f3}.fral .flogo{width:24px;height:24px;border-radius:50%}
+.frsort{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:14px;color:var(--muted);border-top:1px solid #f0f0f0;padding-top:10px}.frsort>span b{color:var(--ink)}
+.frsort label{margin-left:auto;display:flex;align-items:center;gap:6px}.frsort select{border:1px solid var(--line);border-radius:8px;padding:6px 8px;font:500 14px 'Jost',sans-serif;background:#fff;color:var(--ink)}
+.frclr{background:none;border:0;color:var(--red);font:500 14px 'Jost',sans-serif;cursor:pointer;text-decoration:underline;padding:0}
+.frl{display:grid;gap:12px;margin-top:12px}
+.flogo{position:relative;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;background:#f4f4f4;border:1px solid #eee;overflow:hidden;flex:none}
+.flogo em{font-style:normal;font:600 13px 'Jost',sans-serif;color:#555}.flogo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.flogo img[src]:not([complete]){background:transparent}
+.fo{position:relative;display:grid;grid-template-columns:minmax(170px,1.1fr) 2fr auto;align-items:center;gap:8px 18px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px 0;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.fo:hover{border-color:#c8c8c8;box-shadow:0 6px 18px rgba(0,0,0,.06)}.fo.on{border-color:var(--red);box-shadow:0 0 0 1px var(--red),0 6px 18px rgba(215,25,31,.08)}
+.fo input{position:absolute;opacity:0;pointer-events:none}
+.foal{display:flex;align-items:center;gap:12px;min-width:0}.foal b{display:block;font:600 16px 'Jost',sans-serif;color:var(--ink)}.foal small{display:block;color:var(--muted);font-size:12.5px;line-height:1.4}
+.fomid{display:grid;gap:10px}.fobl{font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.fotimes{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px}
+.fot b{display:block;font:600 22px/1.1 'Jost',sans-serif;color:var(--ink)}.fot b sup{color:var(--red);font-size:11px;margin-left:2px;font-weight:600}.fot small{display:block;color:var(--muted);font-size:13px;margin-top:3px}.fot.r{text-align:right}
+.fod{text-align:center;min-width:90px}.fod small{display:block;font-size:12.5px;color:var(--muted)}
+.fline{display:flex;align-items:center;gap:4px;margin:3px 0;color:#9a9a9a}.fline i{flex:1;height:0;border-top:1.5px dashed #cfcfcf}.fline svg{flex:none}
+.fod .fns{color:#2e7d5b;font-weight:600}.fod .fstop{color:#a0522d;font-weight:600}
+.foact{justify-self:end;min-width:118px;text-align:right}.fopk{display:inline-block;border:1.5px solid var(--ink);color:var(--ink);border-radius:10px;padding:9px 20px;font:600 14px 'Jost',sans-serif;white-space:nowrap}
+.fo:hover .fopk{background:#f5f5f5}.fo.on .fopk{background:var(--red);border-color:var(--red);color:#fff}
+.fofoot.fofs{padding:0;border:0;margin-top:8px;background:none}.fofoot{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px 18px;border-top:1px dashed #ececec;margin:6px -18px 0;padding:9px 18px;font-size:12.5px;color:#666;background:#fafafa;border-radius:0 0 16px 16px}
+.frmore{display:block;margin:14px auto 0;background:#fff;border:1px solid var(--line);border-radius:999px;padding:10px 22px;font:600 14px 'Jost',sans-serif;color:var(--ink);cursor:pointer}.frmore:hover{border-color:var(--ink)}.frmore small{color:var(--muted);font-weight:500}
+.frempty{background:#fff;border:1px dashed var(--line);border-radius:14px;padding:18px;text-align:center;color:var(--muted);margin:12px 0 0}
+.fsel{margin-top:22px;background:#fff;border:1.5px solid var(--red);border-radius:16px;padding:16px 18px;scroll-margin-top:90px}
+.fselh{display:flex;align-items:center;gap:12px;margin-bottom:10px}.fselh .frstep{background:var(--red)}.fselh b{display:block;font:600 18px 'Jost',sans-serif}.fselh small{display:block;color:var(--muted);font-size:13.5px}
+.fselc{background:#f7f7f7;border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.6;margin-bottom:8px}
+.frwarn{color:var(--red);font-size:14px;margin:6px 0}
+.fselg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}.fselg label{display:grid;gap:5px;font-size:13px;color:var(--muted)}
+.fselg select{border:1px solid var(--line);border-radius:10px;padding:10px;font:500 15px 'Jost',sans-serif;background:#fff;color:var(--ink)}
+.frgo{width:100%;height:48px;border-radius:12px;font:600 16px 'Jost',sans-serif}
+.frload{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}.frlt{display:grid;grid-template-columns:auto 1fr;gap:0 12px;align-items:center;margin-bottom:12px}.frlt b{font:600 16px 'Jost',sans-serif}.frlt small{grid-column:2;color:var(--muted);font-size:13px}
+.frspin{grid-row:span 2;width:26px;height:26px;border-radius:50%;border:3px solid #eee;border-top-color:var(--red);animation:frspin .8s linear infinite}@keyframes frspin{to{transform:rotate(360deg)}}
+.fsk{display:grid;grid-template-columns:44px 1fr 90px;gap:16px;align-items:center;padding:16px 0;border-top:1px solid #f2f2f2}.fsk i{display:block;height:14px;border-radius:7px;background:linear-gradient(90deg,#f1f1f1 25%,#e6e6e6 50%,#f1f1f1 75%);background-size:200% 100%;animation:frsh 1.2s infinite}.fsk i:first-child{height:44px;border-radius:12px}.fsk i:last-child{height:34px;border-radius:10px}
+@keyframes frsh{to{background-position:-200% 0}}
+@media(max-width:800px){.fo{grid-template-columns:1fr auto;padding:14px 14px 0}.fomid{grid-column:1/-1;order:3}.foact{order:2}.fofoot{order:4;margin:6px -14px 0;padding:9px 14px}.fot b{font-size:20px}
+ .frtime{grid-template-columns:repeat(4,1fr);gap:6px}.frtime button{padding:6px 2px}.frtime button small{display:none}.frtime button b{font-size:12px;line-height:1.2}.fselg{grid-template-columns:1fr}.frroute span{font-size:19px}.frsort label{margin-left:0}}
 /* ===== airport picker ===== */
 .fbar form[data-kind=flight] .fcell{position:relative}
 .fac{position:absolute;left:-1px;right:-1px;top:calc(100% + 4px);z-index:60;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 28px rgba(0,0,0,.12);max-height:340px;overflow:auto;padding:4px;min-width:260px;text-transform:none;letter-spacing:0}
