@@ -95,7 +95,7 @@ SERVICES = [
   h1="Travel Insurance for Every Trip",
   desc="Overseas and domestic travel insurance for families, seniors and students – medical cover, trip cancellation, lost baggage and Schengen-compliant policies. Arranged by The Real Tours and Travels.",
   intro="A medical emergency or lost baggage abroad can be expensive and stressful. The right travel insurance protects your family and your holiday. We help you choose a suitable policy and issue it quickly.",
-  points=["Overseas medical and hospitalisation cover","Trip cancellation, delay and missed connection","Loss of baggage and passport","Senior citizen and family floater policies","0% GST on individual and family travel insurance","24 x 7 claim assistance","Schengen-compliant policies for visa applications","Student and multi-trip annual policies"],
+  points=["Overseas medical and hospitalisation cover","Trip cancellation, delay and missed connection","Loss of baggage and passport","Senior citizen and family floater policies","<b>0% GST</b> on individual and family travel insurance","24 x 7 claim assistance","Schengen-compliant policies for visa applications","Student and multi-trip annual policies"],
   why="We explain what is and isn't covered in simple language, so you can choose with confidence.",
   faqs=[("Is travel insurance compulsory?","It is mandatory for Schengen visas and some other countries, and strongly recommended for every international trip."),
         ("Can senior citizens get travel insurance?","Yes, there are policies designed for senior travellers. We will help you find suitable cover."),
@@ -596,7 +596,7 @@ def build():
 <section class="hero"{hs}><div class="wrap"><div>
 <div class="crumbs"><a href="../">Home</a> › {s['short']}</div>
 <span class="kicker">{s['icon']} {s['short']}</span>
-<h1>{s['h1']}</h1><p>{s['intro']}</p>
+<h1>{s['h1']}</h1>{'<div class="inshl"><div><b>0% GST</b><span>on individual &amp; family travel insurance</span></div><div><b>24 x 7</b><span>Claim assistance</span></div></div>' if s['slug']=='travel-insurance' else ''}<p>{s['intro']}</p>
 <div class="btns">{'<a class="btn gold" href="#enquire">📝 Send an enquiry</a>' if s['slug'] in SVC_SLUGS else ''}{'<a class="btn gold" href="../visa/">📄 Visa documents &amp; upload</a><a class="btn outline" href="../passport/">🛂 Passport services</a>' if s['slug']=='passport-visa-services' else ('<a class="btn gold" href="../insurance/#ins-form">🛡️ Get insurance quotation</a>' if s['slug']=='travel-insurance' else '')}<a class="btn gold" href="{WA}" target="_blank" rel="noopener">💬 Get a free plan on WhatsApp</a><a class="btn ghost" href="tel:{PHONE_RAW}">📞 98431 21212</a></div>
 </div>{seal("../")}</div>{RIDGE}</section>
 <section><div class="wrap two"><div><h2>What we offer</h2><ul class="ticks">{pts}</ul></div>
