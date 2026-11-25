@@ -9,6 +9,9 @@ const KEY = Deno.env.get("AMADEUS_API_KEY") ?? "";
 // AeroDataBox (RapidAPI) – airport timetable, direct flights only, no baggage data
 const ADB_KEY = Deno.env.get("AERODATABOX_API_KEY") ?? "";
 const ADB_HOST = Deno.env.get("AERODATABOX_HOST") ?? "aerodatabox.p.rapidapi.com";
+// AeroDataBox via API.Market (alternative marketplace)
+const ADB_AM_KEY = Deno.env.get("AERODATABOX_APIMARKET_KEY") ?? "";
+const ADB_AM_BASE = "https://prod.api.market/api/v1/aedbx/aerodatabox";
 const ALLOWED = ["https://www.therealtoursandtravels.com", "https://therealtoursandtravels.com"];
 
 function cors(origin: string | null) {
@@ -51,8 +54,10 @@ function iso(local: string): string {
 }
 
 async function adbWindow(from: string, a: string, b: string): Promise<any[]> {
-  const url = `https://${ADB_HOST}/flights/airports/iata/${from}/${a}/${b}?direction=Departure&withLeg=true&withCancelled=false&withCodeshared=false&withCargo=false&withPrivate=false&withLocation=false`;
-  const r = await fetch(url, { headers: { "X-RapidAPI-Key": ADB_KEY, "X-RapidAPI-Host": ADB_HOST, Accept: "application/json" } });
+  const path = `/flights/airports/iata/${from}/${a}/${b}?direction=Departure&withLeg=true&withCancelled=false&withCodeshared=false&withCargo=false&withPrivate=false&withLocation=false`;
+  const r = ADB_KEY
+    ? await fetch(`https://${ADB_HOST}${path}`, { headers: { "X-RapidAPI-Key": ADB_KEY, "X-RapidAPI-Host": ADB_HOST, Accept: "application/json" } })
+    : await fetch(`${ADB_AM_BASE}${path}`, { headers: { "x-api-market-key": ADB_AM_KEY, Accept: "application/json" } });
   if (r.status === 204) return [];
   if (!r.ok) throw new Error(`ADB ${r.status} ${(await r.text()).slice(0, 300)}`);
   const j = await r.json();
@@ -104,9 +109,9 @@ Deno.serve(async (req) => {
   const h = { ...cors(req.headers.get("origin")), "Content-Type": "application/json" };
   if (req.method === "OPTIONS") return new Response("ok", { headers: h });
   // quick readiness check used by the website to decide whether to show the "Show flights" button
-  if (req.method === "GET") return new Response(JSON.stringify({ ready: !!(KEY || ADB_KEY) }), { headers: { ...h, "Cache-Control": "max-age=300" } });
+  if (req.method === "GET") return new Response(JSON.stringify({ ready: !!(KEY || ADB_KEY || ADB_AM_KEY) }), { headers: { ...h, "Cache-Control": "max-age=300" } });
   if (req.method !== "POST") return new Response(JSON.stringify({ error: "POST only" }), { status: 405, headers: h });
-  if (!KEY && !ADB_KEY) return new Response(JSON.stringify({ error: "not_configured" }), { status: 503, headers: h });
+  if (!KEY && !ADB_KEY && !ADB_AM_KEY) return new Response(JSON.stringify({ error: "not_configured" }), { status: 503, headers: h });
 
   let p: Record<string, unknown>;
   try { p = await req.json(); } catch { return new Response(JSON.stringify({ error: "bad_json" }), { status: 400, headers: h }); }
