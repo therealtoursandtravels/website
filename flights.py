@@ -59,32 +59,40 @@ const F=document.querySelector('#flight-search form[data-kind=flight]');if(!F)re
 const SB='__SB__',KEY='__KEY__';
 const AL={AI:'Air India',IX:'Air India Express','6E':'IndiGo',SG:'SpiceJet',QP:'Akasa Air',UK:'Vistara',I5:'AIX Connect','9I':'Alliance Air',S5:'Star Air',EK:'Emirates',EY:'Etihad Airways',QR:'Qatar Airways',FZ:'flydubai',G9:'Air Arabia',WY:'Oman Air',GF:'Gulf Air',KU:'Kuwait Airways',SV:'Saudia',XY:'flynas',J9:'Jazeera Airways',SQ:'Singapore Airlines',TR:'Scoot',TG:'Thai Airways',FD:'Thai AirAsia',AK:'AirAsia',D7:'AirAsia X',MH:'Malaysia Airlines',OD:'Batik Air',VN:'Vietnam Airlines',VJ:'VietJet Air',GA:'Garuda Indonesia',CX:'Cathay Pacific',UL:'SriLankan Airlines',KB:'Druk Air',RA:'Nepal Airlines',BG:'Biman',MU:'China Eastern',CA:'Air China',CZ:'China Southern',JL:'Japan Airlines',NH:'ANA',KE:'Korean Air',OZ:'Asiana',QF:'Qantas',VA:'Virgin Australia',NZ:'Air New Zealand',BA:'British Airways',VS:'Virgin Atlantic',LH:'Lufthansa',LX:'SWISS',OS:'Austrian',AF:'Air France',KL:'KLM',AZ:'ITA Airways',IB:'Iberia',TK:'Turkish Airlines',PC:'Pegasus',SU:'Aeroflot',AA:'American Airlines',UA:'United Airlines',DL:'Delta',AC:'Air Canada',ET:'Ethiopian Airlines',KQ:'Kenya Airways',MS:'EgyptAir',SA:'South African Airways',MK:'Air Mauritius',HY:'Uzbekistan Airways',KC:'Air Astana',J2:'Azerbaijan Airlines',LO:'LOT',SK:'SAS',AY:'Finnair',EI:'Aer Lingus',TP:'TAP Portugal'};
 const an=c=>AL[c]||c;
-const box=F.querySelector('.fres'),btn=F.querySelector('.fshow');if(btn.closest('.fsr').hidden)return;
-let opts=[],sel=null;
+const box=F.querySelector('.fres'),btn=F.querySelector('.fshow'),bar=btn.closest('.fsr');
+if(bar.hidden){fetch(SB+'/functions/v1/flight-search',{headers:{apikey:KEY,Authorization:'Bearer '+KEY}}).then(r=>r.ok?r.json():{}).then(j=>{if(j.ready)bar.hidden=false;}).catch(()=>{});}
+let legs=[],sel=[],flt=[],src='';
+const BAGS=['No extra baggage','+5 kg per person','+10 kg per person','+15 kg per person','+20 kg per person','+25 kg per person','+30 kg per person','1 extra bag (23 kg) per person'];
 const code=v=>{v=(v||'').trim();const m=v.match(/\(([A-Za-z]{3})\)\s*$/);if(m)return m[1].toUpperCase();if(/^[A-Za-z]{3}$/.test(v))return v.toUpperCase();const o=[...document.querySelectorAll('#fapts option')].find(o=>o.textContent.toLowerCase()===v.toLowerCase()||o.value.toLowerCase().startsWith(v.toLowerCase()+' ('));return o?(o.value.match(/\(([A-Z]{3})\)/)||[])[1]:'';};
 const tm=s=>s.slice(11,16);
+const hr=s=>+s.slice(11,13);
 const dd=s=>{const d=new Date(s.slice(0,10)+'T00:00');return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'});};
 const plus=(a,b)=>{const n=Math.round((new Date(b.slice(0,10))-new Date(a.slice(0,10)))/864e5);return n>0?'<sup>+'+n+'</sup>':'';};
 const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const CAB={'Economy':'ECONOMY','Premium Economy':'PREMIUM_ECONOMY','Business':'BUSINESS','First':'FIRST'};
-function boundHtml(b,label){const f0=b.flights[0],fl=b.flights[b.flights.length-1];const als=[...new Set(b.flights.map(x=>x.airline))];
- return '<div class="fob">'+(label?'<span class="fobl">'+label+'</span>':'')+'<div class="foa"><b>'+esc(als.map(an).join(' + '))+'</b><small>'+esc(b.flights.map(x=>x.number).join(', '))+'</small></div>'+
- '<div class="fot"><b>'+tm(f0.departs)+'</b><small>'+esc(f0.from)+'</small></div><div class="fod"><small>'+esc(b.total)+'</small><i></i><small>'+(b.stops?b.stops+' stop'+(b.stops>1?'s':'')+' · '+esc(b.via.join(', ')):'Non-stop')+'</small></div><div class="fot"><b>'+tm(fl.arrives)+plus(f0.departs,fl.arrives)+'</b><small>'+esc(fl.to)+'</small></div>'+
- '<div class="fobag">🧳 '+esc(b.baggage||'Check-in baggage: we will confirm')+'<br><span>👜 Cabin bag as per airline</span></div></div>';}
-function summary(o){return o.bounds.map((b,i)=>{const f0=b.flights[0],fl=b.flights[b.flights.length-1];return (o.bounds.length>1?(i?'Return':'Onward')+': ':'')+[...new Set(b.flights.map(x=>an(x.airline)))].join(' + ')+' '+b.flights.map(x=>x.number).join(', ')+' · '+f0.from+' '+dd(f0.departs)+' '+tm(f0.departs)+' → '+fl.to+' '+tm(fl.arrives)+(dd(fl.arrives)!==dd(f0.departs)?' ('+dd(fl.arrives)+')':'')+' · '+(b.stops?b.stops+' stop'+(b.stops>1?'s':'')+' via '+b.via.join(', '):'non-stop')+' · '+b.total+(b.baggage?' · Included: '+b.baggage:'');});}
-const BAGS=['No extra baggage','+5 kg per person','+10 kg per person','+15 kg per person','+20 kg per person','+25 kg per person','+30 kg per person','1 extra bag (23 kg) per person'];
-function draw(filter){
- const list=opts.filter(o=>!filter||filter==='all'||(filter==='nonstop'?o.bounds.every(b=>!b.stops):filter==='morning'?+tm(o.bounds[0].flights[0].departs).slice(0,2)<12:filter==='afternoon'?(h=>h>=12&&h<18)(+tm(o.bounds[0].flights[0].departs).slice(0,2)):+tm(o.bounds[0].flights[0].departs).slice(0,2)>=18));
- const airlines=[...new Set(opts.map(o=>o.bounds[0].flights[0].airline))];
- box.innerHTML='<div class="frh"><b>'+opts.length+' flight option'+(opts.length>1?'s':'')+' found</b><span class="frf">'+[['all','All'],['nonstop','Non-stop'],['morning','Before 12 pm'],['afternoon','12–6 pm'],['evening','After 6 pm']].map(([k,t])=>'<button type="button" data-f="'+k+'" class="'+((filter||'all')===k?'on':'')+'">'+t+'</button>').join('')+'</span></div>'+
- '<p class="frn">Airlines: '+esc(airlines.map(an).join(', '))+'. Fares are not shown – select a flight and press <b>Get Flight Quote</b>; we reply with the best fare.</p>'+
- '<div class="frl">'+(list.length?list.map(o=>{const i=opts.indexOf(o);return '<label class="fo'+(sel===i?' on':'')+'"><input type="radio" name="fpick" value="'+i+'"'+(sel===i?' checked':'')+'>'+o.bounds.map((b,j)=>boundHtml(b,o.bounds.length>1?(j?'Return':'Onward'):'')).join('')+'<span class="fopk">'+(sel===i?'✓ Selected':'Select')+'</span></label>';}).join(''):'<p class="frn">No flights match this filter.</p>')+'</div>'+
- (sel!=null?'<div class="fsel"><b>✓ Your selected flight</b><p>'+summary(opts[sel]).map(esc).join('<br>')+'</p><div class="fgrid2 fselg"><label class="fcell">Extra check-in baggage<select class="fxbag">'+BAGS.map(b=>'<option>'+b+'</option>').join('')+'</select></label><label class="fcell">Seat preference<select class="fxseat"><option>No preference</option><option>Window</option><option>Aisle</option><option>Seats together (family)</option><option>Extra legroom</option></select></label><label class="fcell">Meal<select class="fxmeal"><option>As per airline</option><option>Jain meal</option><option>Vegetarian meal</option><option>Non-vegetarian meal</option><option>Child meal</option><option>Diabetic meal</option></select></label></div><p class="frn">Now add your name and mobile below and press <b>Get Flight Quote</b>.</p></div>':'');
- box.querySelectorAll('.frf button').forEach(b=>b.onclick=()=>draw(b.dataset.f));
- box.querySelectorAll('input[name=fpick]').forEach(r=>r.onchange=()=>{sel=+r.value;draw(filter);const s=box.querySelector('.fsel');if(s)s.scrollIntoView({behavior:'smooth',block:'center'});});
+const nm=f=>AL[f.airline]||f.airline_name||f.airline;
+const bagTxt=b=>b.baggage||(src==='timetable'?'Baggage allowance confirmed in your quote':'Check-in baggage: we will confirm');
+function boundHtml(b,label){const f0=b.flights[0],fl=b.flights[b.flights.length-1];const names=[...new Set(b.flights.map(nm))];
+ return '<div class="fob">'+(label?'<span class="fobl">'+label+'</span>':'')+'<div class="foa"><b>'+esc(names.join(' + '))+'</b><small>'+esc(b.flights.map(x=>x.number).join(', '))+'</small></div>'+
+ '<div class="fot"><b>'+tm(f0.departs)+'</b><small>'+esc(f0.from)+(f0.from_terminal?' · T'+esc(f0.from_terminal):'')+'</small></div><div class="fod"><small>'+esc(b.total||'&nbsp;')+'</small><i></i><small>'+(b.stops?b.stops+' stop'+(b.stops>1?'s':'')+' · '+esc(b.via.join(', ')):'Non-stop')+'</small></div><div class="fot"><b>'+tm(fl.arrives)+plus(f0.departs,fl.arrives)+'</b><small>'+esc(fl.to)+(fl.to_terminal?' · T'+esc(fl.to_terminal):'')+'</small></div>'+
+ '<div class="fobag">🧳 '+esc(bagTxt(b))+'<br><span>👜 Cabin bag as per airline</span></div></div>';}
+function summary(o,label){return o.bounds.map((b,i)=>{const f0=b.flights[0],fl=b.flights[b.flights.length-1];return (label||(o.bounds.length>1?(i?'Return':'Onward'):''))+(label||o.bounds.length>1?': ':'')+[...new Set(b.flights.map(nm))].join(' + ')+' '+b.flights.map(x=>x.number).join(', ')+' · '+f0.from+' '+dd(f0.departs)+' '+tm(f0.departs)+' → '+fl.to+' '+tm(fl.arrives)+(dd(fl.arrives)!==dd(f0.departs)?' ('+dd(fl.arrives)+')':'')+' · '+(b.stops?b.stops+' stop'+(b.stops>1?'s':'')+' via '+b.via.join(', '):'non-stop')+(b.total?' · '+b.total:'')+(b.baggage?' · Included: '+b.baggage:'');});}
+const FL=[['all','All'],['nonstop','Non-stop'],['morning','Before 12 pm'],['afternoon','12–6 pm'],['evening','After 6 pm']];
+const pass=(o,f)=>{const h=hr(o.bounds[0].flights[0].departs);return !f||f==='all'||(f==='nonstop'?o.bounds.every(b=>!b.stops):f==='morning'?h<12:f==='afternoon'?h>=12&&h<18:h>=18);};
+function legLabel(i){return legs.length>1?(i?'Return flight':'Onward flight'):'';}
+function draw(){
+ const allSel=legs.every((_,i)=>sel[i]!=null);
+ box.innerHTML=legs.map((opts,i)=>{const f=flt[i]||'all',list=opts.filter(o=>pass(o,f));const airlines=[...new Set(opts.map(o=>nm(o.bounds[0].flights[0])))];
+  return '<div class="frleg" data-l="'+i+'"><div class="frh"><b>'+(legLabel(i)?legLabel(i)+' – ':'')+opts.length+' option'+(opts.length!==1?'s':'')+'</b><span class="frf">'+FL.filter(x=>src!=='timetable'||x[0]!=='nonstop').map(([k,t])=>'<button type="button" data-f="'+k+'" class="'+(f===k?'on':'')+'">'+t+'</button>').join('')+'</span></div>'+
+  (opts.length?'<p class="frn">Airlines: '+esc(airlines.join(', '))+'.</p><div class="frl">'+(list.length?list.map(o=>{const k=opts.indexOf(o);return '<label class="fo'+(sel[i]===k?' on':'')+'"><input type="radio" name="fpick'+i+'" value="'+k+'"'+(sel[i]===k?' checked':'')+'>'+o.bounds.map((b,j)=>boundHtml(b,o.bounds.length>1?(j?'Return':'Onward'):'')).join('')+'<span class="fopk">'+(sel[i]===k?'✓ Selected':'Select')+'</span></label>';}).join(''):'<p class="frn">No flights match this filter.</p>')+'</div>':'<p class="frn">No direct flights found for this date – we will check connecting flights for you in your quote.</p>')+'</div>';}).join('')+
+ '<p class="frn">'+(src==='timetable'?'Showing direct (non-stop) flights. Need a connecting flight? Just mention it in Notes. ':'')+'Fares are not shown – select your flight'+(legs.length>1?'s':'')+' and press <b>Get Flight Quote</b>; we reply with the best fare.</p>'+
+ (sel.some(x=>x!=null)?'<div class="fsel"><b>✓ Your selected flight'+(legs.length>1?'s':'')+'</b><p>'+legs.map((o,i)=>sel[i]!=null?summary(o[sel[i]],legLabel(i)).map(esc).join('<br>'):'').filter(Boolean).join('<br>')+'</p>'+(allSel?'':'<p class="frn">Please also select your '+(sel[0]==null?'onward':'return')+' flight.</p>')+'<div class="fgrid2 fselg"><label class="fcell">Extra check-in baggage<select class="fxbag">'+BAGS.map(b=>'<option>'+b+'</option>').join('')+'</select></label><label class="fcell">Seat preference<select class="fxseat"><option>No preference</option><option>Window</option><option>Aisle</option><option>Seats together (family)</option><option>Extra legroom</option></select></label><label class="fcell">Meal<select class="fxmeal"><option>As per airline</option><option>Jain meal</option><option>Vegetarian meal</option><option>Non-vegetarian meal</option><option>Child meal</option><option>Diabetic meal</option></select></label></div><p class="frn">Now add your name and mobile below and press <b>Get Flight Quote</b>.</p></div>':'');
+ box.querySelectorAll('.frleg').forEach(L=>{const i=+L.dataset.l;L.querySelectorAll('.frf button').forEach(b=>b.onclick=()=>{flt[i]=b.dataset.f;keep(draw);});
+  L.querySelectorAll('input[type=radio]').forEach(r=>r.onchange=()=>{sel[i]=+r.value;keep(draw);const s=box.querySelector('.fsel');if(s&&legs.every((_,j)=>sel[j]!=null))s.scrollIntoView({behavior:'smooth',block:'center'});});});
 }
-window.RTT_FSEL=()=>{if(sel==null||!opts[sel])return null;const g=c=>{const x=box.querySelector(c);return x?x.value:'';};const out=summary(opts[sel]);const xb=g('.fxbag'),st=g('.fxseat'),ml=g('.fxmeal');if(xb&&xb!==BAGS[0])out.push('Extra baggage: '+xb);if(st&&st!=='No preference')out.push('Seat: '+st);if(ml&&ml!=='As per airline')out.push('Meal: '+ml);return out;};
-function reset(){if(opts.length||sel!=null){opts=[];sel=null;box.hidden=true;box.innerHTML='';}}
+function keep(fn){const g=c=>{const x=box.querySelector(c);return x?x.value:null;};const v=[g('.fxbag'),g('.fxseat'),g('.fxmeal')];fn();[['.fxbag',v[0]],['.fxseat',v[1]],['.fxmeal',v[2]]].forEach(([c,x])=>{const e=box.querySelector(c);if(e&&x)e.value=x;});}
+window.RTT_FSEL=()=>{if(!legs.length||!sel.some(x=>x!=null))return null;const g=c=>{const x=box.querySelector(c);return x?x.value:'';};const out=[];legs.forEach((o,i)=>{if(sel[i]!=null)out.push(...summary(o[sel[i]],legLabel(i)));});const xb=g('.fxbag'),st=g('.fxseat'),ml=g('.fxmeal');if(xb&&xb!==BAGS[0])out.push('Extra baggage: '+xb);if(st&&st!=='No preference')out.push('Seat: '+st);if(ml&&ml!=='As per airline')out.push('Meal: '+ml);return out;};
+function reset(){if(legs.length){legs=[];sel=[];flt=[];box.hidden=true;box.innerHTML='';}}
 ['from','to','depart','ret','adults','children','infants','cabin'].forEach(n=>F[n]&&F[n].addEventListener('change',reset));
 F.querySelectorAll('input[name=ftrip]').forEach(r=>r.addEventListener('change',reset));
 btn.addEventListener('click',async()=>{
@@ -102,8 +110,8 @@ btn.addEventListener('click',async()=>{
  try{const r=await fetch(SB+'/functions/v1/flight-search',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+KEY,'Content-Type':'application/json'},body:JSON.stringify({from:fr,to,depart:F.depart.value,ret:t==='Round trip'?F.ret.value:'',adults:+F.adults.value,children:+F.children.value,infants:+F.infants.value,cabin:CAB[F.cabin.value]||'ECONOMY',nonstop:!!F.querySelector('input[name=fpref][value="Non-stop flights only"]:checked')})});
   const j=await r.json().catch(()=>({}));
   if(!r.ok)throw j.error||r.status;
-  opts=j.options||[];sel=null;
-  if(!opts.length)show('We could not load flights for this date online. Just press <b>Get Flight Quote</b> – our team will check all airlines and send you the options.');else draw('all');
+  src=j.source||'';legs=j.legs||[];sel=legs.map(()=>null);flt=legs.map(()=>'all');
+  if(!legs.length||legs.every(l=>!l.length))show('We could not load flights for this date online. Just press <b>Get Flight Quote</b> – our team will check all airlines and send you the options.');else draw();
  }catch(e){show('Live flight list is not available right now. Just press <b>Get Flight Quote</b> – our team will check all airlines and send you the options.');}
  btn.disabled=false;
 });
@@ -111,7 +119,7 @@ btn.addEventListener('click',async()=>{
 """
 
 # Turn on once a flight data key is saved in Supabase (Edge Functions > Secrets)
-FSEARCH_ON = False
+FSEARCH_ON = False  # the button also appears automatically once the function reports ready
 
 def flight_widget(root):
     opts = "".join(f'<option value="{c} ({k})">{n}</option>' for c,k,n in AIRPORTS)
@@ -419,7 +427,8 @@ FLIGHT_CSS = """
 @media(max-width:700px){.fgrid.fmain{grid-template-columns:1fr 1fr!important}.fbar .fgo{width:100%}}
 
 /* ===== flight list (schedules only, no fares) ===== */
-.fsr{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin:14px 0 4px}.fsr .fshow{font-weight:600}.fsrh{color:var(--muted);font-size:14px}
+.frleg+.frleg{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.fsr[hidden]{display:none}.fsr{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin:14px 0 4px}.fsr .fshow{font-weight:600}.fsrh{color:var(--muted);font-size:14px}
 .fres{margin:10px 0 14px;border:1px solid var(--line);border-radius:14px;padding:14px;background:#fafafa}
 .frh{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px}.frf{display:flex;flex-wrap:wrap;gap:6px}
 .frf button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;font:500 13px 'Jost',sans-serif;cursor:pointer;color:inherit}.frf button.on{border-color:var(--wine);color:var(--wine);background:#fbf3f4}

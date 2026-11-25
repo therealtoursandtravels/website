@@ -6,6 +6,9 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const GATEWAY = Deno.env.get("AMADEUS_GATEWAY_URL") ?? "https://api.amadeus.com";
 const KEY = Deno.env.get("AMADEUS_API_KEY") ?? "";
+// AeroDataBox (RapidAPI) – airport timetable, direct flights only, no baggage data
+const ADB_KEY = Deno.env.get("AERODATABOX_API_KEY") ?? "";
+const ADB_HOST = Deno.env.get("AERODATABOX_HOST") ?? "aerodatabox.p.rapidapi.com";
 const ALLOWED = ["https://www.therealtoursandtravels.com", "https://therealtoursandtravels.com"];
 
 function cors(origin: string | null) {
@@ -13,7 +16,7 @@ function cors(origin: string | null) {
   return {
     "Access-Control-Allow-Origin": o,
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     "Vary": "Origin",
   };
 }
@@ -37,11 +40,73 @@ function utcMin(s: string): number {
   return Math.round(new Date(s).getTime() / 60000);
 }
 
+// ---------- AeroDataBox ----------
+// "2026-12-20 06:00+05:30" -> "2026-12-20T06:00:00+05:30"
+function iso(local: string): string {
+  const m = local.match(/^(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2})(?::\d{2})?(Z|[+-]\d{2}:?\d{2})?$/);
+  if (!m) return local;
+  let off = m[3] || "Z";
+  if (/^[+-]\d{4}$/.test(off)) off = off.slice(0, 3) + ":" + off.slice(3);
+  return `${m[1]}T${m[2]}:00${off}`;
+}
+
+async function adbWindow(from: string, a: string, b: string): Promise<any[]> {
+  const url = `https://${ADB_HOST}/flights/airports/iata/${from}/${a}/${b}?direction=Departure&withLeg=true&withCancelled=false&withCodeshared=false&withCargo=false&withPrivate=false&withLocation=false`;
+  const r = await fetch(url, { headers: { "X-RapidAPI-Key": ADB_KEY, "X-RapidAPI-Host": ADB_HOST, Accept: "application/json" } });
+  if (r.status === 204) return [];
+  if (!r.ok) throw new Error(`ADB ${r.status} ${(await r.text()).slice(0, 300)}`);
+  const j = await r.json();
+  return j?.departures ?? [];
+}
+
+async function adbBound(from: string, to: string, date: string) {
+  // the timetable endpoint allows up to 12 hours per call -> two calls cover the day
+  const [am, pm] = await Promise.all([
+    adbWindow(from, `${date}T00:00`, `${date}T11:59`),
+    adbWindow(from, `${date}T12:00`, `${date}T23:59`),
+  ]);
+  const seen = new Set<string>();
+  const out: any[] = [];
+  for (const f of [...am, ...pm]) {
+    const dep = f.departure, arr = f.arrival;
+    if (!dep?.scheduledTime?.local || arr?.airport?.iata !== to || f.isCargo) continue;
+    const number = String(f.number || "").replace(/\s+/g, " ").trim();
+    if (!number || seen.has(number)) continue;
+    seen.add(number);
+    const departs = iso(dep.scheduledTime.local);
+    const arrives = arr?.scheduledTime?.local ? iso(arr.scheduledTime.local) : "";
+    const mins = arrives ? utcMin(arrives) - utcMin(departs) : 0;
+    const code = f.airline?.iata || number.split(" ")[0];
+    out.push({
+      flights: [{
+        airline: code, airline_name: f.airline?.name ?? null, operated_by: null, number,
+        from, from_terminal: dep.terminal ?? null, to, to_terminal: arr?.terminal ?? null,
+        departs, arrives: arrives || departs, duration: "", aircraft: f.aircraft?.model ?? null, cabin: "",
+      }],
+      stops: 0, via: [],
+      total: mins > 0 ? `${Math.floor(mins / 60)}h ${String(mins % 60).padStart(2, "0")}m` : "",
+      total_min: mins, baggage: "",
+    });
+  }
+  out.sort((a, b) => a.flights[0].departs.localeCompare(b.flights[0].departs));
+  return out;
+}
+
+async function adbSearch(from: string, to: string, depart: string, ret: string) {
+  const wrap = (b: any) => ({ id: b.flights[0].number + b.flights[0].departs, bounds: [b] });
+  const [out1, back] = await Promise.all([adbBound(from, to, depart), ret ? adbBound(to, from, ret) : Promise.resolve([])]);
+  const legs = [out1.slice(0, 120).map(wrap)];
+  if (ret) legs.push(back.slice(0, 120).map(wrap));
+  return legs;
+}
+
 Deno.serve(async (req) => {
   const h = { ...cors(req.headers.get("origin")), "Content-Type": "application/json" };
   if (req.method === "OPTIONS") return new Response("ok", { headers: h });
+  // quick readiness check used by the website to decide whether to show the "Show flights" button
+  if (req.method === "GET") return new Response(JSON.stringify({ ready: !!(KEY || ADB_KEY) }), { headers: { ...h, "Cache-Control": "max-age=300" } });
   if (req.method !== "POST") return new Response(JSON.stringify({ error: "POST only" }), { status: 405, headers: h });
-  if (!KEY) return new Response(JSON.stringify({ error: "not_configured" }), { status: 503, headers: h });
+  if (!KEY && !ADB_KEY) return new Response(JSON.stringify({ error: "not_configured" }), { status: 503, headers: h });
 
   let p: Record<string, unknown>;
   try { p = await req.json(); } catch { return new Response(JSON.stringify({ error: "bad_json" }), { status: 400, headers: h }); }
@@ -54,6 +119,17 @@ Deno.serve(async (req) => {
   const cabin = CABINS.includes(String(p.cabin)) ? String(p.cabin) : "ECONOMY";
   if (!CODE.test(from) || !CODE.test(to) || from === to || !DATE.test(depart) || (ret && (!DATE.test(ret) || ret < depart)) || adults + children > 9) {
     return new Response(JSON.stringify({ error: "invalid_input" }), { status: 400, headers: h });
+  }
+
+  if (!KEY) {
+    try {
+      const legs = await adbSearch(from, to, depart, ret);
+      return new Response(JSON.stringify({ source: "timetable", legs }), { headers: { ...h, "Cache-Control": "no-store" } });
+    } catch (e) {
+      console.error("aerodatabox", String(e));
+      const busy = String(e).includes("429");
+      return new Response(JSON.stringify({ error: busy ? "busy" : "upstream" }), { status: busy ? 429 : 502, headers: h });
+    }
   }
 
   const q = new URLSearchParams({
@@ -124,7 +200,7 @@ Deno.serve(async (req) => {
   options.sort((a: any, b: any) =>
     a.bounds[0].flights[0].departs.localeCompare(b.bounds[0].flights[0].departs) || a.bounds[0].total_min - b.bounds[0].total_min);
 
-  return new Response(JSON.stringify({ options: options.slice(0, 120), count: options.length }), {
+  return new Response(JSON.stringify({ source: "amadeus", legs: [options.slice(0, 120)] }), {
     headers: { ...h, "Cache-Control": "no-store" },
   });
 });
