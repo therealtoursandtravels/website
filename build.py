@@ -270,6 +270,7 @@ nav.main a{color:var(--wine);text-decoration:none;font-weight:500;font-size:15px
 .hact{display:flex;align-items:center;gap:10px}.hcta{background:linear-gradient(135deg,var(--red),var(--crimson));color:#fff;text-decoration:none;font-weight:600;padding:10px 20px;border-radius:999px;box-shadow:0 6px 16px rgba(142,14,22,.25);white-space:nowrap}
 nav.main a:hover{color:var(--red)}
 .menu-btn{display:none;background:none;border:0;font-size:28px;color:var(--crimson);width:44px;height:44px}
+.deptpick{display:grid;gap:8px;margin:14px 0 18px;max-width:460px}.deptpick select{font:500 15.5px 'Jost',sans-serif;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}.deptout{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px}.deptout[hidden]{display:none}.deptout span{font-size:13px;color:var(--muted);width:100%}.deptout a{font-weight:600;color:var(--crimson);word-break:break-all;flex:1}.deptout .btn{padding:6px 14px;font-size:13.5px}
 /* ===== icon tab navigation: one line on every page ===== */
 @view-transition{navigation:auto}
 ::view-transition-old(root),::view-transition-new(root){animation-duration:.22s}
@@ -618,9 +619,10 @@ def build():
 <h2>Get in touch</h2>
 <p><b>Phone / WhatsApp:</b> <a href="tel:{PHONE_RAW}">{PHONE}</a></p>
 <p><b>Email:</b> <a href="mailto:{EMAILS['info']}">{EMAILS['info']}</a></p>
-<p><b>Email the right team:</b></p><ul class="ticks depts">{''.join(f'<li>{lbl}: <a href="mailto:{EMAILS[k]}">{EMAILS[k]}</a></li>' for k, lbl in DEPT_LABELS)}</ul>
+<div class="deptpick"><label for="deptsel"><b>Email the right team</b></label><select id="deptsel"><option value="">Select the reason for your email</option>{''.join(f'<option value="{EMAILS[k]}">{lbl}</option>' for k, lbl in DEPT_LABELS)}</select>
+<div class="deptout" id="deptout" hidden><span>Write to</span><a id="deptmail" href="#"></a><button type="button" class="btn outline" id="deptcopy">Copy</button></div></div>
+<script>(function(){{const s=document.getElementById('deptsel'),o=document.getElementById('deptout'),a=document.getElementById('deptmail'),c=document.getElementById('deptcopy');s.addEventListener('change',()=>{{o.hidden=!s.value;a.textContent=s.value;a.href='mailto:'+s.value+'?subject='+encodeURIComponent(s.options[s.selectedIndex].text);c.textContent='Copy';}});c.addEventListener('click',()=>{{navigator.clipboard&&navigator.clipboard.writeText(s.value).then(()=>{{c.textContent='Copied ✓';}});}});}})();</script>
 <p><b>Address:</b><br>{'<br>'.join(ADDR)}</p>
-<p><b>Hours:</b> Monday – Sunday, 9:00 am – 10:00 pm</p>
 <p><b>GSTIN:</b> {GST}</p>
 <p><b>Instagram:</b> <a href="{IG}" target="_blank" rel="noopener">@therealtoursandtravels</a></p>
 <div class="btns"><a class="btn gold" href="{WA}" target="_blank" rel="noopener">💬 WhatsApp us</a><a class="btn outline" href="{MAPS}" target="_blank" rel="noopener">📍 Directions</a></div></div>

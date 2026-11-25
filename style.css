@@ -44,6 +44,7 @@ nav.main a{color:var(--wine);text-decoration:none;font-weight:500;font-size:15px
 .hact{display:flex;align-items:center;gap:10px}.hcta{background:linear-gradient(135deg,var(--red),var(--crimson));color:#fff;text-decoration:none;font-weight:600;padding:10px 20px;border-radius:999px;box-shadow:0 6px 16px rgba(142,14,22,.25);white-space:nowrap}
 nav.main a:hover{color:var(--red)}
 .menu-btn{display:none;background:none;border:0;font-size:28px;color:var(--crimson);width:44px;height:44px}
+.deptpick{display:grid;gap:8px;margin:14px 0 18px;max-width:460px}.deptpick select{font:500 15.5px 'Jost',sans-serif;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}.deptout{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px}.deptout[hidden]{display:none}.deptout span{font-size:13px;color:var(--muted);width:100%}.deptout a{font-weight:600;color:var(--crimson);word-break:break-all;flex:1}.deptout .btn{padding:6px 14px;font-size:13.5px}
 /* ===== icon tab navigation: one line on every page ===== */
 @view-transition{navigation:auto}
 ::view-transition-old(root),::view-transition-new(root){animation-duration:.22s}
