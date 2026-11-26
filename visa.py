@@ -115,6 +115,13 @@ def load_rates():
 def inr(v):
     return "₹" + f"{int(v):,}".replace(",", ",") if v is not None else ""
 
+def pass_box(c, rate):
+    g = rate["govt_fee"]; sc = rate["service_charge"]; g60 = rate.get("govt_fee_60")
+    alt = f'<small>60-page booklet: {inr(g60 + sc)} per form</small>' if g60 else ""
+    return (f'<div class="vprice vrates"><div class="vrt"><div class="vrow"><span>Total per form</span><b class="ptotal">{inr(g + sc)}</b></div>'
+            f'<small>36-page booklet · includes government fee and our service charge with GST</small>{alt}</div>'
+            f'<button type="button" class="btn gold" data-papply="{c}">Apply now</button></div>')
+
 def price_box(rate, wa, label):
     g = (rate or {}).get("govt_fee"); sc = (rate or {}).get("service_charge"); gn = (rate or {}).get("govt_note"); gt = (rate or {}).get("govt_fee_text")
     if g is None and sc is None and not gt:
@@ -220,8 +227,8 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
         wa = "https://wa.me/919843121212?text=" + ("Hi%20The%20Real%20Tours%20and%20Travels%2C%20please%20share%20the%20price%20for%20" + n.replace(" ","%20").replace("/","%2F").replace("(","").replace(")","") + ("." if P else "%20visa.%20Travellers%3A%20%20Travel%20date%3A%20"))
         panels += f"""<div class="vpanel" data-c="{c}"{'' if i==0 else ' hidden'}>
 <div class="vhead"><div><h3>{f} {n}</h3>{badges}{f'<p class="meta">{how}</p>' if P else ''}{f'<p class="vwhen">⏱️ <b>When to apply:</b> {WHEN[c]}.</p>' if (not P and c in WHEN) else ''}{f'<p class="vwhen">⏱️ <b>When to apply:</b> {CARD_WHEN[c]}.</p>' if (not P and c in CARD_WHEN) else ''}{f'<p class="vwhen">⚡ <b>Express visa:</b> {EXPRESS[c]}.</p>' if (not P and c in EXPRESS) else ''}{f'<p class="vwhen">🖐️ <b>Biometrics:</b> {BIOMETRICS[c]}.</p>' if (not P and c in BIOMETRICS) else ''}</div>
-{price_box(RATES.get(c), wa_free(n, card) if free else wa, "Government fee" if P else "Embassy / visa fee")}</div>
-<p class="meta" style="margin:8px 0 0">{"Price = our service fee + 18% GST." if free else ("Total per form = government fee (no GST) + our service charge (GST included)." if P else "Price = government / embassy fee (no GST) + our service fee + 18% GST on the service fee. Rupee amounts are approximate – the embassy charges at its exchange rate on the day.")}</p><h4>Documents required</h4><ul class="ticks">{lis}</ul>
+{pass_box(c, RATES[c]) if (P and RATES.get(c) and RATES[c].get("govt_fee") is not None) else price_box(RATES.get(c), wa_free(n, card) if free else wa, "Government fee" if P else "Embassy / visa fee")}</div>
+<p class="meta" style="margin:8px 0 0">{"Price = our service fee + 18% GST." if free else ("Tap <b>Apply now</b> to upload your documents and pay online." if P else "Price = government / embassy fee (no GST) + our service fee + 18% GST on the service fee. Rupee amounts are approximate – the embassy charges at its exchange rate on the day.")}</p><h4>Documents required</h4><ul class="ticks">{lis}</ul>
 {"" if P or free or not card else f'<p class="meta">📲 The {card} is also required before you land.</p>'}<p class="meta">{"Requirements are set by Passport Seva (Ministry of External Affairs) and can change. We confirm the final checklist for your case before you apply." if P else "Rules for Indian passport holders – last checked November 2026 and reviewed every week. Requirements can change and may differ for business, student or family visits; we confirm the final checklist for your case before you travel."}</p>
 {'<p class="meta">🛡️ Schengen visas need travel insurance with at least €30,000 medical cover. <a href="../insurance/?cover=schengen#ins-form">Get a Schengen insurance quote →</a></p>' if c=="schengen" and not P else ""}{"" if free else f'<p><a class="btn outline" href="#upload" data-pick="{c}">Upload documents for {n}</a></p>'}</div>"""
     opts = "".join(f'<option value="{n}">{n}</option>' for (_,_,n,_,_) in ITEMS) + ('' if P else '<option value="Other">Other country – type below</option>')
@@ -251,7 +258,7 @@ def visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="visa"):
              "Check the documents required for your visa, request the price, and upload your documents securely – our visa team will review them and call you back."),
       k2="Choose your service" if P else "Visas & arrival cards",
       h2="Documents required by service" if P else "Visas & Digital Arrival Cards",
-      lead2=("Select a service to see the checklist and the current government fee (as revised by the Ministry of External Affairs from 1 July 2026). Tap <b>Apply / Enquire</b> to start on WhatsApp." if P else
+      lead2=("Select a service to see the checklist and the current government fee (as revised by the Ministry of External Affairs from 1 July 2026). Tap <b>Apply now</b> to upload your documents and pay online." if P else
              "Pick a country to see the documents required, when to apply and whether biometrics are needed, then tap <b>Request Price</b>. Need a <b>multiple-entry</b> or <b>express</b> visa? Choose it in the form below. Suggested times allow for weekends and public holidays in India and the destination country – apply earlier around festivals and peak season."),
       h3="Upload your passport documents" if P else "Upload your visa documents",
       team="passport team" if P else "visa team",
@@ -326,6 +333,7 @@ f.addEventListener('submit',async e=>{{
   const r2=await fetch(SB+'/rest/v1/visa_applications',{{method:'POST',headers:{{apikey:KEY,Authorization:'Bearer '+(window.RTT_TOKEN||KEY),'Content-Type':'application/json',Prefer:'return=minimal'}},body:JSON.stringify(row)}});
   if(!r2.ok)throw new Error('save '+r2.status);
   notify('New {"passport" if P else "visa"} documents '+id.slice(0,8).toUpperCase()+' – '+row.full_name,'Name: '+row.full_name+'\\nPhone: '+row.phone+(row.email?'\\nEmail: '+row.email:'')+'\\n{"Service" if P else "Country"}: '+row.country+'\\nType: '+row.visa_type+(row.travel_date?'\\nTravel date: '+row.travel_date:'')+'\\nApplicants: '+(row.travellers||1)+'\\nFiles uploaded: '+paths.length+' (see Supabase → Storage → visa-documents → applications/'+id+')'+(row.notes?'\\nNotes: '+row.notes:''),row.email||'');
+  if(window.rttPass)window.rttPass.lock(id.slice(0,8).toUpperCase());
   f.reset();fl.innerHTML='';syncOther();if(typeof syncP==='function'){{syncP();pfiles.hidden=false;f.files.required=true;}}
   msg.innerHTML='✅ Thank you! '+(paths.length?'Your documents were uploaded securely':'Your request is saved')+' (reference: <b>'+id.slice(0,8).toUpperCase()+'</b>). Our team will call you shortly. For faster service, <a href="https://wa.me/919843121212?text='+encodeURIComponent('Hi, I uploaded my documents on your website. Reference: '+id.slice(0,8).toUpperCase())+'" target="_blank" rel="noopener">WhatsApp us your reference</a>.';
   msg.classList.add('ok');
@@ -355,12 +363,12 @@ f.addEventListener('submit',async e=>{{
 {PREMIND if P else ""}
 </div></section>
 
-<section class="alt" id="upload"{"" if P else " hidden"}><div class="wrap" style="max-width:820px">
+<section class="alt" id="upload" hidden><div class="wrap" style="max-width:820px">
 <div class="head"><span class="kicker">Secure upload</span><h2>{T["h3"]}</h2><p class="lead">Upload clear scans or photos (PDF, JPG or PNG, up to 10 MB each). Your documents are stored privately and seen only by our {T["team"]}.</p></div>
 {form_html}
 <div class="paybox" id="pay"><span class="kicker" style="justify-content:center">Secure payment</span><h3 style="font-size:26px;margin:4px 0 8px">Pay {T["payfor"]} online</h3>
-{"" if P else VISA_PTOT}<p class="lead" style="font-size:16px"{"" if P else " hidden"}>Enter the fees confirmed by our team to see the GST and total, then pay securely. Add your name, phone and reference in the payment window so we can match your payment. UPI, cards, net banking and wallets accepted.</p>
-<div class="gcalc{"" if P else " vmode"}" id="gcalc">
+{PASS_PTOT if P else VISA_PTOT}<p class="lead" style="font-size:16px" hidden>Enter the fees confirmed by our team to see the GST and total, then pay securely. Add your name, phone and reference in the payment window so we can match your payment. UPI, cards, net banking and wallets accepted.</p>
+<div class="gcalc vmode" id="gcalc">
 <div class="grow"><label>Government / embassy fee <small>(as confirmed by us – no GST)</small><span class="gin">₹<input type="number" min="0" step="1" inputmode="decimal" id="g_gov" placeholder="0"></span></label>
 <label>Our service fee <small>(as confirmed by us)</small><span class="gin">₹<input type="number" min="0" step="1" inputmode="decimal" id="g_fee" placeholder="0"></span></label></div>
 <label class="chk gb2b"><input type="checkbox" id="g_b2b"><span>I need a <b>GST invoice</b> for my business (enter your GSTIN)</span></label>
@@ -378,7 +386,7 @@ f.addEventListener('submit',async e=>{{
 <p class="meta" style="text-align:center;margin-top:16px">Prefer WhatsApp or visiting us? Call/WhatsApp <a href="tel:{PHONE_RAW}">{PHONE}</a> or visit our office.</p>
 </div></section>
 {cta_band()}
-{"" if P else VISA_PAY_JS}
+{PASS_PAY_JS.replace("__RATES__", json.dumps({c: RATES[c] for (c,_,_,_,_) in ITEMS if RATES.get(c)})).replace("__NAMES__", json.dumps({c:n for (c,_,n,_,_) in ITEMS})) if P else VISA_PAY_JS}
 <script>
 (function(){{
 const SB="{SB_URL}",KEY="{SB_KEY}";
@@ -654,7 +662,37 @@ f.addEventListener('input',()=>{if(locked&&document.activeElement&&f.contains(do
 fill();});
 </script>"""
 
+PASS_PTOT = """<div class="ptot" id="ptot"><p class="ptl" id="pt_what">Choose a passport service above to see the amount to pay.</p>
+<label class="ptbk" id="pt_bkw" hidden>Passport booklet <select id="pt_bk"><option value="36">36 pages</option><option value="60">60 pages</option></select></label>
+<div class="ptamt" id="pt_amt_w" hidden><span>Total to pay</span><b id="pt_amt">₹0</b><small>government fee + our service charge, GST included</small></div>
+<ol class="ptsteps"><li>Upload your documents above.</li><li>Pay the total securely below (UPI, cards, net banking).</li><li>Send the payment screenshot on WhatsApp with your reference number – we then book your appointment.</li></ol>
+<a class="btn outline ptwa" id="pt_wa" href="https://wa.me/919843121212" target="_blank" rel="noopener">📲 Send payment screenshot on WhatsApp</a></div>"""
+
+PASS_PAY_JS = r"""<script>
+(function(){
+const R=__RATES__,N=__NAMES__,$=i=>document.getElementById(i),f=document.getElementById('vform');if(!f)return;
+const csel=f.querySelector('select[name=country]'),inr=n=>'₹'+Number(n).toLocaleString('en-IN');const byN={};Object.entries(N).forEach(([c,n])=>byN[n]=c);
+const up=$('upload');let locked=null;
+function showUp(){if(up.hidden)up.hidden=false;}
+if(/^#(upload|pay)/.test(location.hash))setTimeout(()=>{showUp();const t=document.querySelector(location.hash);if(t)t.scrollIntoView();},60);
+document.addEventListener('click',e=>{const l=e.target.closest('a[href^="#upload"],a[href^="#pay"]');if(l)showUp();},true);
+function q(){const c=byN[csel.value],r=R[c];if(!r||r.govt_fee==null)return null;const n=Math.max(1,parseInt(f.travellers&&f.travellers.value)||1);const bk=$('pt_bk').value==='60'&&r.govt_fee_60?r.govt_fee_60:r.govt_fee;return {c,label:csel.value,n,each:bk+r.service_charge,has60:!!r.govt_fee_60,bk:$('pt_bk').value};}
+function wa(ref,t){return 'https://wa.me/919843121212?text='+encodeURIComponent('Hi The Real Tours and Travels, I have paid '+(t?t+' ':'')+'for my passport application'+(ref?' (reference '+ref+')':'')+'. Sending the payment screenshot.');}
+function show(x){const w=$('pt_what');$('pt_bkw').hidden=!(x&&x.has60);
+ if(x){w.innerHTML='<b>'+x.label+'</b>'+(x.has60?' · '+x.bk+' pages':'')+'<br>'+x.n+' applicant'+(x.n>1?'s':'')+' × '+inr(x.each)+(x.ref?' · Reference <b>'+x.ref+'</b>':'');$('pt_amt').textContent=inr(x.each*x.n);$('pt_amt_w').hidden=false;}
+ else{w.textContent='Choose a passport service above to see the amount to pay.';$('pt_amt_w').hidden=true;}
+ $('pt_wa').href=wa(x&&x.ref,x?inr(x.each*x.n):'');}
+function upd(){if(locked)return;show(q());}
+csel.addEventListener('change',upd);$('pt_bk').addEventListener('change',()=>{if(locked){const x=q();if(x){x.ref=locked.ref;locked=x;show(x);}}else upd();});if(f.travellers)f.travellers.addEventListener('input',upd);
+document.querySelectorAll('[data-papply]').forEach(b=>b.addEventListener('click',()=>{locked=null;showUp();csel.value=N[b.dataset.papply];csel.dispatchEvent(new Event('change'));upd();up.scrollIntoView({behavior:'smooth'});}));
+window.rttPass={lock(ref){const x=q();locked=x?Object.assign(x,{ref}):{ref};if(x)show(locked);else{$('pt_what').innerHTML='Reference <b>'+ref+'</b> – our team will confirm the amount.';$('pt_wa').href=wa(ref,'');}
+ setTimeout(()=>{const m=document.getElementById('vmsg');if(m)m.innerHTML='✅ Documents received (reference: <b>'+ref+'</b>).<br><b>Next step:</b> <a href="#pay">pay '+(x?inr(x.each*x.n):'online')+' below</a>, then send the payment screenshot on WhatsApp – we will book your appointment.';document.getElementById('pay').scrollIntoView({behavior:'smooth'});},80);}};
+f.addEventListener('input',e=>{if(locked&&e.target!==$('pt_bk'))locked=null;});
+upd();})();
+</script>"""
+
 VISA_CSS = """
+.ptotal{font-size:24px;color:var(--ink)}.ptbk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:14.5px}.ptbk select{font:500 15px 'Jost',sans-serif;padding:8px 10px;border:1px solid var(--line);border-radius:10px}.ptbk[hidden]{display:none}.ptsteps{margin:0;padding-left:20px;font-size:14px;color:var(--ink);display:grid;gap:4px}.ptwa{justify-self:start}
 .vmode>.grow:first-child,.vmode .gst8,.vmode .gtab,.vmode #g_out{display:none!important}
 .ptot{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:14px 0;text-align:left;display:grid;gap:10px}
 .ptl{margin:0;font-size:15px}.ptamt{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;border-top:1px dashed var(--line);padding-top:10px}.ptamt span{font-size:14px;color:var(--muted)}.ptamt b{font-size:30px;color:var(--wine)}.ptamt small{color:var(--muted)}

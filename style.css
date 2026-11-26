@@ -139,6 +139,7 @@ footer ul{list-style:none;padding:0;margin:0}footer li{margin:7px 0}
 @media(max-width:380px){.seal{width:170px;height:170px}.brand small{display:none}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
 
+.ptotal{font-size:24px;color:var(--ink)}.ptbk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:14.5px}.ptbk select{font:500 15px 'Jost',sans-serif;padding:8px 10px;border:1px solid var(--line);border-radius:10px}.ptbk[hidden]{display:none}.ptsteps{margin:0;padding-left:20px;font-size:14px;color:var(--ink);display:grid;gap:4px}.ptwa{justify-self:start}
 .vmode>.grow:first-child,.vmode .gst8,.vmode .gtab,.vmode #g_out{display:none!important}
 .ptot{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:14px 0;text-align:left;display:grid;gap:10px}
 .ptl{margin:0;font-size:15px}.ptamt{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;border-top:1px dashed var(--line);padding-top:10px}.ptamt span{font-size:14px;color:var(--muted)}.ptamt b{font-size:30px;color:var(--wine)}.ptamt small{color:var(--muted)}
