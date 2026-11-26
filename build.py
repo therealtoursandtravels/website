@@ -294,7 +294,7 @@ nav.main a.on{color:var(--wine)!important;font-weight:700;border-bottom-color:va
 .seal{justify-self:center;align-self:center;position:relative;width:340px;height:340px;max-width:80vw;max-height:80vw;aspect-ratio:1/1;flex:none;border-radius:50%;overflow:hidden;background:#fff;display:grid;place-items:center;box-shadow:0 0 0 12px #fdf0f0,0 24px 50px rgba(0,0,0,.10)}
 .seal img{width:86%;height:auto;aspect-ratio:1/1;object-fit:contain;display:block}
 img{max-width:100%;height:auto}
-html,body{overflow-x:hidden}
+html,body{overflow-x:clip}
 .ridge{display:none}
 .paybox{max-width:620px;margin:0 auto;text-align:center;background:#fff;border:1px solid var(--line);border-radius:22px;padding:40px 28px;box-shadow:0 20px 44px rgba(0,0,0,.07)}.paybox form{margin:22px 0 8px;min-height:50px}.copy a{color:var(--muted)}
 .article{max-width:780px;margin:0 auto}.article h2{margin-top:38px}.article h3{font-size:22px;color:var(--crimson);margin:26px 0 8px}.article p{font-size:17px}

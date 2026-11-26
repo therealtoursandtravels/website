@@ -429,17 +429,15 @@ Object.entries(forms).forEach(([kind,f])=>f.addEventListener('submit',async e=>{
   const kind=f.dataset.kind||'flight';const full=b.textContent;
   const wrap=document.createElement('div');wrap.className='fmsearch';const hint=document.createElement('p');hint.className='fmhint';
   b.textContent=kind==='hotel'?'Search hotels':kind==='cruise'?'Search cruises':'Search flights';main.after(wrap);wrap.appendChild(b);wrap.appendChild(hint);
-  const sh=document.createElement('div');sh.className='fsheet';sh.hidden=true;sh.innerHTML='<div class="fsh-in" role="dialog" aria-modal="true"><div class="fsh-top"><b>Where should we send your quote?</b><button type="button" class="fsh-x" aria-label="Close">✕</button></div></div>';
-  f.appendChild(sh);const inn=sh.querySelector('.fsh-in');inn.appendChild(g2);if(msg)inn.appendChild(msg);
-  const go=document.createElement('button');go.type='button';go.className='btn gold fsh-go';go.textContent=full;inn.appendChild(go);
+  const sh=document.createElement('div');sh.className='fcontact';sh.hidden=true;sh.innerHTML='<p class="fct-t"><b>Where should we send your quote?</b></p>';
+  wrap.after(sh);sh.appendChild(g2);if(msg)sh.appendChild(msg);
+  const go=document.createElement('button');go.type='button';go.className='btn gold fsh-go';go.textContent=full;sh.appendChild(go);
   let pass=false;
   b.addEventListener('click',e=>{{if(pass)return;e.preventDefault();e.stopImmediatePropagation();hint.textContent='';
    const miss=[...main.querySelectorAll('input[required],select[required]')].find(x=>!x.disabled&&!x.value.trim());
    if(miss){{const lab=(miss.closest('.fcell')||{{}}).firstChild;hint.textContent='Please fill '+(lab&&lab.textContent?lab.textContent.trim().replace(/\*$/,''):'all fields')+' first.';miss.focus();return;}}
-   sh.hidden=false;document.documentElement.classList.add('fsh-lock');setTimeout(()=>{{const c=g2.querySelector('input[name=full_name],input[name=name],input');if(c)c.focus();}},60);}},true);
+   sh.hidden=false;setTimeout(()=>{{sh.scrollIntoView({{behavior:'smooth',block:'start'}});}},30);}},true);
   go.addEventListener('click',()=>{{pass=true;b.click();pass=false;}});
-  const close=()=>{{sh.hidden=true;document.documentElement.classList.remove('fsh-lock');}};
-  sh.querySelector('.fsh-x').addEventListener('click',close);sh.addEventListener('click',e=>{{if(e.target===sh)close();}});
  }});
 }})();
 }})();
@@ -649,10 +647,6 @@ FLIGHT_CSS = """
 
 .fmsearch{display:none}.fmhint:empty{display:none}
 @media(max-width:700px){.fmsearch{display:block;margin:4px 0 14px}.fmsearch .fgo{width:100%!important;height:52px!important;font-size:17px!important;border-radius:14px!important}.fmhint{margin:8px 2px 0;color:#b3121a;font-size:14px}
-.fsheet{position:fixed;inset:0;z-index:200;background:rgba(20,10,12,.45);display:flex;align-items:flex-end}.fsheet[hidden]{display:none}
-.fsh-in{background:#fff;width:100%;max-height:88vh;overflow:auto;border-radius:20px 20px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom));display:grid;gap:12px;animation:fshup .22s ease-out}
-@keyframes fshup{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
-.fsh-top{display:flex;justify-content:space-between;align-items:center}.fsh-top b{font-size:17px}.fsh-x{border:0;background:var(--bg);width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer}
-.fsh-in .fgrid2{display:grid!important;grid-template-columns:1fr!important;border:0!important;padding:0!important;margin:0!important}.fsh-in .fgrid2 .fgo{display:none!important}.fsh-go{height:50px;width:100%;border-radius:12px;font-size:16px}
-html.fsh-lock,html.fsh-lock body{overflow:hidden}html.fsh-lock .appbar,html.fsh-lock .float-wa,html.fsh-lock header{display:none!important}}
+.fcontact{display:grid;gap:12px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin:0 0 14px;scroll-margin-top:140px}.fcontact[hidden]{display:none}.fct-t{margin:0;font-size:16px}
+.fcontact .fgrid2{display:grid!important;grid-template-columns:1fr!important;border:0!important;padding:0!important;margin:0!important}.fsh-go{height:50px;width:100%;border-radius:12px;font-size:16px}}
 """
