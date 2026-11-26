@@ -634,11 +634,11 @@ PREMIND = """<form class="vtrack vrem" id="premind" novalidate><div><b>⏰ Passp
 <p class="vmsg" role="status" aria-live="polite"></p></form>"""
 
 VISA_PTOT = """<div class="ptot" id="ptot"><p class="ptl" id="pt_what">Choose your visa option above (or in the upload form) to see the amount to pay.</p>
-<div class="ptamt" id="pt_amt_w" hidden><span>Total to pay</span><b id="pt_amt">₹0</b><small>including GST</small></div>
+<div class="ptamt" id="pt_amt_w" hidden><span>Total to pay</span><b id="pt_amt">₹0</b><small>including GST</small></div><p class="pdlines" id="pt_disc_lines"></p><div class="pdisc" id="pt_disc" hidden><div class="pdrow"><input id="pt_cin" placeholder="Have a coupon code?" maxlength="20" autocapitalize="characters" autocomplete="off"><button type="button" class="btn outline" id="pt_cbtn">Apply</button></div><p class="pdmsg" id="pt_cmsg"></p><p class="pdpts" id="pt_pts" hidden></p></div>
 <label class="ptman" id="pt_man" hidden>Amount confirmed by our team (₹, including GST)<input type="number" min="0" step="1" inputmode="decimal" id="pt_in" placeholder="0"></label>
 <p class="ptnote">Pay securely below – UPI, cards, net banking and wallets. Enter the <b>total</b> as the amount in the payment window, with your name, phone and reference number.</p></div>"""
 
-VISA_PAY_JS = r"""<script>
+VISA_PAY_JS = r"""<script src="/js/rewards.js" defer></script><script>
 window.addEventListener('load',function(){
 const D=window.VFD,f=document.getElementById('vform');if(!D||!f)return;
 const csel=f.querySelector('select[name=country]'),vs=document.getElementById('vopt'),vw=document.getElementById('voptw'),ql=document.getElementById('vqline');
@@ -653,7 +653,7 @@ function fill(){const code=byName[csel.value],keep=vs.value;vs.innerHTML='';
 function pick(){const v=vs.value;if(!v||vw.hidden)return null;const [i,k]=v.split(':').map(Number);return {r:D.rows[i],o:D.rows[i].o[k]};}
 const $=i=>document.getElementById(i);
 function show(q){const what=$('pt_what'),aw=$('pt_amt_w'),man=$('pt_man');
- if(q&&q.total){what.innerHTML='<b>'+q.label+'</b><br>'+q.n+' applicant'+(q.n>1?'s':'')+' × '+inr(q.each)+(q.ref?' · Reference <b>'+q.ref+'</b>':'');$('pt_amt').textContent=inr(q.total);aw.hidden=false;man.hidden=true;}
+ if(q&&q.total){what.innerHTML='<b>'+q.label+'</b><br>'+q.n+' applicant'+(q.n>1?'s':'')+' × '+inr(q.each)+(q.ref?' · Reference <b>'+q.ref+'</b>':'');$('pt_amt').textContent=inr(q.total);$('pt_amt').dataset.base=q.total;window.rttApplyDisc&&rttApplyDisc();aw.hidden=false;man.hidden=true;}
  else{what.innerHTML=q&&q.ref?'Reference <b>'+q.ref+'</b> – our team will confirm your total on WhatsApp. Enter it below to pay.':'Choose your visa option above (or in the upload form) to see the amount to pay. For other countries our team confirms the amount on WhatsApp.';aw.hidden=!(+$('pt_in').value);man.hidden=false;$('pt_amt').textContent=inr(+$('pt_in').value||0);}}
 function upd(){if(locked)return;const p=pick(),n=Math.max(1,parseInt(f.travellers.value)||1);
  if(p&&p.o.price){const each=p.o.price+SCG;ql.innerHTML='💳 <b>'+inr(each)+'</b> per applicant incl. GST · <b>'+inr(each*n)+'</b> for '+n+' applicant'+(n>1?'s':'');show({label:p.r.n+' – '+p.o.name+(p.o.note?' <small>('+p.o.note+')</small>':''),n,each,total:each*n});}
@@ -661,7 +661,7 @@ function upd(){if(locked)return;const p=pick(),n=Math.max(1,parseInt(f.traveller
 $('pt_in').addEventListener('input',()=>{if(!locked||!locked.total)show(locked);});
 csel.addEventListener('change',fill);vs.addEventListener('change',upd);f.travellers.addEventListener('input',upd);
 window.rttQuote={set(i,k){const r=D.rows[i];if(!r)return;csel.value=D.names[r.c];csel.dispatchEvent(new Event('change'));vs.value=i+':'+k;upd();},
- lock(ref){const p=pick(),n=Math.max(1,parseInt(f.travellers.value)||1);locked=p&&p.o.price?{label:p.r.n+' – '+p.o.name+(p.o.note?' <small>('+p.o.note+')</small>':''),n,each:p.o.price+SCG,total:(p.o.price+SCG)*n,ref}:{ref};show(locked);
+ lock(ref){const p=pick(),n=Math.max(1,parseInt(f.travellers.value)||1);locked=p&&p.o.price?{label:p.r.n+' – '+p.o.name+(p.o.note?' <small>('+p.o.note+')</small>':''),n,each:p.o.price+SCG,total:(p.o.price+SCG)*n,ref}:{ref};show(locked);if(locked.total&&window.rttDiscBox)rttDiscBox(ref,'visa');
   setTimeout(()=>{const m=document.getElementById('vmsg');if(m)m.insertAdjacentHTML('beforeend',' <br><b>Next step:</b> <a href="#pay">pay '+(locked.total?inr(locked.total):'online')+' securely below →</a>');document.getElementById('pay').scrollIntoView({behavior:'smooth'});},50);}};
 f.addEventListener('input',()=>{if(locked&&document.activeElement&&f.contains(document.activeElement)){locked=null;}});
 fill();});
@@ -669,11 +669,11 @@ fill();});
 
 PASS_PTOT = """<div class="ptot" id="ptot"><p class="ptl" id="pt_what">Choose a passport service above to see the amount to pay.</p>
 <label class="ptbk" id="pt_bkw" hidden>Passport booklet <select id="pt_bk"><option value="36">36 pages</option><option value="60">60 pages</option></select></label>
-<div class="ptamt" id="pt_amt_w" hidden><span>Total to pay</span><b id="pt_amt">₹0</b><small>government fee + our service charge, GST included</small></div>
+<div class="ptamt" id="pt_amt_w" hidden><span>Total to pay</span><b id="pt_amt">₹0</b><small>government fee + our service charge, GST included</small></div><p class="pdlines" id="pt_disc_lines"></p><div class="pdisc" id="pt_disc" hidden><div class="pdrow"><input id="pt_cin" placeholder="Have a coupon code?" maxlength="20" autocapitalize="characters" autocomplete="off"><button type="button" class="btn outline" id="pt_cbtn">Apply</button></div><p class="pdmsg" id="pt_cmsg"></p><p class="pdpts" id="pt_pts" hidden></p></div>
 <ol class="ptsteps"><li>Upload your documents above.</li><li>Pay the total securely below (UPI, cards, net banking).</li><li>Send the payment screenshot on WhatsApp with your reference number – we then book your appointment.</li></ol>
 <a class="btn outline ptwa" id="pt_wa" href="https://wa.me/919843121212" target="_blank" rel="noopener">📲 Send payment screenshot on WhatsApp</a></div>"""
 
-PASS_PAY_JS = r"""<script>
+PASS_PAY_JS = r"""<script src="/js/rewards.js" defer></script><script>
 (function(){
 const R=__RATES__,N=__NAMES__,$=i=>document.getElementById(i),f=document.getElementById('vform');if(!f)return;
 const csel=f.querySelector('select[name=country]'),inr=n=>'₹'+Number(n).toLocaleString('en-IN');const byN={};Object.entries(N).forEach(([c,n])=>byN[n]=c);
@@ -684,19 +684,20 @@ document.addEventListener('click',e=>{const l=e.target.closest('a[href^="#upload
 function q(){const c=byN[csel.value],r=R[c];if(!r||r.govt_fee==null)return null;const n=Math.max(1,parseInt(f.travellers&&f.travellers.value)||1);const bk=$('pt_bk').value==='60'&&r.govt_fee_60?r.govt_fee_60:r.govt_fee;return {c,label:csel.value,n,each:bk+r.service_charge,has60:!!r.govt_fee_60,bk:$('pt_bk').value};}
 function wa(ref,t){return 'https://wa.me/919843121212?text='+encodeURIComponent('Hi The Real Tours and Travels, I have paid '+(t?t+' ':'')+'for my passport application'+(ref?' (reference '+ref+')':'')+'. Sending the payment screenshot.');}
 function show(x){const w=$('pt_what');$('pt_bkw').hidden=!(x&&x.has60);
- if(x){w.innerHTML='<b>'+x.label+'</b>'+(x.has60?' · '+x.bk+' pages':'')+'<br>'+x.n+' applicant'+(x.n>1?'s':'')+' × '+inr(x.each)+(x.ref?' · Reference <b>'+x.ref+'</b>':'');$('pt_amt').textContent=inr(x.each*x.n);$('pt_amt_w').hidden=false;}
+ if(x){w.innerHTML='<b>'+x.label+'</b>'+(x.has60?' · '+x.bk+' pages':'')+'<br>'+x.n+' applicant'+(x.n>1?'s':'')+' × '+inr(x.each)+(x.ref?' · Reference <b>'+x.ref+'</b>':'');$('pt_amt').textContent=inr(x.each*x.n);$('pt_amt').dataset.base=x.each*x.n;window.rttApplyDisc&&rttApplyDisc();$('pt_amt_w').hidden=false;}
  else{w.textContent='Choose a passport service above to see the amount to pay.';$('pt_amt_w').hidden=true;}
  $('pt_wa').href=wa(x&&x.ref,x?inr(x.each*x.n):'');}
 function upd(){if(locked)return;show(q());}
 csel.addEventListener('change',upd);$('pt_bk').addEventListener('change',()=>{if(locked){const x=q();if(x){x.ref=locked.ref;locked=x;show(x);}}else upd();});if(f.travellers)f.travellers.addEventListener('input',upd);
 document.querySelectorAll('[data-papply]').forEach(b=>b.addEventListener('click',()=>{locked=null;showUp();csel.value=N[b.dataset.papply];csel.dispatchEvent(new Event('change'));upd();up.scrollIntoView({behavior:'smooth'});}));
-window.rttPass={lock(ref){const x=q();locked=x?Object.assign(x,{ref}):{ref};if(x)show(locked);else{$('pt_what').innerHTML='Reference <b>'+ref+'</b> – our team will confirm the amount.';$('pt_wa').href=wa(ref,'');}
+window.rttPass={lock(ref){const x=q();locked=x?Object.assign(x,{ref}):{ref};if(x)show(locked);if(x&&window.rttDiscBox)rttDiscBox(ref,'passport');else{$('pt_what').innerHTML='Reference <b>'+ref+'</b> – our team will confirm the amount.';$('pt_wa').href=wa(ref,'');}
  setTimeout(()=>{const m=document.getElementById('vmsg');if(m)m.innerHTML='✅ Documents received (reference: <b>'+ref+'</b>).<br><b>Next step:</b> <a href="#pay">pay '+(x?inr(x.each*x.n):'online')+' below</a>, then send the payment screenshot on WhatsApp – we will book your appointment.';document.getElementById('pay').scrollIntoView({behavior:'smooth'});},80);}};
 f.addEventListener('input',e=>{if(locked&&e.target!==$('pt_bk'))locked=null;});
 upd();})();
 </script>"""
 
 VISA_CSS = """
+.pdlines{margin:0;font-size:13.5px;color:var(--muted)}.pdlines:empty{display:none}.pdisc{display:grid;gap:6px;border-top:1px dashed var(--line);padding-top:10px}.pdisc[hidden]{display:none}.pdrow{display:flex;gap:8px}.pdrow input{flex:1;min-width:0;font:500 15px 'Jost',sans-serif;padding:10px 12px;border:1px solid var(--line);border-radius:10px;text-transform:uppercase}.pdrow .btn,.pdpts .btn{padding:8px 16px;font-size:14px}.pdmsg{margin:0;font-size:13.5px}.pdmsg:empty{display:none}.pdmsg.ok{color:#1b7a3a}.pdmsg.err{color:#b3121a}.pdpts{margin:0;font-size:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}.pdpts[hidden]{display:none}
 .pfind{grid-template-columns:1fr auto!important;margin-bottom:6px}@media(max-width:720px){.pfind{grid-template-columns:1fr!important}}.pfind+.vmsg:empty{display:none}#pf_box{scroll-margin-top:150px;margin-top:14px}
 .ptotal{font-size:24px;color:var(--ink)}.ptbk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:14.5px}.ptbk select{font:500 15px 'Jost',sans-serif;padding:8px 10px;border:1px solid var(--line);border-radius:10px}.ptbk[hidden]{display:none}.ptsteps{margin:0;padding-left:20px;font-size:14px;color:var(--ink);display:grid;gap:4px}.ptwa{justify-self:start}
 .vmode>.grow:first-child,.vmode .gst8,.vmode .gtab,.vmode #g_out{display:none!important}

@@ -30,9 +30,10 @@ tr.r{cursor:pointer}tr.r:hover{background:#fdf6f6}.ref{font-family:ui-monospace,
 .files a{display:block;margin:3px 0}
 .admins li{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid var(--line)}
 .hide-sm{}@media(max-width:760px){.hide-sm{display:none}th,td{padding:8px 6px;font-size:13.5px}.kv{grid-template-columns:110px 1fr}}
+.rwf{display:flex;flex-wrap:wrap;gap:8px}.rwf input,.rwf select{padding:9px;border:1px solid var(--line);border-radius:10px;flex:1 1 160px}#rwDrawer h3{margin:22px 0 6px}#rwDrawer table{width:100%}
 </style></head><body>
 <header><img src="/img/logo.png" alt=""><div><b>The Real Tours and Travels</b><small>Office admin – staff only</small></div><span class="sp"></span>
-<span id="who" class="msg"></span><button class="btn o s" id="btnAdmins" hidden>👥 Admins</button><button class="btn o s" id="btnRefresh" hidden>⟳ Refresh</button><button class="btn s" id="btnOut" hidden>Log out</button></header>
+<span id="who" class="msg"></span><button class="btn o s" id="btnRewards" hidden>🎁 Rewards</button><button class="btn o s" id="btnAdmins" hidden>👥 Admins</button><button class="btn o s" id="btnRefresh" hidden>⟳ Refresh</button><button class="btn s" id="btnOut" hidden>Log out</button></header>
 <main>
 <div id="vLoading" class="empty">Loading…</div>
 
@@ -59,6 +60,17 @@ tr.r{cursor:pointer}tr.r:hover{background:#fdf6f6}.ref{font-family:ui-monospace,
 <p class="msg">Admins can see every enquiry and booking. The person must first create an account on the website (Login → Create account) and confirm their email.</p>
 <ul class="admins" id="admList" style="list-style:none;padding:0"></ul>
 <form id="fAdd" style="display:flex;gap:8px;margin-top:10px"><input name="email" type="email" required placeholder="staff@email.com" style="flex:1;padding:9px;border:1px solid var(--line);border-radius:10px"><button class="btn s">Add admin</button></form><p class="msg" id="admMsg"></p></div></div>
+<div class="drawer" id="rwDrawer" hidden><div class="panel"><div style="display:flex;justify-content:space-between;align-items:center"><h2>Rewards &amp; coupons</h2><button class="btn o s" data-close>✕ Close</button></div>
+<h3>Give points for a booking</h3><p class="msg">Use the customer's account email. If a friend referred them, both get referral points on their first booking.</p>
+<form id="fAward" class="rwf"><input name="email" type="email" required placeholder="customer@email.com"><select name="service" id="rwSvc"></select><input name="ref" placeholder="Booking ref (optional)"><button class="btn s">Give points</button></form><p class="msg" id="awMsg"></p>
+<h3>Correct points</h3><p class="msg">Positive number adds points (e.g. refund an unused redemption), negative removes.</p>
+<form id="fAdj" class="rwf"><input name="email" type="email" required placeholder="customer@email.com"><input name="pts" type="number" required placeholder="e.g. 150 or -150"><input name="note" required placeholder="Reason"><button class="btn s">Save</button></form><p class="msg" id="adjMsg"></p>
+<h3>Coupon codes</h3>
+<form id="fCoup" class="rwf"><input name="code" required placeholder="CODE e.g. FIRSTTRIP" style="text-transform:uppercase"><input name="title" required placeholder="Title e.g. ₹250 off your first trip"><select name="kind"><option value="flat">₹ off</option><option value="percent">% off</option></select><input name="amount" type="number" min="1" required placeholder="Amount"><input name="max_discount" type="number" min="1" placeholder="Max ₹ (for %)"><input name="min_amount" type="number" min="0" placeholder="Min booking ₹"><input name="valid_to" type="date" title="Valid till (optional)"><button class="btn s">Add coupon</button></form><p class="msg" id="cpMsg"></p>
+<ul class="admins" id="cpList" style="list-style:none;padding:0"></ul>
+<h3>Points per service</h3><div id="rwSet" class="msg">Loading…</div>
+<h3>Customers' points</h3><div id="rwList" class="msg">Loading…</div>
+</div></div>
 
 <script src="/js/supabase.js"></script>
 <script>
@@ -150,16 +162,42 @@ async function admins(){
 }
 async function start(){
  const {data:{session}}=await c.auth.getSession();
- if(!session){view('vLogin');['btnOut','btnRefresh','btnAdmins'].forEach(b=>$('#'+b).hidden=true);$('#who').textContent='';return;}
+ if(!session){view('vLogin');['btnOut','btnRefresh','btnAdmins','btnRewards'].forEach(b=>$('#'+b).hidden=true);$('#who').textContent='';return;}
  me=(session.user.email||'').toLowerCase();$('#who').textContent=me;$('#btnOut').hidden=false;
  const {data:ok}=await c.rpc('is_admin');
  if(!ok){$('#dEmail').textContent=me;view('vDenied');return;}
- $('#btnRefresh').hidden=false;$('#btnAdmins').hidden=false;view('vApp');load();
+ $('#btnRefresh').hidden=false;$('#btnAdmins').hidden=false;$('#btnRewards').hidden=false;view('vApp');load();
 }
 $('#fLogin').addEventListener('submit',async e=>{e.preventDefault();const f=e.target;$('#lMsg').textContent='Logging in…';$('#lMsg').className='msg';
  const {error}=await c.auth.signInWithPassword({email:f.email.value.trim(),password:f.password.value});
  if(error){$('#lMsg').textContent='Wrong email or password.';$('#lMsg').className='msg err';return;}start();});
 const out=async()=>{await c.auth.signOut();start();};$('#btnOut').onclick=out;$('#btnOut2').onclick=out;
+
+async function rewards(){
+ $('#rwDrawer').hidden=false;
+ const {data:set}=await c.from('reward_settings').select('*').order('points');
+ $('#rwSvc').innerHTML=(set||[]).filter(x=>!['welcome','referral'].includes(x.key)).map(x=>'<option value="'+x.key+'">'+esc(x.label)+' – '+x.points+' pts</option>').join('');
+ $('#rwSet').innerHTML='<table><tbody>'+(set||[]).map(x=>'<tr><td>'+esc(x.label)+'</td><td><input type="number" min="0" value="'+x.points+'" data-set="'+x.key+'" style="width:90px"> pts</td></tr>').join('')+'</tbody></table>';
+ coupons();
+ const {data:l}=await c.rpc('rewards_admin_list');
+ $('#rwList').innerHTML=(l&&l.length)?'<table><thead><tr><th>Customer</th><th>Points</th><th>Referral code</th><th>Referred by</th></tr></thead><tbody>'+l.map(r=>'<tr><td>'+esc(r.email)+'</td><td>'+r.balance+'</td><td>'+esc(r.code||'')+'</td><td>'+esc(r.referred_by_email||'')+'</td></tr>').join('')+'</tbody></table>':'No customers yet.';
+}
+async function coupons(){
+ const {data}=await c.from('coupons').select('*').order('created_at',{ascending:false});
+ $('#cpList').innerHTML=(data||[]).map(k=>'<li><span><b>'+esc(k.code)+'</b> – '+esc(k.title)+' · '+(k.kind==='percent'?k.amount+'%':'₹'+k.amount)+(k.min_amount?' · min ₹'+k.min_amount:'')+(k.valid_to?' · till '+fd(k.valid_to):'')+(k.active?'':' · <i>off</i>')+'</span><button class="btn o s" data-cp="'+esc(k.code)+'" data-on="'+(k.active?1:0)+'">'+(k.active?'Turn off':'Turn on')+'</button></li>').join('')||'<li>No coupons yet.</li>';
+}
+$('#btnRewards').onclick=rewards;
+$('#fAward').addEventListener('submit',async e=>{e.preventDefault();const f=e.target;$('#awMsg').textContent='Saving…';
+ const {data,error}=await c.rpc('rewards_award',{customer_email:f.email.value.trim(),service:f.service.value,ref:f.ref.value.trim()||null});
+ $('#awMsg').textContent=error?error.message:('✅ Gave '+data.points+' points. New balance: '+data.balance);if(!error){f.reset();rewards();}});
+$('#fAdj').addEventListener('submit',async e=>{e.preventDefault();const f=e.target;
+ const {data,error}=await c.rpc('rewards_adjust',{customer_email:f.email.value.trim(),pts:+f.pts.value,note:f.note.value.trim()});
+ $('#adjMsg').textContent=error?error.message:'✅ Saved. New balance: '+data;if(!error){f.reset();rewards();}});
+$('#fCoup').addEventListener('submit',async e=>{e.preventDefault();const f=e.target;
+ const row={code:f.code.value.trim().toUpperCase(),title:f.title.value.trim(),kind:f.kind.value,amount:+f.amount.value,max_discount:f.max_discount.value?+f.max_discount.value:null,min_amount:f.min_amount.value?+f.min_amount.value:0,valid_to:f.valid_to.value||null};
+ const {error}=await c.from('coupons').insert(row);$('#cpMsg').textContent=error?error.message:'✅ Coupon '+row.code+' added.';if(!error){f.reset();coupons();}});
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-cp]');if(!b)return;await c.from('coupons').update({active:b.dataset.on!=='1'}).eq('code',b.dataset.cp);coupons();});
+document.addEventListener('change',async e=>{const i=e.target.closest('[data-set]');if(!i)return;const {error}=await c.from('reward_settings').update({points:+i.value}).eq('key',i.dataset.set);i.style.borderColor=error?'red':'green';});
 $('#btnRefresh').onclick=load;$('#btnCsv').onclick=csv;$('#btnAdmins').onclick=admins;
 $('#tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(b){tab=b.dataset.k;render();}});
 ['#q','#fType','#fSort'].forEach(s=>$(s).addEventListener('input',render));

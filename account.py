@@ -8,6 +8,7 @@ STORE_KEY = "sb-byvytpxqqgjschknqpms-auth-token"
 SITE_JS = f"""<script>
 (function(){{
  const SB="{SB_URL}",KEY="{SB_KEY}",LIB="{SBJS}";
+ try{{const rf=new URLSearchParams(location.search).get('ref');if(rf&&/^[A-Za-z0-9]{{4,12}}$/.test(rf))localStorage.setItem('rtt_ref',rf.toUpperCase());}}catch(_){{}}
  let has=false;try{{has=!!localStorage.getItem('{STORE_KEY}');}}catch(_){{}}
  window.rttClient=function(){{return window.__rttc||(window.__rttc=new Promise((ok,no)=>{{const go=()=>ok(supabase.createClient(SB,KEY,{{auth:{{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}}}));if(window.supabase)return go();const s=document.createElement('script');s.src=LIB;s.onload=go;s.onerror=no;document.head.appendChild(s);}}));}};
  if(!has&&!/[#&](access_token|type=recovery)/.test(location.hash))return;
@@ -59,7 +60,7 @@ def account_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band):
 <li>Your details are filled in automatically when you book flights, hotels, cruises, visas, insurance or packages</li>
 <li>See all your enquiries and their reference numbers in one place</li>
 <li>Get members-first travel offers and festival deals (only if you choose)</li>
-<li>Free – no card needed</li></ul>
+<li>🎁 <b>100 welcome reward points</b> + earn points on every booking</li><li>Refer friends – you both get bonus points</li><li>Free – no card needed</li></ul>
 <p class="meta">Prefer to talk? Call or WhatsApp <a href="tel:{PHONE_RAW}">{PHONE}</a>.</p></div>
 </div></div>
 
@@ -86,7 +87,12 @@ def account_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band):
 <label class="chk"><input type="checkbox" name="consent_whatsapp"><span>Send me offers and updates on WhatsApp</span></label>
 <label class="chk"><input type="checkbox" name="consent_email"><span>Send me offers and updates by email</span></label>
 <button class="btn gold" type="submit">Save my details</button><p class="vmsg" role="status"></p></form>
-<div class="acct-card"><h2 style="margin:0 0 6px">My enquiries</h2><div id="a_enq" class="meta">Loading…</div></div>
+<div style="display:grid;gap:24px"><div class="acct-card rwcard" id="a_rw"><div class="rwtop"><div><h2 style="margin:0">🎁 My Rewards</h2><p class="meta" style="margin:2px 0 0">1 point = ₹1 off your next booking</p></div><div class="rwbal"><b id="rw_bal">–</b><span>points</span></div></div>
+<div class="rwref"><b>Refer &amp; earn</b><p class="meta" style="margin:2px 0 8px">Share your code. When your friend makes their first booking, you both get <b id="rw_refpts">100</b> points.</p>
+<div class="rwcode"><span id="rw_code">……</span><button type="button" class="btn outline" id="rw_copy">Copy link</button><a class="btn gold" id="rw_wa" target="_blank" rel="noopener" href="#">Share on WhatsApp</a></div></div>
+<details class="rwhow"><summary>How to earn points</summary><ul class="ticks" id="rw_earn"></ul><p class="meta">Points are valid for 12 months and can pay up to 10% of a booking. <a href="../offers/">See all offers</a></p></details>
+<details class="rwhow"><summary>Points history</summary><ul class="enq" id="rw_hist"><li>Loading…</li></ul></details></div>
+<div class="acct-card"><h2 style="margin:0 0 6px">My enquiries</h2><div id="a_enq" class="meta">Loading…</div></div></div>
 </div></div>
 </div></section>
 <script src="{SBJS}"></script>
@@ -114,7 +120,21 @@ window.rttClient().then(async c=>{{
   p=p||{{}};$('#a_name').textContent=(p.full_name||'traveller').split(' ')[0];
   const f=$('#f_profile');['full_name','phone','email','city','date_of_birth','food_preference','travel_interests'].forEach(k=>{{if(f[k])f[k].value=p[k]||'';}});
   f.consent_email.checked=!!p.consent_email;f.consent_whatsapp.checked=!!p.consent_whatsapp;
-  loadEnq();
+  loadEnq();loadRewards();
+ }}
+ async function loadRewards(){{
+  let ref=null;try{{ref=localStorage.getItem('rtt_ref');}}catch(_){{}}
+  const r=await c.rpc('rewards_init',{{ref_code:ref}});if(r.error){{$('#a_rw').hidden=true;return;}}
+  try{{localStorage.removeItem('rtt_ref');}}catch(_){{}}
+  const code=r.data.code,link='https://www.therealtoursandtravels.com/?ref='+code;
+  $('#rw_bal').textContent=r.data.balance;$('#rw_code').textContent=code;
+  const {{data:set}}=await c.from('reward_settings').select('*').order('points');
+  const S={{}};(set||[]).forEach(x=>S[x.key]=x);if(S.referral)$('#rw_refpts').textContent=S.referral.points;
+  $('#rw_earn').innerHTML=(set||[]).filter(x=>!['welcome','referral'].includes(x.key)).map(x=>'<li>'+x.label+': <b>'+x.points+' points</b></li>').join('');
+  $('#rw_wa').href='https://wa.me/?text='+encodeURIComponent('I book my trips with The Real Tours and Travels (since 1981). Use my code '+code+' – we both get '+((S.referral||{{}}).points||100)+' reward points on your first booking: '+link);
+  $('#rw_copy').onclick=()=>{{navigator.clipboard&&navigator.clipboard.writeText(link).then(()=>{{$('#rw_copy').textContent='Copied ✓';}});}};
+  const {{data:h}}=await c.from('reward_ledger').select('points,note,created_at,expires_at').order('created_at',{{ascending:false}}).limit(50);
+  $('#rw_hist').innerHTML=(h||[]).map(x=>'<li><b style="color:'+(x.points>0?'#1b7a3a':'#b3121a')+'">'+(x.points>0?'+':'')+x.points+'</b> '+(x.note||'')+'<br><small>'+new Date(x.created_at).toLocaleDateString('en-IN',{{dateStyle:'medium'}})+(x.expires_at&&x.points>0?' · valid till '+new Date(x.expires_at).toLocaleDateString('en-IN',{{dateStyle:'medium'}}):'')+'</small></li>').join('')||'<li>No points yet.</li>';
  }}
  async function loadEnq(){{
   const T=[['flight_enquiries','FL','✈️ Flight',r=>r.from_city+' → '+r.to_city+' · '+r.depart_date],['booking_enquiries','',null,r=>r.destination+(r.start_date?' · '+r.start_date:(r.travel_month?' · '+r.travel_month:''))],['insurance_enquiries','IN','🛡️ Insurance',r=>r.destination+' · '+r.start_date],['trip_requests','','✨ Package',r=>r.destination+' · '+r.days+' days'],['visa_applications','','🛂 Visa / Passport',r=>r.country],['service_enquiries','SV','🧳 Enquiry',r=>r.service+' · '+(r.destination||r.travel_month||'')]];
@@ -156,6 +176,7 @@ window.rttClient().then(async c=>{{
 </script>"""
 
 ACCOUNT_CSS = """
+.rwcard{display:grid;gap:14px;border-top:4px solid var(--red)}.rwtop{display:flex;justify-content:space-between;align-items:center;gap:12px}.rwbal{display:grid;text-align:center;background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:8px 16px}.rwbal b{font-size:30px;color:var(--crimson);line-height:1.1}.rwbal span{font-size:12px;color:var(--muted)}.rwref{background:#fdf6f6;border-radius:14px;padding:12px 14px}.rwcode{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.rwcode span{font:700 18px monospace;letter-spacing:2px;background:#fff;border:1px dashed var(--crimson);border-radius:10px;padding:6px 12px}.rwcode .btn{padding:7px 14px;font-size:14px}.rwhow summary{cursor:pointer;font-weight:600}
 .acct-link{position:absolute;right:22px;top:50%;transform:translateY(-50%);text-decoration:none;color:var(--crimson);font-weight:600;border:1.5px solid var(--red);border-radius:999px;padding:8px 16px;white-space:nowrap;background:#fff}
 .acct-link:hover{background:#fdf0f0}
 header.site .hrow{position:relative}
