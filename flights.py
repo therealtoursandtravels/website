@@ -423,6 +423,15 @@ Object.entries(forms).forEach(([kind,f])=>f.addEventListener('submit',async e=>{
   document.addEventListener('click',e=>{{if(!c.contains(e.target))pop.hidden=true;}});
   px.closest('form').addEventListener('reset',()=>setTimeout(draw,0));}});
 }})();
+// mobile: keep the main button reachable – move it to the end of its form and stick it to the bottom of the screen
+(function(){{if(!matchMedia('(max-width:700px)').matches||!('IntersectionObserver' in window))return;
+ const fl=document.createElement('button');fl.type='button';fl.className='btn gold fgo-float';fl.hidden=true;document.body.appendChild(fl);
+ let cur=null,formIn=new Set(),btnIn=new Set();
+ const upd=()=>{{const f=[...box.querySelectorAll('form')].find(x=>!x.hidden&&formIn.has(x));const b=f&&f.querySelector('.fgo');cur=b;fl.hidden=!(b&&!btnIn.has(b));if(b)fl.textContent=b.textContent;}};
+ const io=new IntersectionObserver(es=>{{es.forEach(e=>{{const set=e.target.tagName==='FORM'?formIn:btnIn;e.isIntersecting?set.add(e.target):set.delete(e.target);}});upd();}});
+ box.querySelectorAll('form').forEach(f=>{{io.observe(f);const b=f.querySelector('.fgo');if(b)io.observe(b);}});
+ box.addEventListener('click',()=>setTimeout(upd,50));
+ fl.addEventListener('click',()=>{{if(!cur)return;const f=cur.closest('form');cur.click();setTimeout(()=>{{const m=f.querySelector('.fmsg');const bad=f.querySelector(':invalid');if(m&&m.textContent.trim())m.scrollIntoView({{behavior:'smooth',block:'center'}});else if(bad)bad.scrollIntoView({{behavior:'smooth',block:'center'}});}},150);}});}})();
 }})();
 </script><script>"""+FSEARCH_JS.replace("__SB__",SB_URL).replace("__KEY__",SB_KEY)+"""</script>"""
 
@@ -627,4 +636,6 @@ FLIGHT_CSS = """
  .fbar form[data-kind=flight] .fmain>.fcell{padding:12px 16px!important}.fbar form[data-kind=flight] .fcab select{font-size:18px}}
 
 @media(min-width:1101px){.fbar form[data-kind=flight] .fmain>.fcell:nth-of-type(2){padding-left:32px!important}}
+
+.fgo-float{position:fixed;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:70;height:50px;border:0;border-radius:12px;font:600 16px 'Jost',sans-serif;box-shadow:0 10px 26px rgba(0,0,0,.25);cursor:pointer}.fgo-float[hidden]{display:none}html.is-app .fgo-float{bottom:calc(80px + env(safe-area-inset-bottom))}
 """

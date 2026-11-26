@@ -449,6 +449,8 @@ footer ul{list-style:none;padding:0;margin:0}footer li{margin:7px 0}
 
 @media(min-width:1101px){.fbar form[data-kind=flight] .fmain>.fcell:nth-of-type(2){padding-left:32px!important}}
 
+.fgo-float{position:fixed;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:70;height:50px;border:0;border-radius:12px;font:600 16px 'Jost',sans-serif;box-shadow:0 10px 26px rgba(0,0,0,.25);cursor:pointer}.fgo-float[hidden]{display:none}html.is-app .fgo-float{bottom:calc(80px + env(safe-area-inset-bottom))}
+
 .qt-form{display:grid;gap:14px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px}
 .qrow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .qt-form label{display:grid;gap:5px;font-size:13px;font-weight:600;color:var(--wine)}
