@@ -355,8 +355,13 @@ f.addEventListener('submit',async e=>{{
 {"" if P else visa_finder(ITEMS)}
 <section id="countries"{"" if P else ' style="padding-top:0"'}><div class="wrap">
 {f"""<div class="head"><span class="kicker">{T["k2"]}</span><h2>{T["h2"]}</h2><p class="lead">{T["lead2"]}</p></div>
-<div class="vtabs" role="tablist">{tabs}</div>
-<div class="vbox">{panels}</div>""" if P else ""}
+<form class="vfind pfind" id="pfind" onsubmit="return false"><label><span>Select passport service</span><select id="pf_s"><option value="">Select service</option>{"".join(f'<option value="{c}">{n}</option>' for (c,_,n,_,_) in ITEMS)}</select></label><button class="btn gold" id="pf_go" type="submit">Show details</button></form>
+<p class="vmsg" id="pf_msg" role="status"></p>
+<div class="vtabs" role="tablist" hidden>{tabs}</div>
+<div class="vbox" id="pf_box" hidden>{panels}</div>
+<script>(function(){{const s=document.getElementById('pf_s'),bx=document.getElementById('pf_box'),m=document.getElementById('pf_msg');
+function go(){{m.textContent='';m.className='vmsg';if(!s.value){{m.textContent='Please select a passport service.';m.classList.add('err');s.focus();return;}}bx.hidden=false;bx.querySelectorAll('.vpanel').forEach(p=>p.hidden=p.dataset.c!==s.value);setTimeout(()=>bx.scrollIntoView({{behavior:'smooth',block:'start'}}),30);}}
+s.addEventListener('change',()=>{{if(s.value)go();}});document.getElementById('pfind').addEventListener('submit',go);}})();</script>""" if P else ""}
 <div class="vtrack" id="track"><div><b>🔎 Already applied with us? Track your application</b><p>Enter the reference number from your confirmation – we reply on WhatsApp with the latest status.</p></div>
 <div class="vtrk"><input id="trk_ref" maxlength="20" placeholder="Reference, e.g. 3F9A1C2B" autocomplete="off" aria-label="Your reference number"><a class="btn gold" id="trk_go" href="https://wa.me/919843121212" target="_blank" rel="noopener">Track on WhatsApp</a></div>
 <p class="vmsg" id="trk_msg" role="status" aria-live="polite"></p></div>
@@ -692,6 +697,7 @@ upd();})();
 </script>"""
 
 VISA_CSS = """
+.pfind{grid-template-columns:1fr auto!important;margin-bottom:6px}@media(max-width:720px){.pfind{grid-template-columns:1fr!important}}.pfind+.vmsg:empty{display:none}#pf_box{scroll-margin-top:150px;margin-top:14px}
 .ptotal{font-size:24px;color:var(--ink)}.ptbk{display:flex;align-items:center;gap:10px;font-weight:500;font-size:14.5px}.ptbk select{font:500 15px 'Jost',sans-serif;padding:8px 10px;border:1px solid var(--line);border-radius:10px}.ptbk[hidden]{display:none}.ptsteps{margin:0;padding-left:20px;font-size:14px;color:var(--ink);display:grid;gap:4px}.ptwa{justify-self:start}
 .vmode>.grow:first-child,.vmode .gst8,.vmode .gtab,.vmode #g_out{display:none!important}
 .ptot{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:14px 0;text-align:left;display:grid;gap:10px}
