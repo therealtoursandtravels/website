@@ -36,6 +36,7 @@ def holiday_packages_page(root, wa_number, cta_band):
 <div class="hpgrid">{"".join(cards)}</div>
 <p class="meta hpnote">Prices are per person on twin sharing and depend on travel dates, hotel availability and flights (flights not included unless mentioned). Our team confirms the final price before you pay. GST and TCS as applicable.</p>
 </div></section>
+<section><div class="wrap"><h2>Destination guides</h2><div class="tlinks">{"".join(f'<a class="tlink" href="{root}tours/{d["slug"]}/">{d["name"]}</a>' for d in __import__("tours").DEST)}</div></div></section>
 <section class="alt"><div class="wrap" style="text-align:center"><h2>Want a different plan?</h2><p class="lead">Choose your own places, days, hotels and car – get an instant itinerary.</p><a class="btn gold" href="{root}customize-your-package/">Create a Customized Package</a></div></section>
 {cta_band()}
 <script>(function(){{const g=document.querySelector('.hpgrid');document.querySelectorAll('.hpf').forEach(b=>b.addEventListener('click',()=>{{document.querySelectorAll('.hpf').forEach(x=>x.classList.toggle('on',x===b));const f=b.dataset.f;g.querySelectorAll('.hpcard').forEach(c=>{{c.hidden=!(f==='all'||c.dataset.type===f||c.dataset.tags.split(' ').includes(f));}});}}));}})();</script>"""

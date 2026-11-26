@@ -2,11 +2,12 @@
 """Static site generator for The Real Tours and Travels (SEO site)."""
 import json, os, datetime, re
 from articles import ARTICLES
-from visa import visa_page, passport_page, VISA_CSS
+from visa import visa_page, passport_page, VISA_CSS, COUNTRIES, NEW_COUNTRIES, clean_docs, WHEN, CARD_WHEN, BIOMETRICS, ENTRY
 from planner import planner_page, PLANNER_CSS
 from flights import flight_widget, FLIGHT_CSS
 import packages as hpk
 import offers as ofr
+import tours
 from tools import gst_tool_page, TOOL_CSS
 import pwa
 from insurance import insurance_page
@@ -441,7 +442,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
         _root = "../" * path.strip("/").count("/") + "../"
         body = re.sub(r'<section class="hero"(?: style="[^"]*")?>', f'<section class="hero home-hero photo-hero" style="--hero:url({_root}img/h-{_ph}.jpg)">', body, count=1)
         hero_img = f"h-{_ph}.jpg"
-    if path in ("/visa/", "/passport/", "/insurance/", "/customize-your-package/", "/holiday-packages/", "/offers/"):
+    if path in ("/visa/", "/passport/", "/insurance/", "/customize-your-package/", "/holiday-packages/", "/offers/") or path.startswith("/tours/") or (path.startswith("/visa/") and path != "/visa/"):
         body = re.sub(r'(<section class="hero[^"]*"[^>]*>\s*<div class="wrap)(")', r'\1 fhwrap cpt\2', body, count=1)
     lds = [jsonld_org()] + (extra_ld or [])
     if path == "/":
@@ -542,7 +543,7 @@ CSSV = "0"
 def build():
     root = os.path.dirname(os.path.abspath(__file__))
     global CSSV
-    css_all = ofr.CSS + hpk.CSS + CSS + VISA_CSS + PLANNER_CSS + FLIGHT_CSS + TOOL_CSS + pwa.CSS + account.ACCOUNT_CSS + SVC_CSS + fx.CSS
+    css_all = tours.CSS + ofr.CSS + hpk.CSS + CSS + VISA_CSS + PLANNER_CSS + FLIGHT_CSS + TOOL_CSS + pwa.CSS + account.ACCOUNT_CSS + SVC_CSS + fx.CSS
     CSSV = __import__("hashlib").md5(css_all.encode()).hexdigest()[:8]
     open(os.path.join(root, "style.css"), "w").write(css_all)
     imgs = set(os.listdir(os.path.join(root, "img")))
@@ -673,6 +674,19 @@ def build():
 <section><div class="wrap two"><div><h2>Why book with The Real Tours and Travels</h2><ul class="ticks"><li>We compare fares across airlines and hotels for you</li><li>Group bookings, family seats together and special meals arranged</li><li>Changes, cancellations and web check-in help – one call away</li><li>Visas and travel insurance in the same place</li></ul></div>
 <div><h2>How it works</h2><ul class="ticks"><li>1. Enter your trip details and tap <b>Get Quote</b></li><li>2. We reply with the best options on WhatsApp / email</li><li>3. Confirm and pay – your tickets and vouchers are issued by our team</li></ul></div></div></section>{cta_band()}"""
     write("/flights-hotels/", page("/flights-hotels/", "Flight Tickets, Hotel & Cruise Booking | The Real Tours and Travels", "Book domestic and international flight tickets and hotels with The Real Tours and Travels. Search and request a quote – we reply with the best fares on WhatsApp.", fh, None, "flight.jpg"))
+    # SEO landing pages: destinations + country visa guides
+    TOUR_URLS = []
+    for d in tours.DEST:
+        tb, tld = tours.dest_page(d, "../../")
+        u = f"/tours/{d['slug']}/"; TOUR_URLS.append(u)
+        write(u, page(u, f"{d['name']} Tour Package – {d['nights']} Itinerary & Best Time | The Real Tours and Travels", f"{d['name']} tour package by The Real Tours and Travels (since 1981): {d['nights']} sample itinerary, best time to visit, highlights and FAQs. Customise your {d['name']} trip – call/WhatsApp 98431 21212.", tb, tld, d["img"] + ".jpg"))
+    import json as _json
+    _cat = _json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "visa_catalog.json")))
+    VISA_URLS = []
+    for slug, nm, fl, card, vb, vld in tours.visa_pages(list({x[0]: x for x in list(COUNTRIES) + list(NEW_COUNTRIES)}.values()), clean_docs, WHEN, CARD_WHEN, BIOMETRICS, ENTRY, _cat):
+        u = f"/visa/{slug}/"; VISA_URLS.append((u, nm, fl))
+        what = "Arrival Card" if card else "Visa"
+        write(u, page(u, f"{nm} {what} for Indians – Documents, Price & How to Apply", f"{nm} {what.lower()} for Indian passport holders: documents required, when to apply, processing time and price. Upload documents and pay online with The Real Tours and Travels.", vb, vld, "h-passport.jpg"))
     write("/offers/", page("/offers/", "Offers, Coupons & Reward Points | The Real Tours and Travels", "Travel offers from The Real Tours and Travels – 100 welcome points, refer & earn, reward points on every flight, hotel, holiday, visa and passport booking, and coupon codes.", ofr.offers_page("../", cta_band), None, "g-maldives.jpg"))
     write("/holiday-packages/", page("/holiday-packages/", "Holiday Packages – Ready Tour Packages | The Real Tours and Travels", "Ready-made holiday packages in India and abroad – Kashmir, Kerala, Ladakh, Golden Triangle, Char Dham, Shikharji with Maharaj, Dubai, Bali, Maldives, Switzerland & Paris. Pick a package and book.", hpk.holiday_packages_page("../", "919843121212", cta_band), None, "g-swiss.jpg"))
     # Customized Packages
@@ -783,7 +797,7 @@ def build():
     for old_p, new_p in {"/weekend-getaways-from-mumbai/": "/weekend-getaways/", "/blog/best-december-holidays-from-mumbai/": "/blog/best-december-family-holidays/", "/police-clearance-certificate-pcc-document-services/": "/passport/", "/review/": "https://search.google.com/local/writereview?placeid=ChIJn8v1TlS45zsRAQu5MAlfr1U"}.items():
         write(old_p, f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><link rel="canonical" href="{new_p if new_p.startswith('http') else SITE+new_p}"><meta http-equiv="refresh" content="0; url={new_p}"><title>Moved</title></head><body><a href="{new_p}">This page has moved</a></body></html>')
     # sitemap / robots / CNAME
-    urls = ["/"] + [f"/{s['slug']}/" for s in SERVICES] + ["/blog/", "/visa/", "/passport/", "/insurance/", "/about/", "/flights-hotels/", "/customize-your-package/", "/holiday-packages/", "/offers/"] + [f"/blog/{a['slug']}/" for a in ARTICLES] + ["/contact/", "/terms/", "/privacy-policy/", "/cancellation-refund-policy/"]
+    urls = ["/"] + [f"/{s['slug']}/" for s in SERVICES] + ["/blog/", "/visa/", "/passport/", "/insurance/", "/about/", "/flights-hotels/", "/customize-your-package/", "/holiday-packages/", "/offers/"] + TOUR_URLS + [u for u, _, _ in VISA_URLS] + [f"/blog/{a['slug']}/" for a in ARTICLES] + ["/contact/", "/terms/", "/privacy-policy/", "/cancellation-refund-policy/"]
     def _img(u):
         k = "hero-travel.jpg" if u == "/" else (f"h-{PAGE_PHOTO[u]}.jpg" if u in PAGE_PHOTO else None)
         return f"<image:image><image:loc>{SITE}/img/{k}</image:loc></image:image>" if k else ""

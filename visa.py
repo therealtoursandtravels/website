@@ -352,7 +352,7 @@ f.addEventListener('submit',async e=>{{
 
 </div>{seal("../")}</div></section>
 
-{"" if P else visa_finder(ITEMS)}
+{"" if P else visa_finder(ITEMS) + VF_PARAM_JS + vguides(ITEMS)}
 <section id="countries"{"" if P else ' style="padding-top:0"'}><div class="wrap">
 {f"""<div class="head"><span class="kicker">{T["k2"]}</span><h2>{T["h2"]}</h2><p class="lead">{T["lead2"]}</p></div>
 <form class="vfind pfind" id="pfind" onsubmit="return false"><label><span>Select passport service</span><select id="pf_s"><option value="">Select service</option>{"".join(f'<option value="{c}">{n}</option>' for (c,_,n,_,_) in ITEMS)}</select></label><button class="btn gold" id="pf_go" type="submit">Show details</button></form>
@@ -695,6 +695,20 @@ window.rttPass={lock(ref){const x=q();locked=x?Object.assign(x,{ref}):{ref};if(x
 f.addEventListener('input',e=>{if(locked&&e.target!==$('pt_bk'))locked=null;});
 upd();})();
 </script>"""
+
+VF_PARAM_JS = """<script>(function(){const code=new URLSearchParams(location.search).get('country');const D=window.VFD;if(!code||!D)return;const i=D.rows.findIndex(r=>r.c===code);if(i<0)return;const c=document.getElementById('vf_c'),j=document.getElementById('vf_j');c.value=String(i);c.dispatchEvent(new Event('change'));if(j.options.length===1){document.getElementById('vf_go').click();}else{setTimeout(()=>{document.getElementById('find').scrollIntoView({behavior:'smooth'});j.focus();},300);}})();</script>"""
+
+def vguides(ITEMS):
+    import re as _re
+    S = {"uae": "dubai-uae", "uk": "uk", "usa": "usa", "schengen": "schengen", "southkorea": "south-korea", "newzealand": "new-zealand", "srilanka": "sri-lanka", "hongkong": "hong-kong"}
+    seen = set(); links = []
+    for (c, f, n, _h, _d) in ITEMS:
+        if c in seen or c == "nepal":
+            continue
+        seen.add(c)
+        slug = S.get(c, _re.sub(r"[^a-z0-9]+", "-", n.split("/")[0].lower()).strip("-"))
+        links.append(f'<a class="tlink" href="{slug}/">{f} {n.replace(" / UAE", "")}</a>')
+    return '<section class="alt"><div class="wrap"><h2>Visa guides by country</h2><p class="lead">Documents, when to apply and price for each country.</p><div class="tlinks">' + "".join(links) + "</div></div></section>"
 
 VISA_CSS = """
 .pdlines{margin:0;font-size:13.5px;color:var(--muted)}.pdlines:empty{display:none}.pdisc{display:grid;gap:6px;border-top:1px dashed var(--line);padding-top:10px}.pdisc[hidden]{display:none}.pdrow{display:flex;gap:8px}.pdrow input{flex:1;min-width:0;font:500 15px 'Jost',sans-serif;padding:10px 12px;border:1px solid var(--line);border-radius:10px;text-transform:uppercase}.pdrow .btn,.pdpts .btn{padding:8px 16px;font-size:14px}.pdmsg{margin:0;font-size:13.5px}.pdmsg:empty{display:none}.pdmsg.ok{color:#1b7a3a}.pdmsg.err{color:#b3121a}.pdpts{margin:0;font-size:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}.pdpts[hidden]{display:none}
