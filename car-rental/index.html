@@ -112,6 +112,18 @@ document.querySelectorAll('form.sform').forEach(f=>{
 });
 })();
 </script>
+<section class="alt" id="carpay" hidden><div class="wrap" style="max-width:720px"><div class="paybox"><span class="kicker" style="justify-content:center">Secure payment</span><h2 style="margin:4px 0 10px">Pay for your car booking</h2>
+<div id="cp_body" class="meta">Loading your quote…</div>
+<div id="cp_pay" hidden><form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_U3RKkNsxkSYwez" async></script></form>
+<p style="font-size:13px;color:var(--muted);margin:6px 0 0">🔒 Secured by Razorpay · By paying you agree to our <a href="../terms/">Terms</a> and <a href="../cancellation-refund-policy/">Cancellation &amp; Refund Policy</a>.</p></div></div></div></section>
+<script>(function(){const ref=new URLSearchParams(location.search).get('pay');if(!ref)return;const sec=document.getElementById('carpay');sec.hidden=false;
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[x]);const inr=n=>'₹'+Number(n).toLocaleString('en-IN',{maximumFractionDigits:2});
+const enq=document.getElementById('enquire');if(enq)enq.hidden=true;setTimeout(()=>sec.scrollIntoView({behavior:'smooth'}),300);
+fetch("https://byvytpxqqgjschknqpms.supabase.co/rest/v1/rpc/get_car_quote",{method:'POST',headers:{apikey:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5dnl0cHhxcWdqc2Noa25xcG1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ5MzM0NDMsImV4cCI6MjExMDUwOTQ0M30.AyJHMAk3jHQM7GahMLLxxWYT0-mr5SUnzrhAm0J2ZGA",Authorization:"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5dnl0cHhxcWdqc2Noa25xcG1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ5MzM0NDMsImV4cCI6MjExMDUwOTQ0M30.AyJHMAk3jHQM7GahMLLxxWYT0-mr5SUnzrhAm0J2ZGA",'Content-Type':'application/json'},body:JSON.stringify({p_ref:ref})}).then(r=>r.json()).then(d=>{const q=Array.isArray(d)&&d[0];const b=document.getElementById('cp_body');
+ if(!q){b.innerHTML='Sorry, we could not find this quote. Please WhatsApp us on <a href="https://wa.me/919843121212">98431 21212</a>.';return;}
+ if(q.status!=='sent'){b.innerHTML='Quote <b>'+esc(q.ref)+'</b> is already <b>'+esc(q.status)+'</b>. For help, WhatsApp us on <a href="https://wa.me/919843121212">98431 21212</a>.';return;}
+ b.innerHTML='<table class="gtab"><tr><td>Reference</td><td><b>'+esc(q.ref)+'</b></td></tr>'+(q.customer_name?'<tr><td>Name</td><td>'+esc(q.customer_name)+'</td></tr>':'')+'<tr><td>Trip</td><td>'+esc(q.trip)+'</td></tr>'+(q.pickup_at?'<tr><td>Pick-up</td><td>'+esc(q.pickup_at)+'</td></tr>':'')+(q.car?'<tr><td>Car</td><td>'+esc(q.car)+'</td></tr>':'')+(q.pax?'<tr><td>Passengers</td><td>'+q.pax+'</td></tr>':'')+'<tr class="gtot"><td>Total to pay</td><td>'+inr(q.total)+'</td></tr></table><p class="gnote">In the payment window, enter <b>'+inr(q.total)+'</b> as the amount and <b>'+esc(q.ref)+'</b> as the reference. After paying, please WhatsApp the payment screenshot to <a href="https://wa.me/919843121212?text='+encodeURIComponent('Paid for car booking '+q.ref)+'">98431 21212</a> – we confirm your car and share driver details.</p>';
+ document.getElementById('cp_pay').hidden=false;}).catch(()=>{document.getElementById('cp_body').textContent='Could not load your quote. Please WhatsApp us on 98431 21212.';});})();</script>
 <section><div class="wrap">
 <div class="fxgrid">
 <div class="fxcard"><span>🇮🇳</span><h3>Within India</h3><p>Airport pick-ups and drops, one-way and round-trip outstation cabs, local cars by the hour, and Tempo Travellers for groups – in cities across India.</p></div>
@@ -120,8 +132,8 @@ document.querySelectorAll('form.sform').forEach(f=>{
 </div>
 <div class="fxsteps"><h2>How it works</h2><ol>
 <li><b>Send your enquiry</b> – pick-up, drop, date and car type.</li>
-<li><b>Get the fare</b> – we share the confirmed fare and what is included (fuel, tolls, parking, driver allowance).</li>
-<li><b>Pay online</b> to confirm.</li>
+<li><b>Get the fare</b> – we send you a secure payment link with the confirmed fare and what is included (fuel, tolls, parking, driver allowance).</li>
+<li><b>Pay online</b> through the link to confirm.</li>
 <li><b>Get driver details</b> before your trip.</li></ol></div>
 <div class="fxdocs"><h2>For self-drive cars abroad</h2><ul class="ticks"><li>Valid Indian driving licence (held for the period the rental company requires)</li><li>International Driving Permit where the country requires it</li><li>Passport and a credit card in the driver's name for the security deposit</li></ul></div>
 <div class="faq" style="margin-top:22px"><h2>Car rental FAQs</h2>

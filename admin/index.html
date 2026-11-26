@@ -33,7 +33,7 @@ tr.r{cursor:pointer}tr.r:hover{background:#fdf6f6}.ref{font-family:ui-monospace,
 .rwf{display:flex;flex-wrap:wrap;gap:8px}.rwf input,.rwf select{padding:9px;border:1px solid var(--line);border-radius:10px;flex:1 1 160px}#rwDrawer h3{margin:22px 0 6px}#rwDrawer table{width:100%}
 </style></head><body>
 <header><img src="/img/logo.png" alt=""><div><b>The Real Tours and Travels</b><small>Office admin – staff only</small></div><span class="sp"></span>
-<span id="who" class="msg"></span><button class="btn o s" id="btnRewards" hidden>🎁 Rewards</button><button class="btn o s" id="btnAdmins" hidden>👥 Admins</button><button class="btn o s" id="btnRefresh" hidden>⟳ Refresh</button><button class="btn s" id="btnOut" hidden>Log out</button></header>
+<span id="who" class="msg"></span><button class="btn o s" id="btnRewards" hidden>🎁 Rewards</button><button class="btn o s" id="btnCars" hidden>🚗 Car quote</button><button class="btn o s" id="btnAdmins" hidden>👥 Admins</button><button class="btn o s" id="btnRefresh" hidden>⟳ Refresh</button><button class="btn s" id="btnOut" hidden>Log out</button></header>
 <main>
 <div id="vLoading" class="empty">Loading…</div>
 
@@ -72,6 +72,15 @@ tr.r{cursor:pointer}tr.r:hover{background:#fdf6f6}.ref{font-family:ui-monospace,
 <h3>Customers' points</h3><div id="rwList" class="msg">Loading…</div>
 </div></div>
 
+<div class="drawer" id="carDrawer" hidden><div class="panel"><div style="display:flex;justify-content:space-between;align-items:center"><h2>Car / transfer quote</h2><button class="btn o s" data-close>✕ Close</button></div>
+<p class="msg">Enter the price from Kiwitaxi / Mozio / Savaari (in ₹). The customer price adds your margin (default 6%). The customer gets a payment link that shows only the final price.</p>
+<form id="fCar" class="rwf"><select name="supplier"><option>Kiwitaxi</option><option>Mozio</option><option>Savaari</option><option>CabBazar</option><option>Other</option></select>
+<input name="cost" type="number" min="1" step="0.01" required placeholder="Supplier price ₹"><input name="margin" type="number" min="0" max="100" step="0.5" value="6" title="Margin %" style="width:90px">
+<input name="trip" required maxlength="200" placeholder="Trip e.g. Dubai Airport T3 → Hotel, Deira"><input name="when" maxlength="60" placeholder="Pick-up date &amp; time"><input name="car" maxlength="60" placeholder="Car e.g. Sedan"><input name="pax" type="number" min="1" max="60" placeholder="Passengers">
+<input name="name" maxlength="120" placeholder="Customer name"><input name="contact" maxlength="160" placeholder="Customer mobile / email"><button class="btn s">Create payment link</button></form>
+<p class="msg" id="carCalc"></p><div class="msg" id="carMsg"></div>
+<h3>Recent car quotes</h3><div id="carList" class="msg">Loading…</div>
+</div></div>
 <script src="/js/supabase.js"></script>
 <script>
 (function(){
@@ -162,11 +171,11 @@ async function admins(){
 }
 async function start(){
  const {data:{session}}=await c.auth.getSession();
- if(!session){view('vLogin');['btnOut','btnRefresh','btnAdmins','btnRewards'].forEach(b=>$('#'+b).hidden=true);$('#who').textContent='';return;}
+ if(!session){view('vLogin');['btnOut','btnRefresh','btnAdmins','btnRewards','btnCars'].forEach(b=>$('#'+b).hidden=true);$('#who').textContent='';return;}
  me=(session.user.email||'').toLowerCase();$('#who').textContent=me;$('#btnOut').hidden=false;
  const {data:ok}=await c.rpc('is_admin');
  if(!ok){$('#dEmail').textContent=me;view('vDenied');return;}
- $('#btnRefresh').hidden=false;$('#btnAdmins').hidden=false;$('#btnRewards').hidden=false;view('vApp');load();
+ $('#btnRefresh').hidden=false;$('#btnAdmins').hidden=false;$('#btnRewards').hidden=false;$('#btnCars').hidden=false;view('vApp');load();
 }
 $('#fLogin').addEventListener('submit',async e=>{e.preventDefault();const f=e.target;$('#lMsg').textContent='Logging in…';$('#lMsg').className='msg';
  const {error}=await c.auth.signInWithPassword({email:f.email.value.trim(),password:f.password.value});
@@ -187,6 +196,26 @@ async function coupons(){
  $('#cpList').innerHTML=(data||[]).map(k=>'<li><span><b>'+esc(k.code)+'</b> – '+esc(k.title)+' · '+(k.kind==='percent'?k.amount+'%':'₹'+k.amount)+(k.min_amount?' · min ₹'+k.min_amount:'')+(k.valid_to?' · till '+fd(k.valid_to):'')+(k.active?'':' · <i>off</i>')+'</span><button class="btn o s" data-cp="'+esc(k.code)+'" data-on="'+(k.active?1:0)+'">'+(k.active?'Turn off':'Turn on')+'</button></li>').join('')||'<li>No coupons yet.</li>';
 }
 $('#btnRewards').onclick=rewards;
+const CSITE='https://www.therealtoursandtravels.com/car-rental/?pay=';
+const cinr=n=>'₹'+Number(n).toLocaleString('en-IN',{minimumFractionDigits:0,maximumFractionDigits:2});
+function carTot(){const f=$('#fCar');const c=+f.cost.value||0,m=+f.margin.value||0;const t=Math.ceil(c*(1+m/100));$('#carCalc').innerHTML=c?('Customer pays <b>'+cinr(t)+'</b> (your margin '+cinr(t-c)+')'):'';return t;}
+async function cars(){$('#carDrawer').hidden=false;carTot();
+ const {data}=await c.from('car_quotes').select('*').order('created_at',{ascending:false}).limit(30);
+ $('#carList').innerHTML=(data&&data.length)?'<table><thead><tr><th>Ref</th><th>Trip</th><th>Supplier ₹</th><th>Customer ₹</th><th>Status</th><th></th></tr></thead><tbody>'+data.map(q=>'<tr><td>'+esc(q.ref)+'</td><td>'+esc(q.trip)+(q.pickup_at?'<br><small>'+esc(q.pickup_at)+'</small>':'')+'</td><td>'+esc(q.supplier)+' '+cinr(q.supplier_cost)+'</td><td><b>'+cinr(q.total)+'</b></td><td><select data-cq="'+esc(q.ref)+'">'+['sent','paid','booked','cancelled'].map(s=>'<option'+(s===q.status?' selected':'')+'>'+s+'</option>').join('')+'</select></td><td><button class="btn o s" data-cl="'+esc(q.ref)+'">Copy link</button></td></tr>').join('')+'</tbody></table>':'No car quotes yet.';}
+$('#btnCars').onclick=cars;
+$('#fCar').addEventListener('input',carTot);
+$('#fCar').addEventListener('submit',async e=>{e.preventDefault();const f=e.target;const total=carTot();
+ const ref='CR-'+Math.random().toString(36).slice(2,8).toUpperCase();
+ const row={ref,supplier:f.supplier.value,supplier_cost:+f.cost.value,margin_pct:+f.margin.value||0,total,trip:f.trip.value.trim(),pickup_at:f.when.value.trim()||null,car:f.car.value.trim()||null,pax:f.pax.value?+f.pax.value:null,customer_name:f.name.value.trim()||null,customer_contact:f.contact.value.trim()||null};
+ const {error}=await c.from('car_quotes').insert(row);
+ if(error){$('#carMsg').textContent=error.message;return;}
+ const link=CSITE+ref;const txt='Hello'+(row.customer_name?' '+row.customer_name:'')+', your car booking quote from The Real Tours and Travels:\n'+row.trip+(row.pickup_at?'\n'+row.pickup_at:'')+(row.car?'\nCar: '+row.car:'')+'\nTotal: '+cinr(total)+'\nPay securely here: '+link;
+ const ph=(row.customer_contact||'').replace(/[^0-9]/g,'');const wa='https://wa.me/'+(ph.length===10?'91'+ph:ph)+'?text='+encodeURIComponent(txt);
+ $('#carMsg').innerHTML='✅ Quote <b>'+ref+'</b> created – customer pays <b>'+cinr(total)+'</b>.<br>Link: <a href="'+link+'" target="_blank">'+link+'</a><br><a class="btn s" href="'+wa+'" target="_blank" rel="noopener">💬 Send on WhatsApp</a> <button type="button" class="btn o s" data-cl="'+ref+'">Copy link</button>';
+ f.reset();f.margin.value=6;carTot();cars();});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-cl]');if(b){navigator.clipboard&&navigator.clipboard.writeText(CSITE+b.dataset.cl);b.textContent='Copied ✓';}});
+document.addEventListener('change',async e=>{const s=e.target.closest('[data-cq]');if(s){const {error}=await c.from('car_quotes').update({status:s.value}).eq('ref',s.dataset.cq);if(error)alert(error.message);}});
+
 $('#fAward').addEventListener('submit',async e=>{e.preventDefault();const f=e.target;$('#awMsg').textContent='Saving…';
  const {data,error}=await c.rpc('rewards_award',{customer_email:f.email.value.trim(),service:f.service.value,ref:f.ref.value.trim()||null});
  $('#awMsg').textContent=error?error.message:('✅ Gave '+data.points+' points. New balance: '+data.balance);if(!error){f.reset();rewards();}});
