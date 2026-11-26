@@ -4,6 +4,75 @@ Rules: no prices anywhere; name written exactly "The Real Tours and Travels".
 
 ARTICLES = [
 {
+"slug": "bali-honeymoon-itinerary-guide",
+"img": "g-bali.jpg",
+"img_alt": "Tropical temple and green landscape in Bali, Indonesia",
+"date": "2026-11-27",
+"title": "Bali Honeymoon Itinerary: 6 Nights Plan, Best Time and Travel Tips",
+"h1": "Bali Honeymoon Itinerary: A Relaxed 6-Night Plan for Newly-Weds",
+"desc": "Planning a Bali honeymoon from India? A day-by-day 6-night itinerary covering Ubud, Kintamani, Nusa Penida and Seminyak, plus best time to go, documents, food and practical tips.",
+"intro": "Bali is one of the most-loved honeymoon destinations for Indian couples – short flights, private pool villas, rice terraces, temples on the sea and sunsets on the beach. With the wedding season in full swing, here is the simple, relaxed itinerary we recommend most, along with the practical details couples usually ask us about.",
+"body": """
+<h2>When is the best time for a Bali honeymoon?</h2>
+<p>Bali has two seasons. The <b>dry season, roughly April to October</b>, brings sunny days and calm seas – ideal for beaches, sunrise treks and the boat trip to Nusa Penida. July and August are the busiest months, so villas need to be booked early.</p>
+<p>The <b>wet season, roughly November to March</b>, falls right after the Indian wedding season. It usually means short, heavy showers in the afternoon rather than all-day rain, and the island is at its greenest. Many couples still travel happily in December and January – just keep one flexible day for sea trips, which can be cancelled in rough weather.</p>
+<p>One date to watch: <b>Nyepi, the Balinese Day of Silence</b>, usually falls in March. The whole island, including the airport, shuts down for 24 hours and guests must stay inside their hotel. It is a unique experience, but check the date before you fix your flights.</p>
+
+<h2>Our 6-night Bali honeymoon itinerary</h2>
+<p>We suggest splitting the stay between Ubud (culture and jungle) and the south coast (beaches and sunsets). Changing hotels once keeps it interesting without spending too much time on the road.</p>
+<h3>Day 1 – Arrive in Bali, transfer to Ubud</h3>
+<p>Land at Denpasar (Ngurah Rai) airport and drive to Ubud, about one and a half to two hours depending on traffic. Check in to a private pool villa, rest, and take an evening walk through Ubud's art markets and cafés.</p>
+<h3>Day 2 – Ubud sightseeing</h3>
+<p>Visit the Tegallalang rice terraces in the morning before the crowds, try the famous jungle swing, then see the Sacred Monkey Forest and Ubud Palace. In the evening, book a couple's Balinese massage or a candle-lit dinner at the villa.</p>
+<h3>Day 3 – Kintamani volcano and water temples</h3>
+<p>Drive up to Kintamani for views of Mount Batur and its crater lake, then visit the Tirta Empul holy spring temple. Adventurous couples can instead do the early-morning Mount Batur sunrise trek, which starts around 2 am.</p>
+<h3>Day 4 – Move to the south coast via Tanah Lot</h3>
+<p>Check out of Ubud and drive to Seminyak or Jimbaran, stopping at Tanah Lot – the temple standing on a rock in the sea – for sunset. Seminyak suits couples who like cafés and beach clubs; Nusa Dua and Jimbaran are quieter and more resort-style.</p>
+<h3>Day 5 – Nusa Penida day trip</h3>
+<p>Take a fast boat to Nusa Penida to see Kelingking Beach (the famous T-Rex cliff), Broken Beach and Angel's Billabong. The roads on the island are bumpy and the viewpoints involve steps, so wear good shoes. In the wet season we keep this day flexible.</p>
+<h3>Day 6 – Uluwatu and a beach dinner</h3>
+<p>Spend a slow morning by the pool, then head to Uluwatu temple on the cliffs for sunset and the Kecak fire dance. End the day with a seafood or vegetarian dinner on the sand at Jimbaran Bay.</p>
+<h3>Day 7 – Departure</h3>
+<p>Last-minute shopping for coffee, handicrafts and sarongs, then transfer to the airport.</p>
+<p>Have more time? Add two nights in the Gili Islands or Nusa Lembongan for snorkelling and quiet beaches. Have less? A 4-night plan with two nights each in Ubud and Seminyak still covers the highlights. See our <a href="/tours/bali-tour-package/">Bali tour package</a> for a ready itinerary, or <a href="/customize-your-package/">customise your package</a> to your own dates.</p>
+
+<h2>Documents and entry formalities</h2>
+<p>Indian passport holders need a visa for Indonesia. Keep these documents ready, and read our <a href="/visa/indonesia-bali/">Indonesia (Bali) visa guide</a> for full details:</p>
+<ul class="ticks">
+<li><b>Passport</b> valid for at least six months from your date of arrival, with blank pages.</li>
+<li><b>Confirmed return or onward flight tickets.</b></li>
+<li><b>Hotel bookings</b> for your entire stay.</li>
+<li><b>Proof of funds</b>, such as recent bank statements or an international debit/credit card.</li>
+<li><b>Newly-weds:</b> if your passport still shows your maiden name, make sure the name on your passport and your flight tickets match exactly. Carry a copy of your marriage certificate.</li>
+</ul>
+<p>Indonesia also asks all arriving travellers to fill in the <b>All Indonesia</b> digital arrival card (immigration, customs and health declaration) shortly before the flight, and Bali charges a <b>tourist levy</b> on each foreign visitor. We remind our couples about both before they fly.</p>
+
+<h2>Food for Indian couples</h2>
+<p>Finding Indian and vegetarian food in Bali is easy – Ubud is full of vegetarian and vegan cafés, and Seminyak, Kuta and Nusa Dua have several Indian restaurants. Balinese dishes often use shrimp paste, so vegetarians should ask clearly. If you need pure vegetarian or Jain meals, tell us at the time of booking and we will choose hotels and restaurants accordingly.</p>
+
+<h2>Practical tips for a smooth honeymoon</h2>
+<ul class="ticks">
+<li><b>Choose a private pool villa</b> in Ubud – it is the classic Bali honeymoon experience. Mention your honeymoon while booking; many hotels add a cake, flower decoration or a floating breakfast.</li>
+<li><b>Dress for temples.</b> Shoulders and knees should be covered, and a sarong is usually provided or rented at the entrance.</li>
+<li><b>Hire a private car with driver</b> for sightseeing – it is the easiest way to get around, as public transport is limited.</li>
+<li><b>Carry sunscreen, insect repellent and a light rain jacket</b>, whatever the season.</li>
+<li><b>Drink bottled water only</b> and be careful with ice from roadside stalls.</li>
+<li><b>Take travel insurance</b> that covers medical emergencies, adventure activities like snorkelling and the volcano trek, and flight delays. Our <a href="/insurance/">travel insurance</a> team can help you pick the right plan.</li>
+<li><b>Book early for peak dates</b> – December holidays, New Year and July–August see the highest demand for villas and flights.</li>
+</ul>
+
+<h2>Plan your Bali honeymoon with The Real Tours and Travels</h2>
+<p>We plan honeymoons for couples from all over India – flights from your nearest city, handpicked villas, private transfers, sightseeing, special dinners and complete document guidance. Browse our <a href="/honeymoon-packages/">honeymoon packages</a> and current <a href="/offers/">offers</a>, or simply call or WhatsApp us on <b>98431 21212</b> with your wedding date and we will send you a Bali plan made just for the two of you.</p>
+""",
+"faqs": [
+ ("How many days are enough for a Bali honeymoon?", "Six nights is ideal – three in Ubud and three on the south coast. Four nights covers the main highlights, while eight or nine nights lets you add the Gili Islands or Nusa Lembongan."),
+ ("Is December a good time for a Bali honeymoon?", "Yes, many couples travel in December. It is the wet season, so expect short afternoon showers and keep a flexible day for sea trips like Nusa Penida. The island is very green and lively at this time."),
+ ("What documents do Indians need for Bali?", "A passport valid for at least six months, return flight tickets, hotel bookings and proof of funds. Travellers also fill in the All Indonesia digital arrival card before flying, and Bali charges a tourist levy on foreign visitors."),
+ ("Is vegetarian food easily available in Bali?", "Yes. Ubud has many vegetarian cafés and the main tourist areas have Indian restaurants. We can arrange hotels and restaurants for pure vegetarian or Jain food on request."),
+],
+"related": ["honeymoon-packages", "international-holiday-packages", "travel-insurance"],
+},
+{
 "slug": "best-december-family-holidays",
 "img": "gulmarg.jpg",
 "img_alt": "Snow-covered mountains in Kashmir in winter",
