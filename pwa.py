@@ -1,7 +1,7 @@
 """Installable app (PWA): manifest, service worker, install button and offline page."""
 import json
 
-VERSION = "rtt-v13"
+VERSION = "rtt-v14"
 
 def manifest(NAME):
     return json.dumps({
