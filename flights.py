@@ -423,15 +423,25 @@ Object.entries(forms).forEach(([kind,f])=>f.addEventListener('submit',async e=>{
   document.addEventListener('click',e=>{{if(!c.contains(e.target))pop.hidden=true;}});
   px.closest('form').addEventListener('reset',()=>setTimeout(draw,0));}});
 }})();
-// mobile: keep the main button reachable – move it to the end of its form and stick it to the bottom of the screen
-(function(){{if(!matchMedia('(max-width:700px)').matches||!('IntersectionObserver' in window))return;
- const fl=document.createElement('button');fl.type='button';fl.className='btn gold fgo-float';fl.hidden=true;document.body.appendChild(fl);
- let cur=null,formIn=new Set(),btnIn=new Set();
- const upd=()=>{{const f=[...box.querySelectorAll('form')].find(x=>!x.hidden&&formIn.has(x));const b=f&&f.querySelector('.fgo');cur=b;fl.hidden=!(b&&!btnIn.has(b));if(b)fl.textContent=b.textContent;}};
- const io=new IntersectionObserver(es=>{{es.forEach(e=>{{const set=e.target.tagName==='FORM'?formIn:btnIn;e.isIntersecting?set.add(e.target):set.delete(e.target);}});upd();}});
- box.querySelectorAll('form').forEach(f=>{{io.observe(f);const b=f.querySelector('.fgo');if(b)io.observe(b);}});
- box.addEventListener('click',()=>setTimeout(upd,50));
- fl.addEventListener('click',()=>{{if(!cur)return;const f=cur.closest('form');cur.click();setTimeout(()=>{{const m=f.querySelector('.fmsg');const bad=f.querySelector(':invalid');if(m&&m.textContent.trim())m.scrollIntoView({{behavior:'smooth',block:'center'}});else if(bad)bad.scrollIntoView({{behavior:'smooth',block:'center'}});}},150);}});}})();
+// mobile: Search button right under the main fields; name & mobile asked in a bottom sheet
+(function(){{if(!matchMedia('(max-width:700px)').matches)return;
+ box.querySelectorAll('form').forEach(f=>{{const b=f.querySelector('.fgo'),main=f.querySelector('.fmain'),g2=f.querySelector('.fgrid2'),msg=f.querySelector('.fmsg');if(!b||!main||!g2)return;
+  const kind=f.dataset.kind||'flight';const full=b.textContent;
+  const wrap=document.createElement('div');wrap.className='fmsearch';const hint=document.createElement('p');hint.className='fmhint';
+  b.textContent=kind==='hotel'?'Search hotels':kind==='cruise'?'Search cruises':'Search flights';main.after(wrap);wrap.appendChild(b);wrap.appendChild(hint);
+  const sh=document.createElement('div');sh.className='fsheet';sh.hidden=true;sh.innerHTML='<div class="fsh-in" role="dialog" aria-modal="true"><div class="fsh-top"><b>Where should we send your quote?</b><button type="button" class="fsh-x" aria-label="Close">✕</button></div></div>';
+  f.appendChild(sh);const inn=sh.querySelector('.fsh-in');inn.appendChild(g2);if(msg)inn.appendChild(msg);
+  const go=document.createElement('button');go.type='button';go.className='btn gold fsh-go';go.textContent=full;inn.appendChild(go);
+  let pass=false;
+  b.addEventListener('click',e=>{{if(pass)return;e.preventDefault();e.stopImmediatePropagation();hint.textContent='';
+   const miss=[...main.querySelectorAll('input[required],select[required]')].find(x=>!x.disabled&&!x.value.trim());
+   if(miss){{const lab=(miss.closest('.fcell')||{{}}).firstChild;hint.textContent='Please fill '+(lab&&lab.textContent?lab.textContent.trim().replace(/\*$/,''):'all fields')+' first.';miss.focus();return;}}
+   sh.hidden=false;document.documentElement.classList.add('fsh-lock');setTimeout(()=>{{const c=g2.querySelector('input[name=full_name],input[name=name],input');if(c)c.focus();}},60);}},true);
+  go.addEventListener('click',()=>{{pass=true;b.click();pass=false;}});
+  const close=()=>{{sh.hidden=true;document.documentElement.classList.remove('fsh-lock');}};
+  sh.querySelector('.fsh-x').addEventListener('click',close);sh.addEventListener('click',e=>{{if(e.target===sh)close();}});
+ }});
+}})();
 }})();
 </script><script>"""+FSEARCH_JS.replace("__SB__",SB_URL).replace("__KEY__",SB_KEY)+"""</script>"""
 
@@ -637,5 +647,12 @@ FLIGHT_CSS = """
 
 @media(min-width:1101px){.fbar form[data-kind=flight] .fmain>.fcell:nth-of-type(2){padding-left:32px!important}}
 
-.fgo-float{position:fixed;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:70;height:50px;border:0;border-radius:12px;font:600 16px 'Jost',sans-serif;box-shadow:0 10px 26px rgba(0,0,0,.25);cursor:pointer}.fgo-float[hidden]{display:none}html.is-app .fgo-float{bottom:calc(80px + env(safe-area-inset-bottom))}
+.fmsearch{display:none}.fmhint:empty{display:none}
+@media(max-width:700px){.fmsearch{display:block;margin:4px 0 14px}.fmsearch .fgo{width:100%!important;height:52px!important;font-size:17px!important;border-radius:14px!important}.fmhint{margin:8px 2px 0;color:#b3121a;font-size:14px}
+.fsheet{position:fixed;inset:0;z-index:200;background:rgba(20,10,12,.45);display:flex;align-items:flex-end}.fsheet[hidden]{display:none}
+.fsh-in{background:#fff;width:100%;max-height:88vh;overflow:auto;border-radius:20px 20px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom));display:grid;gap:12px;animation:fshup .22s ease-out}
+@keyframes fshup{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
+.fsh-top{display:flex;justify-content:space-between;align-items:center}.fsh-top b{font-size:17px}.fsh-x{border:0;background:var(--bg);width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer}
+.fsh-in .fgrid2{display:grid!important;grid-template-columns:1fr!important;border:0!important;padding:0!important;margin:0!important}.fsh-in .fgrid2 .fgo{display:none!important}.fsh-go{height:50px;width:100%;border-radius:12px;font-size:16px}
+html.fsh-lock,html.fsh-lock body{overflow:hidden}html.fsh-lock .appbar,html.fsh-lock .float-wa,html.fsh-lock header{display:none!important}}
 """
