@@ -85,6 +85,7 @@ CFG = {
  "women-only-group-tours": ("Women-only tour", "Where would you like to go?", "e.g. Kerala, Bhutan, Vietnam – or suggest", WOMEN_EXTRA),
  "adventure-trekking-tours": ("Adventure / trek", "Where would you like to go?", "e.g. Kedarkantha, Ladakh, Rishikesh – or suggest", TREK_EXTRA),
  "forex": __import__("forex").CFG_ENTRY,
+ "car-rental": __import__("cars").CFG_ENTRY,
  "jain-yatra-tours-with-maharaj": ("Jain yatra", "Which tirth(s)?", "e.g. Palitana, Sammed Shikharji, Girnar", JAIN_EXTRA),
 }
 
