@@ -24,6 +24,11 @@
 .ofrules{margin-top:14px;font-size:14.5px}
 @media(max-width:800px){.ofgrid{grid-template-columns:1fr}}
 
+.fxgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.fxcard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px}.fxcard>span{font-size:28px}.fxcard h3{margin:6px 0;font-size:20px}.fxcard p{margin:0;color:var(--muted)}
+.fxsteps,.fxdocs{margin-top:26px}.fxsteps ol{margin:0;padding-left:20px;display:grid;gap:6px}
+.fxnote{margin-top:20px;padding:14px 16px;background:var(--bg);border:1px solid var(--line);border-radius:14px;color:var(--muted);font-size:14.5px}
+
 .hpsec{padding-top:0!important}
 .hpfilters{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:0 0 22px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 10px 30px rgba(60,20,25,.08)}
 .hpf{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 18px;font:600 14.5px 'Jost',sans-serif;color:#555;cursor:pointer}
@@ -84,7 +89,7 @@ nav.main a:hover{color:var(--red)}
 nav.main a{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:86px;padding:6px 10px 9px!important;font-size:13px!important;font-weight:500;color:#555!important;border-bottom:3px solid transparent!important;text-align:center;line-height:1.2;transition:color .15s}
 nav.main a svg{color:#7a6a6b;transition:color .15s}
 nav.main a:hover,nav.main a:hover svg{color:var(--wine)!important}
-nav.main a.on{color:var(--wine)!important;font-weight:700;border-bottom-color:var(--wine)!important}nav.main a.on svg{color:var(--wine)}
+nav.main a.on{color:var(--wine)!important;font-weight:700;border-bottom-color:var(--wine)!important}nav.main a.on svg{color:var(--wine)}@media(min-width:901px){nav.main .navrow{flex-wrap:nowrap!important;justify-content:space-between!important}nav.main .navrow a{min-width:0!important;flex:1 1 auto;padding:6px 3px 9px!important;white-space:normal!important;max-width:110px}}
 .mtabs{display:none!important}.fbar{padding-top:22px!important}
 
 .hero{position:relative;color:var(--ink);overflow:hidden;background:radial-gradient(900px 500px at 85% 30%,rgba(215,25,31,.07),transparent 65%),#fff;border-bottom:1px solid var(--line)}

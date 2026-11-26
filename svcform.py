@@ -84,6 +84,7 @@ CFG = {
  "wildlife-safari-tours": ("Wildlife safari", "Where would you like to go?", "e.g. Tadoba, Ranthambore, Kenya – or suggest", SAFARI_EXTRA),
  "women-only-group-tours": ("Women-only tour", "Where would you like to go?", "e.g. Kerala, Bhutan, Vietnam – or suggest", WOMEN_EXTRA),
  "adventure-trekking-tours": ("Adventure / trek", "Where would you like to go?", "e.g. Kedarkantha, Ladakh, Rishikesh – or suggest", TREK_EXTRA),
+ "forex": __import__("forex").CFG_ENTRY,
  "jain-yatra-tours-with-maharaj": ("Jain yatra", "Which tirth(s)?", "e.g. Palitana, Sammed Shikharji, Girnar", JAIN_EXTRA),
 }
 
@@ -93,7 +94,7 @@ def svc_form(slug, root="../"):
         return ""
     name, dlabel, dph, extra = CFG[slug]
     return f"""<section class="alt" id="enquire"><div class="wrap" style="max-width:860px">
-<div class="head"><span class="kicker">Quick enquiry</span><h2>Tell us about your {name if name.split()[0] in ('Jain','FIT','PCC') else name.lower()} plans</h2><p class="lead">Takes a minute – we reply with options on WhatsApp or email.</p></div>
+<div class="head"><span class="kicker">Quick enquiry</span><h2>Tell us about your {name if name.split()[0] in ('Jain','FIT','PCC','Forex') else name.lower()} plans</h2><p class="lead">Takes a minute – we reply with options on WhatsApp or email.</p></div>
 <form class="sform" data-svc="{name}" novalidate>
 <div class="sf-row"><label>{dlabel}*<input name="dest" required maxlength="120" placeholder="{dph}" autocomplete="off"></label>
 <label>Month of travel<input name="month" type="month"></label></div>
