@@ -74,6 +74,17 @@ COUNTRIES = [(c, f, n, UPDATES[c][0] if c in UPDATES else how,
               (UPDATES[c][1] if c in UPDATES and UPDATES[c][1] is not None else docs) + ([SCHENGEN_EXTRA] if c == "schengen" else []))
              for (c, f, n, how, docs) in COUNTRIES] + NEW_COUNTRIES
 
+# Notice banner on /visa/ – Malaysia visa rule for Indians from 1 Jan 2027 (added 28 Nov 2026; remove once outdated)
+import urllib.parse as _U
+MY_BANNER = ('<section style="padding:18px 0 6px"><div class="wrap"><div role="note" style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;'
+  'justify-content:space-between;background:#f3f5f7;border:1px solid #dde3e8;border-left:4px solid #5b7083;border-radius:10px;padding:16px 18px">'
+  '<div style="flex:1 1 420px"><p style="margin:0 0 4px;font-weight:700;color:#2f3e4c">🇲🇾 Malaysia visa update for Indian travellers</p>'
+  '<p style="margin:0;color:#444;line-height:1.55">Visa-free entry to Malaysia for Indian passport holders is available until <b>31 December 2026</b>. '
+  'For travel on or after <b>1 January 2027</b>, a Malaysia visa is needed before you travel. Applications open from 1 December 2026 – '
+  'planning a Malaysia trip in 2027? Apply at least 3–4 weeks before travel.</p></div>'
+  '<a class="btn outline" href="https://wa.me/919843121212?text=' + _U.quote("Hi The Real Tours and Travels, I am planning a Malaysia trip in 2027. Please help me with the Malaysia visa.\nTravellers: \nTravel date: ") +
+  '" target="_blank" rel="noopener">Enquire about Malaysia visa</a></div></div></section>')
+
 def passport_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band):
     return visa_page(PHONE, PHONE_RAW, EMAIL, seal, cta_band, mode="passport")
 
@@ -351,7 +362,7 @@ f.addEventListener('submit',async e=>{{
 <p>{T["intro"]}</p>
 
 </div>{seal("../")}</div></section>
-
+{"" if P else MY_BANNER}
 {"" if P else visa_finder(ITEMS) + VF_PARAM_JS + vguides(ITEMS)}
 <section id="countries"{"" if P else ' style="padding-top:0"'}><div class="wrap">
 {f"""<div class="head"><span class="kicker">{T["k2"]}</span><h2>{T["h2"]}</h2><p class="lead">{T["lead2"]}</p></div>
