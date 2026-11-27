@@ -1,7 +1,7 @@
 // Flight schedule search for www.therealtoursandtravels.com
 // Calls the Amadeus Travel Builder flight search with the secret AMADEUS_API_KEY
-// and returns ONLY schedule details (no fares, no deep links) so the customer can
-// pick a flight and request a quote from The Real Tours and Travels.
+// and returns schedule details plus the indicative public fare (no deep links), so the
+// customer can compare flights and request a booking from The Real Tours and Travels.
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const GATEWAY = Deno.env.get("AMADEUS_GATEWAY_URL") ?? "https://api.amadeus.com";
@@ -114,7 +114,7 @@ Deno.serve(async (req) => {
   const h = { ...cors(req.headers.get("origin")), "Content-Type": "application/json" };
   if (req.method === "OPTIONS") return new Response("ok", { headers: h });
   // quick readiness check used by the website to decide whether to show the "Show flights" button
-  if (req.method === "GET") return new Response(JSON.stringify({ ready: !!(KEY || ADB_KEY || ADB_AM_KEY) }), { headers: { ...h, "Cache-Control": "max-age=300" } });
+  if (req.method === "GET") return new Response(JSON.stringify({ ready: !!(KEY || ADB_KEY || ADB_AM_KEY), priced: !!KEY }), { headers: { ...h, "Cache-Control": "max-age=300" } });
   if (req.method !== "POST") return new Response(JSON.stringify({ error: "POST only" }), { status: 405, headers: h });
   if (!KEY && !ADB_KEY && !ADB_AM_KEY) return new Response(JSON.stringify({ error: "not_configured" }), { status: 503, headers: h });
 
@@ -172,8 +172,9 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify({ error: "upstream" }), { status: 502, headers: h });
   }
 
-  // Strip every price / link; keep schedule + baggage; de-duplicate identical flight combinations.
-  const seen = new Set<string>();
+  // Keep schedule + baggage + indicative fare (no links); de-duplicate identical flight combinations,
+  // keeping the lowest fare seen for each combination.
+  const seen = new Map<string, any>();
   const options: unknown[] = [];
   for (const res of data?.results ?? []) {
     const bounds = (res.bounds ?? []).map((b: any) => {
@@ -200,11 +201,18 @@ Deno.serve(async (req) => {
     });
     if (!bounds.length || bounds.some((b: any) => !b.flights.length)) continue;
     const key = bounds.map((b: any) => b.flights.map((f: any) => f.number + f.departs).join("+")).join("|");
-    if (seen.has(key)) {
+    const total = Number(res.fare?.itinerary_price?.total_fare);
+    const fare = Number.isFinite(total) && total > 0
+      ? { currency: String(res.fare?.currency || "INR"), total: Math.round(total), per_adult: Math.round(Number(res.fare?.price_per_adult?.total_fare) || 0) || null }
+      : null;
+    const prev = seen.get(key);
+    if (prev) {
+      if (fare && (!prev.fare || fare.currency === prev.fare.currency && fare.total < prev.fare.total)) prev.fare = fare;
       continue;
     }
-    seen.add(key);
-    options.push({ id: key, bounds });
+    const opt = { id: key, bounds, fare };
+    seen.set(key, opt);
+    options.push(opt);
   }
   options.sort((a: any, b: any) =>
     a.bounds[0].flights[0].departs.localeCompare(b.bounds[0].flights[0].departs) || a.bounds[0].total_min - b.bounds[0].total_min);
