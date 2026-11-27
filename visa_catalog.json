@@ -1,6 +1,6 @@
 {
  "_about": "Visa options shown in the 'Find your visa' search on /visa/. 'price' = visa price per applicant in INR (selling price); null shows 'Price on request'. service_charge is added per applicant (+18% GST). 'code' links to the document checklist in visa.py. Keep wording client-safe (no e-visa / on-arrival / free wording).",
- "updated": "2026-11-25",
+ "updated": "2026-11-28",
  "countries": [
   {
    "name": "United Arab Emirates (Dubai)",
@@ -269,6 +269,15 @@
     "All India"
    ],
    "options": [
+    {
+     "name": "Tourist visa – for travel from 1 Jan 2027",
+     "entry": "Single",
+     "stay": "Up to 30 days",
+     "validity": "3 months",
+     "proc": "Confirmed when you apply",
+     "type": "Visa",
+     "price": null
+    },
     {
      "name": "Digital Arrival Card (MDAC)",
      "entry": "Single",

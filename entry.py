@@ -1,4 +1,4 @@
-# Visa & entry requirements for INDIAN passport holders – researched 23 Nov 2026.
+# Visa & entry requirements for INDIAN passport holders – researched 23 Nov 2026; reviewed 28 Nov 2026 (Malaysia visa from 1 Jan 2027).
 # Existing entries are updated in place; NEW_COUNTRIES are appended. ENTRY gives the entry type and arrival card.
 PP = "Original passport valid for at least 6 months from the return date, with at least 2 blank pages"
 STD_FIN = ["Bank statements for the last 6 months (signed and stamped by the bank)",
@@ -16,9 +16,10 @@ UPDATES = {  # code: (how, docs)  – replaces the existing entry's line and lis
    [PP, "Thailand Digital Arrival Card (TDAC) – free, filled online within 3 days before arrival (we can fill it for you)",
     "Confirmed return or onward ticket within 30 days", "Hotel bookings for the whole stay", "Proof of funds (cash, card or bank statement) – immigration may ask",
     "Staying longer than 30 days or not travelling for tourism? A visa is needed – we will advise"]),
- "malaysia": ("Indian travellers must submit the Malaysia Digital Arrival Card (MDAC) online within 3 days before arrival. We fill and submit it for you. Travelling in 2027? We confirm the latest rule before you book",
-   [PP, "Malaysia Digital Arrival Card (MDAC) – free, filled online within 3 days before arrival (we can fill it for you)",
-    "Confirmed return or onward ticket", "Hotel bookings for the whole stay", "Proof of funds – immigration may ask"]),
+ "malaysia": ("Visa-free for up to 30 days for arrivals until 31 December 2026. From 1 January 2027 Indian travellers need a visa before travel – applications open from 1 December 2026. The Malaysia Digital Arrival Card (MDAC) must also be submitted within 3 days before arrival",
+   [PP, "Malaysia Digital Arrival Card (MDAC) – submitted within 3 days before arrival",
+    "Confirmed return or onward ticket", "Hotel bookings for the whole stay", "Proof of funds – immigration may ask",
+    "Travelling on or after 1 January 2027: a Malaysia visa is needed before travel – clear scan of passport bio page, recent passport-size photo with white background and bank statements for the last 3 months"]),
  "singapore": ("Visa required – e-visa applied through an authorised agent (we do this for you). The SG Arrival Card must also be submitted online within 3 days before arrival",
    [PP, "Recent photo, 35 × 45 mm, white background, matte finish", "Visa application form (we fill it for you)", "Covering letter",
     "Return flight booking and hotel bookings", "Recent bank statements", "For business visits: invitation letter from the Singapore company",
@@ -81,7 +82,7 @@ NEW_COUNTRIES = [
 # group: card = digital arrival card only (we fill it), visa = visa / e-visa / permit (we apply)
 ENTRY = {
  "thailand": ("card", "Visa-free · 30 days", "TDAC arrival card"),
- "malaysia": ("card", "Visa-free · 30 days (till 31 Dec 2026)", "MDAC arrival card"),
+ "malaysia": ("visa", "Visa-free till 31 Dec 2026 · visa needed from 1 Jan 2027", "MDAC arrival card"),
  "bhutan": ("visa", "No visa · entry permit", None),
  "maldives": ("card", "Free visa on arrival · 30 days", "IMUGA declaration"),
  "mauritius": ("card", "No visa in advance", "All-in-One travel form"),
@@ -115,6 +116,7 @@ GROUPS = [("visa", "🛂 Visas"), ("card", "📲 Digital Arrival Cards / Travel 
 # Kept generous on purpose: allows for weekends, public holidays in India and the destination country, and peak-season slot shortages.
 WHEN = {
  "uae": "at least 2–3 weeks before travel",
+ "malaysia": "at least 3–4 weeks before travel for trips from 1 January 2027 (applications open from 1 December 2026); the MDAC arrival card is submitted within the 3 days before arrival",
  "singapore": "at least 3–4 weeks before travel",
  "vietnam": "at least 3–4 weeks before travel",
  "schengen": "8–12 weeks before travel (applications open up to 6 months ahead; appointments fill up fast in summer and the Christmas season)",
@@ -176,7 +178,6 @@ BIOMETRICS = {
 # Arrival cards / travel permits – when to apply (generous, to allow for weekends and holidays)
 CARD_WHEN = {
  "thailand": "at least 1 week before travel (the card itself can only be filed within the 3 days before arrival)",
- "malaysia": "at least 1 week before travel (the card itself can only be filed within the 3 days before arrival)",
  "maldives": "at least 1 week before travel (the declaration is filed within the 96 hours before arrival, and again before departure)",
  "mauritius": "at least 1 week before travel (it must be completed before you leave India)",
  "hongkong": "at least 2–3 weeks before travel",
