@@ -10,6 +10,7 @@ import offers as ofr
 import tours
 from tools import gst_tool_page, TOOL_CSS
 import pwa
+import apphome
 from insurance import insurance_page
 import account
 import admin
@@ -472,6 +473,7 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <meta name="geo.region" content="IN-MH"><meta name="geo.placename" content="Mulund West, Mumbai">{'<link rel="preload" as="image" href="img/hero-travel.jpg" fetchpriority="high">' if path=="/" else ''}
 <meta name="theme-color" content="#ffffff">
 {pwa.HEAD}
+{apphome.HEAD_JS}
 {account.SITE_JS}
 <link rel="icon" type="image/png" href="{root}favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -511,6 +513,7 @@ w.style.pointerEvents='';w.classList.toggle('tuck',hit);}} /* hide the WhatsApp 
 addEventListener('scroll',()=>{{if(!q)q=requestAnimationFrame(chk);}},{{passive:true}});addEventListener('resize',chk);addEventListener('load',chk);chk();}})();</script>
 {fx.jain_popup(root)}
 {pwa.BODY}
+{apphome.BODY_JS}
 {fx.JS}
 </body></html>"""
 
@@ -545,7 +548,7 @@ CSSV = "0"
 def build():
     root = os.path.dirname(os.path.abspath(__file__))
     global CSSV
-    css_all = tours.CSS + ofr.CSS + fxp.CSS + hpk.CSS + CSS + VISA_CSS + PLANNER_CSS + FLIGHT_CSS + TOOL_CSS + pwa.CSS + account.ACCOUNT_CSS + SVC_CSS + fx.CSS
+    css_all = tours.CSS + ofr.CSS + fxp.CSS + hpk.CSS + CSS + VISA_CSS + PLANNER_CSS + FLIGHT_CSS + TOOL_CSS + pwa.CSS + apphome.CSS + account.ACCOUNT_CSS + SVC_CSS + fx.CSS
     CSSV = __import__("hashlib").md5(css_all.encode()).hexdigest()[:8]
     open(os.path.join(root, "style.css"), "w").write(css_all)
     imgs = set(os.listdir(os.path.join(root, "img")))
@@ -558,7 +561,7 @@ def build():
     hero_style = f' style="--hero:url(img/{hero})"' if hero else ""
     side = "dubai.jpg" if "dubai.jpg" in imgs else None
     side_html = f'<div class="photo"><img src="img/{side}" alt="Indian family holiday in Dubai planned by The Real Tours and Travels" loading="lazy" width="800" height="600"></div>' if side else '<div class="emblem"><img src="img/logo.png" alt="The Real Tours and Travels emblem"><b>Crafting Journeys Since 1981</b><p>A family business trusted by generations of travellers in India and abroad.</p></div>'
-    home = f"""
+    home = apphome.html("") + f"""
 <section class="hero home-hero"{hero_style}><div class="wrap homecpt"><div>
 <span class="kicker">Trusted travel experts · Since 1981</span>
 <h1>Your Travel Agency for All Your Travel Needs – Across India &amp; Abroad</h1>
