@@ -247,18 +247,18 @@ html.dw-open,html.dw-open body{overflow:hidden}
 .ah-dw-v{margin:16px 4px 0;font-size:11.5px;color:#9a8e8e;line-height:1.5;text-align:center}
 /* opening animation */
 html.splash-on body{overflow:hidden}html.splash-on::after{content:"";position:fixed;inset:0;background:#fff;z-index:9998}
-#splash{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 42%,#fff 0,#fff 35%,#f9efef 100%);transition:opacity .5s ease,transform .5s ease}
+#splash{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;transition:opacity .5s ease,transform .5s ease}
 #splash.out{opacity:0;transform:scale(1.06);pointer-events:none}
 .sp-stage{position:relative;width:220px;height:220px;display:grid;place-items:center}
-.sp-logo{width:132px;height:132px;border-radius:50%;background:#fff;box-shadow:0 0 0 10px #fbf1f1,0 18px 40px rgba(179,18,26,.16);display:grid;place-items:center;opacity:0;transform:scale(.55) rotate(-25deg);animation:spIn .8s cubic-bezier(.2,.9,.3,1.25) .15s forwards}
+.sp-logo{width:132px;height:132px;border-radius:50%;background:#fff;display:grid;place-items:center;animation:spGlow .9s ease .05s both}
 .sp-logo img{width:118px;height:118px}
-.sp-ring{position:absolute;inset:0}.sp-ring circle{fill:none;stroke:#d7191f;stroke-opacity:.28;stroke-width:1.5;stroke-dasharray:4 7;stroke-dashoffset:0;opacity:0;animation:spFade .4s ease .55s forwards}
-.sp-orbit{position:absolute;inset:0;opacity:0;animation:spFade .3s ease .55s forwards,spSpin 1.6s cubic-bezier(.45,.05,.35,1) .55s forwards}
+.sp-ring{position:absolute;inset:0}.sp-ring circle{fill:none;stroke:#d7191f;stroke-opacity:.28;stroke-width:1.5;stroke-dasharray:4 7;stroke-dashoffset:0;opacity:0;animation:spFade .35s ease .1s forwards}
+.sp-orbit{position:absolute;inset:0;opacity:0;animation:spFade .25s ease .1s forwards,spSpin 1.5s cubic-bezier(.45,.05,.35,1) .1s forwards}
 .sp-orbit svg{position:absolute;left:50%;top:-2px;width:26px;height:26px;margin-left:-13px;color:#b3121a;transform:rotate(90deg)}
-.sp-name{margin:18px 0 0;font-family:'Playfair Display',serif;font-size:23px;color:#b3121a;opacity:0;transform:translateY(10px);animation:spUp .6s ease 1.15s forwards}
-.sp-tag{margin:6px 0 0;font-size:11.5px;letter-spacing:2.4px;color:#7a6a6b;text-transform:uppercase;opacity:0;transform:translateY(10px);animation:spUp .6s ease 1.4s forwards}
-.sp-dots{display:flex;gap:6px;margin-top:26px;opacity:0;animation:spFade .3s ease 1.6s forwards}.sp-dots i{width:6px;height:6px;border-radius:50%;background:#d7191f;opacity:.25;animation:spDot 1s ease-in-out infinite}.sp-dots i:nth-child(2){animation-delay:.15s}.sp-dots i:nth-child(3){animation-delay:.3s}
-@keyframes spIn{to{opacity:1;transform:none}}@keyframes spFade{to{opacity:1}}@keyframes spUp{to{opacity:1;transform:none}}
+.sp-txt{position:absolute;left:0;right:0;top:calc(50% + 120px);display:flex;flex-direction:column;align-items:center;text-align:center}.sp-name{margin:0;font-family:'Playfair Display',serif;font-size:23px;color:#b3121a;opacity:0;transform:translateY(10px);animation:spUp .5s ease .55s forwards}
+.sp-tag{margin:6px 0 0;font-size:11.5px;letter-spacing:2.4px;color:#7a6a6b;text-transform:uppercase;opacity:0;transform:translateY(10px);animation:spUp .5s ease .75s forwards}
+.sp-dots{display:flex;gap:6px;margin-top:26px;opacity:0;animation:spFade .3s ease 1s forwards}.sp-dots i{width:6px;height:6px;border-radius:50%;background:#d7191f;opacity:.25;animation:spDot 1s ease-in-out infinite}.sp-dots i:nth-child(2){animation-delay:.15s}.sp-dots i:nth-child(3){animation-delay:.3s}
+@keyframes spGlow{from{box-shadow:0 0 0 0 #fbf1f1,0 0 0 rgba(179,18,26,0)}to{box-shadow:0 0 0 10px #fbf1f1,0 18px 40px rgba(179,18,26,.16)}}@keyframes spFade{to{opacity:1}}@keyframes spUp{to{opacity:1;transform:none}}
 @keyframes spSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}@keyframes spDot{50%{opacity:.9;transform:translateY(-3px)}}
 @media(prefers-reduced-motion:reduce){#splash *{animation-duration:.01s!important;animation-delay:0s!important}}
 """
@@ -269,10 +269,15 @@ if(u.get('app')==='1')d.classList.add('is-app');
 var app=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
 if(u.get('splash')==='1'||(app&&!sessionStorage.getItem('rtt_splash')))d.classList.add('splash-on');}catch(e){}})();</script>"""
 
-# Runs at the end of <body>
-BODY_JS = """<script>(function(){var d=document.documentElement;if(!d.classList.contains('splash-on'))return;try{sessionStorage.setItem('rtt_splash','1')}catch(e){}
+# Runs right after <body>: shows the animation on the very first paint (no waiting for the page)
+SPLASH_EARLY = """<script>(function(){var d=document.documentElement;if(!d.classList.contains('splash-on'))return;try{sessionStorage.setItem('rtt_splash','1')}catch(e){}
 var s=document.createElement('div');s.id='splash';s.setAttribute('aria-hidden','true');
-s.innerHTML='<div class="sp-stage"><svg class="sp-ring" viewBox="0 0 220 220"><circle cx="110" cy="110" r="100"/></svg><div class="sp-orbit"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg></div><div class="sp-logo"><img src="/img/logo-512.png" alt=""></div></div><p class="sp-name">The Real Tours and Travels</p><p class="sp-tag">Estd. 1981 · All your travel needs</p><div class="sp-dots"><i></i><i></i><i></i></div>';
+s.innerHTML='<div class="sp-stage"><svg class="sp-ring" viewBox="0 0 220 220"><circle cx="110" cy="110" r="100"/></svg><div class="sp-orbit"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg></div><div class="sp-logo"><img src="/img/logo-512.png" alt="" width="118" height="118"></div></div><div class="sp-txt"><p class="sp-name">The Real Tours and Travels</p><p class="sp-tag">Estd. 1981 · All your travel needs</p><div class="sp-dots"><i></i><i></i><i></i></div></div>';
 document.body.appendChild(s);d.classList.remove('splash-on');
-var rm=matchMedia('(prefers-reduced-motion: reduce)').matches,t;function go(){clearTimeout(t);s.classList.add('out');setTimeout(function(){s.remove()},550);}
-t=setTimeout(go,rm?900:2700);s.addEventListener('click',go);})();</script>"""
+var t0=Date.now(),rm=matchMedia('(prefers-reduced-motion: reduce)').matches,done=false;
+function go(){if(done)return;done=true;s.classList.add('out');setTimeout(function(){s.remove()},550);}
+function later(){setTimeout(go,Math.max(0,(rm?700:2100)-(Date.now()-t0)));}
+if(document.readyState==='complete')later();else{addEventListener('load',later);setTimeout(go,5000);}
+s.addEventListener('click',go);})();</script>"""
+
+BODY_JS = ""

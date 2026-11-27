@@ -480,7 +480,9 @@ def page(path, title, desc, body, extra_ld=None, hero_img=None):
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{root}style.css?v={CSSV}">
 {ld}
+<link rel="preload" as="image" href="/img/logo-512.png">
 </head><body>
+{apphome.SPLASH_EARLY}
 
 <header class="site"><div class="wrap hrow">
 <a class="brand" href="{root or './'}"><img src="{root}img/logo.png" alt="The Real Tours and Travels logo – Estd. 1981" width="64" height="64"><span><b>The Real Tours and Travels</b><small>Crafting Journeys Since 1981</small></span></a>
