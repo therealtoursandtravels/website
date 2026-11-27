@@ -98,15 +98,16 @@ def _explore(root):
 
 
 def _drawer(root):
-    items = [("🎁", "Offers & coupons", "offers/"), ("⭐", "My reward points", "offers/#points"), ("🤝", "Refer & earn", "account/"),
+    items = [("🎁", "Offers & coupons", "offers/"), ("🤝", "Refer & earn", "account/"),
              ("🧳", "Holiday packages", "holiday-packages/"), ("🛂", "Visa", "visa/"), ("📘", "Passport", "passport/"),
              ("🛡️", "Travel insurance", "insurance/"), ("💳", "Forex card", "forex/"), ("📖", "Travel guides", "blog/"),
              ("🎧", "Customer support", "contact/"), ("ℹ️", "About us", "about/")]
     li = "".join(f'<a href="{root}{h}"><span>{e}</span>{n}<i>›</i></a>' for e, n, h in items)
     soc = "".join(f'<a href="{u}" target="_blank" rel="noopener">{n}</a>' for n, u in SOCIAL)
     return f"""<div class="ah-dw" id="ahDw" hidden><div class="ah-dw-bg" data-x></div><aside class="ah-dw-p" role="dialog" aria-label="Menu">
-<a class="ah-dw-me" href="{root}account/"><img src="{root}img/logo.png" alt="" width="44" height="44"><span><b>My Account</b><small>Login / sign up · bookings · points</small></span><i>›</i></a>
-<div class="ah-dw-q"><a href="{root}account/"><span>🧾</span>My Trips</a><a href="{root}offers/"><span>🎁</span>Offers</a><a href="https://wa.me/919843121212" target="_blank" rel="noopener"><span>💬</span>WhatsApp</a></div>
+<div class="ah-dw-me"><img src="{root}img/logo-512.png" alt="" width="64" height="64"><b>Welcome to The Real Tours and Travels</b><small>Log in to see your bookings and reward points. New here? Sign up and get 100 welcome points</small>
+<div class="ah-dw-btns"><a class="btn gold" href="{root}account/">Log in</a><a class="btn outline" href="{root}account/#signup">Sign up</a></div></div>
+<div class="ah-dw-q"><a href="{root}account/"><span>🧾</span>My Trips</a><a href="{root}offers/"><span>🎁</span>Offers</a><a href="{root}offers/#points"><span>⭐</span>Rewards</a></div>
 <nav class="ah-dw-l">{li}</nav>
 <div class="ah-dw-l"><a href="tel:+919843121212"><span>📞</span>Call 98431 21212<i>›</i></a><a href="https://search.google.com/local/writereview?placeid=ChIJn8v1TlS45zsRAQu5MAlfr1U" target="_blank" rel="noopener"><span>⭐</span>Rate us on Google<i>›</i></a></div>
 <p class="ah-dw-s">Follow us</p><div class="ah-dw-so">{soc}</div>
@@ -178,7 +179,7 @@ CSS = """
 .app-home{display:none}
 html.is-app .app-home{display:block;padding:14px 16px 4px;background:linear-gradient(180deg,#fbf4f4 0,#fbf4f4 170px,#fff 300px)}
 html.is-app .home-hero{display:none!important}html.is-app .home-hero+.fsec{margin-top:0!important}
-html.is-app body:has(.app-home) nav.main{display:none!important}
+html.is-app body:has(.app-home) nav.main,html.is-app body:has(.app-home) #acctLink{display:none!important}
 .ah-hi{margin:2px 2px 0;font-size:13px;color:#7a6a6b;letter-spacing:.2px}
 .app-home h2{margin:2px 2px 12px;font-family:'Playfair Display',serif;font-size:23px;color:var(--wine);line-height:1.2}
 .ah-search{position:relative;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #ead9da;border-radius:14px;padding:0 14px;box-shadow:0 6px 18px rgba(120,40,40,.07);color:#9a8a8b}
@@ -233,8 +234,9 @@ html.dw-open,html.dw-open body{overflow:hidden}
 .ah-dw-bg{position:absolute;inset:0;background:rgba(20,15,15,.42);animation:spFade .25s ease forwards;opacity:0}
 .ah-dw-p{position:absolute;left:0;top:0;bottom:0;width:86%;max-width:360px;background:#f7f5f5;overflow-y:auto;padding:16px 14px calc(20px + env(safe-area-inset-bottom));box-shadow:10px 0 30px rgba(0,0,0,.15);animation:dwIn .3s cubic-bezier(.2,.8,.2,1)}
 @keyframes dwIn{from{transform:translateX(-100%)}to{transform:none}}
-.ah-dw-me{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#7c2a31,#4a1f24);color:#fff;border-radius:16px;padding:14px;text-decoration:none}
-.ah-dw-me img{background:#fff;border-radius:50%;padding:2px}.ah-dw-me span{flex:1;display:flex;flex-direction:column}.ah-dw-me small{opacity:.8;font-size:12px}.ah-dw-me i{font-style:normal;font-size:22px}
+.ah-dw-me{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;background:#fff;border:1px solid #ece4e4;border-radius:18px;padding:18px 14px 14px}
+.ah-dw-me img{width:64px;height:64px}.ah-dw-me b{font-family:'Playfair Display',serif;font-size:17px;color:var(--wine);line-height:1.25}.ah-dw-me small{font-size:12.5px;color:#7a6a6b}
+.ah-dw-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;margin-top:8px}.ah-dw-btns .btn{padding:9px 6px!important;min-height:0!important;line-height:1.2!important;font-size:14px!important;text-align:center;justify-content:center}
 .ah-dw-q{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
 .ah-dw-q a{display:flex;flex-direction:column;align-items:center;gap:4px;background:#fff;border:1px solid #ece4e4;border-radius:14px;padding:11px 4px;text-decoration:none;color:#3d3032;font-size:12px;font-weight:600}.ah-dw-q span{font-size:20px}
 .ah-dw-l{display:flex;flex-direction:column;background:#fff;border:1px solid #ece4e4;border-radius:14px;margin-bottom:12px;overflow:hidden}
