@@ -114,119 +114,141 @@ def _drawer(root):
 <p class="ah-dw-v">The Real Tours and Travels · Estd. 1981<br>enquiry@therealtoursandtravels.com</p></aside></div>"""
 
 
+SERVICES = [("Flights", "Flights"), ("Hotels", "Hotels"), ("Holiday Packages", "Holidays"), ("Visa", "Visa"),
+            ("Passport", "Passport"), ("Cruise", "Cruise"), ("Cars", "Cars"), ("Travel Insurance", "Insurance"),
+            ("Forex", "Forex"), ("Customized Packages", "Custom Trip"), ("Jain Yatra", "Jain Yatra"), ("Offers", "Offers")]
+
+HERO_PHOTOS = [("h-kashmir", "Kashmir"), ("h-swiss", "Switzerland"), ("h-maldives", "Maldives"), ("h-ladakh", "Ladakh"),
+               ("h-dubai", "Dubai"), ("h-honeymoon", "Bali")]
+
+OCCASIONS = [("Family holidays", "Kids-friendly stays and easy days", "domestic-holiday-packages/", "c-kashmir"),
+             ("Honeymoon", "Romantic escapes, planned for two", "honeymoon-packages/", "c-honeymoon"),
+             ("Yatras & pilgrimages", "Char Dham, Shikharji, Palitana and more", "yatra-tours/", "c-yatra"),
+             ("Group tours", "Fixed departures with like-minded travellers", "group-tours/", "c-group"),
+             ("Senior citizen tours", "Comfortable pace, extra care", "senior-citizen-tours/", "c-senior"),
+             ("Women-only tours", "Safe, fun trips with women leaders", "women-only-group-tours/", "c-women"),
+             ("Weekend getaways", "Short breaks close to home", "weekend-getaways/", "c-weekend"),
+             ("Wildlife safaris", "Tigers, jungles and lodges", "wildlife-safari-tours/", "c-safari")]
+
+
 def html(root=""):
     icons = _icons()
     try:
         pk = json.load(open(os.path.join(HERE, "packages.json")))["packages"]
     except Exception:
         pk = []
-
-    def tile(lbl, name, cls):
-        href, svg = icons[lbl]
-        return f'<a class="{cls}" href="{root}{href}"><i>{svg}</i><span>{name}</span></a>'
-
-    big = "".join(tile(l, n, "ah-big") for l, n in BIG if l in icons)
-    small = "".join(tile(l, n, "ah-sm") for l, n in SMALL if l in icons)
-    cards = ""
+    try:
+        import fx
+        rating = fx.load_reviews().get("rating") or "4.8"
+    except Exception:
+        rating = "4.8"
+    stamps = "".join(f'<a class="ah-st" href="{root}{icons[l][0]}"><i>{icons[l][1]}</i><span>{n}</span></a>' for l, n in SERVICES if l in icons)
+    tickets = ""
     for p in pk[:10]:
         img = p.get("img") or ""
         if not os.path.exists(os.path.join(HERE, "img", img + ".jpg")):
             continue
         n = p.get("nights")
-        sub = f'{n} nights · {"India" if p.get("type") == "india" else "International"}' if n else ""
-        cards += (f'<a class="ah-card" href="{root}holiday-packages/"><img src="{root}img/{img}.jpg" alt="{p["name"]}" loading="lazy" width="320" height="220">'
-                  f'<span><b>{p["name"]}</b><small>{sub}</small></span></a>')
+        sub = f'{n} nights · {"India" if p.get("type") == "india" else "Abroad"}' if n else ""
+        tickets += (f'<a class="ah-tk" href="{root}holiday-packages/"><img src="{root}img/{img}.jpg" alt="{p["name"]}" loading="lazy" width="300" height="200">'
+                    f'<span class="ah-tk-b"><b>{p["name"]}</b><small>{sub}</small><i>View plan ›</i></span></a>')
+    slides = "".join(f'<a class="ah-pc" href="{root}{link}"><img src="{root}img/{ph}.jpg" alt="" loading="lazy"><em>{tag}</em>'
+                     f'<span><b>{title}</b><small>{line}</small><i>{cta} ›</i></span></a>' for (_t, tag, title, line, cta, link, ph, _c) in SLIDES)
+    occ = "".join(f'<a class="ah-oc" href="{root}{link}"><img src="{root}img/{ph}.jpg" alt="" loading="lazy" width="56" height="56"><span><b>{t}</b><small>{d}</small></span><i>›</i></a>'
+                  for t, d, link, ph in OCCASIONS if os.path.exists(os.path.join(HERE, "img", ph + ".jpg")))
+    heroes = json.dumps([[f"{root}img/{h}.jpg", n] for h, n in HERO_PHOTOS if os.path.exists(os.path.join(HERE, "img", h + ".jpg"))])
     idx = json.dumps(_search_index(icons), ensure_ascii=False)
     from visa import SB_URL as SBU, SB_KEY as SBK
-    return f"""<section class="app-home" aria-label="App home"><div class="ah-top">
-<p class="ah-hi"><span id="ahHi">Namaste</span> 🙏</p><h2>Where would you like to go?</h2></div>
+    return f"""<section class="app-home" aria-label="App home">
+<div class="ah-hero" id="ahHero"><div class="ah-ph"><img id="ahPh" src="{root}img/h-kashmir.jpg" alt=""></div>
+<img class="ah-seal" src="{root}img/logo-512.png" alt="" width="64" height="64">
+<div class="ah-hero-t"><p class="ah-hi"><span id="ahHi">Namaste</span>, <span id="ahNm">traveller</span></p><h2>Where shall we take you next?</h2><p class="ah-pl" id="ahPl">📍 Kashmir</p></div>
 <form class="ah-search" id="ahSearch" role="search" onsubmit="return false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-<input id="ahQ" type="search" autocomplete="off" placeholder="Search destinations, visas, services…" aria-label="Search"><ul id="ahList" hidden></ul></form>
-<div class="ah-grid ah-grid-big">{big}</div>
-<div class="ah-grid ah-grid-sm">{small}</div>
-{_offers(root)}
-<div class="ah-head"><h3>Discover more</h3></div>
-<div class="ah-disc">{"".join(f'<a href="{root}{h}"><span>{e}</span>{n}</a>' for e, n, h in DISCOVER)}</div>
-<div class="ah-head"><h3>Trending holidays</h3><a href="{root}holiday-packages/">View all ›</a></div>
-<div class="ah-row">{cards}</div>
-{_explore(root)}
-<div class="ah-head"><h3>Book a flight</h3></div>
+<input id="ahQ" type="search" autocomplete="off" placeholder="Try “Dubai”, “visa”, “Jain yatra”…" aria-label="Search"><ul id="ahList" hidden></ul></form></div>
+<div class="ah-sec"><h3>How can we help?</h3></div>
+<div class="ah-stamps">{stamps}</div>
+<div class="ah-trust"><img src="{root}img/logo.png" alt="" width="40" height="40"><div><b>Your travel partner since 1981</b><small>★ {rating} on Google · 24×7 support · Jain food tours with Maharaj</small></div></div>
+<div class="ah-sec"><h3>This season</h3><a href="{root}offers/">All offers ›</a></div>
+<div class="ah-prog" id="ahProg"></div>
+<div class="ah-pcs" id="ahSlider">{slides}</div>
+<div class="ah-sec"><h3>Ready-made holidays</h3><a href="{root}holiday-packages/">See all ›</a></div>
+<div class="ah-tks">{tickets}</div>
+<div class="ah-sec"><h3>Plan by occasion</h3></div>
+<div class="ah-occ">{occ}</div>
+<div class="ah-sec"><h3>Book a flight</h3></div>
 {_drawer(root)}
 </section>
 <script>(function(){{const h=new Date().getHours();const g=document.getElementById('ahHi');if(g)g.textContent=h<12?'Good morning':h<17?'Good afternoon':'Good evening';
+const HP={heroes};try{{let k=+(sessionStorage.getItem('rtt_hp')||-1);k=(k+1)%HP.length;sessionStorage.setItem('rtt_hp',k);document.getElementById('ahPh').src=HP[k][0];document.getElementById('ahPl').textContent='📍 '+HP[k][1];}}catch(e){{}}
+const nmT=setInterval(()=>{{const p=window.RTT_PROFILE;if(p&&p.name){{document.getElementById('ahNm').textContent=p.name.split(' ')[0];clearInterval(nmT);}}}},400);setTimeout(()=>clearInterval(nmT),8000);
 const I={idx},q=document.getElementById('ahQ'),L=document.getElementById('ahList'),R='{root}';
 function show(){{const v=q.value.trim().toLowerCase();if(!v){{L.hidden=true;return;}}const m=I.filter(x=>x[0].toLowerCase().includes(v)).slice(0,7);
 L.innerHTML=m.map(x=>'<li><a href="'+R+x[1]+'">'+x[0]+'</a></li>').join('')+'<li class="ah-ask"><a href="'+R+'customize-your-package/">✨ Plan a custom trip to “'+q.value.trim().replace(/[<>&"]/g,'')+'”</a></li>';L.hidden=false;}}
 q.addEventListener('input',show);document.getElementById('ahSearch').addEventListener('submit',()=>{{const a=L.querySelector('a');if(a)location.href=a.href;}});
 document.addEventListener('click',e=>{{if(!e.target.closest('#ahSearch'))L.hidden=true;}});
-const hd=document.querySelector('header.site');function hh(){{if(hd)document.documentElement.style.setProperty('--hh',hd.offsetHeight+'px');}}hh();addEventListener('resize',hh);
-const S=document.getElementById('ahSlider'),D=document.getElementById('ahDots');let vis=[],cur=0,tm=null,hold=false;
-function slides(){{return [...S.children].filter(a=>!a.hidden);}}
-function dots(){{vis=slides();D.innerHTML=vis.map((_,i)=>'<i'+(i===cur?' class="on"':'')+'></i>').join('');}}
-function go(i){{vis=slides();if(!vis.length)return;cur=(i+vis.length)%vis.length;S.scrollTo({{left:vis[cur].offsetLeft-S.offsetLeft-16,behavior:'smooth'}});[...D.children].forEach((d,k)=>d.classList.toggle('on',k===cur));}}
-function auto(){{clearInterval(tm);tm=setInterval(()=>{{if(!hold&&!document.hidden)go(cur+1);}},4500);}}
-S.addEventListener('scroll',()=>{{vis=slides();const x=S.scrollLeft+S.clientWidth/2;let b=0,bd=1e9;vis.forEach((a,k)=>{{const c=a.offsetLeft-S.offsetLeft+a.offsetWidth/2,dd=Math.abs(c-x);if(dd<bd){{bd=dd;b=k;}}}});if(b!==cur){{cur=b;[...D.children].forEach((d,k)=>d.classList.toggle('on',k===cur));}}}},{{passive:true}});
-S.addEventListener('touchstart',()=>{{hold=true;}},{{passive:true}});S.addEventListener('touchend',()=>{{setTimeout(()=>{{hold=false;}},2500);auto();}},{{passive:true}});
-document.querySelectorAll('.ah-tab').forEach(b=>b.addEventListener('click',()=>{{document.querySelectorAll('.ah-tab').forEach(x=>x.classList.toggle('on',x===b));const t=b.dataset.t;[...S.children].forEach(a=>{{a.hidden=!(t==='all'||a.dataset.t===t||a.dataset.t==='coupon');}});cur=0;S.scrollLeft=0;dots();auto();}}));
-fetch('{SBU}/rest/v1/coupons?select=code,title,description,valid_to&order=created_at.desc&limit=4',{{headers:{{apikey:'{SBK}',Authorization:'Bearer {SBK}'}}}}).then(r=>r.json()).then(d=>{{if(!Array.isArray(d))return;const esc=x=>String(x==null?'':x).replace(/[&<>"]/g,'');d.reverse().forEach(k=>{{if(k.valid_to&&new Date(k.valid_to+'T23:59')<new Date())return;const a=document.createElement('a');a.className='ah-slide ah-coupon';a.dataset.t='coupon';a.href=R+'offers/';a.innerHTML='<span class="ah-sl-in"><em>Coupon code</em><b>'+esc(k.title)+'</b><small>Use code <u>'+esc(k.code)+'</u> at checkout'+(k.valid_to?' · valid till '+new Date(k.valid_to+'T00:00').toLocaleDateString('en-IN',{{day:'numeric',month:'short'}}):'')+'</small><i>View offer ›</i></span>';S.prepend(a);}});dots();}}).catch(()=>{{}});
-dots();auto();
-const W=document.getElementById('ahDw');document.body.appendChild(W);const F=document.getElementById('ahSearch');addEventListener('scroll',()=>{{F.classList.toggle('stuck',F.getBoundingClientRect().top<=(hd?hd.offsetHeight:66)+8);}},{{passive:true}});function dw(o){{W.hidden=!o;document.documentElement.classList.toggle('dw-open',o);}}W.addEventListener('click',e=>{{if(e.target.hasAttribute('data-x'))dw(false);}});
+const S=document.getElementById('ahSlider'),P=document.getElementById('ahProg');let cur=0,tm=null,hold=false;const DUR=5000;
+function bars(){{P.innerHTML=[...S.children].map(()=>'<i><b></b></i>').join('');mark();}}
+function mark(){{[...P.children].forEach((d,k)=>{{d.className=k<cur?'done':k===cur?'run':'';const b=d.firstChild;b.style.animation='none';void b.offsetWidth;b.style.animation='';}});}}
+function go(i){{const n=S.children.length;if(!n)return;cur=(i+n)%n;S.scrollTo({{left:S.children[cur].offsetLeft-S.offsetLeft-16,behavior:'smooth'}});mark();}}
+function auto(){{clearInterval(tm);tm=setInterval(()=>{{if(!hold&&!document.hidden)go(cur+1);}},DUR);}}
+let st=null;S.addEventListener('scroll',()=>{{clearTimeout(st);st=setTimeout(()=>{{const x=S.scrollLeft+S.clientWidth/2;let b=0,bd=1e9;[...S.children].forEach((a,k)=>{{const c=a.offsetLeft-S.offsetLeft+a.offsetWidth/2,dd=Math.abs(c-x);if(dd<bd){{bd=dd;b=k;}}}});if(b!==cur){{cur=b;mark();auto();}}}},120);}},{{passive:true}});
+S.addEventListener('touchstart',()=>{{hold=true;}},{{passive:true}});S.addEventListener('touchend',()=>{{setTimeout(()=>{{hold=false;}},1500);}},{{passive:true}});
+fetch('{SBU}/rest/v1/coupons?select=code,title,valid_to&order=created_at.desc&limit=4',{{headers:{{apikey:'{SBK}',Authorization:'Bearer {SBK}'}}}}).then(r=>r.json()).then(d=>{{if(!Array.isArray(d))return;const esc=x=>String(x==null?'':x).replace(/[&<>"]/g,'');d.reverse().forEach(k=>{{if(k.valid_to&&new Date(k.valid_to+'T23:59')<new Date())return;const a=document.createElement('a');a.className='ah-pc ah-cp';a.href=R+'offers/';a.innerHTML='<em>Coupon</em><span><b>'+esc(k.title)+'</b><small>Use code <u>'+esc(k.code)+'</u> at checkout'+(k.valid_to?' · till '+new Date(k.valid_to+'T00:00').toLocaleDateString('en-IN',{{day:'numeric',month:'short'}}):'')+'</small><i>View offer ›</i></span>';S.prepend(a);}});bars();}}).catch(()=>{{}});
+bars();auto();
+const W=document.getElementById('ahDw');document.body.appendChild(W);function dw(o){{W.hidden=!o;document.documentElement.classList.toggle('dw-open',o);}}W.addEventListener('click',e=>{{if(e.target.hasAttribute('data-x'))dw(false);}});
 const r=document.querySelector('header.site .hrow');if(r&&!document.querySelector('.ah-burger')){{const b=document.createElement('button');b.type='button';b.className='ah-burger';b.setAttribute('aria-label','Menu');b.innerHTML='<i></i><i></i><i></i>';b.onclick=()=>dw(true);r.prepend(b);}}
 }})();</script>"""
 
 
 CSS = """
 .app-home{display:none}
-html.is-app .app-home{display:block;padding:14px 16px 4px;background:linear-gradient(180deg,#fbf4f4 0,#fbf4f4 170px,#fff 300px)}
+html.is-app .app-home{display:block;padding:12px 16px 4px;background:#fff}
 html.is-app .home-hero{display:none!important}html.is-app .home-hero+.fsec{margin-top:0!important}
 html.is-app body:has(.app-home) nav.main,html.is-app body:has(.app-home) #acctLink{display:none!important}
-.ah-hi{margin:2px 2px 0;font-size:13px;color:#7a6a6b;letter-spacing:.2px}
-.app-home h2{margin:2px 2px 12px;font-family:'Playfair Display',serif;font-size:23px;color:var(--wine);line-height:1.2}
-.ah-search{position:relative;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #ead9da;border-radius:14px;padding:0 14px;box-shadow:0 6px 18px rgba(120,40,40,.07);color:#9a8a8b}
+.ah-hero{position:relative;border-radius:22px;min-height:300px;padding:18px 16px 16px;display:flex;flex-direction:column;justify-content:flex-end;color:#fff}
+.ah-ph{position:absolute;inset:0;border-radius:22px;overflow:hidden;background:#3a2b2d}
+.ah-ph img{width:100%;height:100%;object-fit:cover;animation:ahKen 14s ease-out both}
+.ah-ph:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,15,15,.05) 20%,rgba(30,18,20,.72) 100%)}
+@keyframes ahKen{from{transform:scale(1.08)}to{transform:scale(1)}}
+.ah-seal{position:absolute;right:14px;top:14px;width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.92);padding:3px;transform:rotate(-12deg);box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.ah-hero-t{position:relative;margin-bottom:14px}
+.ah-hi{margin:0;font-size:13.5px;opacity:.92}
+.app-home .ah-hero h2{margin:4px 0 6px;font-family:'Playfair Display',serif;font-size:26px;line-height:1.15;color:#fff;max-width:290px}
+.ah-pl{margin:0;font-size:12px;opacity:.85;letter-spacing:.3px}
+.ah-search{position:relative;display:flex;align-items:center;gap:10px;background:#fff;border-radius:999px;padding:0 16px;color:#8a7a7b;box-shadow:0 8px 24px rgba(0,0,0,.18)}
 .ah-search input{flex:1;border:0;outline:0;background:none;font:inherit;font-size:15px;padding:13px 0;color:var(--ink);min-width:0}
-.ah-search ul{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:60;list-style:none;margin:0;padding:6px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 30px rgba(0,0,0,.12)}
+.ah-search ul{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:60;list-style:none;margin:0;padding:6px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 14px 30px rgba(0,0,0,.14)}
 .ah-search li a{display:block;padding:11px 12px;border-radius:10px;color:var(--ink);text-decoration:none;font-size:14.5px}.ah-search li a:active{background:#f6eeee}
 .ah-search li.ah-ask a{color:var(--crimson);font-weight:600;border-top:1px solid var(--line);border-radius:0 0 10px 10px}
-.ah-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
-.ah-grid a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-decoration:none;color:var(--wine);text-align:center;line-height:1.15;-webkit-tap-highlight-color:transparent;transition:transform .15s}
-.ah-grid a:active{transform:scale(.95)}
-.ah-big{background:#fff;border:1px solid #efe3e4;border-radius:16px;padding:14px 4px 12px;font-weight:700;font-size:13px;box-shadow:0 4px 14px rgba(120,40,40,.06)}
-.ah-big i{display:grid;place-items:center;width:48px;height:48px;border-radius:14px;background:#f8ecec;color:#b3121a}
-.ah-grid-sm{background:#fafafa;border:1px solid #f0f0f0;border-radius:16px;padding:12px 4px;gap:14px 4px}
-.ah-sm{font-size:11.5px;font-weight:500;color:#555!important}.ah-sm i{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:#fff;border:1px solid #eee;color:#6b5a5b}
-.ah-sm i svg{width:22px;height:22px}
-.ah-head{display:flex;align-items:baseline;justify-content:space-between;margin:22px 2px 10px}
-.ah-head h3{margin:0;font-size:17px;color:var(--wine)}.ah-head a{font-size:13px;color:var(--crimson);text-decoration:none;font-weight:600}
-.ah-row{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:0 16px 6px;scrollbar-width:none}.ah-row::-webkit-scrollbar{display:none}
-.ah-card{flex:0 0 62%;max-width:250px;scroll-snap-align:start;position:relative;border-radius:16px;overflow:hidden;text-decoration:none;color:#fff;aspect-ratio:4/5;box-shadow:0 8px 20px rgba(0,0,0,.12)}
-.ah-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.ah-card span{position:absolute;left:0;right:0;bottom:0;padding:40px 14px 14px;background:linear-gradient(180deg,transparent,rgba(20,20,20,.72));display:flex;flex-direction:column;gap:2px}
-.ah-card b{font-size:16px;line-height:1.2}.ah-card small{font-size:12px;opacity:.85}
-/* v2: sticky search, offers slider, discover, explore grid, drawer */
-html.is-app .app-home .ah-search{position:sticky;top:calc(var(--hh,66px) + 6px);z-index:45}
-.ah-search.stuck:before{content:"";position:absolute;inset:-8px -17px -9px;background:#fff;border-bottom:1px solid #eee;z-index:-1}
-.ah-tabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 10px;padding:0 16px}.ah-tabs::-webkit-scrollbar{display:none}
-.ah-tab{flex:none;border:1px solid #e4d6d7;background:#fff;color:#5a4a4b;border-radius:999px;padding:7px 15px;font:600 13px 'Jost',sans-serif;cursor:pointer}
-.ah-tab.on{background:#f8ecec;border-color:#c98f93;color:#8f1d24}
-.ah-slider{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:0 16px 4px;scrollbar-width:none;scroll-padding:0 16px}.ah-slider::-webkit-scrollbar{display:none}
-.ah-slide{flex:0 0 88%;scroll-snap-align:start;position:relative;height:178px;border-radius:18px;overflow:hidden;text-decoration:none;color:#fff;background:rgb(var(--tint,74,30,36));box-shadow:0 10px 22px rgba(40,20,20,.14)}
-.ah-slide[hidden]{display:none}
-.ah-slide img{position:absolute;right:0;top:0;width:70%;height:100%;object-fit:cover}
-.ah-slide:before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgb(var(--tint)) 0,rgb(var(--tint)) 34%,rgba(var(--tint),.55) 62%,rgba(var(--tint),.05) 100%)}
-.ah-sl-in{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:center;gap:5px;padding:16px 18px;max-width:72%}
-.ah-sl-in em{align-self:flex-start;font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:3px 9px}
-.ah-sl-in b{font-family:'Playfair Display',serif;font-size:21px;line-height:1.15}
-.ah-sl-in small{font-size:12.5px;line-height:1.35;opacity:.9}
-.ah-sl-in i{align-self:flex-start;font-style:normal;font-size:12.5px;font-weight:700;margin-top:4px;background:#fff;color:rgb(var(--tint));border-radius:999px;padding:6px 13px}
-.ah-coupon{--tint:62,42,46;background:repeating-linear-gradient(135deg,#3e2a2e 0 14px,#45303a 14px 28px)}.ah-coupon:before{display:none}.ah-coupon .ah-sl-in{max-width:100%}.ah-coupon u{text-decoration:none;font-weight:700;letter-spacing:1px;border:1px dashed rgba(255,255,255,.6);border-radius:6px;padding:1px 6px}
-.ah-dots{display:flex;justify-content:center;gap:6px;margin-top:10px}.ah-dots i{width:6px;height:6px;border-radius:99px;background:#dccbcc;transition:all .3s}.ah-dots i.on{width:18px;background:#b3121a}
-.ah-disc{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border:1px solid #efe3e4;border-radius:16px;overflow:hidden}
-.ah-disc a{display:flex;flex-direction:column;align-items:center;gap:5px;padding:13px 4px;text-decoration:none;color:#4a3b3c;font-size:11.5px;font-weight:600;text-align:center;border-right:1px solid #f1e8e8}.ah-disc a:last-child{border-right:0}.ah-disc span{font-size:22px}
-.ah-mason{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}.ah-mason>div{display:flex;flex-direction:column;gap:10px}
-.ah-ex{position:relative;display:block;height:170px;border-radius:16px;overflow:hidden;text-decoration:none;color:#fff;box-shadow:0 6px 16px rgba(0,0,0,.1)}.ah-ex.tall{height:240px}
-.ah-ex img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.ah-ex span{position:absolute;left:0;right:0;bottom:0;padding:34px 11px 11px;background:linear-gradient(180deg,transparent,rgba(15,15,15,.75));display:flex;flex-direction:column;gap:2px}
-.ah-ex b{font-size:14.5px}.ah-ex small{font-size:11.5px;opacity:.88;line-height:1.3}
+.ah-sec{display:flex;align-items:baseline;justify-content:space-between;margin:24px 2px 12px}
+.ah-sec h3{margin:0;font-family:'Playfair Display',serif;font-size:19px;color:var(--wine)}.ah-sec a{font-size:13px;color:var(--crimson);text-decoration:none;font-weight:600}
+.ah-stamps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px 6px}
+.ah-st{display:flex;flex-direction:column;align-items:center;gap:7px;text-decoration:none;color:#4a3b3c;font-size:12px;font-weight:600;text-align:center;line-height:1.15;-webkit-tap-highlight-color:transparent}
+.ah-st i{display:grid;place-items:center;width:60px;height:60px;border-radius:50%;border:1.5px dashed #cfa9ac;color:#8f1d24;background:radial-gradient(circle,#fff 58%,#fbf4f4 59%);transition:transform .15s}
+.ah-st i svg{width:26px;height:26px}.ah-st:active i{transform:scale(.92) rotate(-6deg)}
+.ah-trust{display:flex;align-items:center;gap:12px;margin-top:22px;background:#faf6f6;border:1px solid #efe5e5;border-radius:16px;padding:12px 14px}
+.ah-trust b{display:block;font-size:14px;color:var(--wine)}.ah-trust small{font-size:12px;color:#7a6a6b}
+.ah-prog{display:flex;gap:4px;margin:0 2px 10px}.ah-prog i{flex:1;height:3px;border-radius:3px;background:#eadfe0;overflow:hidden}.ah-prog i b{display:block;height:100%;width:0;background:#8f1d24}
+.ah-prog i.done b{width:100%}.ah-prog i.run b{animation:ahBar 5s linear forwards}@keyframes ahBar{to{width:100%}}
+.ah-pcs{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:0 16px 4px;scrollbar-width:none;scroll-padding:0 16px}.ah-pcs::-webkit-scrollbar{display:none}
+.ah-pc{flex:0 0 100%;scroll-snap-align:start;position:relative;height:230px;border-radius:20px;overflow:hidden;text-decoration:none;color:#fff;background:#4a2e32}
+.ah-pc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ah-pc:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(25,15,17,.8) 100%)}
+.ah-pc em{position:absolute;top:14px;right:14px;z-index:2;font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;padding:6px 10px;border:1.5px dashed rgba(255,255,255,.85);border-radius:8px;transform:rotate(4deg);background:rgba(0,0,0,.18)}
+.ah-pc span{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:16px;display:flex;flex-direction:column;gap:4px}
+.ah-pc b{font-family:'Playfair Display',serif;font-size:22px;line-height:1.15}.ah-pc small{font-size:13px;opacity:.9;line-height:1.35}
+.ah-pc i{font-style:normal;font-size:13px;font-weight:700;margin-top:4px;text-decoration:underline;text-underline-offset:3px}
+.ah-cp{background:repeating-linear-gradient(135deg,#3e2a2e 0 14px,#46313a 14px 28px)}.ah-cp:after{display:none}.ah-cp u{text-decoration:none;font-weight:700;letter-spacing:1px;border:1px dashed rgba(255,255,255,.6);border-radius:6px;padding:1px 6px}
+.ah-tks{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:0 16px 8px;scrollbar-width:none}.ah-tks::-webkit-scrollbar{display:none}
+.ah-tk{flex:0 0 58%;max-width:230px;scroll-snap-align:start;display:flex;flex-direction:column;background:#fff;border:1px solid #ece3e3;border-radius:16px;overflow:hidden;text-decoration:none;color:var(--ink);box-shadow:0 6px 16px rgba(60,30,30,.06)}
+.ah-tk img{width:100%;height:120px;object-fit:cover}
+.ah-tk-b{position:relative;display:flex;flex-direction:column;gap:2px;padding:14px 13px 12px;border-top:2px dashed #e6d7d8}
+.ah-tk-b:before,.ah-tk-b:after{content:"";position:absolute;top:-9px;width:16px;height:16px;border-radius:50%;background:#fff;border:1px solid #ece3e3}.ah-tk-b:before{left:-9px}.ah-tk-b:after{right:-9px}
+.ah-tk b{font-size:14.5px;color:var(--wine);line-height:1.2}.ah-tk small{font-size:12px;color:#7a6a6b}.ah-tk i{font-style:normal;font-size:12.5px;font-weight:700;color:var(--crimson);margin-top:6px}
+.ah-occ{display:flex;flex-direction:column;border:1px solid #efe5e5;border-radius:18px;overflow:hidden}
+.ah-oc{display:flex;align-items:center;gap:12px;padding:10px 14px;text-decoration:none;color:var(--ink);border-bottom:1px solid #f4eded;background:#fff}.ah-oc:last-child{border-bottom:0}
+.ah-oc img{width:52px;height:52px;border-radius:50%;object-fit:cover;flex:none;border:2px solid #fff;box-shadow:0 0 0 1.5px #e3cfd1}
+.ah-oc span{flex:1;display:flex;flex-direction:column}.ah-oc b{font-size:14.5px;color:var(--wine)}.ah-oc small{font-size:12px;color:#7a6a6b}.ah-oc i{font-style:normal;color:#b9aeae;font-size:20px}
 .ah-burger{display:none}html.is-app .ah-burger{display:inline-flex;flex-direction:column;justify-content:center;gap:4px;width:40px;height:40px;margin-right:6px;padding:0 9px;border:1px solid var(--line);border-radius:12px;background:#fff;cursor:pointer}
 .ah-burger i{display:block;height:2px;border-radius:2px;background:var(--wine)}.ah-burger i:nth-child(2){width:70%}
 html.dw-open,html.dw-open body{overflow:hidden}
