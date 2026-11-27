@@ -98,7 +98,7 @@ def _explore(root):
 
 
 def _drawer(root):
-    items = [("🎁", "Offers & coupons", "offers/"), ("🤝", "Refer & earn", "account/"),
+    items = [("🎁", "Offers & coupons", "offers/"), ("👥", "Saved travellers", "account/#travellers"), ("🤝", "Refer & earn", "account/"),
              ("🧳", "Holiday packages", "holiday-packages/"), ("🛂", "Visa", "visa/"), ("📘", "Passport", "passport/"),
              ("🛡️", "Travel insurance", "insurance/"), ("💳", "Forex card", "forex/"), ("📖", "Travel guides", "blog/"),
              ("🎧", "Customer support", "contact/"), ("ℹ️", "About us", "about/")]

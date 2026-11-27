@@ -21,6 +21,32 @@ SITE_JS = f"""<script>
   window.RTT_PROFILE={{name,phone,email}};
   const fill=(sel,val)=>{{if(!val)return;document.querySelectorAll(sel).forEach(i=>{{if(!i.value&&!i.closest('#acct'))i.value=val;}});}};
   fill('input[name=full_name],input[name=name]',name);fill('input[name=phone]',phone);fill('input[name=email]',email);fill('input[name=contact]',phone||email);
+  const {{data:TV}}=await c.from('travellers').select('*').order('is_self',{{ascending:false}}).order('created_at');const TRV=TV||[];
+  const E=x=>String(x==null?'':x).replace(/[&<>"]/g,ch=>({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}})[ch]);
+  const nm=t=>[t.title,t.first_name,t.last_name].filter(Boolean).join(' ');
+  const fd=d=>d?new Date(d+'T00:00').toLocaleDateString('en-IN',{{day:'2-digit',month:'short',year:'numeric'}}):'';
+  const age=d=>{{if(!d)return 30;const b=new Date(d+'T00:00'),n=new Date();let a=n.getFullYear()-b.getFullYear();if(n<new Date(n.getFullYear(),b.getMonth(),b.getDate()))a--;return a;}};
+  const line=(t,i)=>(i+1)+'. '+nm(t)+[t.gender,t.date_of_birth?'DOB '+fd(t.date_of_birth):'',t.nationality,t.passport_no?'Passport '+t.passport_no+(t.passport_expiry?' (exp '+fd(t.passport_expiry)+')':'')+(t.passport_issue_place?' issued '+t.passport_issue_place:''):'',t.meal_pref?'Meal: '+t.meal_pref:'',t.mobile,t.email].filter(Boolean).map(x=>' · '+x).join('');
+  let sheet=null,target=null;
+  function openSheet(f){{target=f;if(!sheet){{sheet=document.createElement('div');sheet.className='trv-sheet';document.body.appendChild(sheet);sheet.addEventListener('click',e=>{{if(e.target===sheet)sheet.hidden=true;}});}}
+   const pre=(f.dataset.trv||'').split(',');
+   sheet.innerHTML='<div class="trv-pan"><div class="trv-h"><b>Choose travellers</b><button type="button" class="trv-x" aria-label="Close">✕</button></div>'+(TRV.length?'<div class="trv-opts">'+TRV.map(t=>'<label class="trv-op"><input type="checkbox" value="'+t.id+'"'+(pre.includes(t.id)?' checked':'')+'><span><b>'+E(nm(t))+(t.is_self?' (me)':'')+'</b><small>'+E([t.gender,t.date_of_birth?'DOB '+fd(t.date_of_birth):'',t.passport_no?'Passport ••'+t.passport_no.slice(-3):''].filter(Boolean).join(' · '))+'</small></span></label>').join('')+'</div><p class="trv-n">The first traveller ticked is the main contact – name, mobile and email are filled in for you.</p><button type="button" class="btn gold trv-ok">Fill details</button>':'<p class="trv-n">No travellers saved yet.</p>')+'<a class="trv-new" href="/account/#travellers">＋ Add or edit travellers</a></div>';
+   sheet.hidden=false;sheet.querySelector('.trv-x').onclick=()=>{{sheet.hidden=true;}};
+   const ok=sheet.querySelector('.trv-ok');if(ok)ok.onclick=()=>{{const ids=[...sheet.querySelectorAll('input:checked')].map(i=>i.value);apply(target,TRV.filter(t=>ids.includes(t.id)).sort((a,b)=>ids.indexOf(a.id)-ids.indexOf(b.id)));sheet.hidden=true;}};}}
+  function setv(f,n,v){{const el=f.querySelector('[name="'+n+'"]');if(el&&v!=null&&v!==''){{el.value=v;el.dispatchEvent(new Event('input',{{bubbles:true}}));el.dispatchEvent(new Event('change',{{bubbles:true}}));}}}}
+  function apply(f,sel){{f.dataset.trv=sel.map(t=>t.id).join(',');const chip=f.querySelector('.trv-chips');if(chip)chip.innerHTML=sel.map(t=>'<span>'+E(nm(t))+'</span>').join('');if(!sel.length)return;
+   const lead=sel.find(t=>t.is_self)||sel[0];const ph=lead.mobile||phone,em=lead.email||email;
+   setv(f,'full_name',nm(lead));setv(f,'name',nm(lead));setv(f,'phone',ph);setv(f,'email',em);setv(f,'contact',ph||em);
+   const A=sel.map(t=>age(t.date_of_birth)),ad=A.filter(a=>a>=12).length,ch=A.filter(a=>a>=2&&a<12).length,inf=A.filter(a=>a<2).length;
+   if(f.querySelector('[name=adults]')&&ad){{setv(f,'adults',ad);setv(f,'children',ch);setv(f,'infants',inf);}}
+   setv(f,'travellers',sel.length);
+   let n=f.querySelector('[name=notes]');if(!n)return;
+   if(n.tagName==='INPUT'){{const ta=document.createElement('textarea');[...n.attributes].forEach(a=>{{if(a.name!=='type')ta.setAttribute(a.name,a.value);}});ta.rows=4;ta.maxLength=1500;n.replaceWith(ta);n=ta;}}
+   else n.maxLength=Math.max(n.maxLength||0,1500);
+   const own=n.value.split('\\n— Travellers —')[0].trim();n.value=(own?own+'\\n':'')+'— Travellers —\\n'+sel.map(line).join('\\n');}}
+  document.querySelectorAll('form').forEach(f=>{{if(f.closest('#acct')||f.dataset.trvb)return;const inp=f.querySelector('input[name=full_name],input[name=name]');if(!inp)return;
+   f.dataset.trvb='1';const box=document.createElement('div');box.className='trv-bar';box.innerHTML='<button type="button" class="trv-btn">👥 Fill from saved travellers</button><span class="trv-chips"></span>';
+   const anchor=inp.closest('.row')||inp.closest('label')||inp;anchor.parentNode.insertBefore(box,anchor);box.querySelector('button').onclick=()=>openSheet(f);}});
  }}).catch(()=>{{}});
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
 }})();
@@ -95,6 +121,19 @@ def account_page(PHONE, PHONE_RAW, EMAIL, WA, seal, cta_band):
 <details class="rwhow"><summary>How to earn points</summary><ul class="ticks" id="rw_earn"></ul><p class="meta">Points are valid for 12 months and can pay up to 10% of a booking. <a href="../offers/">See all offers</a></p></details>
 <details class="rwhow"><summary>Points history</summary><ul class="enq" id="rw_hist"><li>Loading…</li></ul></details></div>
 <div class="acct-card"><h2 style="margin:0 0 6px">My enquiries</h2><div id="a_enq" class="meta">Loading…</div></div></div>
+<div class="acct-card trv" id="travellers"><div class="trv-top"><div><h2 style="margin:0">👥 Saved travellers</h2><p class="meta" style="margin:2px 0 0">Save family and friends once – then fill any booking form in one tap.</p></div><button type="button" class="btn gold" id="trv_add">＋ Add traveller</button></div>
+<div id="trv_list" class="trv-list"><p class="meta">Loading…</p></div>
+<form id="f_trv" class="vform trv-form" novalidate hidden><input type="hidden" name="id">
+<div class="row"><label>Title<select name="title"><option>Mr</option><option>Mrs</option><option>Ms</option><option>Miss</option><option>Master</option></select></label><label>Gender<select name="gender"><option>Male</option><option>Female</option><option>Other</option></select></label></div>
+<div class="row"><label>First &amp; middle name* <small>(as on passport)</small><input name="first_name" required maxlength="60" autocomplete="off"></label><label>Last name / surname<input name="last_name" maxlength="60" autocomplete="off"></label></div>
+<div class="row"><label>Date of birth<input name="date_of_birth" type="date"></label><label>Nationality<input name="nationality" maxlength="40" value="Indian"></label></div>
+<div class="row"><label>Passport number<input name="passport_no" maxlength="20" autocomplete="off" style="text-transform:uppercase"></label><label>Passport expiry date<input name="passport_expiry" type="date"></label></div>
+<div class="row"><label>Passport place of issue<input name="passport_issue_place" maxlength="60"></label><label>Meal preference<select name="meal_pref"><option value="">No preference</option><option>Vegetarian</option><option>Jain</option><option>Non-vegetarian</option><option>Vegan</option></select></label></div>
+<div class="row"><label>Mobile number<input name="mobile" inputmode="tel" maxlength="20"></label><label>Email<input name="email" type="email" maxlength="160"></label></div>
+<label class="chk"><input type="checkbox" name="is_self"><span>This is me (main contact)</span></label>
+<div class="btns"><button class="btn gold" type="submit">Save traveller</button><button class="btn outline" type="button" id="trv_cancel">Cancel</button></div>
+<p class="vmsg" role="status"></p><p class="meta" style="font-size:12.5px">🔒 Only you (and our ticketing team, when you book) can see these details.</p></form>
+</div>
 </div></div>
 </div></section>
 <script src="{SBJS}"></script>
@@ -122,8 +161,23 @@ window.rttClient().then(async c=>{{
   p=p||{{}};if(!p.phone)setTimeout(()=>{{const f=$('#f_profile');if(f){{msg(f,'Please add your mobile number and tap Save – we need it to contact you about your bookings.','err');f.phone.focus();}}}},300);$('#a_name').textContent=(p.full_name||'traveller').split(' ')[0];
   const f=$('#f_profile');['full_name','phone','email','city','date_of_birth','food_preference','travel_interests'].forEach(k=>{{if(f[k])f[k].value=p[k]||'';}});
   f.consent_email.checked=!!p.consent_email;f.consent_whatsapp.checked=!!p.consent_whatsapp;
-  loadEnq();loadRewards();
+  loadEnq();loadRewards();loadTrv();if(location.hash==='#travellers')setTimeout(()=>$('#travellers').scrollIntoView({{behavior:'smooth'}}),300);
  }}
+ const TF=()=>$('#f_trv');const esc2=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}})[c]);
+ const fdt=d=>d?new Date(d+'T00:00').toLocaleDateString('en-IN',{{day:'2-digit',month:'short',year:'numeric'}}):'';
+ async function loadTrv(){{const {{data,error}}=await c.from('travellers').select('*').order('is_self',{{ascending:false}}).order('created_at');const L=$('#trv_list');
+  if(error){{L.innerHTML='<p class="meta">Could not load travellers.</p>';return;}}
+  if(!data.length){{L.innerHTML='<p class="meta">No travellers saved yet. Tap <b>＋ Add traveller</b> to add yourself and your family.</p>';return;}}
+  L.innerHTML=data.map(t=>{{const exp=t.passport_expiry&&new Date(t.passport_expiry)<new Date(Date.now()+182*864e5);return '<div class="trv-item"><div><b>'+esc2([t.title,t.first_name,t.last_name].filter(Boolean).join(' '))+(t.is_self?' <em>Me</em>':'')+'</b><small>'+[t.gender,t.date_of_birth?'DOB '+fdt(t.date_of_birth):'',t.nationality].filter(Boolean).map(esc2).join(' · ')+'</small>'+(t.passport_no?'<small>Passport '+esc2(t.passport_no.slice(0,2))+'••••'+esc2(t.passport_no.slice(-2))+(t.passport_expiry?' · exp '+fdt(t.passport_expiry):'')+(exp?' <span class="trv-warn">⚠️ expires within 6 months</span>':'')+'</small>':'')+'</div><div class="trv-act"><button type="button" class="linkbtn" data-e="'+t.id+'">Edit</button><button type="button" class="linkbtn" data-d="'+t.id+'">Remove</button></div></div>';}}).join('');
+  L.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>openTrv(data.find(x=>x.id===b.dataset.e)));
+  L.querySelectorAll('[data-d]').forEach(b=>b.onclick=async()=>{{if(!confirmRemove(b))return;await c.from('travellers').delete().eq('id',b.dataset.d);loadTrv();}});}}
+ function confirmRemove(b){{if(b.dataset.sure)return true;b.dataset.sure='1';b.textContent='Tap again to remove';setTimeout(()=>{{delete b.dataset.sure;b.textContent='Remove';}},3000);return false;}}
+ function openTrv(t){{const f=TF();f.reset();f.hidden=false;f.id.value='';msg(f,'');if(t){{['id','title','gender','first_name','last_name','date_of_birth','nationality','passport_no','passport_expiry','passport_issue_place','meal_pref','mobile','email'].forEach(k=>{{if(f[k])f[k].value=t[k]||'';}});f.is_self.checked=!!t.is_self;}}f.scrollIntoView({{behavior:'smooth',block:'start'}});}}
+ $('#trv_add').onclick=()=>openTrv(null);$('#trv_cancel').onclick=()=>{{TF().hidden=true;}};
+ $('#f_trv').addEventListener('submit',async e=>{{e.preventDefault();const f=e.target;if(f.first_name.value.trim().length<1)return msg(f,'Please enter the first name as on the passport.','err');
+  const row={{title:f.title.value,gender:f.gender.value,first_name:f.first_name.value.trim(),last_name:f.last_name.value.trim()||null,date_of_birth:f.date_of_birth.value||null,nationality:f.nationality.value.trim()||null,passport_no:f.passport_no.value.trim().toUpperCase()||null,passport_expiry:f.passport_expiry.value||null,passport_issue_place:f.passport_issue_place.value.trim()||null,meal_pref:f.meal_pref.value||null,mobile:f.mobile.value.trim()||null,email:f.email.value.trim()||null,is_self:f.is_self.checked,updated_at:new Date().toISOString()}};
+  msg(f,'Saving…');const r=f.id.value?await c.from('travellers').update(row).eq('id',f.id.value):await c.from('travellers').insert(row);
+  if(r.error)return msg(f,'Could not save – please check the details and try again.','err');f.hidden=true;loadTrv();}});
  async function loadRewards(){{
   let ref=null;try{{ref=localStorage.getItem('rtt_ref');}}catch(_){{}}
   const r=await c.rpc('rewards_init',{{ref_code:ref}});if(r.error){{$('#a_rw').hidden=true;return;}}
@@ -179,6 +233,18 @@ window.rttClient().then(async c=>{{
 </script>"""
 
 ACCOUNT_CSS = """
+.trv-bar{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 4px}.trv-btn{border:1px dashed #c98f93;background:#fbf4f4;color:#8f1d24;border-radius:12px;padding:9px 14px;font:600 14px 'Jost',sans-serif;cursor:pointer}
+.trv-chips{display:flex;flex-wrap:wrap;gap:6px}.trv-chips span{background:#fff;border:1px solid #e4d6d7;border-radius:99px;padding:4px 10px;font-size:12.5px;color:#4a3b3c}
+.trv-sheet{position:fixed;inset:0;z-index:300;background:rgba(20,15,15,.45);display:flex;align-items:flex-end;justify-content:center}.trv-sheet[hidden]{display:none}
+.trv-pan{width:100%;max-width:520px;max-height:82vh;overflow:auto;background:#fff;border-radius:20px 20px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom));animation:trvUp .25s ease}@keyframes trvUp{from{transform:translateY(40px);opacity:0}}
+@media(min-width:700px){.trv-sheet{align-items:center}.trv-pan{border-radius:20px}}
+.trv-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.trv-h b{font-size:17px;color:var(--wine)}.trv-x{border:0;background:#f3eeee;border-radius:50%;width:32px;height:32px;cursor:pointer}
+.trv-opts{display:flex;flex-direction:column;gap:8px}.trv-op{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:11px 12px;cursor:pointer}.trv-op:has(input:checked){border-color:#c98f93;background:#fbf4f4}.trv-op input{width:20px;height:20px;accent-color:#b3121a}.trv-op small{display:block;color:var(--muted);font-size:12.5px}
+.trv-n{font-size:12.5px;color:var(--muted);margin:10px 2px}.trv-ok{width:100%;justify-content:center}.trv-new{display:block;text-align:center;margin-top:12px;color:var(--crimson);font-weight:600;text-decoration:none;font-size:14px}
+.trv{margin-top:24px}.trv-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}.trv-top .btn{padding:9px 16px;font-size:14px}
+.trv-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-top:14px}
+.trv-item{display:flex;justify-content:space-between;gap:10px;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px 14px}.trv-item b{display:block}.trv-item em{font-style:normal;font-size:11px;background:#f8ecec;color:#8f1d24;border-radius:99px;padding:2px 8px;margin-left:4px}.trv-item small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}.trv-warn{color:#9a3b12}.trv-act{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.trv-form{margin-top:16px;border-top:1px solid var(--line);padding-top:16px}
 .gbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:#fff;border:1px solid #dadce0;border-radius:12px;padding:12px 14px;font:600 15px 'Jost',sans-serif;color:#3c4043;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.06)}.gbtn:active{background:#f6f6f6}
 .aor{display:flex;align-items:center;gap:10px;margin:2px 0;color:#9a8e8e;font-size:12.5px}.aor:before,.aor:after{content:"";flex:1;height:1px;background:var(--line)}
 .gnote{margin:-6px 0 0;font-size:12.5px;text-align:center}
